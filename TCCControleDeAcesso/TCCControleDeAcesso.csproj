@@ -109,6 +109,12 @@
     <Compile Include="Models\Banco.cs" />
     <Compile Include="Models\CadastroAlunos.cs" />
     <Compile Include="Models\CadastroEmpresas.cs" />
+    <Compile Include="Models\frmMainMenu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Models\frmMainMenu.Designer.cs">
+      <DependentUpon>frmMainMenu.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Verificacao.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
