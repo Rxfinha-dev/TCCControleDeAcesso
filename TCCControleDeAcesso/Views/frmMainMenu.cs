@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace TCCControleDeAcesso.Models
+namespace TCCControleDeAcesso.Views
 {
     public partial class frmMainMenu : Form
     {

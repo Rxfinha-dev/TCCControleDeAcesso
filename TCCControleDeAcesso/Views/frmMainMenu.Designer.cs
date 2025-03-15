@@ -1,4 +1,4 @@
-﻿namespace TCCControleDeAcesso.Models
+﻿namespace TCCControleDeAcesso.Views
 {
     partial class frmMainMenu
     {

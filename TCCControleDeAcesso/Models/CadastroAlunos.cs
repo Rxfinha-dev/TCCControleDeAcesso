@@ -7,25 +7,36 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
+using TCCControleDeAcesso.Controllers;
 
 
 namespace TCCControleDeAcesso.Models
 {
+    
     public class CadastroAlunos
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public string rm { get; set; }
-        public int idCurso { get; set; }
-        public int idEscola { get; set; }
+        public string rm { get; set; }   
         public int serie { get; set; }
+
+        public int idEscola { get; set; }
+        
+        public int idCurso { get; set; }
         public UInt16 foto { get; set; }
         public UInt16 digital { get; set; }
+
+        
+
+        
+
 
 
 
         public void Insert()
         {
+
+            var _login = new Login();
             try
             {
                 Banco.OpenConnection();
@@ -36,11 +47,12 @@ namespace TCCControleDeAcesso.Models
                 Banco.Command.Parameters.AddWithValue("@nome", Name);
                 Banco.Command.Parameters.AddWithValue("@rm", rm);
                 Banco.Command.Parameters.AddWithValue("@serie", serie);
-                Banco.Command.Parameters.AddWithValue("@idEscola", idEscola);
+                Banco.Command.Parameters.AddWithValue("@idEscola",_login.idEscola );
                 Banco.Command.Parameters.AddWithValue("@idCurso", idCurso);
                 Banco.Command.Parameters.AddWithValue("@foto", foto);
                 Banco.Command.Parameters.AddWithValue("@digital", digital);
                 Banco.Command.ExecuteNonQuery();
+
 
                 Banco.CloseConnection();
 
@@ -98,7 +110,8 @@ namespace TCCControleDeAcesso.Models
             try
             {
                 Banco.OpenConnection();
-                Banco.DataAdapter = new MySqlDataAdapter("select a.id, a.nome, a.rm , a.serie, a.foto, a.digital from Alunos a inner join escolas on a.idEscola=id", Banco.Connection);
+                Banco.DataAdapter = new MySqlDataAdapter("select a.id, a.nome, a.rm , a.serie, a.foto, a.digital from Alunos a inner join escolas on a.idEscola=id where a.id=@idEscola", Banco.Connection);
+                Banco.Command.Parameters.AddWithValue("@idEscola", idEscola);
                 Banco.datTable = new DataTable();
                 Banco.DataAdapter.Fill(Banco.datTable);
                 Banco.CloseConnection();

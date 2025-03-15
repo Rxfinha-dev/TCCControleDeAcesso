@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 using System.Windows.Forms;
 using TCCControleDeAcesso.Models;
+using TCCControleDeAcesso.Views;
 
 namespace TCCControleDeAcesso.Controllers
 {
@@ -14,8 +15,7 @@ namespace TCCControleDeAcesso.Controllers
         public int id { get; set; }
         public string nome { get; set; }
         public string senha { get; set; }
-
-        public int idEscola;
+        public int idEscola { get; set; }
 
         public void LoginPermissions()
         {

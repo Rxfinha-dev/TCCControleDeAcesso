@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -109,12 +109,6 @@
     <Compile Include="Models\Banco.cs" />
     <Compile Include="Models\CadastroAlunos.cs" />
     <Compile Include="Models\CadastroEmpresas.cs" />
-    <Compile Include="Models\frmMainMenu.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Models\frmMainMenu.Designer.cs">
-      <DependentUpon>frmMainMenu.cs</DependentUpon>
-    </Compile>
     <Compile Include="Models\Verificacao.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -135,6 +129,12 @@
     </Compile>
     <Compile Include="Views\frmListaDeAlunos.Designer.cs">
       <DependentUpon>frmListaDeAlunos.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\frmMainMenu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\frmMainMenu.Designer.cs">
+      <DependentUpon>frmMainMenu.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\frmVerificacao.cs">
       <SubType>Form</SubType>
