@@ -47,7 +47,7 @@ namespace TCCControleDeAcesso.Models
                 Banco.Command.Parameters.AddWithValue("@nome", Name);
                 Banco.Command.Parameters.AddWithValue("@rm", rm);
                 Banco.Command.Parameters.AddWithValue("@serie", serie);
-                Banco.Command.Parameters.AddWithValue("@idEscola",_login.idEscola );
+                Banco.Command.Parameters.AddWithValue("@idEscola",idEscola);
                 Banco.Command.Parameters.AddWithValue("@idCurso", idCurso);
                 Banco.Command.Parameters.AddWithValue("@foto", foto);
                 Banco.Command.Parameters.AddWithValue("@digital", digital);
