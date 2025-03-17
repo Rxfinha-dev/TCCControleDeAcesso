@@ -10,11 +10,16 @@ using System.Windows.Forms;
 
 namespace TCCControleDeAcesso.Views
 {
-    public partial class frmCadastroAluno : Form
+    public partial class frmListaAlunos : Form
     {
-        public frmCadastroAluno()
+        public frmListaAlunos()
         {
             InitializeComponent();
+        }
+
+        private void frmListaAlunos_Load(object sender, EventArgs e)
+        {
+
         }
     }
 
