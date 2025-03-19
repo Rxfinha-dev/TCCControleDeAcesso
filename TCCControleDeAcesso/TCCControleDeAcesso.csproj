@@ -118,12 +118,6 @@
     <Compile Include="Views\frmCadastroEmpresa.Designer.cs">
       <DependentUpon>frmCadastroEmpresa.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\frmListaDeAlunos.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\frmListaDeAlunos.Designer.cs">
-      <DependentUpon>frmListaDeAlunos.cs</DependentUpon>
-    </Compile>
     <Compile Include="Views\frmMainMenu.cs">
       <SubType>Form</SubType>
     </Compile>
