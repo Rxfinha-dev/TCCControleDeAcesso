@@ -49,6 +49,7 @@
             this.linkLabel2.TabIndex = 43;
             this.linkLabel2.TabStop = true;
             this.linkLabel2.Text = "Cadastre-se";
+            this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked);
             // 
             // label5
             // 
@@ -81,6 +82,7 @@
             this.btnEntrar.TabIndex = 40;
             this.btnEntrar.Text = "Entrar";
             this.btnEntrar.UseVisualStyleBackColor = false;
+            this.btnEntrar.Click += new System.EventHandler(this.btnEntrar_Click);
             // 
             // txtSenha
             // 
