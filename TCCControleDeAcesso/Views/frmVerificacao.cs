@@ -16,5 +16,11 @@ namespace TCCControleDeAcesso.Views
         {
             InitializeComponent();
         }
+
+        private void frmVerificacao_Load(object sender, EventArgs e)
+        {
+
+        }
+
     }
 }
