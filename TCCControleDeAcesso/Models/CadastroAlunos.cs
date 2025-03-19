@@ -36,7 +36,6 @@ namespace TCCControleDeAcesso.Models
         public void Insert()
         {
 
-            var _login = new Login();
             try
             {
                 Banco.OpenConnection();

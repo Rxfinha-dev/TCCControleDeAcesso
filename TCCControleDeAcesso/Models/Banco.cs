@@ -25,6 +25,8 @@ namespace TCCControleDeAcesso.Models
             {
                 Connection = new MySqlConnection("server=localhost;port=3307;uid=root;pwd=etecjau");
 
+
+
                 Connection.Open();
             } catch (Exception e)
             {
@@ -51,14 +53,16 @@ namespace TCCControleDeAcesso.Models
                 //abre a conexão com o banco de dados
                 OpenConnection();
 
-                // Cria o banco de dados 'AccessControl' caso ele não exista e define seu uso
-                Command = new MySqlCommand("create database if not exists AccessControl; Use AccessControl", Connection);       //Linha de comandos sql para a criação da base de dados
-                Command.ExecuteNonQuery(); //execução do comando
+                Command = new MySqlCommand("CREATE DATABASE IF NOT EXISTS AccessControl", Connection);
+                Command.ExecuteNonQuery();
+
+                Connection.ChangeDatabase("AccessControl");
 
                 // Criação da tabela 'escolas'
                 Command = new MySqlCommand("create table if not exists escolas" + 
                     "(id integer auto_increment primary key," +
                     "nome varchar(50)," +
+                    "email varchar(80)," +
                     "password char(8))", Connection);
                 Command.ExecuteNonQuery();
 

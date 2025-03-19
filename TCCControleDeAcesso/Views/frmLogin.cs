@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TCCControleDeAcesso.Controllers;
+using TCCControleDeAcesso.Models;
 
 namespace TCCControleDeAcesso.Views
 {
@@ -36,6 +37,11 @@ namespace TCCControleDeAcesso.Views
             frmCadastroEmpresa check = new frmCadastroEmpresa();
             check.Show();
             Hide();
+        }
+
+        private void frmLogin_Load(object sender, EventArgs e)
+        {
+            Banco.CreateDatabase();
         }
     }
 }

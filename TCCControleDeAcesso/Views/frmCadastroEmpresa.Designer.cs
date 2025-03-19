@@ -32,10 +32,10 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
-            this.textBox4 = new System.Windows.Forms.TextBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.btnCadastrar = new System.Windows.Forms.Button();
+            this.txtConfirmarSenha = new System.Windows.Forms.TextBox();
+            this.txtSenha = new System.Windows.Forms.TextBox();
+            this.txtEmail = new System.Windows.Forms.TextBox();
             this.txtNome = new System.Windows.Forms.TextBox();
             this.button3 = new System.Windows.Forms.Button();
             this.SuspendLayout();
@@ -80,37 +80,38 @@
             this.label7.TabIndex = 38;
             this.label7.Text = "Nome Completo:";
             // 
-            // button1
+            // btnCadastrar
             // 
-            this.button1.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.button1.Font = new System.Drawing.Font("Segoe UI", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(359, 463);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(167, 52);
-            this.button1.TabIndex = 37;
-            this.button1.Text = "Confirmar";
-            this.button1.UseVisualStyleBackColor = false;
+            this.btnCadastrar.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.btnCadastrar.Font = new System.Drawing.Font("Segoe UI", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCadastrar.Location = new System.Drawing.Point(359, 463);
+            this.btnCadastrar.Name = "btnCadastrar";
+            this.btnCadastrar.Size = new System.Drawing.Size(167, 52);
+            this.btnCadastrar.TabIndex = 37;
+            this.btnCadastrar.Text = "Confirmar";
+            this.btnCadastrar.UseVisualStyleBackColor = false;
+            this.btnCadastrar.Click += new System.EventHandler(this.btnCadastrar_Click);
             // 
-            // textBox4
+            // txtConfirmarSenha
             // 
-            this.textBox4.Location = new System.Drawing.Point(269, 424);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(349, 20);
-            this.textBox4.TabIndex = 36;
+            this.txtConfirmarSenha.Location = new System.Drawing.Point(269, 424);
+            this.txtConfirmarSenha.Name = "txtConfirmarSenha";
+            this.txtConfirmarSenha.Size = new System.Drawing.Size(349, 20);
+            this.txtConfirmarSenha.TabIndex = 36;
             // 
-            // textBox3
+            // txtSenha
             // 
-            this.textBox3.Location = new System.Drawing.Point(269, 370);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(349, 20);
-            this.textBox3.TabIndex = 35;
+            this.txtSenha.Location = new System.Drawing.Point(269, 370);
+            this.txtSenha.Name = "txtSenha";
+            this.txtSenha.Size = new System.Drawing.Size(349, 20);
+            this.txtSenha.TabIndex = 35;
             // 
-            // textBox2
+            // txtEmail
             // 
-            this.textBox2.Location = new System.Drawing.Point(269, 311);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(349, 20);
-            this.textBox2.TabIndex = 34;
+            this.txtEmail.Location = new System.Drawing.Point(269, 311);
+            this.txtEmail.Name = "txtEmail";
+            this.txtEmail.Size = new System.Drawing.Size(349, 20);
+            this.txtEmail.TabIndex = 34;
             // 
             // txtNome
             // 
@@ -140,10 +141,10 @@
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.label7);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.textBox4);
-            this.Controls.Add(this.textBox3);
-            this.Controls.Add(this.textBox2);
+            this.Controls.Add(this.btnCadastrar);
+            this.Controls.Add(this.txtConfirmarSenha);
+            this.Controls.Add(this.txtSenha);
+            this.Controls.Add(this.txtEmail);
             this.Controls.Add(this.txtNome);
             this.Controls.Add(this.button3);
             this.Name = "frmCadastroEmpresa";
@@ -159,10 +160,10 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.TextBox textBox4;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.Button btnCadastrar;
+        private System.Windows.Forms.TextBox txtConfirmarSenha;
+        private System.Windows.Forms.TextBox txtSenha;
+        private System.Windows.Forms.TextBox txtEmail;
         private System.Windows.Forms.TextBox txtNome;
         private System.Windows.Forms.Button button3;
     }
