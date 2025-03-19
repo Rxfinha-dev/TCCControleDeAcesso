@@ -16,5 +16,7 @@ namespace TCCControleDeAcesso.Views
         {
             InitializeComponent();
         }
+
+  
     }
 }

@@ -36,7 +36,7 @@
             this.textBox4 = new System.Windows.Forms.TextBox();
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.txtNome = new System.Windows.Forms.TextBox();
             this.button3 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
@@ -112,12 +112,12 @@
             this.textBox2.Size = new System.Drawing.Size(349, 20);
             this.textBox2.TabIndex = 34;
             // 
-            // textBox1
+            // txtNome
             // 
-            this.textBox1.Location = new System.Drawing.Point(269, 253);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(349, 20);
-            this.textBox1.TabIndex = 33;
+            this.txtNome.Location = new System.Drawing.Point(269, 253);
+            this.txtNome.Name = "txtNome";
+            this.txtNome.Size = new System.Drawing.Size(349, 20);
+            this.txtNome.TabIndex = 33;
             // 
             // button3
             // 
@@ -144,7 +144,7 @@
             this.Controls.Add(this.textBox4);
             this.Controls.Add(this.textBox3);
             this.Controls.Add(this.textBox2);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.txtNome);
             this.Controls.Add(this.button3);
             this.Name = "frmCadastroEmpresa";
             this.Text = "CadastroEmpresa";
@@ -163,7 +163,7 @@
         private System.Windows.Forms.TextBox textBox4;
         private System.Windows.Forms.TextBox textBox3;
         private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox txtNome;
         private System.Windows.Forms.Button button3;
     }
 }
