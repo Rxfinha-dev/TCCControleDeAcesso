@@ -99,6 +99,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\Login.cs" />
+    <Compile Include="Controllers\NovaSenha.cs" />
     <Compile Include="Controllers\VerificacaoController.cs" />
     <Compile Include="Banco.cs" />
     <Compile Include="Models\CadastroAlunos.cs" />
@@ -136,6 +137,13 @@
     <Compile Include="Views\frmLogin.Designer.cs">
       <DependentUpon>frmLogin.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\NetworCredential.cs" />
+    <Compile Include="Views\frmNovaSenha.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\frmNovaSenha.Designer.cs">
+      <DependentUpon>frmNovaSenha.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -160,6 +168,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\frmVerificacao.resx">
       <DependentUpon>frmVerificacao.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\frmNovaSenha.resx">
+      <DependentUpon>frmNovaSenha.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

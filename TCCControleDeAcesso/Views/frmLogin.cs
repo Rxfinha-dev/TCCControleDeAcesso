@@ -43,5 +43,13 @@ namespace TCCControleDeAcesso.Views
         {
             Banco.CreateDatabase();
         }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            frmNovaSenha form =  new frmNovaSenha();
+            form.Show();
+            Hide();
+
+        }
     }
 }
