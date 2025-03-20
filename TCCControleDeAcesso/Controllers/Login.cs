@@ -25,7 +25,7 @@ namespace TCCControleDeAcesso.Controllers
                 Banco.OpenConnection();
 
 
-                Banco.Command = new MySqlCommand("SELECT id FROM cadastros WHERE nome=@nome AND senha=@senha", Banco.Connection);
+                Banco.Command = new MySqlCommand("SELECT id FROM escolas WHERE nome=@nome AND senha=@senha", Banco.Connection);
 
 
                 Banco.Command.Parameters.AddWithValue("@nome", nome);
@@ -54,7 +54,7 @@ namespace TCCControleDeAcesso.Controllers
                 Banco.OpenConnection();
 
 
-                Banco.Command = new MySqlCommand("SELECT COUNT(*) FROM cadastros WHERE nome=@nome AND senha=@senha", Banco.Connection);
+                Banco.Command = new MySqlCommand("SELECT COUNT(*) FROM escolas WHERE nome=@nome AND senha=@senha", Banco.Connection);
 
 
                 Banco.Command.Parameters.AddWithValue("@nome", nome);

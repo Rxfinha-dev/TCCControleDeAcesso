@@ -23,7 +23,8 @@ namespace TCCControleDeAcesso.Models
         {
             try
             {
-                Connection = new MySqlConnection("server=localhost;port=3307;uid=root;pwd=etecjau");
+                Connection = new MySqlConnection("server=localhost;port=3307;uid=root;pwd=etecjau;database=AccessControl");
+
 
 
 
@@ -31,6 +32,7 @@ namespace TCCControleDeAcesso.Models
             } catch (Exception e)
             {
                 MessageBox.Show(e.Message, "Erro Ao Conectar com o Banco", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Console.WriteLine(e.ToString());
             }
         }
 
@@ -53,17 +55,22 @@ namespace TCCControleDeAcesso.Models
                 //abre a conexão com o banco de dados
                 OpenConnection();
 
+
+
                 Command = new MySqlCommand("CREATE DATABASE IF NOT EXISTS AccessControl", Connection);
+
                 Command.ExecuteNonQuery();
 
-                Connection.ChangeDatabase("AccessControl");
+                Command = new MySqlCommand("use accesscontrol" , Connection);
+
+                
 
                 // Criação da tabela 'escolas'
                 Command = new MySqlCommand("create table if not exists escolas" + 
                     "(id integer auto_increment primary key," +
                     "nome varchar(50)," +
                     "email varchar(80)," +
-                    "password char(8))", Connection);
+                    "senha char(8))", Connection);
                 Command.ExecuteNonQuery();
 
                 // Criação da tabela 'cursos'
@@ -105,6 +112,7 @@ namespace TCCControleDeAcesso.Models
             } catch (Exception e)
             {
                 MessageBox.Show(e.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error );
+                Console.WriteLine(e.ToString());
             }
         }
     }

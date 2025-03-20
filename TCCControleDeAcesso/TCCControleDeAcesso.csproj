@@ -100,7 +100,7 @@
   <ItemGroup>
     <Compile Include="Controllers\Login.cs" />
     <Compile Include="Controllers\VerificacaoController.cs" />
-    <Compile Include="Models\Banco.cs" />
+    <Compile Include="Banco.cs" />
     <Compile Include="Models\CadastroAlunos.cs" />
     <Compile Include="Models\CadastroEmpresas.cs" />
     <Compile Include="Models\Verificacao.cs" />
