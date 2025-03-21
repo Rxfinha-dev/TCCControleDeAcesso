@@ -209,6 +209,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ILLink\ILLink.Descriptors.LibraryBuild.xml" />
+    <None Include="Resources\sair.jpg" />
+    <None Include="Resources\verificar3.jpg" />
+    <None Include="Resources\lista.png" />
+    <None Include="Resources\entradas.jpg" />
+    <None Include="Resources\config.jpg" />
+    <None Include="Resources\cadastro3.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

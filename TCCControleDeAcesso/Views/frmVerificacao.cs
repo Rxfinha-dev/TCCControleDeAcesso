@@ -22,5 +22,20 @@ namespace TCCControleDeAcesso.Views
 
         }
 
+        private void btnCadastro_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btncadastro_MouseEnter(object sender, EventArgs e)
+        {
+            btnCadastro.BackColor = Color.Red; // Define a cor de fundo como cinza
+        }
+
+        private void btnCadastro_MouseLeave(object sender, EventArgs e)
+        {
+            btnCadastro.BackColor = SystemColors.Control; // Retorna à cor padrão do sistema
+        }
+
     }
 }
