@@ -15,10 +15,14 @@ namespace TCCControleDeAcesso.Views
     public partial class frmLogin : Form
     {
         Login _login;
+      
+       
         public frmLogin()
         {
             InitializeComponent();
         }
+
+    
 
         private void btnEntrar_Click(object sender, EventArgs e)
         {
@@ -26,10 +30,19 @@ namespace TCCControleDeAcesso.Views
             {
                 nome = txtLogin.Text,
                 senha = txtSenha.Text,
+                
 
             };
-            _login.SignIn();
 
+            frmMainMenu mainMenu = new frmMainMenu(txtLogin.Text);
+           _login.SignIn();
+
+            txtLogin.Clear();
+            txtSenha.Clear();
+
+            if (_login.count > 0) {
+                Hide();
+            }
         }
 
         private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

@@ -17,6 +17,10 @@ namespace TCCControleDeAcesso.Controllers
         public string senha { get; set; }
         public int idEscola { get; set; }
 
+        public int count;
+
+
+
         public void LoginPermissions()
         {
             try
@@ -61,7 +65,7 @@ namespace TCCControleDeAcesso.Controllers
                 Banco.Command.Parameters.AddWithValue("@senha", senha);
 
       
-                int count = Convert.ToInt32(Banco.Command.ExecuteScalar());
+                 count = Convert.ToInt32(Banco.Command.ExecuteScalar());
 
                 Banco.CloseConnection();
 
@@ -69,8 +73,12 @@ namespace TCCControleDeAcesso.Controllers
                 {
                     MessageBox.Show("Login realizado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     LoginPermissions();
-                    frmMainMenu check = new frmMainMenu();
+
+                 
+                    frmMainMenu check = new frmMainMenu(nome);
                     check.Show();
+
+                  
 
                 }
                 else

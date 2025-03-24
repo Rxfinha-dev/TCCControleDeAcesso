@@ -28,24 +28,25 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.button5 = new System.Windows.Forms.Button();
+            this.btnLogout = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btnNewRegister = new System.Windows.Forms.Button();
+            this.btnRegister = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // button5
+            // btnLogout
             // 
-            this.button5.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.button5.Font = new System.Drawing.Font("Segoe UI", 13.25F);
-            this.button5.Location = new System.Drawing.Point(359, 424);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(117, 52);
-            this.button5.TabIndex = 25;
-            this.button5.Text = "Sair";
-            this.button5.UseVisualStyleBackColor = false;
+            this.btnLogout.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.btnLogout.Font = new System.Drawing.Font("Segoe UI", 13.25F);
+            this.btnLogout.Location = new System.Drawing.Point(359, 424);
+            this.btnLogout.Name = "btnLogout";
+            this.btnLogout.Size = new System.Drawing.Size(117, 52);
+            this.btnLogout.TabIndex = 25;
+            this.btnLogout.Text = "Sair";
+            this.btnLogout.UseVisualStyleBackColor = false;
+            this.btnLogout.Click += new System.EventHandler(this.btnLogout_Click);
             // 
             // label2
             // 
@@ -68,28 +69,28 @@
             this.label1.TabIndex = 23;
             this.label1.Text = "Usuário: ";
             // 
-            // button2
+            // btnNewRegister
             // 
-            this.button2.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.button2.Font = new System.Drawing.Font("Segoe UI", 13.25F);
-            this.button2.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.button2.Location = new System.Drawing.Point(308, 325);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(223, 75);
-            this.button2.TabIndex = 22;
-            this.button2.Text = "Novo cadastro";
-            this.button2.UseVisualStyleBackColor = false;
+            this.btnNewRegister.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.btnNewRegister.Font = new System.Drawing.Font("Segoe UI", 13.25F);
+            this.btnNewRegister.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnNewRegister.Location = new System.Drawing.Point(308, 325);
+            this.btnNewRegister.Name = "btnNewRegister";
+            this.btnNewRegister.Size = new System.Drawing.Size(223, 75);
+            this.btnNewRegister.TabIndex = 22;
+            this.btnNewRegister.Text = "Novo cadastro";
+            this.btnNewRegister.UseVisualStyleBackColor = false;
             // 
-            // button1
+            // btnRegister
             // 
-            this.button1.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.button1.Font = new System.Drawing.Font("Segoe UI", 13.25F);
-            this.button1.Location = new System.Drawing.Point(308, 223);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(223, 75);
-            this.button1.TabIndex = 21;
-            this.button1.Text = "Gerenciar cadastros";
-            this.button1.UseVisualStyleBackColor = false;
+            this.btnRegister.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.btnRegister.Font = new System.Drawing.Font("Segoe UI", 13.25F);
+            this.btnRegister.Location = new System.Drawing.Point(308, 223);
+            this.btnRegister.Name = "btnRegister";
+            this.btnRegister.Size = new System.Drawing.Size(223, 75);
+            this.btnRegister.TabIndex = 21;
+            this.btnRegister.Text = "Gerenciar cadastros";
+            this.btnRegister.UseVisualStyleBackColor = false;
             // 
             // button3
             // 
@@ -108,11 +109,11 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(835, 603);
-            this.Controls.Add(this.button5);
+            this.Controls.Add(this.btnLogout);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.btnNewRegister);
+            this.Controls.Add(this.btnRegister);
             this.Controls.Add(this.button3);
             this.Name = "frmMainMenu";
             this.Text = "frmMainMenu";
@@ -123,11 +124,11 @@
 
         #endregion
 
-        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Button btnLogout;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnNewRegister;
+        private System.Windows.Forms.Button btnRegister;
         private System.Windows.Forms.Button button3;
     }
 }
