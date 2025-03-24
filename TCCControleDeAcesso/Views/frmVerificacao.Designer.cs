@@ -30,19 +30,19 @@
         {
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.panelLogo = new System.Windows.Forms.Panel();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.btnCadastro = new System.Windows.Forms.Button();
+            this.panel2 = new System.Windows.Forms.Panel();
             this.button5 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.btnLista = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.flowLayoutPanel1.SuspendLayout();
             this.panelLogo.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
             // 
             // flowLayoutPanel1
@@ -67,27 +67,6 @@
             this.panelLogo.Size = new System.Drawing.Size(250, 100);
             this.panelLogo.TabIndex = 3;
             // 
-            // panel2
-            // 
-            this.panel2.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.panel2.Controls.Add(this.button5);
-            this.panel2.Controls.Add(this.button4);
-            this.panel2.Controls.Add(this.btnLista);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel2.Location = new System.Drawing.Point(3, 173);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(250, 480);
-            this.panel2.TabIndex = 3;
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Image = global::TCCControleDeAcesso.Properties.Resources.hiust;
-            this.pictureBox1.Location = new System.Drawing.Point(379, 95);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(181, 182);
-            this.pictureBox1.TabIndex = 4;
-            this.pictureBox1.TabStop = false;
-            // 
             // pictureBox2
             // 
             this.pictureBox2.BackgroundImage = global::TCCControleDeAcesso.Properties.Resources.HelpUs_removebg_preview;
@@ -101,6 +80,8 @@
             // 
             // btnCadastro
             // 
+            this.btnCadastro.BackColor = System.Drawing.Color.White;
+            this.btnCadastro.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnCadastro.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnCadastro.FlatAppearance.BorderSize = 0;
             this.btnCadastro.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -109,13 +90,29 @@
             this.btnCadastro.Image = global::TCCControleDeAcesso.Properties.Resources.cadastro3;
             this.btnCadastro.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnCadastro.Location = new System.Drawing.Point(3, 109);
+            this.btnCadastro.Margin = new System.Windows.Forms.Padding(3, 3, 3, 20);
             this.btnCadastro.Name = "btnCadastro";
             this.btnCadastro.Padding = new System.Windows.Forms.Padding(0, 0, 35, 0);
             this.btnCadastro.Size = new System.Drawing.Size(250, 58);
             this.btnCadastro.TabIndex = 4;
             this.btnCadastro.Text = "Cadastrar ";
-            this.btnCadastro.UseVisualStyleBackColor = true;
+            this.btnCadastro.UseVisualStyleBackColor = false;
             this.btnCadastro.Click += new System.EventHandler(this.btnCadastro_Click);
+            this.btnCadastro.MouseEnter += new System.EventHandler(this.btncadastro_MouseEnter);
+            this.btnCadastro.MouseLeave += new System.EventHandler(this.btnCadastro_MouseLeave);
+            this.btnCadastro.MouseHover += new System.EventHandler(this.btnCadastro_MouseHover);
+            // 
+            // panel2
+            // 
+            this.panel2.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.panel2.Controls.Add(this.button5);
+            this.panel2.Controls.Add(this.button4);
+            this.panel2.Controls.Add(this.btnLista);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel2.Location = new System.Drawing.Point(3, 190);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(250, 480);
+            this.panel2.TabIndex = 3;
             // 
             // button5
             // 
@@ -134,6 +131,8 @@
             this.button5.TabIndex = 8;
             this.button5.Text = "Configurações";
             this.button5.UseVisualStyleBackColor = false;
+            this.button5.MouseEnter += new System.EventHandler(this.btncadastro_MouseEnter);
+            this.button5.MouseLeave += new System.EventHandler(this.btnCadastro_MouseLeave);
             // 
             // button4
             // 
@@ -152,6 +151,8 @@
             this.button4.TabIndex = 7;
             this.button4.Text = "Verificação";
             this.button4.UseVisualStyleBackColor = false;
+            this.button4.MouseEnter += new System.EventHandler(this.btncadastro_MouseEnter);
+            this.button4.MouseLeave += new System.EventHandler(this.btnCadastro_MouseLeave);
             // 
             // btnLista
             // 
@@ -170,6 +171,8 @@
             this.btnLista.TabIndex = 5;
             this.btnLista.Text = "Lista";
             this.btnLista.UseVisualStyleBackColor = false;
+            this.btnLista.MouseEnter += new System.EventHandler(this.btncadastro_MouseEnter);
+            this.btnLista.MouseLeave += new System.EventHandler(this.btnCadastro_MouseLeave);
             // 
             // button1
             // 
@@ -181,13 +184,22 @@
             this.button1.ForeColor = System.Drawing.Color.DeepSkyBlue;
             this.button1.Image = global::TCCControleDeAcesso.Properties.Resources.sair;
             this.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button1.Location = new System.Drawing.Point(3, 659);
+            this.button1.Location = new System.Drawing.Point(3, 676);
             this.button1.Name = "button1";
             this.button1.Padding = new System.Windows.Forms.Padding(0, 0, 88, 0);
             this.button1.Size = new System.Drawing.Size(250, 138);
             this.button1.TabIndex = 9;
             this.button1.Text = "Sair";
             this.button1.UseVisualStyleBackColor = false;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::TCCControleDeAcesso.Properties.Resources.hiust;
+            this.pictureBox1.Location = new System.Drawing.Point(379, 95);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(181, 182);
+            this.pictureBox1.TabIndex = 4;
+            this.pictureBox1.TabStop = false;
             // 
             // frmVerificacao
             // 
@@ -201,9 +213,9 @@
             this.Load += new System.EventHandler(this.frmVerificacao_Load);
             this.flowLayoutPanel1.ResumeLayout(false);
             this.panelLogo.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.ResumeLayout(false);
 
         }

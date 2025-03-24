@@ -14,7 +14,8 @@ namespace TCCControleDeAcesso.Views
     {
         public frmVerificacao()
         {
-            InitializeComponent();
+            InitializeComponent();        
+            
         }
 
         private void frmVerificacao_Load(object sender, EventArgs e)
@@ -29,13 +30,23 @@ namespace TCCControleDeAcesso.Views
 
         private void btncadastro_MouseEnter(object sender, EventArgs e)
         {
-            btnCadastro.BackColor = Color.Red; // Define a cor de fundo como cinza
+            Button btn = sender as Button;
+            btn.FlatStyle = FlatStyle.Flat;
+            btn.FlatAppearance.MouseOverBackColor = Color.White;
         }
 
         private void btnCadastro_MouseLeave(object sender, EventArgs e)
         {
-            btnCadastro.BackColor = SystemColors.Control; // Retorna à cor padrão do sistema
+            Button btn = sender as Button;
+            btn.FlatStyle = FlatStyle.Flat;
+            btn.FlatAppearance.MouseOverBackColor = Color.White;
         }
 
+        private void btnCadastro_MouseHover(object sender, EventArgs e)
+        {
+            Button btn = sender as Button;
+            btn.FlatStyle = FlatStyle.Flat;
+            btn.FlatAppearance.MouseOverBackColor = Color.White;
+        }
     }
 }
