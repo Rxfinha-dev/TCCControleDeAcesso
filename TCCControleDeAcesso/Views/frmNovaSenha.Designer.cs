@@ -77,7 +77,7 @@
             // btnVerify
             // 
             this.btnVerify.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnVerify.Location = new System.Drawing.Point(459, 318);
+            this.btnVerify.Location = new System.Drawing.Point(459, 314);
             this.btnVerify.Name = "btnVerify";
             this.btnVerify.Size = new System.Drawing.Size(181, 43);
             this.btnVerify.TabIndex = 15;
