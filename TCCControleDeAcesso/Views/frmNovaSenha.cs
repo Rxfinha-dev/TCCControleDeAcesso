@@ -2,13 +2,14 @@
 using System.Net;
 using System.Net.Mail;
 using System.Windows.Forms;
-using Org.BouncyCastle.Crypto.Macs;
-
 
 namespace TCCControleDeAcesso.Views
 {
     public partial class frmNovaSenha : Form
     {
+
+        String randomCode;
+        public static String to ;
         public frmNovaSenha()
         {
             InitializeComponent();
@@ -16,51 +17,53 @@ namespace TCCControleDeAcesso.Views
 
         private void btnEnviarEmail_Click(object sender, EventArgs e)
         {
-            //Evitando o click mais de uma vez
-            btnEnviarEmail.Enabled = false;
-            //Auto-Explicativo ne 
-            string EmailDestinatario = txtEmailDestinatario.Text;
-            //Assunto(Tenho que ver uma maneira de fazer essa parte ficar oculta e preenche-la automaticamente)
-            string EmailAssunto = txtEmailAssunto.Text;
-            //Mensagem
-            string EmailMensagem = txtEmailMensagem.Text;
-            //
-            MailMessage mail = new MailMessage();
+            String from, pass, messageBody;
+            Random rand = new Random();
+            randomCode = (rand.Next(999999)).ToString();
+            MailMessage message = new MailMessage();                    //txtEmail do cara = meu txtEmailDestinatario
+            from = "brunootaviocostadefreitas@gmail.com"; //Email do remetente
+            pass = "balv ggpf cjta uqut"; //Senha do remetente
+            messageBody = "Seu código de verificação é: " + randomCode;
+            to = txtEmailDestinatario.Text; // Obtendo o e-mail do destinatário
+            message.To.Add(to);
+            to = txtEmailDestinatario.Text; // Obtendo o e-mail do destinatário
+            message.To.Add(to);
+            message.From = new MailAddress(from);
+            message.Body = messageBody;
+            message.Subject = "Recuperação de Senha";
+            SmtpClient smtp = new SmtpClient("smtp.gmail.com");
+            smtp.EnableSsl = true;
+            smtp.Port = 587;
+            smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+            smtp.Credentials = new NetworkCredential(from, pass);
 
-            mail.From = new MailAddress("Carlosandregamer2000@gmail.com");//De onde vai sair o email
+            try
+            { 
+                smtp.Send(message);
+                MessageBox.Show("Código de verificação enviado com sucesso!");
 
-            mail.To.Add(EmailDestinatario);//Para onde vai chegar o Email
-
-            mail.Body = EmailMensagem; //Mensagem
-
-            using (var smtp = new SmtpClient("smtp.gmail.com", 587))
-
-            {
-                smtp.UseDefaultCredentials = false;
-                smtp.EnableSsl = true;
-                smtp.Credentials = new NetworkCredential("Carlosandregamer2000@gmail.com", "carl0sandr5");//se der erro exclui a parte da senha 
-
-                try // Tentando realizar o envio do email  
-                {
-                    smtp.Send(mail);
-
-                    MessageBox.Show("E-mail enviado!");
-
-                    txtEmailDestinatario.Text = string.Empty;
-                    txtEmailAssunto.Text = string.Empty;
-                    txtEmailMensagem.Text = string.Empty;
-                    btnEnviarEmail.Enabled = true;
-                }
-
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, ("Falha ao enviar o E-mail"));
-
-
-                }
             }
 
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
 
+
+
+        private void btnVerify_Click(object sender, EventArgs e)
+        {
+            
+                if (randomCode == (txtCodeVerify.Text).ToString())  
+                {
+                    to = txtEmailDestinatario.Text;
+                    frmTrocandoSenha rp = new frmTrocandoSenha();
+                    this.Hide();
+                    rp.Show();
+
+                }
+            
 
         }
     }

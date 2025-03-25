@@ -125,6 +125,12 @@
     <Compile Include="Views\frmMainMenu.Designer.cs">
       <DependentUpon>frmMainMenu.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\frmTrocandoSenha.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\frmTrocandoSenha.Designer.cs">
+      <DependentUpon>frmTrocandoSenha.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\frmVerificacao.cs">
       <SubType>Form</SubType>
     </Compile>
