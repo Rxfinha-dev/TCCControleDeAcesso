@@ -125,6 +125,18 @@
     <Compile Include="Views\frmMainMenu.Designer.cs">
       <DependentUpon>frmMainMenu.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\frmtesteErroCodigo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\frmtesteErroCodigo.Designer.cs">
+      <DependentUpon>frmtesteErroCodigo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\frmTrocandoSenha.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\frmTrocandoSenha.Designer.cs">
+      <DependentUpon>frmTrocandoSenha.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\frmVerificacao.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -165,6 +177,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\frmMainMenu.resx">
       <DependentUpon>frmMainMenu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\frmtesteErroCodigo.resx">
+      <DependentUpon>frmtesteErroCodigo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\frmVerificacao.resx">
       <DependentUpon>frmVerificacao.cs</DependentUpon>

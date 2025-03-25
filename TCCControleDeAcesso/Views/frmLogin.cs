@@ -15,8 +15,9 @@ namespace TCCControleDeAcesso.Views
     public partial class frmLogin : Form
     {
         Login _login;
-      
-       
+
+
+
         public frmLogin()
         {
             InitializeComponent();
