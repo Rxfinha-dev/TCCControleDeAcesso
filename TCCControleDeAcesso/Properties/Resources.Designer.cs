@@ -173,6 +173,26 @@ namespace TCCControleDeAcesso.Properties {
         /// <summary>
         ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Design_sem_nome5 {
+            get {
+                object obj = ResourceManager.GetObject("Design sem nome5", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Design_sem_nome6 {
+            get {
+                object obj = ResourceManager.GetObject("Design sem nome6", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap entradas {
             get {
                 object obj = ResourceManager.GetObject("entradas", resourceCulture);
@@ -226,6 +246,16 @@ namespace TCCControleDeAcesso.Properties {
         internal static System.Drawing.Bitmap lista {
             get {
                 object obj = ResourceManager.GetObject("lista", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Logo_FAG {
+            get {
+                object obj = ResourceManager.GetObject("Logo FAG", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
