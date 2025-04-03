@@ -238,6 +238,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ILLink\ILLink.Descriptors.LibraryBuild.xml" />
+    <None Include="Resources\Design sem nome %282%29.png" />
+    <None Include="Resources\Texto do seu parágrafo %285%29.png" />
+    <None Include="Resources\Design sem nome %281%29.png" />
+    <None Include="Resources\Texto do seu parágrafo %284%29.png" />
+    <None Include="Resources\Design sem nome5.png" />
+    <None Include="Resources\Logo.png" />
     <None Include="Resources\Design sem nome4.png" />
     <None Include="Resources\Design sem nome3.png" />
     <None Include="Resources\Design sem nome2.png" />
