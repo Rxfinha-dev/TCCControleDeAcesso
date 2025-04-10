@@ -8,5 +8,6 @@ namespace TCCControleDeAcesso.Controllers
 {
     internal class NovaSenha
     {
+
     }
 }

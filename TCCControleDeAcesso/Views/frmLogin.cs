@@ -60,7 +60,7 @@ namespace TCCControleDeAcesso.Views
 
         private void button5_Click(object sender, EventArgs e)
         {
-            frmNovaSenha form =  new frmNovaSenha();
+            frmTrocandoSenha form =  new frmTrocandoSenha();//IMPORTANTE---------------depois altere isso de volta para o "frmNovaSenha"
             form.Show();
             Hide();
 
