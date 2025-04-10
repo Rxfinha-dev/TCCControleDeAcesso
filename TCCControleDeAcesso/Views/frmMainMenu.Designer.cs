@@ -31,16 +31,19 @@
             this.btnLogout = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.btnNewRegister = new System.Windows.Forms.Button();
-            this.btnRegister = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
+            this.button4 = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // btnLogout
             // 
             this.btnLogout.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.btnLogout.Font = new System.Drawing.Font("Segoe UI", 13.25F);
-            this.btnLogout.Location = new System.Drawing.Point(359, 424);
+            this.btnLogout.Location = new System.Drawing.Point(56, 539);
             this.btnLogout.Name = "btnLogout";
             this.btnLogout.Size = new System.Drawing.Size(117, 52);
             this.btnLogout.TabIndex = 25;
@@ -53,7 +56,7 @@
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.Color.Blue;
-            this.label2.Location = new System.Drawing.Point(394, 507);
+            this.label2.Location = new System.Drawing.Point(86, 9);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(109, 20);
             this.label2.TabIndex = 24;
@@ -63,60 +66,82 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(327, 506);
+            this.label1.Location = new System.Drawing.Point(17, 9);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(77, 21);
             this.label1.TabIndex = 23;
             this.label1.Text = "Usuário: ";
             // 
-            // btnNewRegister
+            // button1
             // 
-            this.btnNewRegister.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.btnNewRegister.Font = new System.Drawing.Font("Segoe UI", 13.25F);
-            this.btnNewRegister.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnNewRegister.Location = new System.Drawing.Point(308, 325);
-            this.btnNewRegister.Name = "btnNewRegister";
-            this.btnNewRegister.Size = new System.Drawing.Size(223, 75);
-            this.btnNewRegister.TabIndex = 22;
-            this.btnNewRegister.Text = "Novo cadastro";
-            this.btnNewRegister.UseVisualStyleBackColor = false;
+            this.button1.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.button1.Font = new System.Drawing.Font("Segoe UI", 13.25F);
+            this.button1.Location = new System.Drawing.Point(0, 246);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(223, 75);
+            this.button1.TabIndex = 26;
+            this.button1.Text = "Configurações";
+            this.button1.UseVisualStyleBackColor = false;
             // 
-            // btnRegister
+            // button2
             // 
-            this.btnRegister.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.btnRegister.Font = new System.Drawing.Font("Segoe UI", 13.25F);
-            this.btnRegister.Location = new System.Drawing.Point(308, 223);
-            this.btnRegister.Name = "btnRegister";
-            this.btnRegister.Size = new System.Drawing.Size(223, 75);
-            this.btnRegister.TabIndex = 21;
-            this.btnRegister.Text = "Gerenciar cadastros";
-            this.btnRegister.UseVisualStyleBackColor = false;
+            this.button2.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.button2.Font = new System.Drawing.Font("Segoe UI", 13.25F);
+            this.button2.Location = new System.Drawing.Point(0, 175);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(223, 75);
+            this.button2.TabIndex = 27;
+            this.button2.Text = "Verificacão";
+            this.button2.UseVisualStyleBackColor = false;
             // 
             // button3
             // 
-            this.button3.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.button3.Font = new System.Drawing.Font("Microsoft Sans Serif", 69F, System.Drawing.FontStyle.Bold);
-            this.button3.ForeColor = System.Drawing.SystemColors.InfoText;
-            this.button3.Location = new System.Drawing.Point(246, 38);
+            this.button3.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.button3.Font = new System.Drawing.Font("Segoe UI", 13.25F);
+            this.button3.Location = new System.Drawing.Point(0, 104);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(349, 126);
-            this.button3.TabIndex = 20;
-            this.button3.Text = "LOGO";
+            this.button3.Size = new System.Drawing.Size(223, 75);
+            this.button3.TabIndex = 28;
+            this.button3.Text = "Cadastrar Alunos";
             this.button3.UseVisualStyleBackColor = false;
+            // 
+            // button4
+            // 
+            this.button4.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.button4.Font = new System.Drawing.Font("Segoe UI", 13.25F);
+            this.button4.Location = new System.Drawing.Point(0, 33);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(223, 75);
+            this.button4.TabIndex = 29;
+            this.button4.Text = "Visualizar Alunos";
+            this.button4.UseVisualStyleBackColor = false;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::TCCControleDeAcesso.Properties.Resources.Logo;
+            this.pictureBox1.Location = new System.Drawing.Point(339, 104);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(412, 384);
+            this.pictureBox1.TabIndex = 30;
+            this.pictureBox1.TabStop = false;
             // 
             // frmMainMenu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.ClientSize = new System.Drawing.Size(835, 603);
+            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.button4);
+            this.Controls.Add(this.button3);
+            this.Controls.Add(this.button2);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.btnLogout);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.btnNewRegister);
-            this.Controls.Add(this.btnRegister);
-            this.Controls.Add(this.button3);
             this.Name = "frmMainMenu";
             this.Text = "frmMainMenu";
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -127,8 +152,10 @@
         private System.Windows.Forms.Button btnLogout;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button btnNewRegister;
-        private System.Windows.Forms.Button btnRegister;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }

@@ -232,6 +232,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ILLink\ILLink.Descriptors.LibraryBuild.xml" />
+    <None Include="Resources\Logo.png" />
+    <None Include="Resources\UserIP.png" />
+    <None Include="Resources\Texto do seu parágrafo1.png" />
+    <None Include="Resources\Texto do seu parágrafo.png" />
+    <None Include="Resources\LOGOPF.png" />
+    <None Include="Resources\FAInicialPage.png" />
     <None Include="Resources\Design sem nome6.png" />
     <None Include="Resources\Design sem nome5.png" />
     <None Include="Resources\Logo FAG.png" />
