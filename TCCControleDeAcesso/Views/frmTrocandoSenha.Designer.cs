@@ -28,12 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.txtNovaSenha = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.txtNovaSenha2 = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.btnAlterarSenha = new System.Windows.Forms.Button();
             this.chkBoxMostrarSenha = new System.Windows.Forms.CheckBox();
+            this.guna2AnimateWindow1 = new Guna.UI2.WinForms.Guna2AnimateWindow(this.components);
             this.SuspendLayout();
             // 
             // txtNovaSenha
@@ -76,6 +78,7 @@
             this.btnAlterarSenha.TabIndex = 6;
             this.btnAlterarSenha.Text = "Alterar Senha";
             this.btnAlterarSenha.UseVisualStyleBackColor = true;
+            this.btnAlterarSenha.Click += new System.EventHandler(this.btnAlterarSenha_Click);
             // 
             // chkBoxMostrarSenha
             // 
@@ -86,6 +89,7 @@
             this.chkBoxMostrarSenha.TabIndex = 7;
             this.chkBoxMostrarSenha.Text = "Mostrar Senha";
             this.chkBoxMostrarSenha.UseVisualStyleBackColor = true;
+            this.chkBoxMostrarSenha.CheckedChanged += new System.EventHandler(this.chkBoxMostrarSenha_CheckedChanged);
             // 
             // frmTrocandoSenha
             // 
@@ -100,6 +104,7 @@
             this.Controls.Add(this.label2);
             this.Name = "frmTrocandoSenha";
             this.Text = "frmTrocandoSenha";
+            this.Load += new System.EventHandler(this.frmTrocandoSenha_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -112,5 +117,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button btnAlterarSenha;
         private System.Windows.Forms.CheckBox chkBoxMostrarSenha;
+        private Guna.UI2.WinForms.Guna2AnimateWindow guna2AnimateWindow1;
     }
 }
