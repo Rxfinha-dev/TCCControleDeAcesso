@@ -8,15 +8,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using TCCControleDeAcesso.Controllers;
 using TCCControleDeAcesso.Models;
 
 namespace TCCControleDeAcesso.Views
 {
     public partial class frmTrocandoSenha: Form
     {
-        public frmTrocandoSenha()
+        NovaSenha ns = new NovaSenha();
+
+       public string EmailCadastrado;
+        public frmTrocandoSenha(string email)
         {
             InitializeComponent();
+            EmailCadastrado = email;
+
+            
+            
         }
 
         private void chkBoxMostrarSenha_CheckedChanged(object sender, EventArgs e)
@@ -37,17 +45,23 @@ namespace TCCControleDeAcesso.Views
         {
             txtNovaSenha.PasswordChar = '*';
             txtNovaSenha2.PasswordChar = '*';
+           
+            
         }
 
         private void btnAlterarSenha_Click(object sender, EventArgs e)
         {
             if (txtNovaSenha.Text == txtNovaSenha2.Text)
             {
-
+                ns = new NovaSenha()
+                {
+                    senha = txtNovaSenha.Text,
+                    email = EmailCadastrado
+                };
+                ns.ChangePasswod();
 
                 MessageBox.Show("Senha alterada com sucesso!");
-                Banco.OpenConnection();               ///=================ESTAMOS AQUI TENTANDO REALIZAR UM UPDATE NO BANCO ATUALIZANDO A NOVA SENHA==================                  
-                SqlConnection sqlConnection = new SqlConnection();
+                
             }
             else
             {
