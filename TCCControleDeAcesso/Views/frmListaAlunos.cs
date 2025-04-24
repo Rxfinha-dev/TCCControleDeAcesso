@@ -12,12 +12,22 @@ namespace TCCControleDeAcesso.Views
 {
     public partial class frmListaAlunos : Form
     {
-        public frmListaAlunos()
+        public frmListaAlunos(object value)
         {
             InitializeComponent();
         }
 
         private void frmListaAlunos_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox4_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
         {
 
         }
