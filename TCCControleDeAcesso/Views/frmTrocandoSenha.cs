@@ -60,13 +60,19 @@ namespace TCCControleDeAcesso.Views
                 };
                 ns.ChangePasswod();
 
-                MessageBox.Show("Senha alterada com sucesso!");
-                
+                MessageBox.Show("Senha alterada com sucesso!"," ", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                this.Close();
+                frmLogin loginForm = new frmLogin();
+                loginForm.Show();
+
             }
             else
             {
-                MessageBox.Show("As senhas não coincidem! ");
+
+                MessageBox.Show("As senhas inseridas não coincidem!", " ", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
             }
+
         }
     }
 }

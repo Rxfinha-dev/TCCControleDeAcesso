@@ -49,7 +49,7 @@ namespace TCCControleDeAcesso.Views
                     randomCode = (rand.Next(999999)).ToString();
                     MailMessage message = new MailMessage();                    //txtEmail do cara = meu txtEmailDestinatario
                     from = "suportehelpus@gmail.com"; //Email do remetente
-                    pass = "vwec abnc veyc jvns"; //Senha do remetente
+                    pass = "vwec abnc veyc jvns"; //Senha de App
                     messageBody = "Seu código de verificação é: " + randomCode;
                     to = txtEmailDestinatario.Text; // Obtendo o e-mail do destinatário
                     message.To.Add(to);
@@ -109,7 +109,7 @@ namespace TCCControleDeAcesso.Views
             }
            else
             {
-                MessageBox.Show("Código de verificação inválido, tente novamente.");
+                MessageBox.Show("Código de verificação inválido, tente novamente.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }
