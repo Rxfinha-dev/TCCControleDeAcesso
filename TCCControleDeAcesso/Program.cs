@@ -20,7 +20,7 @@ namespace TCCControleDeAcesso
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Views.frmListaAlunos(null));
-
+            //Cara, tem que nao permitir definir a senha nova igual a antiga!!!!!!!!!!!!!!!!!!!!!!!
         }
     }
 }

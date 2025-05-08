@@ -60,9 +60,9 @@
             this.label7.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label7.Location = new System.Drawing.Point(1305, 506);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(59, 22);
+            this.label7.Size = new System.Drawing.Size(65, 22);
             this.label7.TabIndex = 37;
-            this.label7.Text = "Email:";
+            this.label7.Text = "Nome:";
             // 
             // txtLogin
             // 
