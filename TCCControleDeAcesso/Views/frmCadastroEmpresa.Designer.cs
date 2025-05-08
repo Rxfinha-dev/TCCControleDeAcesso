@@ -37,14 +37,15 @@
             this.txtSenha = new System.Windows.Forms.TextBox();
             this.txtEmail = new System.Windows.Forms.TextBox();
             this.txtNome = new System.Windows.Forms.TextBox();
-            this.button3 = new System.Windows.Forms.Button();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
             // 
             // label6
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(267, 286);
+            this.label6.Location = new System.Drawing.Point(798, 421);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(54, 22);
             this.label6.TabIndex = 41;
@@ -54,7 +55,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(267, 345);
+            this.label5.Location = new System.Drawing.Point(798, 480);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(63, 22);
             this.label5.TabIndex = 40;
@@ -64,7 +65,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(268, 399);
+            this.label1.Location = new System.Drawing.Point(799, 534);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(150, 22);
             this.label1.TabIndex = 39;
@@ -74,7 +75,7 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(267, 226);
+            this.label7.Location = new System.Drawing.Point(798, 361);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(151, 22);
             this.label7.TabIndex = 38;
@@ -84,7 +85,7 @@
             // 
             this.btnCadastrar.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.btnCadastrar.Font = new System.Drawing.Font("Segoe UI", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCadastrar.Location = new System.Drawing.Point(359, 463);
+            this.btnCadastrar.Location = new System.Drawing.Point(890, 598);
             this.btnCadastrar.Name = "btnCadastrar";
             this.btnCadastrar.Size = new System.Drawing.Size(167, 52);
             this.btnCadastrar.TabIndex = 37;
@@ -94,49 +95,49 @@
             // 
             // txtConfirmarSenha
             // 
-            this.txtConfirmarSenha.Location = new System.Drawing.Point(269, 424);
+            this.txtConfirmarSenha.Location = new System.Drawing.Point(800, 559);
             this.txtConfirmarSenha.Name = "txtConfirmarSenha";
             this.txtConfirmarSenha.Size = new System.Drawing.Size(349, 20);
             this.txtConfirmarSenha.TabIndex = 36;
             // 
             // txtSenha
             // 
-            this.txtSenha.Location = new System.Drawing.Point(269, 370);
+            this.txtSenha.Location = new System.Drawing.Point(800, 505);
             this.txtSenha.Name = "txtSenha";
             this.txtSenha.Size = new System.Drawing.Size(349, 20);
             this.txtSenha.TabIndex = 35;
             // 
             // txtEmail
             // 
-            this.txtEmail.Location = new System.Drawing.Point(269, 311);
+            this.txtEmail.Location = new System.Drawing.Point(800, 446);
             this.txtEmail.Name = "txtEmail";
             this.txtEmail.Size = new System.Drawing.Size(349, 20);
             this.txtEmail.TabIndex = 34;
             // 
             // txtNome
             // 
-            this.txtNome.Location = new System.Drawing.Point(269, 253);
+            this.txtNome.Location = new System.Drawing.Point(800, 388);
             this.txtNome.Name = "txtNome";
             this.txtNome.Size = new System.Drawing.Size(349, 20);
             this.txtNome.TabIndex = 33;
             // 
-            // button3
+            // pictureBox2
             // 
-            this.button3.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.button3.Font = new System.Drawing.Font("Microsoft Sans Serif", 69F, System.Drawing.FontStyle.Bold);
-            this.button3.ForeColor = System.Drawing.SystemColors.InfoText;
-            this.button3.Location = new System.Drawing.Point(269, 69);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(349, 126);
-            this.button3.TabIndex = 32;
-            this.button3.Text = "LOGO";
-            this.button3.UseVisualStyleBackColor = false;
+            this.pictureBox2.Image = global::TCCControleDeAcesso.Properties.Resources.Texto_do_seu_parágrafo1;
+            this.pictureBox2.Location = new System.Drawing.Point(646, -190);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(610, 442);
+            this.pictureBox2.TabIndex = 46;
+            this.pictureBox2.TabStop = false;
             // 
             // frmCadastroEmpresa
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(883, 638);
+            this.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.BackgroundImage = global::TCCControleDeAcesso.Properties.Resources.Design_sem_nome__6_;
+            this.ClientSize = new System.Drawing.Size(1793, 931);
+            this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label1);
@@ -146,9 +147,9 @@
             this.Controls.Add(this.txtSenha);
             this.Controls.Add(this.txtEmail);
             this.Controls.Add(this.txtNome);
-            this.Controls.Add(this.button3);
             this.Name = "frmCadastroEmpresa";
             this.Text = "CadastroEmpresa";
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -165,6 +166,6 @@
         private System.Windows.Forms.TextBox txtSenha;
         private System.Windows.Forms.TextBox txtEmail;
         private System.Windows.Forms.TextBox txtNome;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.PictureBox pictureBox2;
     }
 }

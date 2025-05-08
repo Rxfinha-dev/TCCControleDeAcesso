@@ -31,6 +31,11 @@ namespace TCCControleDeAcesso.Views
         {
 
         }
+
+        private void dataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
     }
 
     //socortroi

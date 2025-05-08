@@ -232,6 +232,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ILLink\ILLink.Descriptors.LibraryBuild.xml" />
+    <None Include="Resources\Design sem nome %286%29.png" />
+    <None Include="Resources\Logo FB1.png" />
+    <None Include="Resources\Logo FB.png" />
+    <None Include="Resources\Design sem nome %285%29.png" />
+    <None Include="Resources\Design sem nome %283%291.png" />
+    <None Include="Resources\Design sem nome %283%29.png" />
     <None Include="Resources\Design sem nome %282%29.png" />
     <None Include="Resources\Design sem nome %281%291.png" />
     <None Include="Resources\Design sem nome %281%29.png" />
