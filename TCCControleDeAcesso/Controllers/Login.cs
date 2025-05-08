@@ -76,7 +76,8 @@ namespace TCCControleDeAcesso.Controllers
 
                  
                     frmMainMenu check = new frmMainMenu(nome);
-                    check.Show();
+                    frmListaAlunos frm = new frmListaAlunos(id);
+                    frm.Show();
 
                   
 

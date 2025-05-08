@@ -23,7 +23,7 @@ namespace TCCControleDeAcesso.Models
         {
             try
             {
-                Connection = new MySqlConnection("server=localhost;port=3307;uid=root;pwd=etecjau;database=AccessControl;");
+                Connection = new MySqlConnection("server=localhost;port=3306;uid=root;pwd=etecjau;database=AccessControl;");
 
 
 
@@ -87,10 +87,11 @@ namespace TCCControleDeAcesso.Models
                     "(id integer auto_increment primary key," +
                     "nome varchar(50)," +
                     "rm varchar(8)," +
+                    "idade char(3)," +
                     "idCurso int," +
                     "idEscola int," +
-                    "serie char(1)," +
-                    "foto blob, " +
+                    "serie char(7)," +
+                    "foto longblob, " +
                     "digital blob," +
                     "foreign key (idEscola) references escolas (id)," +
                     "foreign key (idCurso) references cursos (id))", Connection);

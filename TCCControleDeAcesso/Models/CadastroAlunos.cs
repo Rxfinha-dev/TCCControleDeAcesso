@@ -18,12 +18,13 @@ namespace TCCControleDeAcesso.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public string rm { get; set; }   
-        public int serie { get; set; }
+        public string serie { get; set; }
+        public string idade { get; set; }
 
         public int idEscola { get; set; }
         
         public int idCurso { get; set; }
-        public UInt16 foto { get; set; }
+        public byte[] foto { get; set; }
         public UInt16 digital { get; set; }
 
         
@@ -40,16 +41,17 @@ namespace TCCControleDeAcesso.Models
             {
                 Banco.OpenConnection();
 
-                Banco.Command = new MySqlCommand("insert into Alunos(id, nome, rm, serie, idEscola, idCurso, foto, digital) " +
-                    "values(@id, @nome, @rm, @serie, @idEscola, @idCurso, @foto, @digital)", Banco.Connection);
+                Banco.Command = new MySqlCommand("insert into Alunos(id, nome, rm,idade, serie, foto) " +
+                    "values(@id, @nome, @rm, @idade, @serie, @foto)", Banco.Connection);
                 Banco.Command.Parameters.AddWithValue("@id", Id);
                 Banco.Command.Parameters.AddWithValue("@nome", Name);
                 Banco.Command.Parameters.AddWithValue("@rm", rm);
+                Banco.Command.Parameters.AddWithValue("@idade", idade);
                 Banco.Command.Parameters.AddWithValue("@serie", serie);
-                Banco.Command.Parameters.AddWithValue("@idEscola",idEscola);
-                Banco.Command.Parameters.AddWithValue("@idCurso", idCurso);
-                Banco.Command.Parameters.AddWithValue("@foto", foto);
-                Banco.Command.Parameters.AddWithValue("@digital", digital);
+                //Banco.Command.Parameters.AddWithValue("@idEscola",idEscola);
+                //Banco.Command.Parameters.AddWithValue("@Curso", idCurso);
+                Banco.Command.Parameters.Add("@foto", MySqlDbType.LongBlob).Value = foto;
+                //Banco.Command.Parameters.AddWithValue("@digital", digital);
                 Banco.Command.ExecuteNonQuery();
 
 
