@@ -110,6 +110,7 @@ namespace TCCControleDeAcesso.Views
            else
             {
                 MessageBox.Show("Código de verificação inválido, tente novamente.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtCodeVerify.Text = "";
             }
         }
     }

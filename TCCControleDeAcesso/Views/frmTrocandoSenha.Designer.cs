@@ -35,7 +35,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.btnAlterarSenha = new System.Windows.Forms.Button();
             this.chkBoxMostrarSenha = new System.Windows.Forms.CheckBox();
-            this.guna2AnimateWindow1 = new Guna.UI2.WinForms.Guna2AnimateWindow(this.components);
+
             this.SuspendLayout();
             // 
             // txtNovaSenha
