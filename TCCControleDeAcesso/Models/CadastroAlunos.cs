@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 using TCCControleDeAcesso.Controllers;
+using TCCControleDeAcesso.Views;
 
 
 namespace TCCControleDeAcesso.Models
@@ -36,19 +37,20 @@ namespace TCCControleDeAcesso.Models
 
         public void Insert()
         {
+            frmListaAlunos FrmListaAlunos = new frmListaAlunos(0);
 
             try
             {
                 Banco.OpenConnection();
 
-                Banco.Command = new MySqlCommand("insert into Alunos(id, nome, rm,idade, serie, foto) " +
-                    "values(@id, @nome, @rm, @idade, @serie, @foto)", Banco.Connection);
+                Banco.Command = new MySqlCommand("insert into Alunos(id, nome, rm,idade, idEscola, serie, foto) " +
+                    "values(@id, @nome, @rm, @idade,@idEscola, @serie, @foto)", Banco.Connection);
                 Banco.Command.Parameters.AddWithValue("@id", Id);
                 Banco.Command.Parameters.AddWithValue("@nome", Name);
                 Banco.Command.Parameters.AddWithValue("@rm", rm);
                 Banco.Command.Parameters.AddWithValue("@idade", idade);
                 Banco.Command.Parameters.AddWithValue("@serie", serie);
-                //Banco.Command.Parameters.AddWithValue("@idEscola",idEscola);
+                Banco.Command.Parameters.AddWithValue("@idEscola",idEscola);
                 //Banco.Command.Parameters.AddWithValue("@Curso", idCurso);
                 Banco.Command.Parameters.Add("@foto", MySqlDbType.LongBlob).Value = foto;
                 //Banco.Command.Parameters.AddWithValue("@digital", digital);
@@ -106,20 +108,23 @@ namespace TCCControleDeAcesso.Models
             }
         }
 
-        public void ListStudents()
+        public DataTable ListStudents()
         {
             try
             {
                 Banco.OpenConnection();
-                Banco.DataAdapter = new MySqlDataAdapter("select a.id, a.nome, a.rm , a.serie, a.foto, a.digital from Alunos a inner join escolas on a.idEscola=id where a.id=@idEscola", Banco.Connection);
+                Banco.Command = new MySqlCommand("select id, nome, rm,idade, serie from Alunos where idEscola=@idEscola", Banco.Connection);
                 Banco.Command.Parameters.AddWithValue("@idEscola", idEscola);
+                Banco.DataAdapter = new MySqlDataAdapter(Banco.Command);
                 Banco.datTable = new DataTable();
                 Banco.DataAdapter.Fill(Banco.datTable);
                 Banco.CloseConnection();
+                return Banco.datTable;
             }
             catch (Exception e)
             {
                 MessageBox.Show(e.Message, "Erro Ao Listar Dados!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
             }
         }
     }

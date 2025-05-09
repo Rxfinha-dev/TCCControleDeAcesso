@@ -15,14 +15,17 @@ namespace TCCControleDeAcesso.Views
     public partial class frmMainMenu : Form
     {
 
- 
-       
+
+
+        public int id_escola;
 
         
-        public frmMainMenu(string currentUsername)
+        public frmMainMenu(string currentUsername, int idEscola)
         {
             InitializeComponent();
             label2.Text = currentUsername;
+            id_escola = idEscola;
+
 
            
         }
@@ -30,6 +33,13 @@ namespace TCCControleDeAcesso.Views
         private void btnLogout_Click(object sender, EventArgs e)
         {
             frmLogin check = new frmLogin();         
+            check.Show();
+            Hide();
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            frmListaAlunos check = new frmListaAlunos(id_escola);
             check.Show();
             Hide();
         }

@@ -25,27 +25,23 @@ namespace TCCControleDeAcesso.Controllers
         {
             try
             {
-
                 Banco.OpenConnection();
 
-
-                Banco.Command = new MySqlCommand("SELECT id FROM escolas WHERE nome=@nome AND senha=@senha", Banco.Connection);
-
-
+                Banco.Command = new MySqlCommand("select id from escolas where nome=@nome", Banco.Connection);
                 Banco.Command.Parameters.AddWithValue("@nome", nome);
-                Banco.Command.Parameters.AddWithValue("@senha", senha);
 
-
-                idEscola = Convert.ToInt32(Banco.Command.ExecuteScalar());
+                using (MySqlDataReader reader = Banco.Command.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        idEscola = reader.GetInt32("id");
+                    }
+                }
 
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                MessageBox.Show(e.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                Banco.CloseConnection();
+                MessageBox.Show(ex.Message, "Erro ao guardar o id", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -71,13 +67,10 @@ namespace TCCControleDeAcesso.Controllers
 
                 if (count > 0)
                 {
-                    MessageBox.Show("Login realizado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     LoginPermissions();
-
-                 
-                    frmMainMenu check = new frmMainMenu(nome);
-                    frmListaAlunos frm = new frmListaAlunos(id);
-                    frm.Show();
+                    MessageBox.Show("Login realizado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);          
+                    frmMainMenu check = new frmMainMenu(nome, idEscola);                  
+                    check.Show();
 
                   
 

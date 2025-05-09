@@ -35,7 +35,7 @@ namespace TCCControleDeAcesso.Views
 
             };
 
-            frmMainMenu mainMenu = new frmMainMenu(txtLogin.Text);
+            //frmMainMenu mainMenu = new frmMainMenu(txtLogin.Text,);
            _login.SignIn();
 
             txtLogin.Clear();
