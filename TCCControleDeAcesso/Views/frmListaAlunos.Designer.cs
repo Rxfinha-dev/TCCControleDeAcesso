@@ -45,6 +45,8 @@
             this.dgvAlunos = new System.Windows.Forms.DataGridView();
             this.linkSelectPhoto = new System.Windows.Forms.LinkLabel();
             this.ofd = new System.Windows.Forms.OpenFileDialog();
+            this.txtId = new System.Windows.Forms.TextBox();
+            this.txtIdOficial = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAlunos)).BeginInit();
             this.SuspendLayout();
@@ -134,11 +136,11 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBox1.Location = new System.Drawing.Point(1082, 174);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(158, 182);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 53;
             this.pictureBox1.TabStop = false;
             // 
@@ -184,6 +186,7 @@
             this.BtnDelete.TabIndex = 56;
             this.BtnDelete.Text = "EXCLUIR";
             this.BtnDelete.UseVisualStyleBackColor = false;
+            this.BtnDelete.Click += new System.EventHandler(this.BtnDelete_Click);
             // 
             // txtIdade
             // 
@@ -210,6 +213,7 @@
             this.dgvAlunos.Name = "dgvAlunos";
             this.dgvAlunos.Size = new System.Drawing.Size(925, 449);
             this.dgvAlunos.TabIndex = 59;
+            this.dgvAlunos.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvAlunos_CellContentClick);
             // 
             // linkSelectPhoto
             // 
@@ -227,11 +231,31 @@
             // 
             this.ofd.FileName = "Escolha a Foto:";
             // 
+            // txtId
+            // 
+            this.txtId.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtId.Dock = System.Windows.Forms.DockStyle.Top;
+            this.txtId.Location = new System.Drawing.Point(0, 0);
+            this.txtId.Name = "txtId";
+            this.txtId.Size = new System.Drawing.Size(1725, 15);
+            this.txtId.TabIndex = 61;
+            // 
+            // txtIdOficial
+            // 
+            this.txtIdOficial.HideSelection = false;
+            this.txtIdOficial.Location = new System.Drawing.Point(555, 146);
+            this.txtIdOficial.Name = "txtIdOficial";
+            this.txtIdOficial.Size = new System.Drawing.Size(100, 22);
+            this.txtIdOficial.TabIndex = 62;
+            this.txtIdOficial.Visible = false;
+            // 
             // frmListaAlunos
             // 
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.BackgroundImage = global::TCCControleDeAcesso.Properties.Resources.Design_sem_nome__5_;
             this.ClientSize = new System.Drawing.Size(1725, 926);
+            this.Controls.Add(this.txtIdOficial);
+            this.Controls.Add(this.txtId);
             this.Controls.Add(this.linkSelectPhoto);
             this.Controls.Add(this.dgvAlunos);
             this.Controls.Add(this.txtIdade);
@@ -283,5 +307,7 @@
         private System.Windows.Forms.DataGridView dgvAlunos;
         private System.Windows.Forms.LinkLabel linkSelectPhoto;
         private System.Windows.Forms.OpenFileDialog ofd;
+        private System.Windows.Forms.TextBox txtId;
+        private System.Windows.Forms.TextBox txtIdOficial;
     }
 }
