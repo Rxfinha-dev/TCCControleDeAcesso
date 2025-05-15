@@ -100,6 +100,7 @@
             this.txtName.Name = "txtName";
             this.txtName.Size = new System.Drawing.Size(493, 24);
             this.txtName.TabIndex = 47;
+            this.txtName.TextChanged += new System.EventHandler(this.txtName_TextChanged);
             // 
             // txtRm
             // 
@@ -129,7 +130,7 @@
             this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBox1.Location = new System.Drawing.Point(1104, 362);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(158, 182);
+            this.pictureBox1.Size = new System.Drawing.Size(185, 191);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 53;
             this.pictureBox1.TabStop = false;

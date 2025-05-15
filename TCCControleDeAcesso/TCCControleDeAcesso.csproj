@@ -234,6 +234,7 @@
     <Content Include="ILLink\ILLink.Descriptors.LibraryBuild.xml" />
     <None Include="Resources\FundoNovo.png" />
     <None Include="Resources\Design sem nome %286%291.png" />
+    <None Include="Resources\default.png" />
     <None Include="Resources\Design sem nome %286%29.png" />
     <None Include="Resources\Logo FB1.png" />
     <None Include="Resources\Logo FB.png" />

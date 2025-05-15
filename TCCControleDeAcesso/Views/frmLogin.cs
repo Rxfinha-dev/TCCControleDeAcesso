@@ -16,6 +16,7 @@ namespace TCCControleDeAcesso.Views
     {
         Login _login;
 
+       
 
 
         public frmLogin()
@@ -23,7 +24,13 @@ namespace TCCControleDeAcesso.Views
             InitializeComponent();
         }
 
-    
+
+        private void CleanAll()
+        {
+            txtLogin.Clear();
+            txtSenha.Clear();
+            txtLogin.Focus();
+        }
 
         private void btnEntrar_Click(object sender, EventArgs e)
         {
@@ -38,8 +45,7 @@ namespace TCCControleDeAcesso.Views
             //frmMainMenu mainMenu = new frmMainMenu(txtLogin.Text,);
            _login.SignIn();
 
-            txtLogin.Clear();
-            txtSenha.Clear();
+            CleanAll();
 
             if (_login.count > 0) {
                 Hide();
@@ -63,6 +69,11 @@ namespace TCCControleDeAcesso.Views
             frmNovaSenha form =  new frmNovaSenha();//IMPORTANTE---------------depois altere isso de volta para o "frmNovaSenha"
             form.Show();
             Hide();
+
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
 
         }
     }
