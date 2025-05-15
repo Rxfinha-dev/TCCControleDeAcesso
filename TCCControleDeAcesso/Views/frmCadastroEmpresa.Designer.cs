@@ -150,6 +150,7 @@
             this.Controls.Add(this.txtNome);
             this.Name = "frmCadastroEmpresa";
             this.Text = "CadastroEmpresa";
+            this.Load += new System.EventHandler(this.frmCadastroEmpresa_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

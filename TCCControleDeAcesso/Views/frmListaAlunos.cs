@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TCCControleDeAcesso.Models;
+using TCCControleDeAcesso.Properties;
 
 namespace TCCControleDeAcesso.Views
 {
@@ -20,18 +21,31 @@ namespace TCCControleDeAcesso.Views
         public string caminho;
         string idText;
 
+        
         public frmListaAlunos(int idEsc)
         {
             InitializeComponent();
             id_escola = idEsc;
         }
 
+        public void CleanAll()
+        {
+            txtId.Clear();
+            txtName.Clear();
+            txtRm.Clear();
+            txtIdade.Clear();
+            cboCurso.SelectedIndex = -1;
+            comboBox2.SelectedIndex = -1;
+            txtIdOficial.Clear();
+            pictureBox1.Image = null;
+        }
         private void frmListaAlunos_Load(object sender, EventArgs e)
         {
             cadastroAlunos = new CadastroAlunos() {
                 idEscola = id_escola
             };
            dgvAlunos.DataSource = cadastroAlunos.ListStudents();
+            CleanAll();
         }
 
         private void linkSelectPhoto_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -48,7 +62,14 @@ namespace TCCControleDeAcesso.Views
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            if (txtName.Text == string.Empty ||  txtIdade.Text == string.Empty || comboBox2.SelectedIndex == -1) return;
+            if (txtName.Text == string.Empty ||  txtIdade.Text == string.Empty || comboBox2.SelectedIndex == -1 || caminho == null)
+            {
+     
+                MessageBox.Show("Preencha todos os login.", "Erro de Formulário.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+          
             cadastroAlunos = new CadastroAlunos()
             {
                 Name = txtName.Text,
@@ -66,6 +87,7 @@ namespace TCCControleDeAcesso.Views
                 idEscola = id_escola
             };
             dgvAlunos.DataSource = cadastroAlunos.ListStudents();
+            CleanAll();
         }
 
         private void dgvAlunos_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -97,7 +119,7 @@ namespace TCCControleDeAcesso.Views
         }
         private void CarregarImagemDoAluno(string nome)
         {
-            string connectionString = "server=localhost;port=3306;uid=root;pwd=etecjau;database=accesscontrol;"; // Atualize conforme necessário
+            string connectionString = "server=localhost;port=3307;uid=root;pwd=etecjau;database=accesscontrol;"; // Atualize conforme necessário
             string query = "SELECT foto FROM alunos WHERE nome = @nome";
 
             using (MySqlConnection conn = new MySqlConnection(connectionString))
@@ -136,16 +158,33 @@ namespace TCCControleDeAcesso.Views
 
         private void BtnDelete_Click(object sender, EventArgs e)
         {
-            cadastroAlunos = new CadastroAlunos()
+            if (idText == null)
             {
-                Id = int.Parse(idText)
-            };
-            cadastroAlunos.Delete();
-            cadastroAlunos = new CadastroAlunos()
+                return;
+            }
+            else
             {
-                idEscola = id_escola
-            };
-            dgvAlunos.DataSource = cadastroAlunos.ListStudents();
+
+                cadastroAlunos = new CadastroAlunos()
+                {
+                    Id = int.Parse(idText)
+                };
+                cadastroAlunos.Delete();
+
+                cadastroAlunos = new CadastroAlunos()
+                {
+                    idEscola = id_escola
+                };
+                dgvAlunos.DataSource = cadastroAlunos.ListStudents();
+                CleanAll();
+            }
+
+           
+        }
+
+        private void txtName_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 

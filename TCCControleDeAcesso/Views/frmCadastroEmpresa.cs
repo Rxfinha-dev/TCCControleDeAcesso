@@ -24,6 +24,15 @@ namespace TCCControleDeAcesso.Views
             InitializeComponent();
         }
 
+        private void CleanAll()
+        {
+            txtConfirmarSenha.Clear();
+            txtEmail.Clear();
+            txtNome.Clear();
+            txtSenha.Clear();
+            txtNome.Focus();
+        }
+
         private void btnCadastrar_Click(object sender, EventArgs e)
         {
             int count = 0;
@@ -65,7 +74,9 @@ namespace TCCControleDeAcesso.Views
                 Name = txtNome.Text,
                 Email = txtEmail.Text,
                 Senha = txtSenha.Text,
+                
             };
+            
 
             if (string.IsNullOrWhiteSpace(txtNome.Text) ||
                 string.IsNullOrWhiteSpace(txtEmail.Text) ||
@@ -140,6 +151,11 @@ namespace TCCControleDeAcesso.Views
                 MessageBox.Show("As Senhas Não Coincidem", "Erro No Login", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+        }
+
+        private void frmCadastroEmpresa_Load(object sender, EventArgs e)
+        {
+            CleanAll();
         }
 
 

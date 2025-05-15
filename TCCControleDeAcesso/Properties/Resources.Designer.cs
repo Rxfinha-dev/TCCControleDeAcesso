@@ -73,6 +73,16 @@ namespace TCCControleDeAcesso.Properties {
         /// <summary>
         ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap _default {
+            get {
+                object obj = ResourceManager.GetObject("default", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap a {
             get {
                 object obj = ResourceManager.GetObject("a", resourceCulture);
@@ -203,6 +213,16 @@ namespace TCCControleDeAcesso.Properties {
         /// <summary>
         ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Design_sem_nome__6_1 {
+            get {
+                object obj = ResourceManager.GetObject("Design sem nome (6)1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Design_sem_nome1 {
             get {
                 object obj = ResourceManager.GetObject("Design sem nome1", resourceCulture);
@@ -286,6 +306,16 @@ namespace TCCControleDeAcesso.Properties {
         internal static System.Drawing.Bitmap fundo {
             get {
                 object obj = ResourceManager.GetObject("fundo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap FundoNovo {
+            get {
+                object obj = ResourceManager.GetObject("FundoNovo", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

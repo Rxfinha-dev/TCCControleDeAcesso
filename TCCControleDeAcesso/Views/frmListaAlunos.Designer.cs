@@ -35,7 +35,6 @@
             this.txtName = new System.Windows.Forms.TextBox();
             this.txtRm = new System.Windows.Forms.TextBox();
             this.btnSave = new System.Windows.Forms.Button();
-            this.label5 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.cboCurso = new System.Windows.Forms.ComboBox();
             this.comboBox2 = new System.Windows.Forms.ComboBox();
@@ -45,10 +44,12 @@
             this.dgvAlunos = new System.Windows.Forms.DataGridView();
             this.linkSelectPhoto = new System.Windows.Forms.LinkLabel();
             this.ofd = new System.Windows.Forms.OpenFileDialog();
-            this.txtId = new System.Windows.Forms.TextBox();
             this.txtIdOficial = new System.Windows.Forms.TextBox();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.txtId = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAlunos)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -56,7 +57,7 @@
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.Black;
-            this.label1.Location = new System.Drawing.Point(503, 177);
+            this.label1.Location = new System.Drawing.Point(523, 365);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(53, 18);
             this.label1.TabIndex = 43;
@@ -66,7 +67,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(502, 263);
+            this.label2.Location = new System.Drawing.Point(522, 451);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(53, 18);
             this.label2.TabIndex = 44;
@@ -76,7 +77,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(503, 206);
+            this.label3.Location = new System.Drawing.Point(523, 394);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(36, 18);
             this.label3.TabIndex = 45;
@@ -86,7 +87,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(793, 264);
+            this.label4.Location = new System.Drawing.Point(813, 452);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(46, 18);
             this.label4.TabIndex = 46;
@@ -95,15 +96,16 @@
             // txtName
             // 
             this.txtName.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtName.Location = new System.Drawing.Point(555, 174);
+            this.txtName.Location = new System.Drawing.Point(575, 362);
             this.txtName.Name = "txtName";
             this.txtName.Size = new System.Drawing.Size(493, 24);
             this.txtName.TabIndex = 47;
+            this.txtName.TextChanged += new System.EventHandler(this.txtName_TextChanged);
             // 
             // txtRm
             // 
             this.txtRm.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtRm.Location = new System.Drawing.Point(555, 202);
+            this.txtRm.Location = new System.Drawing.Point(575, 390);
             this.txtRm.Name = "txtRm";
             this.txtRm.Size = new System.Drawing.Size(493, 24);
             this.txtRm.TabIndex = 50;
@@ -114,7 +116,7 @@
             this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSave.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSave.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.btnSave.Location = new System.Drawing.Point(949, 308);
+            this.btnSave.Location = new System.Drawing.Point(969, 494);
             this.btnSave.Margin = new System.Windows.Forms.Padding(0);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(99, 54);
@@ -123,23 +125,12 @@
             this.btnSave.UseVisualStyleBackColor = false;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.label5.Font = new System.Drawing.Font("Microsoft YaHei", 27.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(793, 28);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(342, 48);
-            this.label5.TabIndex = 52;
-            this.label5.Text = "LISTA DE ALUNOS";
-            // 
             // pictureBox1
             // 
             this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox1.Location = new System.Drawing.Point(1082, 174);
+            this.pictureBox1.Location = new System.Drawing.Point(1104, 362);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(158, 182);
+            this.pictureBox1.Size = new System.Drawing.Size(185, 191);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 53;
             this.pictureBox1.TabStop = false;
@@ -155,7 +146,7 @@
             "Informática ",
             "Mecânica",
             "Mecatrônica"});
-            this.cboCurso.Location = new System.Drawing.Point(555, 259);
+            this.cboCurso.Location = new System.Drawing.Point(575, 447);
             this.cboCurso.Name = "cboCurso";
             this.cboCurso.Size = new System.Drawing.Size(203, 26);
             this.cboCurso.TabIndex = 54;
@@ -168,7 +159,7 @@
             "1° Ano",
             "2° Ano",
             "3° Ano"});
-            this.comboBox2.Location = new System.Drawing.Point(845, 259);
+            this.comboBox2.Location = new System.Drawing.Point(865, 447);
             this.comboBox2.Name = "comboBox2";
             this.comboBox2.Size = new System.Drawing.Size(203, 26);
             this.comboBox2.TabIndex = 55;
@@ -179,10 +170,10 @@
             this.BtnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.BtnDelete.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.BtnDelete.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.BtnDelete.Location = new System.Drawing.Point(827, 308);
+            this.BtnDelete.Location = new System.Drawing.Point(848, 493);
             this.BtnDelete.Margin = new System.Windows.Forms.Padding(0);
             this.BtnDelete.Name = "BtnDelete";
-            this.BtnDelete.Size = new System.Drawing.Size(99, 50);
+            this.BtnDelete.Size = new System.Drawing.Size(99, 55);
             this.BtnDelete.TabIndex = 56;
             this.BtnDelete.Text = "EXCLUIR";
             this.BtnDelete.UseVisualStyleBackColor = false;
@@ -191,7 +182,7 @@
             // txtIdade
             // 
             this.txtIdade.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtIdade.Location = new System.Drawing.Point(555, 231);
+            this.txtIdade.Location = new System.Drawing.Point(575, 419);
             this.txtIdade.Name = "txtIdade";
             this.txtIdade.Size = new System.Drawing.Size(493, 24);
             this.txtIdade.TabIndex = 58;
@@ -200,7 +191,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(503, 235);
+            this.label6.Location = new System.Drawing.Point(523, 423);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(47, 18);
             this.label6.TabIndex = 57;
@@ -209,9 +200,9 @@
             // dgvAlunos
             // 
             this.dgvAlunos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvAlunos.Location = new System.Drawing.Point(469, 377);
+            this.dgvAlunos.Location = new System.Drawing.Point(459, 581);
             this.dgvAlunos.Name = "dgvAlunos";
-            this.dgvAlunos.Size = new System.Drawing.Size(925, 449);
+            this.dgvAlunos.Size = new System.Drawing.Size(925, 344);
             this.dgvAlunos.TabIndex = 59;
             this.dgvAlunos.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvAlunos_CellContentClick);
             // 
@@ -219,7 +210,7 @@
             // 
             this.linkSelectPhoto.AutoSize = true;
             this.linkSelectPhoto.LinkColor = System.Drawing.Color.Black;
-            this.linkSelectPhoto.Location = new System.Drawing.Point(1149, 359);
+            this.linkSelectPhoto.Location = new System.Drawing.Point(1137, 547);
             this.linkSelectPhoto.Name = "linkSelectPhoto";
             this.linkSelectPhoto.Size = new System.Drawing.Size(91, 15);
             this.linkSelectPhoto.TabIndex = 60;
@@ -231,29 +222,38 @@
             // 
             this.ofd.FileName = "Escolha a Foto:";
             // 
-            // txtId
-            // 
-            this.txtId.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtId.Dock = System.Windows.Forms.DockStyle.Top;
-            this.txtId.Location = new System.Drawing.Point(0, 0);
-            this.txtId.Name = "txtId";
-            this.txtId.Size = new System.Drawing.Size(1725, 15);
-            this.txtId.TabIndex = 61;
-            // 
             // txtIdOficial
             // 
             this.txtIdOficial.HideSelection = false;
-            this.txtIdOficial.Location = new System.Drawing.Point(555, 146);
+            this.txtIdOficial.Location = new System.Drawing.Point(575, 334);
             this.txtIdOficial.Name = "txtIdOficial";
             this.txtIdOficial.Size = new System.Drawing.Size(100, 22);
             this.txtIdOficial.TabIndex = 62;
             this.txtIdOficial.Visible = false;
             // 
+            // pictureBox2
+            // 
+            this.pictureBox2.Image = global::TCCControleDeAcesso.Properties.Resources.Texto_do_seu_parágrafo1;
+            this.pictureBox2.Location = new System.Drawing.Point(652, -172);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(610, 433);
+            this.pictureBox2.TabIndex = 63;
+            this.pictureBox2.TabStop = false;
+            // 
+            // txtId
+            // 
+            this.txtId.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtId.Location = new System.Drawing.Point(0, -1);
+            this.txtId.Name = "txtId";
+            this.txtId.Size = new System.Drawing.Size(283, 15);
+            this.txtId.TabIndex = 61;
+            // 
             // frmListaAlunos
             // 
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.BackgroundImage = global::TCCControleDeAcesso.Properties.Resources.Design_sem_nome__5_;
+            this.BackgroundImage = global::TCCControleDeAcesso.Properties.Resources.FundoNovo;
             this.ClientSize = new System.Drawing.Size(1725, 926);
+            this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.txtIdOficial);
             this.Controls.Add(this.txtId);
             this.Controls.Add(this.linkSelectPhoto);
@@ -264,7 +264,6 @@
             this.Controls.Add(this.comboBox2);
             this.Controls.Add(this.cboCurso);
             this.Controls.Add(this.pictureBox1);
-            this.Controls.Add(this.label5);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.txtRm);
             this.Controls.Add(this.txtName);
@@ -274,9 +273,11 @@
             this.Controls.Add(this.label1);
             this.Font = new System.Drawing.Font("News706 BT", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "frmListaAlunos";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Load += new System.EventHandler(this.frmListaAlunos_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAlunos)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -297,7 +298,6 @@
         private System.Windows.Forms.TextBox txtName;
         private System.Windows.Forms.TextBox txtRm;
         private System.Windows.Forms.Button btnSave;
-        private System.Windows.Forms.Label label5;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.ComboBox cboCurso;
         private System.Windows.Forms.ComboBox comboBox2;
@@ -307,7 +307,8 @@
         private System.Windows.Forms.DataGridView dgvAlunos;
         private System.Windows.Forms.LinkLabel linkSelectPhoto;
         private System.Windows.Forms.OpenFileDialog ofd;
-        private System.Windows.Forms.TextBox txtId;
         private System.Windows.Forms.TextBox txtIdOficial;
+        private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.TextBox txtId;
     }
 }
