@@ -16,6 +16,8 @@ namespace TCCControleDeAcesso.Views
 {
     public partial class frmCadastroEmpresa : Form
     {
+        String randomCode;
+        public static String to;
         CadastroEmpresas _cadastroEmpresas;
         public frmCadastroEmpresa()
         {
@@ -58,7 +60,6 @@ namespace TCCControleDeAcesso.Views
                 Banco.CloseConnection();
             }
 
-
             _cadastroEmpresas = new CadastroEmpresas()
             {
                 Name = txtNome.Text,
@@ -79,10 +80,59 @@ namespace TCCControleDeAcesso.Views
 
             if (txtSenha.Text == txtConfirmarSenha.Text ) 
             {
-                _cadastroEmpresas.Insert();
-                frmLogin check = new frmLogin();
-                check.Show();
-                Hide();
+                ////Código que cadastra o email no banco de dados!!!!       --------------->    _cadastroEmpresas.Insert();
+                MessageBox.Show("Para a ativação de conta estamos enviando um código de verificação no seu email! " +
+                    " Olhe o seu email e caixa de Spam! ", "Ativação de conta ", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                /////////////////////
+                ///
+
+
+                //Evitando o click mais de uma vez
+                btnCadastrar.Enabled = false;
+                String from, pass, messageBody;
+                Random rand = new Random();
+                randomCode = (rand.Next(99999999)).ToString();
+                MailMessage message = new MailMessage();                    //txtEmail do cara = meu txtEmailDestinatario
+                from = "suportehelpus@gmail.com"; //Email do remetente
+                pass = "vwec abnc veyc jvns"; //Senha de App
+                messageBody = "Estamos felizes de termos você conosoco! Seu código de ativação de conta é: " + randomCode;
+                to = txtEmail.Text; // Obtendo o e-mail do destinatário  
+                message.To.Add(to);
+                message.From = new MailAddress(from);
+                message.Body = messageBody;
+                message.Subject = "Bem vindo ao HelpUS! ";
+                SmtpClient smtp = new SmtpClient("smtp.gmail.com");
+                smtp.EnableSsl = true;
+                smtp.Port = 587;
+                smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                smtp.Credentials = new NetworkCredential(from, pass);
+                frmAtivacaoConta rp = new frmAtivacaoConta();
+                this.Hide();
+                rp.Show();
+
+                
+
+                try
+                {
+                    smtp.Send(message);
+                    //reativando o btnEnviarEmail
+                    btnCadastrar.Enabled = true;
+
+                }
+
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                    //reativando o btnEnviarEmail
+                    btnCadastrar.Enabled = true;
+                }
+
+
+
+                ///
+                /////////////////////
+
             }
 
             else
@@ -91,5 +141,7 @@ namespace TCCControleDeAcesso.Views
                 return;
             }
         }
+
+
     }
 }

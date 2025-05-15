@@ -113,6 +113,7 @@
             this.txtEmail.Name = "txtEmail";
             this.txtEmail.Size = new System.Drawing.Size(349, 20);
             this.txtEmail.TabIndex = 34;
+
             // 
             // txtNome
             // 

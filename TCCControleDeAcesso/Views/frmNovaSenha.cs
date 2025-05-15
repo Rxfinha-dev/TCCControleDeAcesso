@@ -52,9 +52,7 @@ namespace TCCControleDeAcesso.Views
                     pass = "vwec abnc veyc jvns"; //Senha de App
                     messageBody = "Seu código de verificação é: " + randomCode;
                     to = txtEmailDestinatario.Text; // Obtendo o e-mail do destinatário
-                    message.To.Add(to);
-                    to = txtEmailDestinatario.Text; // Obtendo o e-mail do destinatário
-                    message.To.Add(to);
+                    message.To.Add(to);                                                                 //deu erro == Escrever a linha de cima e essa novamente
                     message.From = new MailAddress(from);
                     message.Body = messageBody;
                     message.Subject = "Recuperação de Senha";

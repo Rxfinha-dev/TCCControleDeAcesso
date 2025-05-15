@@ -60,7 +60,7 @@ namespace TCCControleDeAcesso.Controllers
                 Banco.Command.Parameters.AddWithValue("@nome", nome);
                 Banco.Command.Parameters.AddWithValue("@senha", senha);
 
-      
+          
                  count = Convert.ToInt32(Banco.Command.ExecuteScalar());
 
                 Banco.CloseConnection();

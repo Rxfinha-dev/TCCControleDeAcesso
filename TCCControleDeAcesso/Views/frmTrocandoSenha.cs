@@ -51,6 +51,7 @@ namespace TCCControleDeAcesso.Views
 
         private void btnAlterarSenha_Click(object sender, EventArgs e)
         {
+
             if (txtNovaSenha.Text == txtNovaSenha2.Text)
             {
                 ns = new NovaSenha()
@@ -72,6 +73,8 @@ namespace TCCControleDeAcesso.Views
                 MessageBox.Show("As senhas inseridas não coincidem!", " ", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
             }
+            txtNovaSenha.Text = "";
+            txtNovaSenha2.Text = "";
 
         }
     }
