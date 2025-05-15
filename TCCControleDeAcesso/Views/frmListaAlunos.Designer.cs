@@ -99,6 +99,7 @@
             this.txtName.Name = "txtName";
             this.txtName.Size = new System.Drawing.Size(493, 24);
             this.txtName.TabIndex = 47;
+            this.txtName.TextChanged += new System.EventHandler(this.txtName_TextChanged);
             // 
             // txtRm
             // 
@@ -137,9 +138,9 @@
             // pictureBox1
             // 
             this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox1.Location = new System.Drawing.Point(1082, 174);
+            this.pictureBox1.Location = new System.Drawing.Point(1082, 165);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(158, 182);
+            this.pictureBox1.Size = new System.Drawing.Size(185, 191);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 53;
             this.pictureBox1.TabStop = false;
@@ -219,7 +220,7 @@
             // 
             this.linkSelectPhoto.AutoSize = true;
             this.linkSelectPhoto.LinkColor = System.Drawing.Color.Black;
-            this.linkSelectPhoto.Location = new System.Drawing.Point(1149, 359);
+            this.linkSelectPhoto.Location = new System.Drawing.Point(1176, 359);
             this.linkSelectPhoto.Name = "linkSelectPhoto";
             this.linkSelectPhoto.Size = new System.Drawing.Size(91, 15);
             this.linkSelectPhoto.TabIndex = 60;
