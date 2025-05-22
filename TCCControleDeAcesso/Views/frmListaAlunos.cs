@@ -127,14 +127,14 @@ namespace TCCControleDeAcesso.Views
                 string nome = row.Cells["nome"].Value.ToString();
                 string rm = row.Cells["rm"].Value.ToString();
                 string idade = row.Cells["idade"].Value.ToString();
-                // object curso = row.Cells["curso"].Value;
+                object curso = row.Cells["curso"].Value;
                 object serie = row.Cells["serie"].Value;
 
                 txtId.Text = idText;
                txtName.Text = nome;
                txtRm.Text = rm;
                txtIdade.Text = idade;
-                //cboCurso.SelectedItem = Curso;
+                cboCurso.SelectedItem = curso;
                comboBox2.SelectedItem = serie;
 
                 CarregarImagemDoAluno(nome);
