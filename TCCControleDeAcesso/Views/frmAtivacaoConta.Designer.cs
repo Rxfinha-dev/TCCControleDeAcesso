@@ -31,6 +31,7 @@
             this.txtAtivacao = new System.Windows.Forms.TextBox();
             this.lblConfirmacao = new System.Windows.Forms.Label();
             this.btnAtivacao = new System.Windows.Forms.Button();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // txtAtivacao
@@ -60,16 +61,27 @@
             this.btnAtivacao.UseVisualStyleBackColor = true;
             this.btnAtivacao.Click += new System.EventHandler(this.btnAtivacao_Click);
             // 
+            // textBox1
+            // 
+            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox1.Location = new System.Drawing.Point(68, 294);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(100, 13);
+            this.textBox1.TabIndex = 13;
+            this.textBox1.Visible = false;
+            // 
             // frmAtivacaoConta
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(492, 368);
+            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.btnAtivacao);
             this.Controls.Add(this.txtAtivacao);
             this.Controls.Add(this.lblConfirmacao);
             this.Name = "frmAtivacaoConta";
             this.Text = "frmAtivacaoConta";
+            this.Load += new System.EventHandler(this.frmAtivacaoConta_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -79,5 +91,6 @@
         private System.Windows.Forms.TextBox txtAtivacao;
         private System.Windows.Forms.Label lblConfirmacao;
         private System.Windows.Forms.Button btnAtivacao;
+        private System.Windows.Forms.TextBox textBox1;
     }
 }

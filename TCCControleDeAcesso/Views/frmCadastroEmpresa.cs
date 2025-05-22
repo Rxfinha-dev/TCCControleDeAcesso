@@ -104,6 +104,7 @@ namespace TCCControleDeAcesso.Views
                 String from, pass, messageBody;
                 Random rand = new Random();
                 randomCode = (rand.Next(99999999)).ToString();
+                textBox1.Text = randomCode;///////////////////////////// !!!!!!!!
                 MailMessage message = new MailMessage();                    //txtEmail do cara = meu txtEmailDestinatario
                 from = "suportehelpus@gmail.com"; //Email do remetente
                 pass = "vwec abnc veyc jvns"; //Senha de App
@@ -118,11 +119,18 @@ namespace TCCControleDeAcesso.Views
                 smtp.Port = 587;
                 smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
                 smtp.Credentials = new NetworkCredential(from, pass);
-                frmAtivacaoConta rp = new frmAtivacaoConta();
-                this.Hide();
-                rp.Show();
 
-                
+                /////////////// passando o randon code para o outro form (socorro)
+                frmAtivacaoConta frm = new frmAtivacaoConta();
+                frm.propriedade = textBox1.Text;
+             // this.Hide();
+                frm.Show();
+                ///////////////
+
+
+
+
+
 
                 try
                 {
@@ -151,6 +159,8 @@ namespace TCCControleDeAcesso.Views
                 MessageBox.Show("As Senhas Não Coincidem", "Erro No Login", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+
+
         }
 
         private void frmCadastroEmpresa_Load(object sender, EventArgs e)
