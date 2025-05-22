@@ -210,7 +210,7 @@
             // 
             this.linkSelectPhoto.AutoSize = true;
             this.linkSelectPhoto.LinkColor = System.Drawing.Color.Black;
-            this.linkSelectPhoto.Location = new System.Drawing.Point(1137, 547);
+            this.linkSelectPhoto.Location = new System.Drawing.Point(1149, 547);
             this.linkSelectPhoto.Name = "linkSelectPhoto";
             this.linkSelectPhoto.Size = new System.Drawing.Size(91, 15);
             this.linkSelectPhoto.TabIndex = 60;

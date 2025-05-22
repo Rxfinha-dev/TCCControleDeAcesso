@@ -30,7 +30,6 @@
         {
             this.a = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
-            this.txtLogin = new System.Windows.Forms.TextBox();
             this.txtSenha = new System.Windows.Forms.TextBox();
             this.btnEntrar = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
@@ -39,6 +38,7 @@
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.txtLogin = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -63,13 +63,6 @@
             this.label7.Size = new System.Drawing.Size(65, 22);
             this.label7.TabIndex = 37;
             this.label7.Text = "Nome:";
-            // 
-            // txtLogin
-            // 
-            this.txtLogin.Location = new System.Drawing.Point(1309, 531);
-            this.txtLogin.Name = "txtLogin";
-            this.txtLogin.Size = new System.Drawing.Size(270, 20);
-            this.txtLogin.TabIndex = 38;
             // 
             // txtSenha
             // 
@@ -132,6 +125,7 @@
             this.pictureBox3.Size = new System.Drawing.Size(249, 319);
             this.pictureBox3.TabIndex = 46;
             this.pictureBox3.TabStop = false;
+            this.pictureBox3.Click += new System.EventHandler(this.pictureBox3_Click);
             // 
             // pictureBox2
             // 
@@ -152,6 +146,14 @@
             this.pictureBox1.TabIndex = 44;
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
+            // 
+            // txtLogin
+            // 
+            this.txtLogin.Location = new System.Drawing.Point(1309, 531);
+            this.txtLogin.Name = "txtLogin";
+            this.txtLogin.Size = new System.Drawing.Size(270, 20);
+            this.txtLogin.TabIndex = 38;
+            this.txtLogin.TextChanged += new System.EventHandler(this.txtLogin_TextChanged);
             // 
             // frmLogin
             // 
@@ -187,12 +189,12 @@
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.Label a;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.TextBox txtLogin;
         private System.Windows.Forms.TextBox txtSenha;
         private System.Windows.Forms.Button btnEntrar;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.LinkLabel linkLabel2;
         private System.Windows.Forms.PictureBox pictureBox3;
+        private System.Windows.Forms.TextBox txtLogin;
     }
 }

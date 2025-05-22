@@ -142,12 +142,6 @@
     <Compile Include="Views\frmTrocandoSenha.Designer.cs">
       <DependentUpon>frmTrocandoSenha.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\frmVerificacao.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\frmVerificacao.Designer.cs">
-      <DependentUpon>frmVerificacao.cs</DependentUpon>
-    </Compile>
     <Compile Include="Views\frmLogin.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -194,9 +188,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\frmTrocandoSenha.resx">
       <DependentUpon>frmTrocandoSenha.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\frmVerificacao.resx">
-      <DependentUpon>frmVerificacao.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\frmNovaSenha.resx">
       <DependentUpon>frmNovaSenha.cs</DependentUpon>
