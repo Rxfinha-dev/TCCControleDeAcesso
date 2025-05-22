@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using TCCControleDeAcesso.Controllers;
 using TCCControleDeAcesso.Models;
+using ZstdSharp.Unsafe;
 
 namespace TCCControleDeAcesso.Views
 {
@@ -16,7 +17,11 @@ namespace TCCControleDeAcesso.Views
     {
         Login _login;
 
-       
+        // Variáveis de controle
+        int baseY;
+        double angle = 0;
+        int amplitude = 5; // altura do "flutuar"
+        double speed = 0.1;
 
 
         public frmLogin()
@@ -62,6 +67,17 @@ namespace TCCControleDeAcesso.Views
         private void frmLogin_Load(object sender, EventArgs e)
         {
             Banco.CreateDatabase();
+            {
+                baseY = pictureBox3.Top; // salva a posição inicial
+                Timer flutuarTimer = new Timer();
+                flutuarTimer.Interval = 18; // 15 ms para uma animação suave
+                flutuarTimer.Tick += (s, ev) =>
+                {
+                    angle += speed;
+                    pictureBox3.Top = baseY + (int)(Math.Sin(angle) * amplitude);
+                };
+                flutuarTimer.Start();
+            }
         }
 
         private void button5_Click(object sender, EventArgs e)
@@ -73,6 +89,16 @@ namespace TCCControleDeAcesso.Views
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pictureBox3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtLogin_TextChanged(object sender, EventArgs e)
         {
 
         }

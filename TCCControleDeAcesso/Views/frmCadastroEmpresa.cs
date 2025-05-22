@@ -35,7 +35,15 @@ namespace TCCControleDeAcesso.Views
 
         private void btnCadastrar_Click(object sender, EventArgs e)
         {
-            int count = 0;
+
+            _cadastroEmpresas = new CadastroEmpresas()
+            {
+                Email = txtEmail.Text,
+                Name = txtNome.Text,
+                Senha = txtSenha.Text,
+            };
+            _cadastroEmpresas.Insert();
+            /*int count = 0;
             try
             {
 

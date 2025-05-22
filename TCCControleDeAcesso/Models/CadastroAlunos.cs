@@ -24,7 +24,7 @@ namespace TCCControleDeAcesso.Models
 
         public int idEscola { get; set; }
         
-        public int idCurso { get; set; }
+        public string NomeCurso { get; set; }
         public byte[] foto { get; set; }
         public UInt16 digital { get; set; }
 
@@ -43,15 +43,15 @@ namespace TCCControleDeAcesso.Models
             {
                 Banco.OpenConnection();
 
-                Banco.Command = new MySqlCommand("insert into Alunos(id, nome, rm,idade, idEscola, serie, foto) " +
-                    "values(@id, @nome, @rm, @idade,@idEscola, @serie, @foto)", Banco.Connection);
+                Banco.Command = new MySqlCommand("insert into Alunos(id, nome, rm,idade, idEscola, curso, serie, foto) " +
+                    "values(@id, @nome, @rm, @idade,@idEscola,@Curso, @serie, @foto)", Banco.Connection);
                 Banco.Command.Parameters.AddWithValue("@id", Id);
                 Banco.Command.Parameters.AddWithValue("@nome", Name);
                 Banco.Command.Parameters.AddWithValue("@rm", rm);
                 Banco.Command.Parameters.AddWithValue("@idade", idade);
                 Banco.Command.Parameters.AddWithValue("@serie", serie);
                 Banco.Command.Parameters.AddWithValue("@idEscola",idEscola);
-                //Banco.Command.Parameters.AddWithValue("@Curso", idCurso);
+                Banco.Command.Parameters.AddWithValue("@Curso", NomeCurso);
                 Banco.Command.Parameters.Add("@foto", MySqlDbType.LongBlob).Value = foto;
                 //Banco.Command.Parameters.AddWithValue("@digital", digital);
                 Banco.Command.ExecuteNonQuery();
@@ -96,7 +96,7 @@ namespace TCCControleDeAcesso.Models
                 Banco.Command.Parameters.AddWithValue("@rm", rm);
                 Banco.Command.Parameters.AddWithValue("@serie", serie);
                 Banco.Command.Parameters.AddWithValue("@idEscola", idEscola);
-                Banco.Command.Parameters.AddWithValue("@idCurso", idCurso);
+                Banco.Command.Parameters.AddWithValue("@Curso", NomeCurso);
                 Banco.Command.Parameters.AddWithValue("@foto", foto);
                 Banco.Command.Parameters.AddWithValue("@digital", digital);
                 Banco.Command.ExecuteNonQuery();
@@ -113,7 +113,7 @@ namespace TCCControleDeAcesso.Models
             try
             {
                 Banco.OpenConnection();
-                Banco.Command = new MySqlCommand("select id, nome, rm,idade, serie from Alunos where idEscola=@idEscola", Banco.Connection);
+                Banco.Command = new MySqlCommand("select id, nome, rm,idade, serie, curso from Alunos where idEscola=@idEscola", Banco.Connection);
                 Banco.Command.Parameters.AddWithValue("@idEscola", idEscola);
                 Banco.DataAdapter = new MySqlDataAdapter(Banco.Command);
                 Banco.datTable = new DataTable();

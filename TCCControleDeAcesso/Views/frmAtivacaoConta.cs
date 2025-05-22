@@ -26,6 +26,11 @@ namespace TCCControleDeAcesso.Views
         public string propriedade {  get; set; }
 
         private void btnAtivacao_Click(object sender, EventArgs e)
+        { 
+            
+        }
+    }
+}
         {
         //    txtAtivacao 
         //    int VarAtivacao = txtAtivacao.Text;
