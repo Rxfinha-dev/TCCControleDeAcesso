@@ -88,13 +88,12 @@ namespace TCCControleDeAcesso.Models
                     "nome varchar(50)," +
                     "rm varchar(8)," +
                     "idade char(3)," +
-                    "idCurso int," +
+                    "Curso varchar(30)," +
                     "idEscola int," +
                     "serie char(7)," +
                     "foto longblob, " +
                     "digital blob," +
-                    "foreign key (idEscola) references escolas (id)," +
-                    "foreign key (idCurso) references cursos (id))", Connection);
+                    "foreign key (idEscola) references escolas (id))", Connection);
                 Command.ExecuteNonQuery();
 
 

@@ -28,6 +28,31 @@ namespace TCCControleDeAcesso.Views
             id_escola = idEsc;
         }
 
+        private void CarregarCursos()
+        {
+            string conexao = "server=localhost;port=3307;uid=root;pwd=etecjau;database=AccessControl;";
+            string query = "SELECT nome FROM cursos where idEscola=@idEscola";
+
+            using (MySqlConnection conn = new MySqlConnection(conexao))
+            {
+                try
+                {
+                    conn.Open();
+                    MySqlCommand cmd = new MySqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@idEscola", id_escola);
+                    MySqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        cboCurso.Items.Add(reader["nome"].ToString());
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Erro ao carregar cursos: " + ex.Message);
+                }
+            }
+        }
         public void CleanAll()
         {
             txtId.Clear();
@@ -46,6 +71,7 @@ namespace TCCControleDeAcesso.Views
             };
            dgvAlunos.DataSource = cadastroAlunos.ListStudents();
             CleanAll();
+            CarregarCursos();
         }
 
         private void linkSelectPhoto_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -62,7 +88,7 @@ namespace TCCControleDeAcesso.Views
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            if (txtName.Text == string.Empty ||  txtIdade.Text == string.Empty || comboBox2.SelectedIndex == -1 || caminho == null)
+            if (txtName.Text == string.Empty ||  txtIdade.Text == string.Empty || comboBox2.SelectedIndex == -1 || caminho == null || cboCurso.SelectedIndex == -1)
             {
      
                 MessageBox.Show("Preencha todos os login.", "Erro de Formulário.", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -74,7 +100,7 @@ namespace TCCControleDeAcesso.Views
             {
                 Name = txtName.Text,
                 rm = txtRm.Text,
-                //idCurso = txtCurso.Text,
+                NomeCurso = cboCurso.SelectedItem.ToString(),
                 idade= txtIdade.Text,
                 serie = comboBox2.SelectedItem.ToString(),
                 foto = File.ReadAllBytes(caminho),
@@ -183,6 +209,11 @@ namespace TCCControleDeAcesso.Views
         }
 
         private void txtName_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cboCurso_SelectedIndexChanged(object sender, EventArgs e)
         {
 
         }

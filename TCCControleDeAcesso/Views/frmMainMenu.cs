@@ -43,5 +43,12 @@ namespace TCCControleDeAcesso.Views
             check.Show();
             Hide();
         }
+
+        private void btnCursos_Click(object sender, EventArgs e)
+        {
+            frmCadastroCurso check = new frmCadastroCurso(id_escola);
+            check.Show();
+            Hide();
+        }
     }
 }

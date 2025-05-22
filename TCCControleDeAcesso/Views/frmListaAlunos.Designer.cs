@@ -139,17 +139,11 @@
             // 
             this.cboCurso.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cboCurso.FormattingEnabled = true;
-            this.cboCurso.Items.AddRange(new object[] {
-            "Administração",
-            "Desenvolvimento de Sistemas",
-            "Edificações",
-            "Informática ",
-            "Mecânica",
-            "Mecatrônica"});
             this.cboCurso.Location = new System.Drawing.Point(575, 447);
             this.cboCurso.Name = "cboCurso";
             this.cboCurso.Size = new System.Drawing.Size(203, 26);
             this.cboCurso.TabIndex = 54;
+            this.cboCurso.SelectedIndexChanged += new System.EventHandler(this.cboCurso_SelectedIndexChanged);
             // 
             // comboBox2
             // 

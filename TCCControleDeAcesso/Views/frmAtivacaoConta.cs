@@ -22,14 +22,6 @@ namespace TCCControleDeAcesso.Views
 
         private void btnAtivacao_Click(object sender, EventArgs e)
         {
-            frmAtivacaoConra (int randonCode){
-
-            }
-
-            if ()
-            {
-                _cadastroEmpresas.Insert();
-            }
             
         }
     }

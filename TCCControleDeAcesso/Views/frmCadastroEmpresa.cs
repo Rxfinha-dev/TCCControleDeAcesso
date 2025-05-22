@@ -35,7 +35,15 @@ namespace TCCControleDeAcesso.Views
 
         private void btnCadastrar_Click(object sender, EventArgs e)
         {
-            int count = 0;
+
+            _cadastroEmpresas = new CadastroEmpresas()
+            {
+                Email = txtEmail.Text,
+                Name = txtNome.Text,
+                Senha = txtSenha.Text,
+            };
+            _cadastroEmpresas.Insert();
+            /*int count = 0;
             try
             {
 
@@ -151,6 +159,7 @@ namespace TCCControleDeAcesso.Views
                 MessageBox.Show("As Senhas Não Coincidem", "Erro No Login", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+            */
         }
 
         private void frmCadastroEmpresa_Load(object sender, EventArgs e)
