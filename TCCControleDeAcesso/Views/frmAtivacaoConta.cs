@@ -25,35 +25,6 @@ namespace TCCControleDeAcesso.Views
 
         public string propriedade {  get; set; }
 
-        private void btnAtivacao_Click(object sender, EventArgs e)
-        { 
-            
-        }
-    }
-}
-        {
-        //    txtAtivacao 
-        //    int VarAtivacao = txtAtivacao.Text;
-            if(txtAtivacao.Text == (textBox1.Text).ToString())
-                {
-                MessageBox.Show("Leonidas baitchola", "Verdadeiro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                
-            }
-            else
-            {
-                MessageBox.Show("errou vacilão", "jkhdsakjdhsaj    ", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-          /*  frmAtivacaoConra (int randonCode){
-
-            }
-
-            if ()
-            {
-                _cadastroEmpresas.Insert();
-            }
-          */
-        }
-
         private void frmAtivacaoConta_Load(object sender, EventArgs e)
         {
             if (!this.propriedade.Equals(""))
@@ -65,5 +36,33 @@ namespace TCCControleDeAcesso.Views
 
             }
         }
+
+        private void btnAtivacao_Click(object sender, EventArgs e)
+        {
+            //    txtAtivacao 
+            //    int VarAtivacao = txtAtivacao.Text;
+            if (txtAtivacao.Text == (textBox1.Text).ToString())
+            {
+                MessageBox.Show("Leonidas baitchola", "Verdadeiro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            }
+            else
+            {
+                MessageBox.Show("errou vacilão", "jkhdsakjdhsaj    ", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            /*  frmAtivacaoConra (int randonCode){
+
+              }
+
+              if ()
+              {
+                  _cadastroEmpresas.Insert();
+              }
+            */
+        }
     }
+    
 }
+        
+        
+

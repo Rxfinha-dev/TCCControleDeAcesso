@@ -43,7 +43,7 @@ namespace TCCControleDeAcesso.Views
                 Senha = txtSenha.Text,
             };
             _cadastroEmpresas.Insert();
-            /*int count = 0;
+            int count = 0;
             try
             {
 
