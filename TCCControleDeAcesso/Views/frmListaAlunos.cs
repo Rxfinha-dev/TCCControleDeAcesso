@@ -1,16 +1,9 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using TCCControleDeAcesso.Models;
-using TCCControleDeAcesso.Properties;
 
 namespace TCCControleDeAcesso.Views
 {
@@ -70,6 +63,8 @@ namespace TCCControleDeAcesso.Views
                 idEscola = id_escola
             };
            dgvAlunos.DataSource = cadastroAlunos.ListStudents();
+            dgvAlunos.Columns["id"].Visible = false;
+
             CleanAll();
             CarregarCursos();
         }
@@ -106,13 +101,14 @@ namespace TCCControleDeAcesso.Views
                 foto = File.ReadAllBytes(caminho),
                 idEscola = id_escola
             };
-            cadastroAlunos.Insert();
+            cadastroAlunos.cadastrarAluno();
 
             cadastroAlunos = new CadastroAlunos()
             {
                 idEscola = id_escola
             };
             dgvAlunos.DataSource = cadastroAlunos.ListStudents();
+            dgvAlunos.Columns["id"].Visible = false;
             CleanAll();
         }
 
@@ -123,7 +119,10 @@ namespace TCCControleDeAcesso.Views
                 DataGridViewRow row = dgvAlunos.Rows[e.RowIndex];
 
                 // Recupere os valores das células
-                idText=row.Cells["id"].Value.ToString();
+
+
+                idText =row.Cells["id"].Value.ToString();
+         
                 string nome = row.Cells["nome"].Value.ToString();
                 string rm = row.Cells["rm"].Value.ToString();
                 string idade = row.Cells["idade"].Value.ToString();
@@ -202,6 +201,7 @@ namespace TCCControleDeAcesso.Views
                     idEscola = id_escola
                 };
                 dgvAlunos.DataSource = cadastroAlunos.ListStudents();
+                dgvAlunos.Columns["id"].Visible = false;
                 CleanAll();
             }
 
