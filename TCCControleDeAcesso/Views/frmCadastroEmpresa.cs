@@ -42,7 +42,7 @@ namespace TCCControleDeAcesso.Views
                 Name = txtNome.Text,
                 Senha = txtSenha.Text,
             };
-            _cadastroEmpresas.Insert();
+            //_cadastroEmpresas.Insert();
             int count = 0;
             try
             {
@@ -128,17 +128,12 @@ namespace TCCControleDeAcesso.Views
                 smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
                 smtp.Credentials = new NetworkCredential(from, pass);
 
-                /////////////// passando o randon code para o outro form (socorro)
-                frmAtivacaoConta frm = new frmAtivacaoConta();
-                frm.propriedade = textBox1.Text;
-             // this.Hide();
-                frm.Show();
+                /////////////// passando Variaveis para o outro form
+                var frmAC  = new frmAtivacaoConta(txtNome.Text,txtEmail.Text,txtSenha.Text);
+                frmAC.propriedade = textBox1.Text;
+                this.Hide();
+                frmAC.Show();
                 ///////////////
-
-
-
-
-
 
                 try
                 {

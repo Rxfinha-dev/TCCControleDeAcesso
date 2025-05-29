@@ -48,9 +48,9 @@
             this.label6.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label6.Location = new System.Drawing.Point(798, 421);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(54, 22);
+            this.label6.Size = new System.Drawing.Size(59, 22);
             this.label6.TabIndex = 41;
-            this.label6.Text = "Emai:";
+            this.label6.Text = "Email:";
             // 
             // label5
             // 
