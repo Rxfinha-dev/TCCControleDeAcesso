@@ -67,7 +67,6 @@ namespace TCCControleDeAcesso.Views
         private void frmLogin_Load(object sender, EventArgs e)
         {
             Banco.CreateDatabase();
-            {
                 baseY = pictureBox3.Top; // salva a posição inicial
                 Timer flutuarTimer = new Timer();
                 flutuarTimer.Interval = 18; // 15 ms para uma animação suave
@@ -77,7 +76,7 @@ namespace TCCControleDeAcesso.Views
                     pictureBox3.Top = baseY + (int)(Math.Sin(angle) * amplitude);
                 };
                 flutuarTimer.Start();
-            }
+
         }
 
         private void button5_Click(object sender, EventArgs e)
@@ -101,6 +100,59 @@ namespace TCCControleDeAcesso.Views
         private void txtLogin_TextChanged(object sender, EventArgs e)
         {
 
+        }
+        private void txtLogin_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtLogin_Leave(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtSenha_Enter(object sender, EventArgs e)
+        {
+        }
+
+        private void txtSenha_Leave(object sender, EventArgs e)
+        {
+        }
+
+        private void txtLogin_Leave_1(object sender, EventArgs e)
+        {
+            if (txtLogin.Text == "")
+            {
+                txtLogin.Text = "Digite seu Login";
+                txtLogin.ForeColor = Color.Gray;
+            }
+        }
+
+        private void txtLogin_Enter_1(object sender, EventArgs e)
+        {
+            if (txtLogin.Text == "Digite seu Login")
+            {
+                txtLogin.Text = "";
+                txtLogin.ForeColor = Color.Gray;
+            }
+        }
+
+        private void txtSenha_Leave_1(object sender, EventArgs e)
+        {
+            if (txtSenha.Text == "")
+            {
+                txtSenha.Text = "Digite sua Senha";
+                txtSenha.ForeColor = Color.Gray;
+            }
+        }
+
+        private void txtSenha_Enter_1(object sender, EventArgs e)
+        {
+            if (txtSenha.Text == "Digite sua Senha")
+            {
+                txtSenha.Text = "";
+                txtSenha.ForeColor = Color.Gray;
+            }
         }
     }
 }

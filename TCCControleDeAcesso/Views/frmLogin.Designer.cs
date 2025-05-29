@@ -60,9 +60,9 @@
             this.label7.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label7.Location = new System.Drawing.Point(1305, 506);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(65, 22);
+            this.label7.Size = new System.Drawing.Size(61, 22);
             this.label7.TabIndex = 37;
-            this.label7.Text = "Nome:";
+            this.label7.Text = "Login:";
             // 
             // txtSenha
             // 
@@ -70,6 +70,8 @@
             this.txtSenha.Name = "txtSenha";
             this.txtSenha.Size = new System.Drawing.Size(270, 20);
             this.txtSenha.TabIndex = 39;
+            this.txtSenha.Enter += new System.EventHandler(this.txtSenha_Enter_1);
+            this.txtSenha.Leave += new System.EventHandler(this.txtSenha_Leave_1);
             // 
             // btnEntrar
             // 
@@ -154,6 +156,8 @@
             this.txtLogin.Size = new System.Drawing.Size(270, 20);
             this.txtLogin.TabIndex = 38;
             this.txtLogin.TextChanged += new System.EventHandler(this.txtLogin_TextChanged);
+            this.txtLogin.Enter += new System.EventHandler(this.txtLogin_Enter_1);
+            this.txtLogin.Leave += new System.EventHandler(this.txtLogin_Leave_1);
             // 
             // frmLogin
             // 
