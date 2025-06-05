@@ -242,6 +242,16 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ILLink\ILLink.Descriptors.LibraryBuild.xml" />
+    <None Include="Resources\id.png" />
+    <None Include="Resources\open-book.png" />
+    <None Include="Resources\setting.png" />
+    <None Include="Resources\student.png" />
+    <None Include="Resources\graduated %281%29.png" />
+    <None Include="Resources\books.png" />
+    <None Include="Resources\search %282%29.png" />
+    <None Include="Resources\search1.png" />
+    <None Include="Resources\search %281%29.png" />
+    <None Include="Resources\search.png" />
     <None Include="Resources\FundoNovo.png" />
     <None Include="Resources\Design sem nome %286%291.png" />
     <None Include="Resources\default.png" />

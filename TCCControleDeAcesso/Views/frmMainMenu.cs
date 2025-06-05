@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -15,7 +16,17 @@ namespace TCCControleDeAcesso.Views
     public partial class frmMainMenu : Form
     {
 
+        [DllImport("Gdi32", EntryPoint = "CreateRoundRectRgn")]
 
+        private static extern IntPtr CreateRoundRgn
+(
+int nLeftRect,
+int nTopRect,
+int nRightRect,
+int nBottomRect,
+int nWidthEllipse,
+int nHeightEllipse
+);
 
         public int id_escola;
 
@@ -23,11 +34,9 @@ namespace TCCControleDeAcesso.Views
         public frmMainMenu(string currentUsername, int idEscola)
         {
             InitializeComponent();
+            Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, Width, Height, 25, 25));
             label2.Text = currentUsername;
             id_escola = idEscola;
-
-
-           
         }
 
         private void btnLogout_Click(object sender, EventArgs e)
@@ -49,6 +58,21 @@ namespace TCCControleDeAcesso.Views
             frmCadastroCurso check = new frmCadastroCurso(id_escola);
             check.Show();
             Hide();
+        }
+
+        private void frmMainMenu_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            panel1.Height = b
+        }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }
