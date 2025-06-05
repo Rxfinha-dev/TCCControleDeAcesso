@@ -361,3 +361,7 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/TCCControleDeAcesso/Banco.cs
+/TCCControleDeAcesso/Views/frmListaAlunos.Designer.cs
+/TCCControleDeAcesso/Views/frmListaAlunos.cs
+/TCCControleDeAcesso/Views/frmListaAlunos.resx
