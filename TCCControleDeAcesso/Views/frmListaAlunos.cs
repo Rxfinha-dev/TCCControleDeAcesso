@@ -108,10 +108,10 @@ namespace TCCControleDeAcesso.Views
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            if (txtName.Text == string.Empty || txtIdade.Text == string.Empty || comboBox2.SelectedIndex == -1 || caminho == null || cboCurso.SelectedIndex == -1)
+            if (txtName.Text == string.Empty || txtRm.Text == string.Empty || txtIdade.Text == string.Empty || comboBox2.SelectedIndex == -1 || caminho == null || cboCurso.SelectedIndex == -1)
             {
 
-                MessageBox.Show("Preencha todos os login.", "Erro de Formulário.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Preencha todos os campos.", "Erro de Preenchimento.", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
