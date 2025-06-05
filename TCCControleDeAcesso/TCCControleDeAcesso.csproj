@@ -103,6 +103,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Banco.cs" />
     <Compile Include="Controllers\Login.cs" />
     <Compile Include="Controllers\NovaSenha.cs" />
     <Compile Include="Controllers\VerificacaoController.cs" />
@@ -129,6 +130,12 @@
     </Compile>
     <Compile Include="Views\frmCadastroEmpresa.Designer.cs">
       <DependentUpon>frmCadastroEmpresa.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\frmListaAlunos.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\frmListaAlunos.Designer.cs">
+      <DependentUpon>frmListaAlunos.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\frmMainMenu.cs">
       <SubType>Form</SubType>
@@ -179,6 +186,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\frmCadastroEmpresa.resx">
       <DependentUpon>frmCadastroEmpresa.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\frmListaAlunos.resx">
+      <DependentUpon>frmListaAlunos.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\frmLogin.resx">
       <DependentUpon>frmLogin.cs</DependentUpon>
