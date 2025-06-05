@@ -34,7 +34,7 @@ int nHeightEllipse
         public frmMainMenu(string currentUsername, int idEscola)
         {
             InitializeComponent();
-            Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, Width, Height, 25, 25));
+            //Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, Width, Height, 25, 25));
             label2.Text = currentUsername;
             id_escola = idEscola;
         }
@@ -67,7 +67,7 @@ int nHeightEllipse
 
         private void button5_Click(object sender, EventArgs e)
         {
-            panel1.Height = b
+            //panel1.Height = b;
         }
 
         private void panel1_Paint(object sender, PaintEventArgs e)
