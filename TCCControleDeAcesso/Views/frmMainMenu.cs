@@ -46,7 +46,7 @@ int nHeightEllipse
             Hide();
         }
 
-        private void button4_Click(object sender, EventArgs e)
+        private void btnAlunos_Click(object sender, EventArgs e)
         {
             frmListaAlunos check = new frmListaAlunos(id_escola);
             check.Show();
@@ -73,6 +73,20 @@ int nHeightEllipse
         private void panel1_Paint(object sender, PaintEventArgs e)
         {
 
+        }
+
+        private void btnConfiguracoes_Click(object sender, EventArgs e)
+        {
+            frmConfiguracoes check = new frmConfiguracoes();
+            check.Show();
+            Hide();
+        }
+
+        private void btnVerificacao_Click(object sender, EventArgs e)
+        {
+            frmVerification check = new frmVerification();
+            check.Show();
+            Hide();
         }
     }
 }

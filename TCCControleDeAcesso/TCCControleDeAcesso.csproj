@@ -131,6 +131,12 @@
     <Compile Include="Views\frmCadastroEmpresa.Designer.cs">
       <DependentUpon>frmCadastroEmpresa.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\frmConfiguracoes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\frmConfiguracoes.Designer.cs">
+      <DependentUpon>frmConfiguracoes.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\frmListaAlunos.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -186,6 +192,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\frmCadastroEmpresa.resx">
       <DependentUpon>frmCadastroEmpresa.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\frmConfiguracoes.resx">
+      <DependentUpon>frmConfiguracoes.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\frmListaAlunos.resx">
       <DependentUpon>frmListaAlunos.cs</DependentUpon>
