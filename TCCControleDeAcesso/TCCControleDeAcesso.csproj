@@ -107,6 +107,7 @@
     <Compile Include="Controllers\Login.cs" />
     <Compile Include="Controllers\NovaSenha.cs" />
     <Compile Include="Controllers\VerificacaoController.cs" />
+    <Compile Include="Models\Arduino.cs" />
     <Compile Include="Models\CadastroAlunos.cs" />
     <Compile Include="Models\CadastroEmpresas.cs" />
     <Compile Include="Models\Curso.cs" />

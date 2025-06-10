@@ -9,11 +9,13 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO.Ports;
 using System.Web.UI;
+using TCCControleDeAcesso.Models;
 
 namespace TCCControleDeAcesso.Views
 {
     public partial class frmConfiguracoes : Form
     {
+        Arduino arduino = new Arduino();
         bool connected;
         String[] ports;
         SerialPort port;
@@ -43,8 +45,7 @@ namespace TCCControleDeAcesso.Views
         void connect()
         {
             string selectedPort = comboBoxPortas.SelectedItem.ToString();
-            port = new SerialPort(selectedPort);
-            port.Open();
+            arduino.connect(selectedPort);
             connected = true;
             progressBarConectado.Value = 100;
             bntConectar.Text = "Desconectar";
@@ -52,7 +53,7 @@ namespace TCCControleDeAcesso.Views
 
         void disconnect()
         {
-            port.Close();
+            arduino.disconnect();
             connected = false;
             progressBarConectado.Value = 0;
             bntConectar.Text = "Conectar";
