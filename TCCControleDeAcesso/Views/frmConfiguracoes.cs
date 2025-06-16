@@ -19,6 +19,7 @@ namespace TCCControleDeAcesso.Views
         bool connected;
         String[] ports;
         SerialPort port;
+
         public frmConfiguracoes()
         {
             InitializeComponent();
@@ -57,6 +58,16 @@ namespace TCCControleDeAcesso.Views
             connected = false;
             progressBarConectado.Value = 0;
             bntConectar.Text = "Conectar";
+        }
+
+        public static void dataReceived(string received)
+        {
+            //serial(received);
+        }
+
+        void serial(string received)
+        {
+            richTextBoxSerial.Text = richTextBoxSerial.Text + received;
         }
     }
 }
