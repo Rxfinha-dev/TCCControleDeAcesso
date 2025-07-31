@@ -79,7 +79,6 @@ int nHeightEllipse
         {
             frmConfiguracoes check = new frmConfiguracoes();
             check.Show();
-            Hide();
         }
 
         private void btnVerificacao_Click(object sender, EventArgs e)

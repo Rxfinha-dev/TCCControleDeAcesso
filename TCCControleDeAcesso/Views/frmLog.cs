@@ -10,16 +10,11 @@ using System.Windows.Forms;
 
 namespace TCCControleDeAcesso.Views
 {
-    public partial class frmVerification : Form
+    public partial class frmLog : Form
     {
-        public frmVerification()
+        public frmLog()
         {
             InitializeComponent();
-        }
-
-        private void frmVerification_Load(object sender, EventArgs e)
-        {
-
         }
     }
 }
