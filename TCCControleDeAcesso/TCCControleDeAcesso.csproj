@@ -111,9 +111,16 @@
     <Compile Include="Models\CadastroAlunos.cs" />
     <Compile Include="Models\CadastroEmpresas.cs" />
     <Compile Include="Models\Curso.cs" />
+    <Compile Include="Models\Log.cs" />
     <Compile Include="Models\Verificacao.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Views\frmLog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\frmLog.Designer.cs">
+      <DependentUpon>frmLog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\frmAtivacaoConta.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -199,6 +206,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\frmListaAlunos.resx">
       <DependentUpon>frmListaAlunos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\frmLog.resx">
+      <DependentUpon>frmLog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\frmLogin.resx">
       <DependentUpon>frmLogin.cs</DependentUpon>
