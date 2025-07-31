@@ -252,6 +252,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ILLink\ILLink.Descriptors.LibraryBuild.xml" />
+    <None Include="Resources\Design sem nome %289%29.png" />
+    <None Include="Resources\Design sem nome %288%29 %281%29.png" />
     <None Include="Resources\id.png" />
     <None Include="Resources\open-book.png" />
     <None Include="Resources\setting.png" />
