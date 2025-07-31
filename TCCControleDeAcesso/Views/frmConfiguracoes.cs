@@ -15,7 +15,6 @@ namespace TCCControleDeAcesso.Views
 {
     public partial class frmConfiguracoes : Form
     {
-        Arduino arduino = new Arduino();
         bool connected;
         String[] ports;
         SerialPort port;
@@ -46,7 +45,8 @@ namespace TCCControleDeAcesso.Views
         void connect()
         {
             string selectedPort = comboBoxPortas.SelectedItem.ToString();
-            arduino.connect(selectedPort);
+            port = new SerialPort(selectedPort, 9600);
+            port.Open();
             connected = true;
             progressBarConectado.Value = 100;
             bntConectar.Text = "Desconectar";
@@ -54,20 +54,21 @@ namespace TCCControleDeAcesso.Views
 
         void disconnect()
         {
-            arduino.disconnect();
+            port.Close();
             connected = false;
             progressBarConectado.Value = 0;
             bntConectar.Text = "Conectar";
         }
 
-        public static void dataReceived(string received)
-        {
-            //serial(received);
-        }
-
         void serial(string received)
         {
             richTextBoxSerial.Text = richTextBoxSerial.Text + received;
+        }
+
+        void port_DataReceived(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
+        {
+            string received = port.ReadLine();
+            serial(received);
         }
     }
 }

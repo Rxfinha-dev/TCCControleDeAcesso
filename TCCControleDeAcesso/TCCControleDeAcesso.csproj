@@ -107,7 +107,6 @@
     <Compile Include="Controllers\Login.cs" />
     <Compile Include="Controllers\NovaSenha.cs" />
     <Compile Include="Controllers\VerificacaoController.cs" />
-    <Compile Include="Models\Arduino.cs" />
     <Compile Include="Models\CadastroAlunos.cs" />
     <Compile Include="Models\CadastroEmpresas.cs" />
     <Compile Include="Models\Curso.cs" />
@@ -162,11 +161,11 @@
     <Compile Include="Views\frmLogin.Designer.cs">
       <DependentUpon>frmLogin.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\frmVerification.cs">
+    <Compile Include="Views\frmVerificacao.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\frmVerification.Designer.cs">
-      <DependentUpon>frmVerification.cs</DependentUpon>
+    <Compile Include="Views\frmVerificacao.Designer.cs">
+      <DependentUpon>frmVerificacao.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\NetworCredential.cs" />
     <Compile Include="Views\frmNovaSenha.cs">
@@ -212,8 +211,8 @@
     <EmbeddedResource Include="Views\frmNovaSenha.resx">
       <DependentUpon>frmNovaSenha.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\frmVerification.resx">
-      <DependentUpon>frmVerification.cs</DependentUpon>
+    <EmbeddedResource Include="Views\frmVerificacao.resx">
+      <DependentUpon>frmVerificacao.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
