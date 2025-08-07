@@ -99,62 +99,72 @@ namespace TCCControleDeAcesso.Views
 
             if (txtSenha.Text == txtConfirmarSenha.Text ) 
             {
-                ////Código que cadastra o email no banco de dados!!!!       --------------->    _cadastroEmpresas.Insert();
-                MessageBox.Show("Para a ativação de conta estamos enviando um código de verificação no seu email! " +
-                    " Olhe o seu email e caixa de Spam! ", "Ativação de conta ", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                /////////////////////
-                ///
+               //terminar if (txtEmail.EndsWith("@gmail.com") )
+                //{
 
 
-                //Evitando o click mais de uma vez
-                btnCadastrar.Enabled = false;
-                String from, pass, messageBody;
-                Random rand = new Random();
-                randomCode = (rand.Next(99999999)).ToString();
-                textBox1.Text = randomCode;///////////////////////////// !!!!!!!!
-                MailMessage message = new MailMessage();                    //txtEmail do cara = meu txtEmailDestinatario
-                from = "suportehelpus@gmail.com"; //Email do remetente
-                pass = "vwec abnc veyc jvns"; //Senha de App
-                messageBody = "Estamos felizes de termos você conosoco! Seu código de ativação de conta é: " + randomCode;
-                to = txtEmail.Text; // Obtendo o e-mail do destinatário  
-                message.To.Add(to);
-                message.From = new MailAddress(from);
-                message.Body = messageBody;
-                message.Subject = "Bem vindo ao HelpUS! ";
-                SmtpClient smtp = new SmtpClient("smtp.gmail.com");
-                smtp.EnableSsl = true;
-                smtp.Port = 587;
-                smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
-                smtp.Credentials = new NetworkCredential(from, pass);
+                    ////Código que cadastra o email no banco de dados!!!!       --------------->    _cadastroEmpresas.Insert();
+                    MessageBox.Show("Para a ativação de conta estamos enviando um código de verificação no seu email! " +
+                        " Olhe o seu email e caixa de Spam! ", "Ativação de conta ", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                /////////////// passando Variaveis para o outro form
-                var frmAC  = new frmAtivacaoConta(txtNome.Text,txtEmail.Text,txtSenha.Text);
-                frmAC.propriedade = textBox1.Text;
-                this.Hide();
-                frmAC.Show();
-                ///////////////
+                    /////////////////////
+                    ///
 
-                try
-                {
-                    smtp.Send(message);
-                    //reativando o btnEnviarEmail
-                    btnCadastrar.Enabled = true;
+               
+                    //Evitando o click mais de uma vez
+                    btnCadastrar.Enabled = false;
+                    //Evitando o click mais de uma vez 
+                    String from, pass, messageBody;
+                    Random rand = new Random();
+                    randomCode = (rand.Next(99999999)).ToString();
+                    textBox1.Text = randomCode;///////////////////////////// !!!!!!!!
+                    MailMessage message = new MailMessage();                    
+                    from = "suportehelpus@gmail.com"; //Email do remetente
+                    pass = "vwec abnc veyc jvns"; //Senha de App
+                    messageBody = "Estamos felizes de termos você conosoco! Seu código de ativação de conta é: " + randomCode;
+                    to = txtEmail.Text; // Obtendo o e-mail do destinatário  
 
-                }
+                    message.To.Add(to);
+                    message.From = new MailAddress(from);
+                    message.Body = messageBody;
+                    message.Subject = "Bem vindo ao HelpUS! ";
+                    SmtpClient smtp = new SmtpClient("smtp.gmail.com");
+                    smtp.EnableSsl = true;
+                    smtp.Port = 587;
+                    smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                    smtp.Credentials = new NetworkCredential(from, pass);
 
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                    //reativando o btnEnviarEmail
-                    btnCadastrar.Enabled = true;
-                }
+                    /////////////// passando Variaveis para o outro form
+                    var frmAC = new frmAtivacaoConta(txtNome.Text, txtEmail.Text, txtSenha.Text);
+                    frmAC.propriedade = textBox1.Text;
+                    this.Hide();
+                    frmAC.Show();
+                    ///////////////
+
+                    try
+                    {
+                        smtp.Send(message);
+                        //reativando o btnEnviarEmail
+                        btnCadastrar.Enabled = true;
+
+                    }
+
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                        //reativando o btnEnviarEmail
+                        btnCadastrar.Enabled = true;
+                    }
 
 
 
-                ///
-                /////////////////////
-
+                    ///
+                    /////////////////////
+               // }
+                //else
+                //{
+                 //   MessageBox.Show("Endereço de email inválido!");
+                //}
             }
 
             else

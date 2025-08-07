@@ -13,16 +13,23 @@ namespace TCCControleDeAcesso.Views
 {
     public partial class frmVerificacao : Form
     {
-        SerialPort port;
-
         public frmVerificacao()
         {
             InitializeComponent();
+            if (serialPort.IsOpen)
+            {
+                serialPort.Write("!verify#");
+            }
         }
 
-        void port_DataReceived(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
+        private void serialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            string received = port.ReadLine();
+            this.Invoke(new EventHandler(serialPort_DataReceived));
+        }
+
+        private void serialPort_DataReceived(object sender, EventArgs e)
+        {
+            string received = serialPort.ReadLine();
 
             if (received.StartsWith("#found"))
             {

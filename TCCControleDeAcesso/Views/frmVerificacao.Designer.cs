@@ -28,7 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.aluno = new System.Windows.Forms.Label();
+            this.serialPort = new System.IO.Ports.SerialPort(this.components);
             this.SuspendLayout();
             // 
             // aluno
@@ -57,5 +59,6 @@
         #endregion
 
         private System.Windows.Forms.Label aluno;
+        private System.IO.Ports.SerialPort serialPort;
     }
 }

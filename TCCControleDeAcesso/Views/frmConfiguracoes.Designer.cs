@@ -28,11 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.bntConectar = new System.Windows.Forms.Button();
             this.progressBarConectado = new System.Windows.Forms.ProgressBar();
             this.comboBoxPortas = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.richTextBoxSerial = new System.Windows.Forms.RichTextBox();
+            this.serialPort = new System.IO.Ports.SerialPort(this.components);
             this.SuspendLayout();
             // 
             // bntConectar
@@ -89,6 +91,10 @@
             this.richTextBoxSerial.TabIndex = 4;
             this.richTextBoxSerial.Text = "";
             // 
+            // serialPort
+            // 
+            this.serialPort.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.serialPort_DataReceived);
+            // 
             // frmConfiguracoes
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -115,5 +121,6 @@
         private System.Windows.Forms.ComboBox comboBoxPortas;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.RichTextBox richTextBoxSerial;
+        private System.IO.Ports.SerialPort serialPort;
     }
 }
