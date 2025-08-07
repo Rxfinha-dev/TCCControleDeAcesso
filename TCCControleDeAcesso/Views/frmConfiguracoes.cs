@@ -16,8 +16,9 @@ namespace TCCControleDeAcesso.Views
     public partial class frmConfiguracoes : Form
     {
         bool connected;
-        String[] ports;
-        SerialPort port;
+        string[] ports;
+        string received;
+        string selectedPort;
 
         public frmConfiguracoes()
         {
@@ -44,9 +45,9 @@ namespace TCCControleDeAcesso.Views
 
         void connect()
         {
-            string selectedPort = comboBoxPortas.SelectedItem.ToString();
-            port = new SerialPort(selectedPort, 9600);
-            port.Open();
+            selectedPort = comboBoxPortas.SelectedItem.ToString();
+            serialPort.PortName = selectedPort;
+            serialPort.Open();
             connected = true;
             progressBarConectado.Value = 100;
             bntConectar.Text = "Desconectar";
@@ -54,21 +55,21 @@ namespace TCCControleDeAcesso.Views
 
         void disconnect()
         {
-            port.Close();
+            serialPort.Close();
             connected = false;
             progressBarConectado.Value = 0;
             bntConectar.Text = "Conectar";
         }
 
-        void serial(string received)
+        private void serialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            richTextBoxSerial.Text = richTextBoxSerial.Text + received;
+            this.Invoke(new EventHandler(serialPort_DataReceived));
         }
 
-        void port_DataReceived(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
+        private void serialPort_DataReceived(object sender, EventArgs e)
         {
-            string received = port.ReadLine();
-            serial(received);
+            received = serialPort.ReadLine();
+            richTextBoxSerial.Text += received;
         }
     }
 }
