@@ -83,7 +83,7 @@ int nHeightEllipse
 
         private void btnVerificacao_Click(object sender, EventArgs e)
         {
-            frmVerification check = new frmVerification();
+            frmVerificacao check = new frmVerificacao();
             check.Show();
             Hide();
         }
