@@ -163,6 +163,26 @@ namespace TCCControleDeAcesso.Properties {
         /// <summary>
         ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Design_sem_nome__10_ {
+            get {
+                object obj = ResourceManager.GetObject("Design sem nome (10)", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Design_sem_nome__11_ {
+            get {
+                object obj = ResourceManager.GetObject("Design sem nome (11)", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Design_sem_nome__2_ {
             get {
                 object obj = ResourceManager.GetObject("Design sem nome (2)", resourceCulture);
@@ -216,6 +236,16 @@ namespace TCCControleDeAcesso.Properties {
         internal static System.Drawing.Bitmap Design_sem_nome__6_1 {
             get {
                 object obj = ResourceManager.GetObject("Design sem nome (6)1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Design_sem_nome__7_ {
+            get {
+                object obj = ResourceManager.GetObject("Design sem nome (7)", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -423,6 +453,26 @@ namespace TCCControleDeAcesso.Properties {
         /// <summary>
         ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Logo_FAP {
+            get {
+                object obj = ResourceManager.GetObject("Logo FAP", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Logo_FAP1 {
+            get {
+                object obj = ResourceManager.GetObject("Logo FAP1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Logo_FB {
             get {
                 object obj = ResourceManager.GetObject("Logo FB", resourceCulture);
@@ -596,6 +646,16 @@ namespace TCCControleDeAcesso.Properties {
         internal static System.Drawing.Bitmap Texto_do_seu_parágrafo {
             get {
                 object obj = ResourceManager.GetObject("Texto do seu parágrafo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Texto_do_seu_parágrafo__1_ {
+            get {
+                object obj = ResourceManager.GetObject("Texto do seu parágrafo (1)", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

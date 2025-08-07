@@ -83,7 +83,7 @@ int nHeightEllipse
 
         private void btnVerificacao_Click(object sender, EventArgs e)
         {
-            frmVerification check = new frmVerification();
+            frmVerificacao check = new frmVerificacao();
             check.Show();
             Hide();
         }
@@ -101,6 +101,11 @@ int nHeightEllipse
         private void label2_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
         }
     }
 }

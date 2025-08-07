@@ -261,6 +261,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ILLink\ILLink.Descriptors.LibraryBuild.xml" />
+    <None Include="Resources\Design sem nome %287%29.png" />
+    <None Include="Resources\Design sem nome %2811%29.png" />
+    <None Include="Resources\Texto do seu parágrafo %281%29.png" />
+    <None Include="Resources\Logo FAP1.png" />
+    <None Include="Resources\Logo FAP.png" />
+    <None Include="Resources\Design sem nome %2810%29.png" />
     <None Include="Resources\Design sem nome %289%29.png" />
     <None Include="Resources\Design sem nome %288%29 %281%29.png" />
     <None Include="Resources\id.png" />

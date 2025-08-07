@@ -44,18 +44,16 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAlunos)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // txtIdOficial
             // 
             this.txtIdOficial.HideSelection = false;
-            this.txtIdOficial.Location = new System.Drawing.Point(283, 183);
+            this.txtIdOficial.Location = new System.Drawing.Point(633, 362);
             this.txtIdOficial.Name = "txtIdOficial";
             this.txtIdOficial.Size = new System.Drawing.Size(100, 20);
             this.txtIdOficial.TabIndex = 80;
@@ -73,7 +71,7 @@
             // 
             this.linkSelectPhoto.AutoSize = true;
             this.linkSelectPhoto.LinkColor = System.Drawing.Color.Black;
-            this.linkSelectPhoto.Location = new System.Drawing.Point(857, 396);
+            this.linkSelectPhoto.Location = new System.Drawing.Point(1216, 583);
             this.linkSelectPhoto.Name = "linkSelectPhoto";
             this.linkSelectPhoto.Size = new System.Drawing.Size(72, 13);
             this.linkSelectPhoto.TabIndex = 78;
@@ -84,16 +82,16 @@
             // dgvAlunos
             // 
             this.dgvAlunos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvAlunos.Location = new System.Drawing.Point(167, 430);
+            this.dgvAlunos.Location = new System.Drawing.Point(674, 609);
             this.dgvAlunos.Name = "dgvAlunos";
-            this.dgvAlunos.Size = new System.Drawing.Size(925, 344);
+            this.dgvAlunos.Size = new System.Drawing.Size(614, 344);
             this.dgvAlunos.TabIndex = 77;
             this.dgvAlunos.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvAlunos_CellClick);
             // 
             // txtIdade
             // 
             this.txtIdade.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtIdade.Location = new System.Drawing.Point(283, 268);
+            this.txtIdade.Location = new System.Drawing.Point(633, 447);
             this.txtIdade.Name = "txtIdade";
             this.txtIdade.Size = new System.Drawing.Size(493, 24);
             this.txtIdade.TabIndex = 76;
@@ -102,7 +100,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(231, 272);
+            this.label6.Location = new System.Drawing.Point(581, 451);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(47, 18);
             this.label6.TabIndex = 75;
@@ -114,7 +112,7 @@
             this.BtnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.BtnDelete.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.BtnDelete.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.BtnDelete.Location = new System.Drawing.Point(556, 342);
+            this.BtnDelete.Location = new System.Drawing.Point(906, 521);
             this.BtnDelete.Margin = new System.Windows.Forms.Padding(0);
             this.BtnDelete.Name = "BtnDelete";
             this.BtnDelete.Size = new System.Drawing.Size(99, 55);
@@ -131,7 +129,7 @@
             "1° Ano",
             "2° Ano",
             "3° Ano"});
-            this.comboBox2.Location = new System.Drawing.Point(573, 296);
+            this.comboBox2.Location = new System.Drawing.Point(923, 475);
             this.comboBox2.Name = "comboBox2";
             this.comboBox2.Size = new System.Drawing.Size(203, 26);
             this.comboBox2.TabIndex = 73;
@@ -140,7 +138,7 @@
             // 
             this.cboCurso.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cboCurso.FormattingEnabled = true;
-            this.cboCurso.Location = new System.Drawing.Point(283, 296);
+            this.cboCurso.Location = new System.Drawing.Point(633, 475);
             this.cboCurso.Name = "cboCurso";
             this.cboCurso.Size = new System.Drawing.Size(203, 26);
             this.cboCurso.TabIndex = 72;
@@ -151,7 +149,7 @@
             this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSave.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSave.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.btnSave.Location = new System.Drawing.Point(677, 343);
+            this.btnSave.Location = new System.Drawing.Point(1027, 522);
             this.btnSave.Margin = new System.Windows.Forms.Padding(0);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(99, 54);
@@ -163,7 +161,7 @@
             // txtRm
             // 
             this.txtRm.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtRm.Location = new System.Drawing.Point(283, 239);
+            this.txtRm.Location = new System.Drawing.Point(633, 418);
             this.txtRm.Name = "txtRm";
             this.txtRm.Size = new System.Drawing.Size(493, 24);
             this.txtRm.TabIndex = 69;
@@ -171,7 +169,7 @@
             // txtName
             // 
             this.txtName.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtName.Location = new System.Drawing.Point(283, 211);
+            this.txtName.Location = new System.Drawing.Point(633, 390);
             this.txtName.Name = "txtName";
             this.txtName.Size = new System.Drawing.Size(493, 24);
             this.txtName.TabIndex = 68;
@@ -180,7 +178,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(521, 301);
+            this.label4.Location = new System.Drawing.Point(871, 480);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(46, 18);
             this.label4.TabIndex = 67;
@@ -190,7 +188,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(231, 243);
+            this.label3.Location = new System.Drawing.Point(581, 422);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(36, 18);
             this.label3.TabIndex = 66;
@@ -200,7 +198,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(230, 300);
+            this.label2.Location = new System.Drawing.Point(580, 479);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(53, 18);
             this.label2.TabIndex = 65;
@@ -211,41 +209,33 @@
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.Black;
-            this.label1.Location = new System.Drawing.Point(231, 214);
+            this.label1.Location = new System.Drawing.Point(581, 393);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(53, 18);
             this.label1.TabIndex = 64;
             this.label1.Text = "Nome:";
             // 
-            // pictureBox2
+            // openFileDialog1
             // 
-            this.pictureBox2.Image = global::TCCControleDeAcesso.Properties.Resources.Texto_do_seu_parágrafo1;
-            this.pictureBox2.Location = new System.Drawing.Point(397, -261);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(610, 433);
-            this.pictureBox2.TabIndex = 81;
-            this.pictureBox2.TabStop = false;
+            this.openFileDialog1.FileName = "openFileDialog1";
             // 
             // pictureBox1
             // 
             this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox1.Location = new System.Drawing.Point(812, 211);
+            this.pictureBox1.Location = new System.Drawing.Point(1162, 390);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(185, 191);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 71;
             this.pictureBox1.TabStop = false;
             // 
-            // openFileDialog1
-            // 
-            this.openFileDialog1.FileName = "openFileDialog1";
-            // 
             // frmListaAlunos
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.BackgroundImage = global::TCCControleDeAcesso.Properties.Resources.Design_sem_nome__7_;
             this.ClientSize = new System.Drawing.Size(1523, 861);
-            this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.txtIdOficial);
             this.Controls.Add(this.txtId);
             this.Controls.Add(this.linkSelectPhoto);
@@ -267,7 +257,6 @@
             this.Text = "frmListaAlunos";
             this.Load += new System.EventHandler(this.frmListaAlunos_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvAlunos)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -275,8 +264,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.TextBox txtIdOficial;
         private System.Windows.Forms.TextBox txtId;
         private System.Windows.Forms.LinkLabel linkSelectPhoto;

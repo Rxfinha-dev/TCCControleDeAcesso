@@ -39,23 +39,23 @@
             this.button8 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.button1 = new System.Windows.Forms.Button();
             this.button7 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // btnLogout
             // 
             this.btnLogout.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.btnLogout.Font = new System.Drawing.Font("Segoe UI", 13.25F);
-            this.btnLogout.Location = new System.Drawing.Point(1057, 483);
+            this.btnLogout.Location = new System.Drawing.Point(53, 641);
             this.btnLogout.Name = "btnLogout";
             this.btnLogout.Size = new System.Drawing.Size(117, 52);
             this.btnLogout.TabIndex = 25;
@@ -90,7 +90,7 @@
             // 
             this.btnConfiguracoes.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.btnConfiguracoes.Font = new System.Drawing.Font("Segoe UI", 13.25F);
-            this.btnConfiguracoes.Location = new System.Drawing.Point(594, 483);
+            this.btnConfiguracoes.Location = new System.Drawing.Point(3, 560);
             this.btnConfiguracoes.Name = "btnConfiguracoes";
             this.btnConfiguracoes.Size = new System.Drawing.Size(223, 75);
             this.btnConfiguracoes.TabIndex = 26;
@@ -102,7 +102,7 @@
             // 
             this.btnVerificacao.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.btnVerificacao.Font = new System.Drawing.Font("Segoe UI", 13.25F);
-            this.btnVerificacao.Location = new System.Drawing.Point(986, 580);
+            this.btnVerificacao.Location = new System.Drawing.Point(26, 459);
             this.btnVerificacao.Name = "btnVerificacao";
             this.btnVerificacao.Size = new System.Drawing.Size(223, 75);
             this.btnVerificacao.TabIndex = 27;
@@ -114,7 +114,7 @@
             // 
             this.btnCursos.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.btnCursos.Font = new System.Drawing.Font("Segoe UI", 13.25F);
-            this.btnCursos.Location = new System.Drawing.Point(312, 414);
+            this.btnCursos.Location = new System.Drawing.Point(-2, 505);
             this.btnCursos.Name = "btnCursos";
             this.btnCursos.Size = new System.Drawing.Size(223, 75);
             this.btnCursos.TabIndex = 28;
@@ -126,7 +126,7 @@
             // 
             this.btnAlunos.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.btnAlunos.Font = new System.Drawing.Font("Segoe UI", 13.25F);
-            this.btnAlunos.Location = new System.Drawing.Point(312, 472);
+            this.btnAlunos.Location = new System.Drawing.Point(0, 606);
             this.btnAlunos.Name = "btnAlunos";
             this.btnAlunos.Size = new System.Drawing.Size(223, 75);
             this.btnAlunos.TabIndex = 29;
@@ -136,11 +136,16 @@
             // 
             // panel1
             // 
-            this.panel1.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.panel1.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.panel1.Controls.Add(this.button1);
             this.panel1.Controls.Add(this.button8);
+            this.panel1.Controls.Add(this.btnLogout);
+            this.panel1.Controls.Add(this.btnVerificacao);
+            this.panel1.Controls.Add(this.btnAlunos);
+            this.panel1.Controls.Add(this.btnConfiguracoes);
             this.panel1.Controls.Add(this.button7);
+            this.panel1.Controls.Add(this.btnCursos);
             this.panel1.Controls.Add(this.button6);
             this.panel1.Controls.Add(this.button3);
             this.panel1.Controls.Add(this.button5);
@@ -158,8 +163,8 @@
             this.button8.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.button8.FlatAppearance.BorderSize = 0;
             this.button8.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button8.Font = new System.Drawing.Font("Nirmala UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button8.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(186)))), ((int)(((byte)(240)))));
+            this.button8.Font = new System.Drawing.Font("Nirmala UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button8.ForeColor = System.Drawing.Color.Black;
             this.button8.Location = new System.Drawing.Point(0, 687);
             this.button8.Name = "button8";
             this.button8.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
@@ -167,6 +172,7 @@
             this.button8.TabIndex = 37;
             this.button8.Text = "Sair";
             this.button8.UseVisualStyleBackColor = false;
+            this.button8.Click += new System.EventHandler(this.button8_Click);
             // 
             // button5
             // 
@@ -198,15 +204,6 @@
             this.panel2.Size = new System.Drawing.Size(228, 144);
             this.panel2.TabIndex = 32;
             // 
-            // pictureBox3
-            // 
-            this.pictureBox3.Image = global::TCCControleDeAcesso.Properties.Resources.Design_sem_nome__8___1_;
-            this.pictureBox3.Location = new System.Drawing.Point(516, -109);
-            this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(658, 449);
-            this.pictureBox3.TabIndex = 32;
-            this.pictureBox3.TabStop = false;
-            // 
             // button1
             // 
             this.button1.BackColor = System.Drawing.SystemColors.ControlLightLight;
@@ -214,7 +211,7 @@
             this.button1.FlatAppearance.BorderSize = 0;
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button1.Font = new System.Drawing.Font("Nirmala UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(186)))), ((int)(((byte)(240)))));
+            this.button1.ForeColor = System.Drawing.Color.Black;
             this.button1.Image = global::TCCControleDeAcesso.Properties.Resources.setting;
             this.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.button1.Location = new System.Drawing.Point(0, 361);
@@ -231,7 +228,7 @@
             this.button7.FlatAppearance.BorderSize = 0;
             this.button7.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button7.Font = new System.Drawing.Font("Nirmala UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button7.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(186)))), ((int)(((byte)(240)))));
+            this.button7.ForeColor = System.Drawing.Color.Black;
             this.button7.Image = global::TCCControleDeAcesso.Properties.Resources.student;
             this.button7.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.button7.Location = new System.Drawing.Point(0, 292);
@@ -248,7 +245,7 @@
             this.button6.FlatAppearance.BorderSize = 0;
             this.button6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button6.Font = new System.Drawing.Font("Nirmala UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(186)))), ((int)(((byte)(240)))));
+            this.button6.ForeColor = System.Drawing.Color.Black;
             this.button6.Image = global::TCCControleDeAcesso.Properties.Resources.open_book;
             this.button6.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.button6.Location = new System.Drawing.Point(0, 223);
@@ -265,7 +262,7 @@
             this.button3.FlatAppearance.BorderSize = 0;
             this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button3.Font = new System.Drawing.Font("Nirmala UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(186)))), ((int)(((byte)(240)))));
+            this.button3.ForeColor = System.Drawing.Color.Black;
             this.button3.Image = global::TCCControleDeAcesso.Properties.Resources.id;
             this.button3.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.button3.Location = new System.Drawing.Point(0, 154);
@@ -287,31 +284,35 @@
             this.pictureBox2.TabStop = false;
             this.pictureBox2.Click += new System.EventHandler(this.pictureBox2_Click);
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::TCCControleDeAcesso.Properties.Resources.Design_sem_nome__11_;
+            this.pictureBox1.Location = new System.Drawing.Point(325, 2);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(1596, 971);
+            this.pictureBox1.TabIndex = 32;
+            this.pictureBox1.TabStop = false;
+            // 
             // frmMainMenu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.ClientSize = new System.Drawing.Size(1221, 781);
-            this.Controls.Add(this.pictureBox3);
+            this.BackgroundImage = global::TCCControleDeAcesso.Properties.Resources.Design_sem_nome__11_;
+            this.ClientSize = new System.Drawing.Size(1639, 781);
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.panel1);
-            this.Controls.Add(this.btnAlunos);
-            this.Controls.Add(this.btnCursos);
-            this.Controls.Add(this.btnVerificacao);
-            this.Controls.Add(this.btnConfiguracoes);
-            this.Controls.Add(this.btnLogout);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "frmMainMenu";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "frmMainMenu";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.frmMainMenu_Load);
             this.panel1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -332,8 +333,8 @@
         private System.Windows.Forms.Button button7;
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button button5;
-        private System.Windows.Forms.PictureBox pictureBox3;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }
