@@ -8,34 +8,48 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using TCCControleDeAcesso.Models;
 
 namespace TCCControleDeAcesso.Views
 {
     public partial class frmVerificacao : Form
     {
+        bool verificando;
+
         public frmVerificacao()
         {
             InitializeComponent();
-            if (serialPort.IsOpen)
-            {
-                serialPort.Write("!verify#");
-            }
-        }
-
-        private void serialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
-        {
-            this.Invoke(new EventHandler(serialPort_DataReceived));
+            SerialPortManager.Port.DataReceived += serialPort_DataReceived;
         }
 
         private void serialPort_DataReceived(object sender, EventArgs e)
         {
-            string received = serialPort.ReadLine();
+            string received = SerialPortManager.Port.ReadLine();
+            aluno.Invoke(new Action(() => {
+                if (received.StartsWith("!found"))
+                {
+                    received = received.Replace("!found", "");
+                    received = received.Replace("#", "");
+                    aluno.Text = received;
+                }
+            }));
+        }
 
-            if (received.StartsWith("#found"))
+        private void btnVerificar_Click(object sender, EventArgs e)
+        {
+            if (!verificando)
             {
-                received.Replace("!found", "");
-                received.Replace("#", "");
-                aluno.Text = received;
+                SerialPortManager.Port.Write("!verify#");
+                btnVerificar.Text = "Parar";
+                progressBarVerificar.Value = 100;
+                verificando = true;
+            }
+            else if (verificando)
+            {
+                SerialPortManager.Port.Write("!a#");
+                btnVerificar.Text = "Verificar";
+                progressBarVerificar.Value = 0;
+                verificando = false;
             }
         }
     }

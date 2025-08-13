@@ -17,12 +17,12 @@ namespace TCCControleDeAcesso.Views
     {
         bool connected;
         string[] ports;
-        string received;
         string selectedPort;
 
         public frmConfiguracoes()
         {
             InitializeComponent();
+            //SerialPortManager.Port.DataReceived += serialPort_DataReceived;
             ports = SerialPort.GetPortNames();
 
             foreach (string port in ports)
@@ -33,21 +33,28 @@ namespace TCCControleDeAcesso.Views
 
         private void bntConectar_Click(object sender, EventArgs e)
         {
-            if (!connected)
+            if (comboBoxPortas.SelectedItem != null)
             {
-                connect();
-            }
-            else if (connected)
-            {
-                disconnect();
+                selectedPort = comboBoxPortas.SelectedItem.ToString();
+                if (selectedPort != "")
+                {
+                    if (!connected)
+                    {
+                        connect();
+                    }
+                    else if (connected)
+                    {
+                        disconnect();
+                    }
+                }
             }
         }
 
         void connect()
         {
             selectedPort = comboBoxPortas.SelectedItem.ToString();
-            serialPort.PortName = selectedPort;
-            serialPort.Open();
+            SerialPortManager.Port.PortName = selectedPort;
+            SerialPortManager.Port.Open();
             connected = true;
             progressBarConectado.Value = 100;
             bntConectar.Text = "Desconectar";
@@ -55,21 +62,18 @@ namespace TCCControleDeAcesso.Views
 
         void disconnect()
         {
-            serialPort.Close();
+            SerialPortManager.Port.Close();
             connected = false;
             progressBarConectado.Value = 0;
             bntConectar.Text = "Conectar";
         }
 
-        private void serialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
-        {
-            this.Invoke(new EventHandler(serialPort_DataReceived));
-        }
-
         private void serialPort_DataReceived(object sender, EventArgs e)
         {
-            received = serialPort.ReadLine();
-            richTextBoxSerial.Text += received;
+            string received = SerialPortManager.Port.ReadLine();
+            richTextBoxSerial.Invoke(new Action(() => {
+                richTextBoxSerial.Text += received;
+            }));
         }
     }
 }
