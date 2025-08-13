@@ -22,19 +22,6 @@ namespace TCCControleDeAcesso.Views
             SerialPortManager.Port.DataReceived += serialPort_DataReceived;
         }
 
-        private void serialPort_DataReceived(object sender, EventArgs e)
-        {
-            string received = SerialPortManager.Port.ReadLine();
-            aluno.Invoke(new Action(() => {
-                if (received.StartsWith("!found"))
-                {
-                    received = received.Replace("!found", "");
-                    received = received.Replace("#", "");
-                    aluno.Text = received;
-                }
-            }));
-        }
-
         private void btnVerificar_Click(object sender, EventArgs e)
         {
             if (!verificando)
@@ -51,6 +38,19 @@ namespace TCCControleDeAcesso.Views
                 progressBarVerificar.Value = 0;
                 verificando = false;
             }
+        }
+
+        private void serialPort_DataReceived(object sender, EventArgs e)
+        {
+            string received = SerialPortManager.Port.ReadLine();
+            aluno.Invoke(new Action(() => {
+                if (received.StartsWith("!found"))
+                {
+                    received = received.Replace("!found", "");
+                    received = received.Replace("#", "");
+                    aluno.Text = received;
+                }
+            }));
         }
     }
 }
