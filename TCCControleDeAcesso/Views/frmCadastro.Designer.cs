@@ -34,9 +34,9 @@
             // 
             // btnCadastrar
             // 
-            this.btnCadastrar.Location = new System.Drawing.Point(400, 251);
+            this.btnCadastrar.Location = new System.Drawing.Point(400, 270);
             this.btnCadastrar.Name = "btnCadastrar";
-            this.btnCadastrar.Size = new System.Drawing.Size(75, 23);
+            this.btnCadastrar.Size = new System.Drawing.Size(75, 25);
             this.btnCadastrar.TabIndex = 0;
             this.btnCadastrar.Text = "Cadastrar";
             this.btnCadastrar.UseVisualStyleBackColor = true;
@@ -45,19 +45,20 @@
             // acao
             // 
             this.acao.AutoSize = true;
-            this.acao.Location = new System.Drawing.Point(344, 373);
+            this.acao.Location = new System.Drawing.Point(344, 402);
             this.acao.Name = "acao";
-            this.acao.Size = new System.Drawing.Size(35, 13);
+            this.acao.Size = new System.Drawing.Size(35, 14);
             this.acao.TabIndex = 1;
             this.acao.Text = "label1";
             // 
             // frmCadastro
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1264, 681);
+            this.ClientSize = new System.Drawing.Size(1264, 733);
             this.Controls.Add(this.acao);
             this.Controls.Add(this.btnCadastrar);
+            this.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "frmCadastro";
             this.Text = "frmCadastro";
             this.ResumeLayout(false);

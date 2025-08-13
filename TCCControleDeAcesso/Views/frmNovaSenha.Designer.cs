@@ -39,26 +39,26 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(12, 56);
+            this.label1.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(12, 13);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(139, 18);
+            this.label1.Size = new System.Drawing.Size(130, 18);
             this.label1.TabIndex = 0;
             this.label1.Text = "Digite seu e-mail:";
             // 
             // txtEmailDestinatario
             // 
-            this.txtEmailDestinatario.Location = new System.Drawing.Point(261, 57);
+            this.txtEmailDestinatario.Location = new System.Drawing.Point(301, 12);
             this.txtEmailDestinatario.Name = "txtEmailDestinatario";
             this.txtEmailDestinatario.Size = new System.Drawing.Size(370, 20);
             this.txtEmailDestinatario.TabIndex = 3;
             // 
             // btnEnviarEmail
             // 
-            this.btnEnviarEmail.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnEnviarEmail.Location = new System.Drawing.Point(405, 165);
+            this.btnEnviarEmail.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnEnviarEmail.Location = new System.Drawing.Point(445, 38);
             this.btnEnviarEmail.Name = "btnEnviarEmail";
-            this.btnEnviarEmail.Size = new System.Drawing.Size(226, 40);
+            this.btnEnviarEmail.Size = new System.Drawing.Size(226, 43);
             this.btnEnviarEmail.TabIndex = 8;
             this.btnEnviarEmail.Text = "Enviar E-mail";
             this.btnEnviarEmail.UseVisualStyleBackColor = true;
@@ -66,10 +66,10 @@
             // 
             // btnVerify
             // 
-            this.btnVerify.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnVerify.Location = new System.Drawing.Point(405, 349);
+            this.btnVerify.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnVerify.Location = new System.Drawing.Point(445, 113);
             this.btnVerify.Name = "btnVerify";
-            this.btnVerify.Size = new System.Drawing.Size(226, 40);
+            this.btnVerify.Size = new System.Drawing.Size(226, 43);
             this.btnVerify.TabIndex = 11;
             this.btnVerify.Text = "Verificar";
             this.btnVerify.UseVisualStyleBackColor = true;
@@ -77,7 +77,7 @@
             // 
             // txtCodeVerify
             // 
-            this.txtCodeVerify.Location = new System.Drawing.Point(261, 241);
+            this.txtCodeVerify.Location = new System.Drawing.Point(301, 87);
             this.txtCodeVerify.Name = "txtCodeVerify";
             this.txtCodeVerify.Size = new System.Drawing.Size(370, 20);
             this.txtCodeVerify.TabIndex = 10;
@@ -85,24 +85,25 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(2, 241);
+            this.label2.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(12, 88);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(240, 18);
+            this.label2.Size = new System.Drawing.Size(226, 18);
             this.label2.TabIndex = 9;
             this.label2.Text = "Digite o Código de verificação:";
             // 
             // frmNovaSenha
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(683, 546);
+            this.ClientSize = new System.Drawing.Size(683, 588);
             this.Controls.Add(this.btnVerify);
             this.Controls.Add(this.txtCodeVerify);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.btnEnviarEmail);
             this.Controls.Add(this.txtEmailDestinatario);
             this.Controls.Add(this.label1);
+            this.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "frmNovaSenha";
             this.Text = "NovaSenha";
             this.ResumeLayout(false);

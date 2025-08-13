@@ -38,19 +38,19 @@
             // aluno
             // 
             this.aluno.AutoSize = true;
-            this.aluno.Font = new System.Drawing.Font("Microsoft Sans Serif", 72F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.aluno.Location = new System.Drawing.Point(251, 171);
+            this.aluno.Font = new System.Drawing.Font("Arial", 72F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.aluno.Location = new System.Drawing.Point(251, 189);
             this.aluno.Name = "aluno";
-            this.aluno.Size = new System.Drawing.Size(299, 108);
+            this.aluno.Size = new System.Drawing.Size(299, 107);
             this.aluno.TabIndex = 0;
             this.aluno.Text = "label1";
             // 
             // btnVerificar
             // 
-            this.btnVerificar.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnVerificar.Font = new System.Drawing.Font("Arial", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnVerificar.Location = new System.Drawing.Point(12, 12);
             this.btnVerificar.Name = "btnVerificar";
-            this.btnVerificar.Size = new System.Drawing.Size(150, 46);
+            this.btnVerificar.Size = new System.Drawing.Size(150, 50);
             this.btnVerificar.TabIndex = 1;
             this.btnVerificar.Text = "Verificar";
             this.btnVerificar.UseVisualStyleBackColor = true;
@@ -58,21 +58,22 @@
             // 
             // progressBarVerificar
             // 
-            this.progressBarVerificar.Location = new System.Drawing.Point(12, 64);
+            this.progressBarVerificar.Location = new System.Drawing.Point(12, 68);
             this.progressBarVerificar.MarqueeAnimationSpeed = 0;
             this.progressBarVerificar.Name = "progressBarVerificar";
-            this.progressBarVerificar.Size = new System.Drawing.Size(150, 23);
+            this.progressBarVerificar.Size = new System.Drawing.Size(150, 25);
             this.progressBarVerificar.Step = 100;
             this.progressBarVerificar.TabIndex = 2;
             // 
             // frmVerificacao
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(800, 485);
             this.Controls.Add(this.progressBarVerificar);
             this.Controls.Add(this.btnVerificar);
             this.Controls.Add(this.aluno);
+            this.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "frmVerificacao";
             this.Text = "frmVerificacao";
             this.ResumeLayout(false);

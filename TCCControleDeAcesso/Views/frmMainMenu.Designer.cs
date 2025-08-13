@@ -36,13 +36,13 @@
             this.btnCursos = new System.Windows.Forms.Button();
             this.btnAlunos = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.button8 = new System.Windows.Forms.Button();
-            this.button5 = new System.Windows.Forms.Button();
-            this.panel2 = new System.Windows.Forms.Panel();
             this.button1 = new System.Windows.Forms.Button();
+            this.button8 = new System.Windows.Forms.Button();
             this.button7 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
+            this.button5 = new System.Windows.Forms.Button();
+            this.panel2 = new System.Windows.Forms.Panel();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel1.SuspendLayout();
@@ -54,10 +54,10 @@
             // btnLogout
             // 
             this.btnLogout.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.btnLogout.Font = new System.Drawing.Font("Segoe UI", 13.25F);
-            this.btnLogout.Location = new System.Drawing.Point(53, 641);
+            this.btnLogout.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnLogout.Location = new System.Drawing.Point(53, 690);
             this.btnLogout.Name = "btnLogout";
-            this.btnLogout.Size = new System.Drawing.Size(117, 52);
+            this.btnLogout.Size = new System.Drawing.Size(117, 56);
             this.btnLogout.TabIndex = 25;
             this.btnLogout.Text = "Sair";
             this.btnLogout.UseVisualStyleBackColor = false;
@@ -66,11 +66,11 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.Color.Blue;
-            this.label2.Location = new System.Drawing.Point(61, 114);
+            this.label2.Location = new System.Drawing.Point(61, 123);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(109, 20);
+            this.label2.Size = new System.Drawing.Size(109, 18);
             this.label2.TabIndex = 24;
             this.label2.Text = "ProjetoTcc123";
             this.label2.Click += new System.EventHandler(this.label2_Click);
@@ -78,10 +78,10 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(78, 96);
+            this.label1.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(78, 103);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(77, 21);
+            this.label1.Size = new System.Drawing.Size(79, 19);
             this.label1.TabIndex = 23;
             this.label1.Text = "Usuário: ";
             this.label1.Click += new System.EventHandler(this.label1_Click);
@@ -89,10 +89,10 @@
             // btnConfiguracoes
             // 
             this.btnConfiguracoes.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.btnConfiguracoes.Font = new System.Drawing.Font("Segoe UI", 13.25F);
-            this.btnConfiguracoes.Location = new System.Drawing.Point(3, 560);
+            this.btnConfiguracoes.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnConfiguracoes.Location = new System.Drawing.Point(3, 603);
             this.btnConfiguracoes.Name = "btnConfiguracoes";
-            this.btnConfiguracoes.Size = new System.Drawing.Size(223, 75);
+            this.btnConfiguracoes.Size = new System.Drawing.Size(223, 81);
             this.btnConfiguracoes.TabIndex = 26;
             this.btnConfiguracoes.Text = "Configurações";
             this.btnConfiguracoes.UseVisualStyleBackColor = false;
@@ -101,10 +101,10 @@
             // btnVerificacao
             // 
             this.btnVerificacao.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.btnVerificacao.Font = new System.Drawing.Font("Segoe UI", 13.25F);
-            this.btnVerificacao.Location = new System.Drawing.Point(26, 459);
+            this.btnVerificacao.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnVerificacao.Location = new System.Drawing.Point(26, 494);
             this.btnVerificacao.Name = "btnVerificacao";
-            this.btnVerificacao.Size = new System.Drawing.Size(223, 75);
+            this.btnVerificacao.Size = new System.Drawing.Size(223, 81);
             this.btnVerificacao.TabIndex = 27;
             this.btnVerificacao.Text = "Verificacão";
             this.btnVerificacao.UseVisualStyleBackColor = false;
@@ -113,10 +113,10 @@
             // btnCursos
             // 
             this.btnCursos.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.btnCursos.Font = new System.Drawing.Font("Segoe UI", 13.25F);
-            this.btnCursos.Location = new System.Drawing.Point(-2, 505);
+            this.btnCursos.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCursos.Location = new System.Drawing.Point(-2, 544);
             this.btnCursos.Name = "btnCursos";
-            this.btnCursos.Size = new System.Drawing.Size(223, 75);
+            this.btnCursos.Size = new System.Drawing.Size(223, 81);
             this.btnCursos.TabIndex = 28;
             this.btnCursos.Text = "Cursos";
             this.btnCursos.UseVisualStyleBackColor = false;
@@ -125,10 +125,10 @@
             // btnAlunos
             // 
             this.btnAlunos.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.btnAlunos.Font = new System.Drawing.Font("Segoe UI", 13.25F);
-            this.btnAlunos.Location = new System.Drawing.Point(0, 606);
+            this.btnAlunos.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnAlunos.Location = new System.Drawing.Point(0, 653);
             this.btnAlunos.Name = "btnAlunos";
-            this.btnAlunos.Size = new System.Drawing.Size(223, 75);
+            this.btnAlunos.Size = new System.Drawing.Size(223, 81);
             this.btnAlunos.TabIndex = 29;
             this.btnAlunos.Text = "Alunos";
             this.btnAlunos.UseVisualStyleBackColor = false;
@@ -153,9 +153,26 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(232, 781);
+            this.panel1.Size = new System.Drawing.Size(232, 841);
             this.panel1.TabIndex = 31;
             this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
+            // 
+            // button1
+            // 
+            this.button1.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.button1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.button1.FlatAppearance.BorderSize = 0;
+            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button1.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button1.ForeColor = System.Drawing.Color.Black;
+            this.button1.Image = global::TCCControleDeAcesso.Properties.Resources.setting;
+            this.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.button1.Location = new System.Drawing.Point(0, 388);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(228, 74);
+            this.button1.TabIndex = 38;
+            this.button1.Text = "Configurações";
+            this.button1.UseVisualStyleBackColor = false;
             // 
             // button8
             // 
@@ -163,16 +180,67 @@
             this.button8.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.button8.FlatAppearance.BorderSize = 0;
             this.button8.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button8.Font = new System.Drawing.Font("Nirmala UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button8.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button8.ForeColor = System.Drawing.Color.Black;
-            this.button8.Location = new System.Drawing.Point(0, 687);
+            this.button8.Location = new System.Drawing.Point(0, 740);
             this.button8.Name = "button8";
             this.button8.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.button8.Size = new System.Drawing.Size(228, 90);
+            this.button8.Size = new System.Drawing.Size(228, 97);
             this.button8.TabIndex = 37;
             this.button8.Text = "Sair";
             this.button8.UseVisualStyleBackColor = false;
             this.button8.Click += new System.EventHandler(this.button8_Click);
+            // 
+            // button7
+            // 
+            this.button7.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.button7.Dock = System.Windows.Forms.DockStyle.Top;
+            this.button7.FlatAppearance.BorderSize = 0;
+            this.button7.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button7.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button7.ForeColor = System.Drawing.Color.Black;
+            this.button7.Image = global::TCCControleDeAcesso.Properties.Resources.student;
+            this.button7.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.button7.Location = new System.Drawing.Point(0, 314);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(228, 74);
+            this.button7.TabIndex = 36;
+            this.button7.Text = "Alunos";
+            this.button7.UseVisualStyleBackColor = false;
+            // 
+            // button6
+            // 
+            this.button6.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.button6.Dock = System.Windows.Forms.DockStyle.Top;
+            this.button6.FlatAppearance.BorderSize = 0;
+            this.button6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button6.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button6.ForeColor = System.Drawing.Color.Black;
+            this.button6.Image = global::TCCControleDeAcesso.Properties.Resources.open_book;
+            this.button6.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.button6.Location = new System.Drawing.Point(0, 240);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(228, 74);
+            this.button6.TabIndex = 35;
+            this.button6.Text = "Cursos";
+            this.button6.UseVisualStyleBackColor = false;
+            // 
+            // button3
+            // 
+            this.button3.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.button3.Dock = System.Windows.Forms.DockStyle.Top;
+            this.button3.FlatAppearance.BorderSize = 0;
+            this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button3.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button3.ForeColor = System.Drawing.Color.Black;
+            this.button3.Image = global::TCCControleDeAcesso.Properties.Resources.id;
+            this.button3.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.button3.Location = new System.Drawing.Point(0, 166);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(228, 74);
+            this.button3.TabIndex = 34;
+            this.button3.Text = " Verificação";
+            this.button3.UseVisualStyleBackColor = false;
             // 
             // button5
             // 
@@ -184,9 +252,9 @@
             this.button5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(186)))), ((int)(((byte)(240)))));
             this.button5.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.button5.ImageKey = "(nenhum/a)";
-            this.button5.Location = new System.Drawing.Point(0, 144);
+            this.button5.Location = new System.Drawing.Point(0, 155);
             this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(228, 10);
+            this.button5.Size = new System.Drawing.Size(228, 11);
             this.button5.TabIndex = 33;
             this.button5.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.button5.UseVisualStyleBackColor = false;
@@ -201,84 +269,16 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(228, 144);
+            this.panel2.Size = new System.Drawing.Size(228, 155);
             this.panel2.TabIndex = 32;
-            // 
-            // button1
-            // 
-            this.button1.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.button1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.button1.FlatAppearance.BorderSize = 0;
-            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.Font = new System.Drawing.Font("Nirmala UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.ForeColor = System.Drawing.Color.Black;
-            this.button1.Image = global::TCCControleDeAcesso.Properties.Resources.setting;
-            this.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button1.Location = new System.Drawing.Point(0, 361);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(228, 69);
-            this.button1.TabIndex = 38;
-            this.button1.Text = "Configurações";
-            this.button1.UseVisualStyleBackColor = false;
-            // 
-            // button7
-            // 
-            this.button7.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.button7.Dock = System.Windows.Forms.DockStyle.Top;
-            this.button7.FlatAppearance.BorderSize = 0;
-            this.button7.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button7.Font = new System.Drawing.Font("Nirmala UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button7.ForeColor = System.Drawing.Color.Black;
-            this.button7.Image = global::TCCControleDeAcesso.Properties.Resources.student;
-            this.button7.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button7.Location = new System.Drawing.Point(0, 292);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(228, 69);
-            this.button7.TabIndex = 36;
-            this.button7.Text = "Alunos";
-            this.button7.UseVisualStyleBackColor = false;
-            // 
-            // button6
-            // 
-            this.button6.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.button6.Dock = System.Windows.Forms.DockStyle.Top;
-            this.button6.FlatAppearance.BorderSize = 0;
-            this.button6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button6.Font = new System.Drawing.Font("Nirmala UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button6.ForeColor = System.Drawing.Color.Black;
-            this.button6.Image = global::TCCControleDeAcesso.Properties.Resources.open_book;
-            this.button6.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button6.Location = new System.Drawing.Point(0, 223);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(228, 69);
-            this.button6.TabIndex = 35;
-            this.button6.Text = "Cursos";
-            this.button6.UseVisualStyleBackColor = false;
-            // 
-            // button3
-            // 
-            this.button3.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.button3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.button3.FlatAppearance.BorderSize = 0;
-            this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button3.Font = new System.Drawing.Font("Nirmala UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button3.ForeColor = System.Drawing.Color.Black;
-            this.button3.Image = global::TCCControleDeAcesso.Properties.Resources.id;
-            this.button3.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button3.Location = new System.Drawing.Point(0, 154);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(228, 69);
-            this.button3.TabIndex = 34;
-            this.button3.Text = " Verificação";
-            this.button3.UseVisualStyleBackColor = false;
             // 
             // pictureBox2
             // 
             this.pictureBox2.BackColor = System.Drawing.Color.Transparent;
             this.pictureBox2.Image = global::TCCControleDeAcesso.Properties.Resources.UserIP;
-            this.pictureBox2.Location = new System.Drawing.Point(56, 12);
+            this.pictureBox2.Location = new System.Drawing.Point(56, 13);
             this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(118, 95);
+            this.pictureBox2.Size = new System.Drawing.Size(118, 102);
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox2.TabIndex = 32;
             this.pictureBox2.TabStop = false;
@@ -289,20 +289,21 @@
             this.pictureBox1.Image = global::TCCControleDeAcesso.Properties.Resources.Design_sem_nome__11_;
             this.pictureBox1.Location = new System.Drawing.Point(325, 2);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(1596, 971);
+            this.pictureBox1.Size = new System.Drawing.Size(1596, 1046);
             this.pictureBox1.TabIndex = 32;
             this.pictureBox1.TabStop = false;
             // 
             // frmMainMenu
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.BackgroundImage = global::TCCControleDeAcesso.Properties.Resources.Design_sem_nome__11_;
-            this.ClientSize = new System.Drawing.Size(1639, 781);
+            this.ClientSize = new System.Drawing.Size(1639, 841);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.panel1);
+            this.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "frmMainMenu";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

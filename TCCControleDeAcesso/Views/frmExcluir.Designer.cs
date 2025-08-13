@@ -36,17 +36,17 @@
             // acao
             // 
             this.acao.AutoSize = true;
-            this.acao.Location = new System.Drawing.Point(320, 334);
+            this.acao.Location = new System.Drawing.Point(320, 360);
             this.acao.Name = "acao";
-            this.acao.Size = new System.Drawing.Size(35, 13);
+            this.acao.Size = new System.Drawing.Size(35, 14);
             this.acao.TabIndex = 0;
             this.acao.Text = "label1";
             // 
             // btnExcluir
             // 
-            this.btnExcluir.Location = new System.Drawing.Point(323, 277);
+            this.btnExcluir.Location = new System.Drawing.Point(323, 298);
             this.btnExcluir.Name = "btnExcluir";
-            this.btnExcluir.Size = new System.Drawing.Size(75, 23);
+            this.btnExcluir.Size = new System.Drawing.Size(75, 25);
             this.btnExcluir.TabIndex = 1;
             this.btnExcluir.Text = "Excluir";
             this.btnExcluir.UseVisualStyleBackColor = true;
@@ -54,19 +54,20 @@
             // 
             // txtExcluir
             // 
-            this.txtExcluir.Location = new System.Drawing.Point(353, 211);
+            this.txtExcluir.Location = new System.Drawing.Point(353, 227);
             this.txtExcluir.Name = "txtExcluir";
             this.txtExcluir.Size = new System.Drawing.Size(100, 20);
             this.txtExcluir.TabIndex = 2;
             // 
             // frmExcluir
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1264, 681);
+            this.ClientSize = new System.Drawing.Size(1264, 733);
             this.Controls.Add(this.txtExcluir);
             this.Controls.Add(this.btnExcluir);
             this.Controls.Add(this.acao);
+            this.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "frmExcluir";
             this.Text = "frmExcluir";
             this.ResumeLayout(false);

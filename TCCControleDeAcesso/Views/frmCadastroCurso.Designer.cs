@@ -37,7 +37,7 @@
             // 
             // txtId
             // 
-            this.txtId.Location = new System.Drawing.Point(222, 40);
+            this.txtId.Location = new System.Drawing.Point(315, 43);
             this.txtId.Name = "txtId";
             this.txtId.Size = new System.Drawing.Size(171, 20);
             this.txtId.TabIndex = 0;
@@ -45,16 +45,16 @@
             // 
             // txtNome
             // 
-            this.txtNome.Location = new System.Drawing.Point(222, 89);
+            this.txtNome.Location = new System.Drawing.Point(315, 69);
             this.txtNome.Name = "txtNome";
             this.txtNome.Size = new System.Drawing.Size(171, 20);
             this.txtNome.TabIndex = 1;
             // 
             // btnCadastrar
             // 
-            this.btnCadastrar.Location = new System.Drawing.Point(318, 139);
+            this.btnCadastrar.Location = new System.Drawing.Point(363, 95);
             this.btnCadastrar.Name = "btnCadastrar";
-            this.btnCadastrar.Size = new System.Drawing.Size(75, 23);
+            this.btnCadastrar.Size = new System.Drawing.Size(75, 25);
             this.btnCadastrar.TabIndex = 2;
             this.btnCadastrar.Text = "Cadastrar";
             this.btnCadastrar.UseVisualStyleBackColor = true;
@@ -63,20 +63,21 @@
             // dgvCursos
             // 
             this.dgvCursos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvCursos.Location = new System.Drawing.Point(129, 238);
+            this.dgvCursos.Location = new System.Drawing.Point(124, 256);
             this.dgvCursos.Name = "dgvCursos";
-            this.dgvCursos.Size = new System.Drawing.Size(552, 187);
+            this.dgvCursos.Size = new System.Drawing.Size(552, 201);
             this.dgvCursos.TabIndex = 3;
             // 
             // frmCadastroCurso
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(800, 485);
             this.Controls.Add(this.dgvCursos);
             this.Controls.Add(this.btnCadastrar);
             this.Controls.Add(this.txtNome);
             this.Controls.Add(this.txtId);
+            this.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "frmCadastroCurso";
             this.Text = "frmCadastroCurso";
             this.Load += new System.EventHandler(this.frmCadastroCurso_Load);
