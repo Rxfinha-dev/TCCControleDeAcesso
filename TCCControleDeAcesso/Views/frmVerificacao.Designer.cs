@@ -28,9 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.aluno = new System.Windows.Forms.Label();
-            this.serialPort = new System.IO.Ports.SerialPort(this.components);
             this.btnVerificar = new System.Windows.Forms.Button();
             this.progressBarVerificar = new System.Windows.Forms.ProgressBar();
             this.SuspendLayout();
@@ -38,12 +36,12 @@
             // aluno
             // 
             this.aluno.AutoSize = true;
-            this.aluno.Font = new System.Drawing.Font("Arial", 72F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.aluno.Location = new System.Drawing.Point(251, 189);
+            this.aluno.Font = new System.Drawing.Font("Arial", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.aluno.Location = new System.Drawing.Point(66, 96);
             this.aluno.Name = "aluno";
-            this.aluno.Size = new System.Drawing.Size(299, 107);
+            this.aluno.Size = new System.Drawing.Size(43, 24);
             this.aluno.TabIndex = 0;
-            this.aluno.Text = "label1";
+            this.aluno.Text = "N/A";
             // 
             // btnVerificar
             // 
@@ -69,7 +67,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 485);
+            this.ClientSize = new System.Drawing.Size(1264, 681);
             this.Controls.Add(this.progressBarVerificar);
             this.Controls.Add(this.btnVerificar);
             this.Controls.Add(this.aluno);
@@ -84,7 +82,6 @@
         #endregion
 
         private System.Windows.Forms.Label aluno;
-        private System.IO.Ports.SerialPort serialPort;
         private System.Windows.Forms.Button btnVerificar;
         private System.Windows.Forms.ProgressBar progressBarVerificar;
     }

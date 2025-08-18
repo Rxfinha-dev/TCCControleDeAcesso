@@ -22,9 +22,7 @@ namespace TCCControleDeAcesso.Views
         public frmConfiguracoes()
         {
             InitializeComponent();
-            //SerialPortManager.Port.DataReceived += serialPort_DataReceived;
             ports = SerialPort.GetPortNames();
-
             foreach (string port in ports)
             {
                 comboBoxPortas.Items.Add(port);
@@ -66,14 +64,6 @@ namespace TCCControleDeAcesso.Views
             connected = false;
             progressBarConectado.Value = 0;
             bntConectar.Text = "Conectar";
-        }
-
-        private void serialPort_DataReceived(object sender, EventArgs e)
-        {
-            string received = SerialPortManager.Port.ReadLine();
-            richTextBoxSerial.Invoke(new Action(() => {
-                richTextBoxSerial.Text += received;
-            }));
         }
     }
 }
