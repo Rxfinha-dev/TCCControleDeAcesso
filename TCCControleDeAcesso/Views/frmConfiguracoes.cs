@@ -10,47 +10,78 @@ using System.Windows.Forms;
 using System.IO.Ports;
 using System.Web.UI;
 using TCCControleDeAcesso.Models;
+using System.Management;
 
 namespace TCCControleDeAcesso.Views
 {
     public partial class frmConfiguracoes : Form
     {
         bool connected;
-        string[] ports;
-        string selectedPort;
 
         public frmConfiguracoes()
         {
             InitializeComponent();
-            ports = SerialPort.GetPortNames();
-            foreach (string port in ports)
+            listCom(comboBoxPortas);
+        }
+
+        private void listCom(ComboBox combo)
+        {
+            var portList = new Dictionary<string, string>();
+            try
             {
-                comboBoxPortas.Items.Add(port);
+                using (var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_PnPEntity WHERE Caption like '%(COM%'"))
+                {
+                    var portNames = SerialPort.GetPortNames();
+                    foreach (var port in searcher.Get().Cast<ManagementBaseObject>())
+                    {
+                        var caption = port["Caption"]?.ToString() ?? "Unknown";
+                        var realPort = portNames.FirstOrDefault(p => caption.Contains($"({p})"));
+                        if (realPort != null && !portList.ContainsKey(realPort))
+                        {
+                            portList.Add(realPort, caption);
+                        }
+                    }
+                }
+            }
+            catch (ManagementException)
+            {
+            }
+
+            if (portList.Count > 0)
+            {
+                combo.DataSource = new BindingSource(portList, null);
+                combo.DisplayMember = "Value";
+                combo.ValueMember = "Key";
+                var comUsb = portList.FirstOrDefault(par => par.Value.StartsWith("USB", StringComparison.OrdinalIgnoreCase));
+                combo.SelectedValue = comUsb.Key;
+            }
+            else
+            {
+                combo.SelectedIndex = 0;
             }
         }
 
         private void bntConectar_Click(object sender, EventArgs e)
         {
-            if (comboBoxPortas.SelectedItem != null)
+            comboBoxPortas.Enabled = false;
+            if (comboBoxPortas.SelectedValue != null)
             {
-                selectedPort = comboBoxPortas.SelectedItem.ToString();
-                if (selectedPort != "")
+                if (!connected)
                 {
-                    if (!connected)
-                    {
-                        connect();
-                    }
-                    else if (connected)
-                    {
-                        disconnect();
-                    }
+                    connect();
+                }
+                else if (connected)
+                {
+                    disconnect();
                 }
             }
         }
 
         void connect()
         {
-            selectedPort = comboBoxPortas.SelectedItem.ToString();
+            string selectedPort = comboBoxPortas.SelectedValue.ToString();
+            comboBoxPortas.Enabled = false;
+            selectedPort = comboBoxPortas.SelectedValue.ToString();
             SerialPortManager.Port.PortName = selectedPort;
             SerialPortManager.Port.Open();
             connected = true;
@@ -64,6 +95,7 @@ namespace TCCControleDeAcesso.Views
             connected = false;
             progressBarConectado.Value = 0;
             bntConectar.Text = "Conectar";
+            comboBoxPortas.Enabled = true;
         }
     }
 }
