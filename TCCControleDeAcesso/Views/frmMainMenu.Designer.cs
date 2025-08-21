@@ -286,8 +286,8 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Image = global::TCCControleDeAcesso.Properties.Resources.Design_sem_nome__17_;
-            this.pictureBox1.Location = new System.Drawing.Point(229, -68);
+            this.pictureBox1.Image = global::TCCControleDeAcesso.Properties.Resources._13;
+            this.pictureBox1.Location = new System.Drawing.Point(229, 0);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(1429, 1357);
             this.pictureBox1.TabIndex = 32;

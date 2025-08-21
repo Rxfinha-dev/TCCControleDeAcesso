@@ -376,5 +376,8 @@
   <ItemGroup>
     <None Include="Resources\upscalemedia-transformed.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\12.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
