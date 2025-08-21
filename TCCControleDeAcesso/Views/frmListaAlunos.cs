@@ -27,6 +27,7 @@ namespace TCCControleDeAcesso.Views
             public frmListaAlunos(int idEsc)
             {
                 InitializeComponent();
+                SerialPortManager.Port.DataReceived += serialPort_DataReceived;
                 id_escola = idEsc;
             }
 
@@ -115,7 +116,6 @@ namespace TCCControleDeAcesso.Views
                 return;
             }
 
-
             cadastroAlunos = new CadastroAlunos()
             {
                 Name = txtName.Text,
@@ -135,6 +135,9 @@ namespace TCCControleDeAcesso.Views
             dgvAlunos.DataSource = cadastroAlunos.ListStudents();
             dgvAlunos.Columns["id"].Visible = false;
             CleanAll();
+
+            int id = cadastroAlunos.idArduino;
+            SerialPortManager.Port.Write("!enroll" + id + "#");
         }
 
         private void frmListaAlunos_Load(object sender, EventArgs e)
@@ -218,9 +221,36 @@ namespace TCCControleDeAcesso.Views
             }
         }
 
-        private void pictureBox2_Click(object sender, EventArgs e)
+        private void serialPort_DataReceived(object sender, EventArgs e)
         {
+            string received = SerialPortManager.Port.ReadLine();
 
+            acao.Invoke(new Action(() => {
+                if (received.StartsWith("!enrolling"))
+                {
+                    received = received.Replace("!enrolling", "");
+                    received = received.Replace("#", "");
+                    acao.Text = "Cadastrando o ID " + received;
+                }
+                else if (received.StartsWith("!placeFinger#"))
+                {
+                    acao.Text = "Coloque o dedo no sensor";
+                }
+                else if (received.StartsWith("!imageTaken#"))
+                {
+                    acao.Text = "Dedo capturado";
+                }
+                else if (received.StartsWith("!removeFinger#"))
+                {
+                    acao.Text = "Tire o dedo do sensor";
+                }
+                else if (received.StartsWith("!enrolled"))
+                {
+                    received = received.Replace("!enrolled", "");
+                    received = received.Replace("#", "");
+                    acao.Text = "ID" + received + " cadastrado";
+                }
+            }));
         }
     }
 }
