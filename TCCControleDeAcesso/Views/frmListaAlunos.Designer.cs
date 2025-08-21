@@ -82,9 +82,9 @@
             // dgvAlunos
             // 
             this.dgvAlunos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvAlunos.Location = new System.Drawing.Point(578, 658);
+            this.dgvAlunos.Location = new System.Drawing.Point(583, 629);
             this.dgvAlunos.Name = "dgvAlunos";
-            this.dgvAlunos.Size = new System.Drawing.Size(614, 370);
+            this.dgvAlunos.Size = new System.Drawing.Size(536, 311);
             this.dgvAlunos.TabIndex = 77;
             this.dgvAlunos.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvAlunos_CellClick);
             // 
