@@ -167,7 +167,7 @@
             this.button1.ForeColor = System.Drawing.Color.Black;
             this.button1.Image = global::TCCControleDeAcesso.Properties.Resources.setting;
             this.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button1.Location = new System.Drawing.Point(0, 388);
+            this.button1.Location = new System.Drawing.Point(0, 393);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(228, 74);
             this.button1.TabIndex = 38;
@@ -201,7 +201,7 @@
             this.button7.ForeColor = System.Drawing.Color.Black;
             this.button7.Image = global::TCCControleDeAcesso.Properties.Resources.student;
             this.button7.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button7.Location = new System.Drawing.Point(0, 314);
+            this.button7.Location = new System.Drawing.Point(0, 319);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(228, 74);
             this.button7.TabIndex = 36;
@@ -218,7 +218,7 @@
             this.button6.ForeColor = System.Drawing.Color.Black;
             this.button6.Image = global::TCCControleDeAcesso.Properties.Resources.open_book;
             this.button6.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button6.Location = new System.Drawing.Point(0, 240);
+            this.button6.Location = new System.Drawing.Point(0, 245);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(228, 74);
             this.button6.TabIndex = 35;
@@ -235,7 +235,7 @@
             this.button3.ForeColor = System.Drawing.Color.Black;
             this.button3.Image = global::TCCControleDeAcesso.Properties.Resources.id;
             this.button3.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button3.Location = new System.Drawing.Point(0, 166);
+            this.button3.Location = new System.Drawing.Point(0, 171);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(228, 74);
             this.button3.TabIndex = 34;
@@ -252,7 +252,7 @@
             this.button5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(186)))), ((int)(((byte)(240)))));
             this.button5.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.button5.ImageKey = "(nenhum/a)";
-            this.button5.Location = new System.Drawing.Point(0, 155);
+            this.button5.Location = new System.Drawing.Point(0, 160);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(228, 11);
             this.button5.TabIndex = 33;
@@ -269,7 +269,7 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(228, 155);
+            this.panel2.Size = new System.Drawing.Size(228, 160);
             this.panel2.TabIndex = 32;
             // 
             // pictureBox2
@@ -286,10 +286,10 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Image = global::TCCControleDeAcesso.Properties.Resources._1;
-            this.pictureBox1.Location = new System.Drawing.Point(229, 0);
+            this.pictureBox1.Image = global::TCCControleDeAcesso.Properties.Resources.Design_sem_nome__17_;
+            this.pictureBox1.Location = new System.Drawing.Point(229, -68);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(1692, 1048);
+            this.pictureBox1.Size = new System.Drawing.Size(1429, 1357);
             this.pictureBox1.TabIndex = 32;
             this.pictureBox1.TabStop = false;
             // 
