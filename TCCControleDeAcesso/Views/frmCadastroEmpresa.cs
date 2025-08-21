@@ -114,26 +114,16 @@ namespace TCCControleDeAcesso.Views
                 MailMessage message = new MailMessage();
                 from = "suportehelpus@gmail.com"; //Email do remetente
                 pass = "vwec abnc veyc jvns"; //Senha de App
-                messageBody = "Estamos felizes de termos você conosoco! Seu código de ativação de conta é: " + randomCode;
+                messageBody = "Estamos felizes de termos você conosco! Seu código de ativação de conta é: " + randomCode;
                 EmailDest = txtEmail.Text; // Obtendo o e-mail do destinatário  
 
                 // fazendo verificação se o email é algum email válido e existente
                 try
                 {
-                    MailAddress mailadress;
-                     mailadress = new MailAddress(EmailDest);
-                }
-
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Endereço de email inválido!");
-                }
-               // if (EmailDest.EndsWith("@gmail.com") )
-               // {
-               /////////////
-               //Tudo isso que esta na parte de baixo vai ir dentro do catch aqui na parte de cima!!!!!!
+                    MailAddress mailadress; 
+                     mailadress = new MailAddress(EmailDest);// endereço de email onde vai ser enviado o código
                     MessageBox.Show("Para a ativação de conta estamos enviando um código de verificação no seu email! " +
-                    " Olhe o seu email e caixa de Spam! ", "Ativação de conta ", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                   " Olhe o seu email e caixa de Spam! ", "Ativação de conta ", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                     message.To.Add(EmailDest);
                     message.From = new MailAddress(from);
@@ -166,10 +156,14 @@ namespace TCCControleDeAcesso.Views
                         //reativando o btnEnviarEmail
                         btnCadastrar.Enabled = true;
                     }
+                }
 
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Endereço de email inválido!");
+                    btnCadastrar.Enabled = true;//reativando o botão de cadastro
+                }
 
-              //  }
-              /////////////
             }
 
             else

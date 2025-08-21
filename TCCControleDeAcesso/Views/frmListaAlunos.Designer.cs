@@ -46,6 +46,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.acao = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAlunos)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -229,6 +230,16 @@
             this.pictureBox1.TabIndex = 71;
             this.pictureBox1.TabStop = false;
             // 
+            // acao
+            // 
+            this.acao.AutoSize = true;
+            this.acao.Font = new System.Drawing.Font("Arial", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.acao.Location = new System.Drawing.Point(713, 554);
+            this.acao.Name = "acao";
+            this.acao.Size = new System.Drawing.Size(43, 24);
+            this.acao.TabIndex = 82;
+            this.acao.Text = "N/A";
+            // 
             // frmListaAlunos
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 14F);
@@ -236,6 +247,7 @@
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.BackgroundImage = global::TCCControleDeAcesso.Properties.Resources.Design_sem_nome__7_;
             this.ClientSize = new System.Drawing.Size(1523, 927);
+            this.Controls.Add(this.acao);
             this.Controls.Add(this.txtIdOficial);
             this.Controls.Add(this.txtId);
             this.Controls.Add(this.linkSelectPhoto);
@@ -283,5 +295,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.Label acao;
     }
 }
