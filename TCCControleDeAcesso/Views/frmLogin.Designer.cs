@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.a = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.txtSenha = new System.Windows.Forms.TextBox();
@@ -35,13 +36,15 @@
             this.button5 = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
             this.linkLabel2 = new System.Windows.Forms.LinkLabel();
+            this.txtLogin = new System.Windows.Forms.TextBox();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.txtLogin = new System.Windows.Forms.TextBox();
+            this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             this.SuspendLayout();
             // 
             // a
@@ -119,6 +122,16 @@
             this.linkLabel2.Text = "Cadastre-se";
             this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked);
             // 
+            // txtLogin
+            // 
+            this.txtLogin.Location = new System.Drawing.Point(1306, 572);
+            this.txtLogin.Name = "txtLogin";
+            this.txtLogin.Size = new System.Drawing.Size(270, 20);
+            this.txtLogin.TabIndex = 38;
+            this.txtLogin.TextChanged += new System.EventHandler(this.txtLogin_TextChanged);
+            this.txtLogin.Enter += new System.EventHandler(this.txtLogin_Enter_1);
+            this.txtLogin.Leave += new System.EventHandler(this.txtLogin_Leave_1);
+            // 
             // pictureBox3
             // 
             this.pictureBox3.Image = global::TCCControleDeAcesso.Properties.Resources.UserIP;
@@ -134,7 +147,7 @@
             this.pictureBox2.Image = global::TCCControleDeAcesso.Properties.Resources.Texto_do_seu_parágrafo1;
             this.pictureBox2.Location = new System.Drawing.Point(55, 168);
             this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(642, 675);
+            this.pictureBox2.Size = new System.Drawing.Size(642, 637);
             this.pictureBox2.TabIndex = 45;
             this.pictureBox2.TabStop = false;
             // 
@@ -149,15 +162,9 @@
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
-            // txtLogin
+            // errorProvider1
             // 
-            this.txtLogin.Location = new System.Drawing.Point(1306, 572);
-            this.txtLogin.Name = "txtLogin";
-            this.txtLogin.Size = new System.Drawing.Size(270, 20);
-            this.txtLogin.TabIndex = 38;
-            this.txtLogin.TextChanged += new System.EventHandler(this.txtLogin_TextChanged);
-            this.txtLogin.Enter += new System.EventHandler(this.txtLogin_Enter_1);
-            this.txtLogin.Leave += new System.EventHandler(this.txtLogin_Leave_1);
+            this.errorProvider1.ContainerControl = this;
             // 
             // frmLogin
             // 
@@ -184,6 +191,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -201,5 +209,6 @@
         private System.Windows.Forms.LinkLabel linkLabel2;
         private System.Windows.Forms.PictureBox pictureBox3;
         private System.Windows.Forms.TextBox txtLogin;
+        private System.Windows.Forms.ErrorProvider errorProvider1;
     }
 }
