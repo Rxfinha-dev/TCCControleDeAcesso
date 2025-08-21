@@ -46,7 +46,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(798, 453);
+            this.label6.Location = new System.Drawing.Point(798, 470);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(57, 19);
             this.label6.TabIndex = 41;
@@ -56,7 +56,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(798, 517);
+            this.label5.Location = new System.Drawing.Point(798, 534);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(64, 19);
             this.label5.TabIndex = 40;
@@ -66,7 +66,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(798, 575);
+            this.label1.Location = new System.Drawing.Point(798, 592);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(144, 19);
             this.label1.TabIndex = 39;
@@ -76,7 +76,7 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(798, 389);
+            this.label7.Location = new System.Drawing.Point(798, 406);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(138, 19);
             this.label7.TabIndex = 38;
@@ -86,7 +86,7 @@
             // 
             this.btnCadastrar.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.btnCadastrar.Font = new System.Drawing.Font("Arial", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCadastrar.Location = new System.Drawing.Point(889, 623);
+            this.btnCadastrar.Location = new System.Drawing.Point(889, 640);
             this.btnCadastrar.Name = "btnCadastrar";
             this.btnCadastrar.Size = new System.Drawing.Size(167, 56);
             this.btnCadastrar.TabIndex = 37;
@@ -96,28 +96,28 @@
             // 
             // txtConfirmarSenha
             // 
-            this.txtConfirmarSenha.Location = new System.Drawing.Point(798, 597);
+            this.txtConfirmarSenha.Location = new System.Drawing.Point(798, 614);
             this.txtConfirmarSenha.Name = "txtConfirmarSenha";
             this.txtConfirmarSenha.Size = new System.Drawing.Size(349, 20);
             this.txtConfirmarSenha.TabIndex = 36;
             // 
             // txtSenha
             // 
-            this.txtSenha.Location = new System.Drawing.Point(798, 539);
+            this.txtSenha.Location = new System.Drawing.Point(798, 556);
             this.txtSenha.Name = "txtSenha";
             this.txtSenha.Size = new System.Drawing.Size(349, 20);
             this.txtSenha.TabIndex = 35;
             // 
             // txtEmail
             // 
-            this.txtEmail.Location = new System.Drawing.Point(798, 475);
+            this.txtEmail.Location = new System.Drawing.Point(798, 492);
             this.txtEmail.Name = "txtEmail";
             this.txtEmail.Size = new System.Drawing.Size(349, 20);
             this.txtEmail.TabIndex = 34;
             // 
             // txtNome
             // 
-            this.txtNome.Location = new System.Drawing.Point(798, 411);
+            this.txtNome.Location = new System.Drawing.Point(798, 428);
             this.txtNome.Name = "txtNome";
             this.txtNome.Size = new System.Drawing.Size(349, 20);
             this.txtNome.TabIndex = 33;
@@ -125,7 +125,7 @@
             // pictureBox2
             // 
             this.pictureBox2.Image = global::TCCControleDeAcesso.Properties.Resources.Texto_do_seu_parágrafo1;
-            this.pictureBox2.Location = new System.Drawing.Point(646, -205);
+            this.pictureBox2.Location = new System.Drawing.Point(652, -213);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(610, 476);
             this.pictureBox2.TabIndex = 46;
@@ -134,7 +134,7 @@
             // textBox1
             // 
             this.textBox1.Enabled = false;
-            this.textBox1.Location = new System.Drawing.Point(922, 685);
+            this.textBox1.Location = new System.Drawing.Point(922, 702);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(100, 20);
             this.textBox1.TabIndex = 48;
@@ -145,7 +145,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.BackgroundImage = global::TCCControleDeAcesso.Properties.Resources.Design_sem_nome__6_;
+            this.BackgroundImage = global::TCCControleDeAcesso.Properties.Resources.Design_sem_nome__13_;
             this.ClientSize = new System.Drawing.Size(1793, 1003);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.pictureBox2);

@@ -134,7 +134,7 @@
             this.pictureBox2.Image = global::TCCControleDeAcesso.Properties.Resources.Texto_do_seu_parágrafo1;
             this.pictureBox2.Location = new System.Drawing.Point(55, 168);
             this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(642, 675);
+            this.pictureBox2.Size = new System.Drawing.Size(642, 637);
             this.pictureBox2.TabIndex = 45;
             this.pictureBox2.TabStop = false;
             // 
