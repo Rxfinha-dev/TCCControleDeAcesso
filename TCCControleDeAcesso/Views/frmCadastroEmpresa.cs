@@ -35,30 +35,21 @@ namespace TCCControleDeAcesso.Views
 
         private void btnCadastrar_Click(object sender, EventArgs e)
         {
-
             _cadastroEmpresas = new CadastroEmpresas()
             {
                 Email = txtEmail.Text,
                 Name = txtNome.Text,
                 Senha = txtSenha.Text,
             };
-            //_cadastroEmpresas.Insert();
+
             int count = 0;
             try
             {
-
                 Banco.OpenConnection();
-
-
                 Banco.Command = new MySqlCommand("SELECT COUNT(*) FROM escolas WHERE email=@email", Banco.Connection);
-
-
                 Banco.Command.Parameters.AddWithValue("@email", txtEmail.Text);
 
-
-
                 count = Convert.ToInt32(Banco.Command.ExecuteScalar());
-
                 Banco.CloseConnection();
 
                 if (count > 0)
@@ -66,7 +57,6 @@ namespace TCCControleDeAcesso.Views
                     MessageBox.Show("Esse Email já está cadastrado! ", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-
             }
             catch (Exception ex)
             {
@@ -77,103 +67,82 @@ namespace TCCControleDeAcesso.Views
                 Banco.CloseConnection();
             }
 
-            _cadastroEmpresas = new CadastroEmpresas()
-            {
-                Name = txtNome.Text,
-                Email = txtEmail.Text,
-                Senha = txtSenha.Text,
-                
-            };
-            
-
             if (string.IsNullOrWhiteSpace(txtNome.Text) ||
                 string.IsNullOrWhiteSpace(txtEmail.Text) ||
                 string.IsNullOrWhiteSpace(txtSenha.Text) ||
-                string.IsNullOrWhiteSpace(txtConfirmarSenha.Text)) //verificando se todos os campos foram preenchidos e alertando caso não 
+                string.IsNullOrWhiteSpace(txtConfirmarSenha.Text))
             {
                 MessageBox.Show("Todos os campos devem ser preenchidos corretamente!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-
-
             if (txtSenha.Text == txtConfirmarSenha.Text)
             {
-
-
-
-                ////Código que cadastra o email no banco de dados!!!!       --------------->    _cadastroEmpresas.Insert();
-                ///
-                //Evitando o click mais de uma vez
                 btnCadastrar.Enabled = false;
-                //Evitando o click mais de uma vez 
+
+                // Gerando código aleatório
                 String from, pass, messageBody;
                 Random rand = new Random();
                 randomCode = (rand.Next(99999999)).ToString();
-                textBox1.Text = randomCode;///////////////////////////// !!!!!!!!
-                MailMessage message = new MailMessage();
-                from = "suportehelpus@gmail.com"; //Email do remetente
-                pass = "vwec abnc veyc jvns"; //Senha de App
-                messageBody = "Estamos felizes de termos você conosco! Seu código de ativação de conta é: " + randomCode;
-                EmailDest = txtEmail.Text; // Obtendo o e-mail do destinatário  
+                textBox1.Text = randomCode;
 
-                // fazendo verificação se o email é algum email válido e existente
+                MailMessage message = new MailMessage();
+                from = "suportehelpus@gmail.com"; // Email do remetente
+                pass = "vwec abnc veyc jvns";      // Senha de App
+                messageBody = "Estamos felizes de termos você conosco! Seu código de ativação de conta é: " + randomCode;
+                EmailDest = txtEmail.Text;
+
                 try
                 {
-                    MailAddress mailadress; 
-                     mailadress = new MailAddress(EmailDest);// endereço de email onde vai ser enviado o código
+                    MailAddress mailadress = new MailAddress(EmailDest);
+
                     MessageBox.Show("Para a ativação de conta estamos enviando um código de verificação no seu email! " +
-                   " Olhe o seu email e caixa de Spam! ", "Ativação de conta ", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                       "Olhe o seu email e caixa de Spam!", "Ativação de conta", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                     message.To.Add(EmailDest);
                     message.From = new MailAddress(from);
                     message.Body = messageBody;
                     message.Subject = "Bem vindo ao HelpUS! ";
+
                     SmtpClient smtp = new SmtpClient("smtp.gmail.com");
                     smtp.EnableSsl = true;
                     smtp.Port = 587;
                     smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
                     smtp.Credentials = new NetworkCredential(from, pass);
 
-                    /////////////// passando Variaveis para o outro form
+                    // Criando a tela de ativação
                     var frmAC = new frmAtivacaoConta(txtNome.Text, txtEmail.Text, txtSenha.Text);
                     frmAC.propriedade = textBox1.Text;
+
+                    // Abre a tela de carregamento, passando a de ativação como destino
+                    frmCarregamento carregamento = new frmCarregamento(frmAC);
                     this.Hide();
-                    frmAC.Show();
-                    ///////////////
+                    carregamento.Show();
 
                     try
                     {
                         smtp.Send(message);
-                        //reativando o btnEnviarEmail
                         btnCadastrar.Enabled = true;
-
                     }
-
                     catch (Exception ex)
                     {
                         MessageBox.Show(ex.Message);
-                        //reativando o btnEnviarEmail
                         btnCadastrar.Enabled = true;
                     }
                 }
-
-                catch (Exception ex)
+                catch (Exception)
                 {
                     MessageBox.Show("Endereço de email inválido!");
-                    btnCadastrar.Enabled = true;//reativando o botão de cadastro
+                    btnCadastrar.Enabled = true;
                 }
-
             }
-
             else
             {
                 MessageBox.Show("As Senhas Não Coincidem", "Erro No Login", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-
-
         }
+
 
         private void frmCadastroEmpresa_Load(object sender, EventArgs e)
         {
