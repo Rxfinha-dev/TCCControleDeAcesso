@@ -33,6 +33,7 @@
             this.btnCadastrar = new System.Windows.Forms.Button();
             this.dgvCursos = new System.Windows.Forms.DataGridView();
             this.btnVoltar = new System.Windows.Forms.Button();
+            this.btnDelete = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCursos)).BeginInit();
             this.SuspendLayout();
             // 
@@ -56,6 +57,7 @@
             this.btnCadastrar.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnCadastrar.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnCadastrar.Location = new System.Drawing.Point(897, 534);
+            this.btnCadastrar.Location = new System.Drawing.Point(411, 95);
             this.btnCadastrar.Name = "btnCadastrar";
             this.btnCadastrar.Size = new System.Drawing.Size(150, 50);
             this.btnCadastrar.TabIndex = 2;
@@ -70,6 +72,17 @@
             this.dgvCursos.Name = "dgvCursos";
             this.dgvCursos.Size = new System.Drawing.Size(552, 201);
             this.dgvCursos.TabIndex = 3;
+            this.dgvCursos.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvCursos_CellContentClick);
+            // 
+            // btnDelete
+            // 
+            this.btnDelete.Location = new System.Drawing.Point(315, 95);
+            this.btnDelete.Name = "btnDelete";
+            this.btnDelete.Size = new System.Drawing.Size(75, 25);
+            this.btnDelete.TabIndex = 4;
+            this.btnDelete.Text = "Delete";
+            this.btnDelete.UseVisualStyleBackColor = true;
+            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
             // 
             // btnVoltar
             // 
@@ -92,6 +105,8 @@
             this.BackgroundImage = global::TCCControleDeAcesso.Properties.Resources.Design_sem_nome__7_;
             this.ClientSize = new System.Drawing.Size(1421, 813);
             this.Controls.Add(this.btnVoltar);
+            this.ClientSize = new System.Drawing.Size(800, 485);
+            this.Controls.Add(this.btnDelete);
             this.Controls.Add(this.dgvCursos);
             this.Controls.Add(this.btnCadastrar);
             this.Controls.Add(this.txtNome);
@@ -114,5 +129,6 @@
         private System.Windows.Forms.Button btnCadastrar;
         private System.Windows.Forms.DataGridView dgvCursos;
         private System.Windows.Forms.Button btnVoltar;
+        private System.Windows.Forms.Button btnDelete;
     }
 }

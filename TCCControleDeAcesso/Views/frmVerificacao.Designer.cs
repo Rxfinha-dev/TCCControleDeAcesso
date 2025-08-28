@@ -33,7 +33,7 @@
             this.progressBarVerificar = new System.Windows.Forms.ProgressBar();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.lbl1 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
+            this.lblCurso = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.lblRM = new System.Windows.Forms.Label();
@@ -95,8 +95,16 @@
             this.lbl1.TabIndex = 4;
             this.lbl1.Text = "Nome:";
             // 
-            // label1
+            // lblCurso
             // 
+            this.lblCurso.AutoSize = true;
+            this.lblCurso.Font = new System.Drawing.Font("Arial", 14F);
+            this.lblCurso.Location = new System.Drawing.Point(420, 269);
+            this.lblCurso.Name = "lblCurso";
+            this.lblCurso.Size = new System.Drawing.Size(66, 22);
+            this.lblCurso.TabIndex = 5;
+            this.lblCurso.Text = "Curso:";
+            this.lblCurso.Click += new System.EventHandler(this.label1_Click);
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Arial", 14F);
             this.label1.Location = new System.Drawing.Point(904, 562);
@@ -189,7 +197,7 @@
             this.Controls.Add(this.lblNome);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.lblCurso);
             this.Controls.Add(this.lbl1);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.progressBarVerificar);
@@ -198,6 +206,7 @@
             this.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "frmVerificacao";
             this.Text = "frmVerificacao";
+            this.Load += new System.EventHandler(this.frmVerificacao_Load);
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
@@ -212,7 +221,7 @@
         private System.Windows.Forms.ProgressBar progressBarVerificar;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label lbl1;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lblCurso;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label lblRM;

@@ -93,5 +93,31 @@ int nHeightEllipse
             Application.Exit();
         }
 
+        private void btnVerificao_Click(object sender, EventArgs e)
+        {
+            frmVerificacao check = new frmVerificacao();
+            check.Show();
+            Hide();
+        }
+
+        private void btnCurso_Click(object sender, EventArgs e)
+        {
+            frmCadastroCurso check = new frmCadastroCurso(id_escola);
+            check.Show();
+            Hide();
+        }
+
+        private void btnAluno_Click(object sender, EventArgs e)
+        {
+            frmListaAlunos check = new frmListaAlunos(id_escola);
+            check.Show();
+            Hide();
+        }
+
+        private void btnConfig_Click(object sender, EventArgs e)
+        {
+            frmConfiguracoes check = new frmConfiguracoes();
+            check.Show();
+        }
     }
 }
