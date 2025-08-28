@@ -40,6 +40,7 @@
             this.lblSerie = new System.Windows.Forms.Label();
             this.lblAno = new System.Windows.Forms.Label();
             this.lblNome = new System.Windows.Forms.Label();
+            this.btnVoltar = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -47,7 +48,7 @@
             // 
             this.aluno.AutoSize = true;
             this.aluno.Font = new System.Drawing.Font("Arial", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.aluno.Location = new System.Drawing.Point(66, 96);
+            this.aluno.Location = new System.Drawing.Point(550, 389);
             this.aluno.Name = "aluno";
             this.aluno.Size = new System.Drawing.Size(43, 24);
             this.aluno.TabIndex = 0;
@@ -55,18 +56,20 @@
             // 
             // btnVerificar
             // 
-            this.btnVerificar.Font = new System.Drawing.Font("Arial", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnVerificar.Location = new System.Drawing.Point(12, 12);
+            this.btnVerificar.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.btnVerificar.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btnVerificar.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnVerificar.Location = new System.Drawing.Point(496, 305);
             this.btnVerificar.Name = "btnVerificar";
             this.btnVerificar.Size = new System.Drawing.Size(150, 50);
             this.btnVerificar.TabIndex = 1;
-            this.btnVerificar.Text = "Verificar";
-            this.btnVerificar.UseVisualStyleBackColor = true;
+            this.btnVerificar.Text = "VERIFICAR";
+            this.btnVerificar.UseVisualStyleBackColor = false;
             this.btnVerificar.Click += new System.EventHandler(this.btnVerificar_Click);
             // 
             // progressBarVerificar
             // 
-            this.progressBarVerificar.Location = new System.Drawing.Point(12, 68);
+            this.progressBarVerificar.Location = new System.Drawing.Point(496, 361);
             this.progressBarVerificar.MarqueeAnimationSpeed = 0;
             this.progressBarVerificar.Name = "progressBarVerificar";
             this.progressBarVerificar.Size = new System.Drawing.Size(150, 25);
@@ -76,7 +79,7 @@
             // pictureBox1
             // 
             this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox1.Location = new System.Drawing.Point(880, 154);
+            this.pictureBox1.Location = new System.Drawing.Point(1364, 447);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(202, 273);
             this.pictureBox1.TabIndex = 3;
@@ -86,7 +89,7 @@
             // 
             this.lbl1.AutoSize = true;
             this.lbl1.Font = new System.Drawing.Font("Arial", 14F);
-            this.lbl1.Location = new System.Drawing.Point(420, 183);
+            this.lbl1.Location = new System.Drawing.Point(904, 476);
             this.lbl1.Name = "lbl1";
             this.lbl1.Size = new System.Drawing.Size(66, 22);
             this.lbl1.TabIndex = 4;
@@ -96,7 +99,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Arial", 14F);
-            this.label1.Location = new System.Drawing.Point(420, 269);
+            this.label1.Location = new System.Drawing.Point(904, 562);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(49, 22);
             this.label1.TabIndex = 5;
@@ -107,7 +110,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Arial", 14F);
-            this.label2.Location = new System.Drawing.Point(665, 269);
+            this.label2.Location = new System.Drawing.Point(1149, 562);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(60, 22);
             this.label2.TabIndex = 6;
@@ -117,7 +120,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Arial", 14F);
-            this.label3.Location = new System.Drawing.Point(420, 373);
+            this.label3.Location = new System.Drawing.Point(904, 666);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(44, 22);
             this.label3.TabIndex = 7;
@@ -127,7 +130,7 @@
             // 
             this.lblRM.AutoSize = true;
             this.lblRM.Font = new System.Drawing.Font("Arial", 14F);
-            this.lblRM.Location = new System.Drawing.Point(433, 405);
+            this.lblRM.Location = new System.Drawing.Point(917, 698);
             this.lblRM.Name = "lblRM";
             this.lblRM.Size = new System.Drawing.Size(0, 22);
             this.lblRM.TabIndex = 11;
@@ -136,7 +139,7 @@
             // 
             this.lblSerie.AutoSize = true;
             this.lblSerie.Font = new System.Drawing.Font("Arial", 14F);
-            this.lblSerie.Location = new System.Drawing.Point(678, 301);
+            this.lblSerie.Location = new System.Drawing.Point(1162, 594);
             this.lblSerie.Name = "lblSerie";
             this.lblSerie.Size = new System.Drawing.Size(0, 22);
             this.lblSerie.TabIndex = 10;
@@ -145,7 +148,7 @@
             // 
             this.lblAno.AutoSize = true;
             this.lblAno.Font = new System.Drawing.Font("Arial", 14F);
-            this.lblAno.Location = new System.Drawing.Point(433, 301);
+            this.lblAno.Location = new System.Drawing.Point(917, 594);
             this.lblAno.Name = "lblAno";
             this.lblAno.Size = new System.Drawing.Size(0, 22);
             this.lblAno.TabIndex = 9;
@@ -154,16 +157,32 @@
             // 
             this.lblNome.AutoSize = true;
             this.lblNome.Font = new System.Drawing.Font("Arial", 14F);
-            this.lblNome.Location = new System.Drawing.Point(433, 215);
+            this.lblNome.Location = new System.Drawing.Point(917, 508);
             this.lblNome.Name = "lblNome";
             this.lblNome.Size = new System.Drawing.Size(0, 22);
             this.lblNome.TabIndex = 8;
+            // 
+            // btnVoltar
+            // 
+            this.btnVoltar.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.btnVoltar.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btnVoltar.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnVoltar.Location = new System.Drawing.Point(496, 754);
+            this.btnVoltar.Name = "btnVoltar";
+            this.btnVoltar.Size = new System.Drawing.Size(150, 50);
+            this.btnVoltar.TabIndex = 12;
+            this.btnVoltar.Text = "VOLTAR";
+            this.btnVoltar.UseVisualStyleBackColor = false;
+            this.btnVoltar.Click += new System.EventHandler(this.btnVoltar_Click);
             // 
             // frmVerificacao
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1264, 681);
+            this.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.BackgroundImage = global::TCCControleDeAcesso.Properties.Resources.Design_sem_nome__7_;
+            this.ClientSize = new System.Drawing.Size(1856, 933);
+            this.Controls.Add(this.btnVoltar);
             this.Controls.Add(this.lblRM);
             this.Controls.Add(this.lblSerie);
             this.Controls.Add(this.lblAno);
@@ -179,6 +198,7 @@
             this.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "frmVerificacao";
             this.Text = "frmVerificacao";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -199,5 +219,6 @@
         private System.Windows.Forms.Label lblSerie;
         private System.Windows.Forms.Label lblAno;
         private System.Windows.Forms.Label lblNome;
+        private System.Windows.Forms.Button btnVoltar;
     }
 }

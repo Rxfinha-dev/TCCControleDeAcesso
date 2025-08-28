@@ -95,5 +95,12 @@ namespace TCCControleDeAcesso.Views
         {
 
         }
+
+        private void btnVoltar_Click(object sender, EventArgs e)
+        {
+            frmMainMenu check = new frmMainMenu("", 0);
+            check.Show();
+            Hide();
+        }
     }
 }

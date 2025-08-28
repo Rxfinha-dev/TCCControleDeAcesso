@@ -47,6 +47,7 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.acao = new System.Windows.Forms.Label();
+            this.btnVoltar = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAlunos)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -111,7 +112,7 @@
             // 
             this.BtnDelete.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.BtnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.BtnDelete.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BtnDelete.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.BtnDelete.ForeColor = System.Drawing.SystemColors.WindowText;
             this.BtnDelete.Location = new System.Drawing.Point(923, 537);
             this.BtnDelete.Margin = new System.Windows.Forms.Padding(0);
@@ -148,7 +149,7 @@
             // 
             this.btnSave.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSave.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSave.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSave.ForeColor = System.Drawing.SystemColors.WindowText;
             this.btnSave.Location = new System.Drawing.Point(1028, 537);
             this.btnSave.Margin = new System.Windows.Forms.Padding(0);
@@ -240,13 +241,27 @@
             this.acao.TabIndex = 82;
             this.acao.Text = "N/A";
             // 
+            // btnVoltar
+            // 
+            this.btnVoltar.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.btnVoltar.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btnVoltar.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnVoltar.Location = new System.Drawing.Point(1183, 890);
+            this.btnVoltar.Name = "btnVoltar";
+            this.btnVoltar.Size = new System.Drawing.Size(150, 50);
+            this.btnVoltar.TabIndex = 83;
+            this.btnVoltar.Text = "VOLTAR";
+            this.btnVoltar.UseVisualStyleBackColor = false;
+            this.btnVoltar.Click += new System.EventHandler(this.btnVoltar_Click);
+            // 
             // frmListaAlunos
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.BackgroundImage = global::TCCControleDeAcesso.Properties.Resources.Design_sem_nome__7_;
-            this.ClientSize = new System.Drawing.Size(1523, 927);
+            this.ClientSize = new System.Drawing.Size(1607, 987);
+            this.Controls.Add(this.btnVoltar);
             this.Controls.Add(this.acao);
             this.Controls.Add(this.txtIdOficial);
             this.Controls.Add(this.txtId);
@@ -296,5 +311,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Label acao;
+        private System.Windows.Forms.Button btnVoltar;
     }
 }

@@ -73,7 +73,6 @@
             this.label2.Size = new System.Drawing.Size(109, 18);
             this.label2.TabIndex = 24;
             this.label2.Text = "ProjetoTcc123";
-            this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // label1
             // 
@@ -84,7 +83,6 @@
             this.label1.Size = new System.Drawing.Size(79, 19);
             this.label1.TabIndex = 23;
             this.label1.Text = "Usuário: ";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // btnConfiguracoes
             // 
@@ -206,8 +204,7 @@
             this.button7.Size = new System.Drawing.Size(228, 74);
             this.button7.TabIndex = 36;
             this.button7.Text = "Alunos";
-            this.button7.UseVisualStyleBackColor = false;
-            // 
+            this.button7.UseVisualStyleBackColor = false;            // 
             // button6
             // 
             this.button6.BackColor = System.Drawing.SystemColors.ControlLightLight;
@@ -223,8 +220,7 @@
             this.button6.Size = new System.Drawing.Size(228, 74);
             this.button6.TabIndex = 35;
             this.button6.Text = "Cursos";
-            this.button6.UseVisualStyleBackColor = false;
-            // 
+            this.button6.UseVisualStyleBackColor = false;            // 
             // button3
             // 
             this.button3.BackColor = System.Drawing.SystemColors.ControlLightLight;
@@ -240,8 +236,7 @@
             this.button3.Size = new System.Drawing.Size(228, 74);
             this.button3.TabIndex = 34;
             this.button3.Text = " Verificação";
-            this.button3.UseVisualStyleBackColor = false;
-            // 
+            this.button3.UseVisualStyleBackColor = false;            // 
             // button5
             // 
             this.button5.BackColor = System.Drawing.SystemColors.ControlLightLight;
@@ -282,7 +277,6 @@
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox2.TabIndex = 32;
             this.pictureBox2.TabStop = false;
-            this.pictureBox2.Click += new System.EventHandler(this.pictureBox2_Click);
             // 
             // pictureBox1
             // 
