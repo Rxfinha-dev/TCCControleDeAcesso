@@ -28,19 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.btnLogout = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.btnConfiguracoes = new System.Windows.Forms.Button();
-            this.btnVerificacao = new System.Windows.Forms.Button();
-            this.btnCursos = new System.Windows.Forms.Button();
-            this.btnAlunos = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button8 = new System.Windows.Forms.Button();
-            this.button7 = new System.Windows.Forms.Button();
-            this.button6 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
+            this.btnConfig = new System.Windows.Forms.Button();
+            this.btnSair = new System.Windows.Forms.Button();
+            this.btnAluno = new System.Windows.Forms.Button();
+            this.btnCurso = new System.Windows.Forms.Button();
+            this.btnVerificao = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
@@ -50,18 +45,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
-            // 
-            // btnLogout
-            // 
-            this.btnLogout.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.btnLogout.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnLogout.Location = new System.Drawing.Point(53, 690);
-            this.btnLogout.Name = "btnLogout";
-            this.btnLogout.Size = new System.Drawing.Size(117, 56);
-            this.btnLogout.TabIndex = 25;
-            this.btnLogout.Text = "Sair";
-            this.btnLogout.UseVisualStyleBackColor = false;
-            this.btnLogout.Click += new System.EventHandler(this.btnLogout_Click);
             // 
             // label2
             // 
@@ -86,68 +69,15 @@
             this.label1.Text = "Usuário: ";
             this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
-            // btnConfiguracoes
-            // 
-            this.btnConfiguracoes.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.btnConfiguracoes.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnConfiguracoes.Location = new System.Drawing.Point(3, 603);
-            this.btnConfiguracoes.Name = "btnConfiguracoes";
-            this.btnConfiguracoes.Size = new System.Drawing.Size(223, 81);
-            this.btnConfiguracoes.TabIndex = 26;
-            this.btnConfiguracoes.Text = "Configurações";
-            this.btnConfiguracoes.UseVisualStyleBackColor = false;
-            this.btnConfiguracoes.Click += new System.EventHandler(this.btnConfiguracoes_Click);
-            // 
-            // btnVerificacao
-            // 
-            this.btnVerificacao.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.btnVerificacao.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnVerificacao.Location = new System.Drawing.Point(26, 494);
-            this.btnVerificacao.Name = "btnVerificacao";
-            this.btnVerificacao.Size = new System.Drawing.Size(223, 81);
-            this.btnVerificacao.TabIndex = 27;
-            this.btnVerificacao.Text = "Verificacão";
-            this.btnVerificacao.UseVisualStyleBackColor = false;
-            this.btnVerificacao.Click += new System.EventHandler(this.btnVerificacao_Click);
-            // 
-            // btnCursos
-            // 
-            this.btnCursos.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.btnCursos.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCursos.Location = new System.Drawing.Point(-2, 544);
-            this.btnCursos.Name = "btnCursos";
-            this.btnCursos.Size = new System.Drawing.Size(223, 81);
-            this.btnCursos.TabIndex = 28;
-            this.btnCursos.Text = "Cursos";
-            this.btnCursos.UseVisualStyleBackColor = false;
-            this.btnCursos.Click += new System.EventHandler(this.btnCursos_Click);
-            // 
-            // btnAlunos
-            // 
-            this.btnAlunos.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.btnAlunos.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnAlunos.Location = new System.Drawing.Point(0, 653);
-            this.btnAlunos.Name = "btnAlunos";
-            this.btnAlunos.Size = new System.Drawing.Size(223, 81);
-            this.btnAlunos.TabIndex = 29;
-            this.btnAlunos.Text = "Alunos";
-            this.btnAlunos.UseVisualStyleBackColor = false;
-            this.btnAlunos.Click += new System.EventHandler(this.btnAlunos_Click);
-            // 
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.panel1.Controls.Add(this.button1);
-            this.panel1.Controls.Add(this.button8);
-            this.panel1.Controls.Add(this.btnLogout);
-            this.panel1.Controls.Add(this.btnVerificacao);
-            this.panel1.Controls.Add(this.btnAlunos);
-            this.panel1.Controls.Add(this.btnConfiguracoes);
-            this.panel1.Controls.Add(this.button7);
-            this.panel1.Controls.Add(this.btnCursos);
-            this.panel1.Controls.Add(this.button6);
-            this.panel1.Controls.Add(this.button3);
+            this.panel1.Controls.Add(this.btnConfig);
+            this.panel1.Controls.Add(this.btnSair);
+            this.panel1.Controls.Add(this.btnAluno);
+            this.panel1.Controls.Add(this.btnCurso);
+            this.panel1.Controls.Add(this.btnVerificao);
             this.panel1.Controls.Add(this.button5);
             this.panel1.Controls.Add(this.panel2);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
@@ -157,90 +87,94 @@
             this.panel1.TabIndex = 31;
             this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
             // 
-            // button1
+            // btnConfig
             // 
-            this.button1.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.button1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.button1.FlatAppearance.BorderSize = 0;
-            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.ForeColor = System.Drawing.Color.Black;
-            this.button1.Image = global::TCCControleDeAcesso.Properties.Resources.setting;
-            this.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button1.Location = new System.Drawing.Point(0, 393);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(228, 74);
-            this.button1.TabIndex = 38;
-            this.button1.Text = "Configurações";
-            this.button1.UseVisualStyleBackColor = false;
+            this.btnConfig.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.btnConfig.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnConfig.FlatAppearance.BorderSize = 0;
+            this.btnConfig.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnConfig.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnConfig.ForeColor = System.Drawing.Color.Black;
+            this.btnConfig.Image = global::TCCControleDeAcesso.Properties.Resources.setting;
+            this.btnConfig.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnConfig.Location = new System.Drawing.Point(0, 393);
+            this.btnConfig.Name = "btnConfig";
+            this.btnConfig.Size = new System.Drawing.Size(228, 74);
+            this.btnConfig.TabIndex = 38;
+            this.btnConfig.Text = "Configurações";
+            this.btnConfig.UseVisualStyleBackColor = false;
+            this.btnConfig.Click += new System.EventHandler(this.btnConfig_Click);
             // 
-            // button8
+            // btnSair
             // 
-            this.button8.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.button8.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.button8.FlatAppearance.BorderSize = 0;
-            this.button8.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button8.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button8.ForeColor = System.Drawing.Color.Black;
-            this.button8.Location = new System.Drawing.Point(0, 740);
-            this.button8.Name = "button8";
-            this.button8.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.button8.Size = new System.Drawing.Size(228, 97);
-            this.button8.TabIndex = 37;
-            this.button8.Text = "Sair";
-            this.button8.UseVisualStyleBackColor = false;
-            this.button8.Click += new System.EventHandler(this.button8_Click);
+            this.btnSair.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.btnSair.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.btnSair.FlatAppearance.BorderSize = 0;
+            this.btnSair.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSair.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSair.ForeColor = System.Drawing.Color.Black;
+            this.btnSair.Location = new System.Drawing.Point(0, 740);
+            this.btnSair.Name = "btnSair";
+            this.btnSair.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.btnSair.Size = new System.Drawing.Size(228, 97);
+            this.btnSair.TabIndex = 37;
+            this.btnSair.Text = "Sair";
+            this.btnSair.UseVisualStyleBackColor = false;
+            this.btnSair.Click += new System.EventHandler(this.button8_Click);
             // 
-            // button7
+            // btnAluno
             // 
-            this.button7.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.button7.Dock = System.Windows.Forms.DockStyle.Top;
-            this.button7.FlatAppearance.BorderSize = 0;
-            this.button7.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button7.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button7.ForeColor = System.Drawing.Color.Black;
-            this.button7.Image = global::TCCControleDeAcesso.Properties.Resources.student;
-            this.button7.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button7.Location = new System.Drawing.Point(0, 319);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(228, 74);
-            this.button7.TabIndex = 36;
-            this.button7.Text = "Alunos";
-            this.button7.UseVisualStyleBackColor = false;
+            this.btnAluno.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.btnAluno.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnAluno.FlatAppearance.BorderSize = 0;
+            this.btnAluno.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAluno.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnAluno.ForeColor = System.Drawing.Color.Black;
+            this.btnAluno.Image = global::TCCControleDeAcesso.Properties.Resources.student;
+            this.btnAluno.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnAluno.Location = new System.Drawing.Point(0, 319);
+            this.btnAluno.Name = "btnAluno";
+            this.btnAluno.Size = new System.Drawing.Size(228, 74);
+            this.btnAluno.TabIndex = 36;
+            this.btnAluno.Text = "Alunos";
+            this.btnAluno.UseVisualStyleBackColor = false;
+            this.btnAluno.Click += new System.EventHandler(this.btnAluno_Click);
             // 
-            // button6
+            // btnCurso
             // 
-            this.button6.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.button6.Dock = System.Windows.Forms.DockStyle.Top;
-            this.button6.FlatAppearance.BorderSize = 0;
-            this.button6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button6.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button6.ForeColor = System.Drawing.Color.Black;
-            this.button6.Image = global::TCCControleDeAcesso.Properties.Resources.open_book;
-            this.button6.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button6.Location = new System.Drawing.Point(0, 245);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(228, 74);
-            this.button6.TabIndex = 35;
-            this.button6.Text = "Cursos";
-            this.button6.UseVisualStyleBackColor = false;
+            this.btnCurso.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.btnCurso.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnCurso.FlatAppearance.BorderSize = 0;
+            this.btnCurso.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCurso.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCurso.ForeColor = System.Drawing.Color.Black;
+            this.btnCurso.Image = global::TCCControleDeAcesso.Properties.Resources.open_book;
+            this.btnCurso.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnCurso.Location = new System.Drawing.Point(0, 245);
+            this.btnCurso.Name = "btnCurso";
+            this.btnCurso.Size = new System.Drawing.Size(228, 74);
+            this.btnCurso.TabIndex = 35;
+            this.btnCurso.Text = "Cursos";
+            this.btnCurso.UseVisualStyleBackColor = false;
+            this.btnCurso.Click += new System.EventHandler(this.btnCurso_Click);
             // 
-            // button3
+            // btnVerificao
             // 
-            this.button3.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.button3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.button3.FlatAppearance.BorderSize = 0;
-            this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button3.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button3.ForeColor = System.Drawing.Color.Black;
-            this.button3.Image = global::TCCControleDeAcesso.Properties.Resources.id;
-            this.button3.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button3.Location = new System.Drawing.Point(0, 171);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(228, 74);
-            this.button3.TabIndex = 34;
-            this.button3.Text = " Verificação";
-            this.button3.UseVisualStyleBackColor = false;
+            this.btnVerificao.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.btnVerificao.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnVerificao.FlatAppearance.BorderSize = 0;
+            this.btnVerificao.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnVerificao.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnVerificao.ForeColor = System.Drawing.Color.Black;
+            this.btnVerificao.Image = global::TCCControleDeAcesso.Properties.Resources.id;
+            this.btnVerificao.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnVerificao.Location = new System.Drawing.Point(0, 171);
+            this.btnVerificao.Name = "btnVerificao";
+            this.btnVerificao.Size = new System.Drawing.Size(228, 74);
+            this.btnVerificao.TabIndex = 34;
+            this.btnVerificao.Text = " Verificação";
+            this.btnVerificao.UseVisualStyleBackColor = false;
+            this.btnVerificao.Click += new System.EventHandler(this.btnVerificao_Click);
             // 
             // button5
             // 
@@ -319,22 +253,16 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.Button btnLogout;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button btnConfiguracoes;
-        private System.Windows.Forms.Button btnVerificacao;
-        private System.Windows.Forms.Button btnCursos;
-        private System.Windows.Forms.Button btnAlunos;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.PictureBox pictureBox2;
-        private System.Windows.Forms.Button button8;
-        private System.Windows.Forms.Button button7;
-        private System.Windows.Forms.Button button6;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnSair;
+        private System.Windows.Forms.Button btnAluno;
+        private System.Windows.Forms.Button btnCurso;
+        private System.Windows.Forms.Button btnVerificao;
+        private System.Windows.Forms.Button btnConfig;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.PictureBox pictureBox1;
     }
