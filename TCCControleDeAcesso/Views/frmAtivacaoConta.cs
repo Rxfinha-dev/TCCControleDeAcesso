@@ -57,7 +57,7 @@ namespace TCCControleDeAcesso.Views
             //    int VarAtivacao = txtAtivacao.Text;
             if (txtAtivacao.Text == (textBox1.Text).ToString())
             {
-                MessageBox.Show("Sua conta foi ativada!", "Ativação da conta", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Sua conta foi ativada!", "Ativação da conta", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 frmLogin rp = new frmLogin();
                 this.Hide();
                 rp.Show();
@@ -80,7 +80,7 @@ namespace TCCControleDeAcesso.Views
             }
             else
             {
-                MessageBox.Show("errou vacilão", "jkhdsakjdhsaj    ", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Senha de ativação inválida!", "Tente novamente.", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             
 
