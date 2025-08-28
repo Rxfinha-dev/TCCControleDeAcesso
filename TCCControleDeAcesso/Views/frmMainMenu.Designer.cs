@@ -139,20 +139,7 @@
             this.btnAluno.Click += new System.EventHandler(this.btnAluno_Click);
             // 
             // btnCurso
-            this.button7.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.button7.Dock = System.Windows.Forms.DockStyle.Top;
-            this.button7.FlatAppearance.BorderSize = 0;
-            this.button7.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button7.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button7.ForeColor = System.Drawing.Color.Black;
-            this.button7.Image = global::TCCControleDeAcesso.Properties.Resources.student;
-            this.button7.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button7.Location = new System.Drawing.Point(0, 319);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(228, 74);
-            this.button7.TabIndex = 36;
-            this.button7.Text = "Alunos";
-            this.button7.UseVisualStyleBackColor = false;            // 
+
             // button6
             // 
             this.btnCurso.BackColor = System.Drawing.SystemColors.ControlLightLight;
@@ -171,21 +158,7 @@
             this.btnCurso.UseVisualStyleBackColor = false;
             this.btnCurso.Click += new System.EventHandler(this.btnCurso_Click);
             // 
-            // btnVerificao
-            this.button6.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.button6.Dock = System.Windows.Forms.DockStyle.Top;
-            this.button6.FlatAppearance.BorderSize = 0;
-            this.button6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button6.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button6.ForeColor = System.Drawing.Color.Black;
-            this.button6.Image = global::TCCControleDeAcesso.Properties.Resources.open_book;
-            this.button6.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button6.Location = new System.Drawing.Point(0, 245);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(228, 74);
-            this.button6.TabIndex = 35;
-            this.button6.Text = "Cursos";
-            this.button6.UseVisualStyleBackColor = false;            // 
+            // 
             // button3
             // 
             this.btnVerificao.BackColor = System.Drawing.SystemColors.ControlLightLight;
@@ -204,20 +177,7 @@
             this.btnVerificao.UseVisualStyleBackColor = false;
             this.btnVerificao.Click += new System.EventHandler(this.btnVerificao_Click);
             // 
-            this.button3.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.button3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.button3.FlatAppearance.BorderSize = 0;
-            this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button3.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button3.ForeColor = System.Drawing.Color.Black;
-            this.button3.Image = global::TCCControleDeAcesso.Properties.Resources.id;
-            this.button3.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button3.Location = new System.Drawing.Point(0, 171);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(228, 74);
-            this.button3.TabIndex = 34;
-            this.button3.Text = " Verificação";
-            this.button3.UseVisualStyleBackColor = false;            // 
+     // 
             // button5
             // 
             this.button5.BackColor = System.Drawing.SystemColors.ControlLightLight;

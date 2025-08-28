@@ -105,14 +105,7 @@
             this.lblCurso.TabIndex = 5;
             this.lblCurso.Text = "Curso:";
             this.lblCurso.Click += new System.EventHandler(this.label1_Click);
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Arial", 14F);
-            this.label1.Location = new System.Drawing.Point(904, 562);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(49, 22);
-            this.label1.TabIndex = 5;
-            this.label1.Text = "Ano:";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
+
             // 
             // label2
             // 
