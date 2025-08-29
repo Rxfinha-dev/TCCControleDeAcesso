@@ -9,6 +9,6 @@ namespace TCCControleDeAcesso.Models
 {
     public class SerialPortManager
     {
-        public static SerialPort Port { get; } = new SerialPort();
+        public static SerialPort Port { get; set; } = new SerialPort();
     }
 }

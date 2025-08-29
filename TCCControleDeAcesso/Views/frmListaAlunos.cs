@@ -227,34 +227,54 @@ namespace TCCControleDeAcesso.Views
 
         private void serialPort_DataReceived(object sender, EventArgs e)
         {
-            string received = SerialPortManager.Port.ReadLine();
+            if (this.IsHandleCreated)
+            {
+                try
+                {
+                    string received = SerialPortManager.Port.ReadLine();
 
-            acao.Invoke(new Action(() => {
-                if (received.StartsWith("!enrolling"))
-                {
-                    received = received.Replace("!enrolling", "");
-                    received = received.Replace("#", "");
-                    acao.Text = "Cadastrando o ID " + received;
+                    acao.Invoke(new Action(() => {
+                        if (received.StartsWith("!enrolling"))
+                        {
+                            received = received.Replace("!enrolling", "");
+                            received = received.Replace("#", "");
+                            acao.Text = "Cadastrando o ID " + received;
+                        }
+                        else if (received.StartsWith("!placeFinger#"))
+                        {
+                            acao.Text = "Coloque o dedo no sensor";
+                        }
+                        else if (received.StartsWith("!imageTaken#"))
+                        {
+                            acao.Text = "Dedo capturado";
+                        }
+                        else if (received.StartsWith("!removeFinger#"))
+                        {
+                            acao.Text = "Tire o dedo do sensor";
+                        }
+                        else if (received.StartsWith("!enrolled"))
+                        {
+                            received = received.Replace("!enrolled", "");
+                            received = received.Replace("#", "");
+                            acao.Text = "ID" + received + " cadastrado";
+                        }
+                    }));
                 }
-                else if (received.StartsWith("!placeFinger#"))
+                catch (IOException)
                 {
-                    acao.Text = "Coloque o dedo no sensor";
                 }
-                else if (received.StartsWith("!imageTaken#"))
+                catch (InvalidOperationException)
                 {
-                    acao.Text = "Dedo capturado";
                 }
-                else if (received.StartsWith("!removeFinger#"))
-                {
-                    acao.Text = "Tire o dedo do sensor";
-                }
-                else if (received.StartsWith("!enrolled"))
-                {
-                    received = received.Replace("!enrolled", "");
-                    received = received.Replace("#", "");
-                    acao.Text = "ID" + received + " cadastrado";
-                }
-            }));
+            }
+        }
+
+        private void FrmListaAlunos_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (SerialPortManager.Port.IsOpen)
+            {
+                SerialPortManager.Port.DataReceived -= serialPort_DataReceived;
+            }
         }
 
         private void btnVoltar_Click(object sender, EventArgs e)

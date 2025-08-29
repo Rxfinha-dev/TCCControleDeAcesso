@@ -83,37 +83,54 @@ namespace TCCControleDeAcesso.Views
 
         private void serialPort_DataReceived(object sender, EventArgs e)
         {
-            string received = SerialPortManager.Port.ReadLine();
+            try
+            {
+                string received = SerialPortManager.Port.ReadLine();
 
-            aluno.Invoke(new Action(() => {
-                if (received.StartsWith("!found"))
-                {
-                    received = received.Replace("!found", "");
-                    received = received.Replace("#", "");
-                    aluno.Text = received;
+                aluno.Invoke(new Action(() => {
+                    if (received.StartsWith("!found"))
+                    {
+                        received = received.Replace("!found", "");
+                        received = received.Replace("#", "");
+                        aluno.Text = received;
 
-                    verificacao = new Verificacao()
-                    {
-                        Id = int.Parse(received)
-                    };
-                    var dt = verificacao.select();
-                    if (dt.Rows.Count > 0)
-                    {
-                        lblRM.Text = dt.Rows[0]["rm"].ToString();
-                        lblNome.Text = dt.Rows[0]["nome"].ToString();
-                        lblSerie.Text = dt.Rows[0]["serie"].ToString();
-                        lblCurso.Text = dt.Rows[0]["curso"].ToString();
+                        verificacao = new Verificacao()
+                        {
+                            Id = int.Parse(received)
+                        };
+                        var dt = verificacao.select();
+                        if (dt.Rows.Count > 0)
+                        {
+                            lblRM.Text = dt.Rows[0]["rm"].ToString();
+                            lblNome.Text = dt.Rows[0]["nome"].ToString();
+                            lblSerie.Text = dt.Rows[0]["serie"].ToString();
+                            lblCurso.Text = dt.Rows[0]["curso"].ToString();
+                        }
+
+
+                        CarregarImagemDoAluno(1);
+
+                        log = new Log();
+                        log.insert(idAluno, dataAtual, id_escola);
+
+
                     }
+                }));
+            }
+            catch (IOException)
+            {
+            }
+            catch (InvalidOperationException)
+            {
+            }
+        }
 
-
-                    CarregarImagemDoAluno(1);
-
-                    log = new Log();
-                    log.insert(idAluno, dataAtual, id_escola);
-
-                    
-                }
-            }));
+        private void FrmListaAlunos_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (SerialPortManager.Port.IsOpen)
+            {
+                SerialPortManager.Port.DataReceived -= serialPort_DataReceived;
+            }
         }
 
         private void label1_Click(object sender, EventArgs e)
