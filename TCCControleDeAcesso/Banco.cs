@@ -24,7 +24,7 @@ namespace TCCControleDeAcesso.Models
         {
             try
             {
-                Connection = new MySqlConnection("server=localhost;port=3306;uid=root;pwd=1234;database=AccessControl;");
+                Connection = new MySqlConnection("server=localhost;port=3307;uid=root;pwd=etecjau;database=AccessControl;");
                 //Na escola:
                 //pwd:etecjau
                 //port =3307
@@ -76,7 +76,7 @@ namespace TCCControleDeAcesso.Models
                     "(id integer auto_increment primary key," +
                     "nome varchar(50)," +
                     "email varchar(80)," +
-                    "senha char(8))", Connection);
+                    "senha varchar(20))", Connection);
                 Command.ExecuteNonQuery();
 
                 // Criação da tabela 'cursos'
