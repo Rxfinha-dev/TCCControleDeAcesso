@@ -3,6 +3,7 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
+using Org.BouncyCastle.Asn1.Ocsp;
 using TCCControleDeAcesso.Models;
 
 namespace TCCControleDeAcesso.Views
@@ -10,6 +11,12 @@ namespace TCCControleDeAcesso.Views
     public partial class frmVerificacao : Form
     {
         bool verificando;
+        Log log;
+        int idAluno;
+        DateTime dataAtual;
+        int id_escola;
+
+        Verificacao verificacao;
 
         public frmVerificacao()
         {
@@ -85,7 +92,24 @@ namespace TCCControleDeAcesso.Views
                     received = received.Replace("#", "");
                     aluno.Text = received;
 
-                    CarregarImagemDoAluno(int.Parse(received));
+                    verificacao = new Verificacao()
+                    {
+                        Id = int.Parse(received)
+                    };
+                    var dt = verificacao.select();
+                    if (dt.Rows.Count > 0)
+                    {
+                        lblRM.Text = dt.Rows[0]["rm"].ToString();
+                        lblNome.Text = dt.Rows[0]["nome"].ToString();
+                        lblSerie.Text = dt.Rows[0]["serie"].ToString();
+                        lblCurso.Text = dt.Rows[0]["curso"].ToString();
+                    }
+
+
+                    CarregarImagemDoAluno(1);
+
+                    log = new Log();
+                    log.insert(idAluno, dataAtual, id_escola);
 
                     
                 }
@@ -95,6 +119,18 @@ namespace TCCControleDeAcesso.Views
         private void label1_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void btnVoltar_Click(object sender, EventArgs e)
+        {
+            frmMainMenu check = new frmMainMenu("", 0);
+            check.Show();
+            Hide();
+        }
+
+        private void frmVerificacao_Load(object sender, EventArgs e)
+        {
+           
         }
     }
 }
