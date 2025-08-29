@@ -24,7 +24,7 @@ namespace TCCControleDeAcesso.Models
         {
             try
             {
-                Connection = new MySqlConnection("server=localhost;port=3307;uid=root;pwd=etecjau;database=AccessControl;");
+                Connection = new MySqlConnection("server=localhost;port=3306;uid=root;pwd=1234;database=AccessControl;");
                 //Na escola:
                 //pwd:etecjau
                 //port =3307

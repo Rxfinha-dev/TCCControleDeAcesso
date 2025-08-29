@@ -37,7 +37,7 @@ namespace TCCControleDeAcesso.Views
 
         private void CarregarImagemDoAluno(int id)
         {
-            string connectionString = "server=localhost;port=3307;uid=root;pwd=etecjau;database=accesscontrol;"; // Atualize conforme necessário
+            string connectionString = "server=localhost;port=3306;uid=root;pwd=1234;database=accesscontrol;"; // Atualize conforme necessário
             string query = "SELECT foto FROM alunos WHERE id = @id";
 
             using (MySqlConnection conn = new MySqlConnection(connectionString))
@@ -77,6 +77,7 @@ namespace TCCControleDeAcesso.Views
         private void serialPort_DataReceived(object sender, EventArgs e)
         {
             string received = SerialPortManager.Port.ReadLine();
+
             aluno.Invoke(new Action(() => {
                 if (received.StartsWith("!found"))
                 {

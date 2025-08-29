@@ -85,7 +85,6 @@ int nHeightEllipse
         {
             frmVerificacao check = new frmVerificacao();
             check.Show();
-            Hide();
         }
 
         private void pictureBox2_Click(object sender, EventArgs e)

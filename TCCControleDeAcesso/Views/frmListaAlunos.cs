@@ -44,7 +44,7 @@ namespace TCCControleDeAcesso.Views
         }
         private void CarregarCursos()
         {
-            string conexao = "server=localhost;port=3307;uid=root;pwd=etecjau;database=AccessControl;";
+            string conexao = "server=localhost;port=3306;uid=root;pwd=1234;database=AccessControl;";
             string query = "SELECT nome FROM cursos where idEscola=@idEscola";
 
             using (MySqlConnection conn = new MySqlConnection(conexao))
@@ -70,7 +70,7 @@ namespace TCCControleDeAcesso.Views
 
         private void CarregarImagemDoAluno(string nome)
         {
-            string connectionString = "server=localhost;port=3307;uid=root;pwd=etecjau;database=accesscontrol;"; // Atualize conforme necessário
+            string connectionString = "server=localhost;port=3306;uid=root;pwd=1234;database=accesscontrol;"; // Atualize conforme necessário
             string query = "SELECT foto FROM alunos WHERE nome = @nome";
 
             using (MySqlConnection conn = new MySqlConnection(connectionString))
