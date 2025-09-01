@@ -40,7 +40,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(12, 13);
+            this.label1.Location = new System.Drawing.Point(650, 497);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(130, 18);
             this.label1.TabIndex = 0;
@@ -48,26 +48,29 @@
             // 
             // txtEmailDestinatario
             // 
-            this.txtEmailDestinatario.Location = new System.Drawing.Point(301, 12);
+            this.txtEmailDestinatario.Location = new System.Drawing.Point(939, 496);
             this.txtEmailDestinatario.Name = "txtEmailDestinatario";
             this.txtEmailDestinatario.Size = new System.Drawing.Size(370, 20);
             this.txtEmailDestinatario.TabIndex = 3;
             // 
             // btnEnviarEmail
             // 
+            this.btnEnviarEmail.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.btnEnviarEmail.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnEnviarEmail.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnEnviarEmail.Location = new System.Drawing.Point(445, 38);
+            this.btnEnviarEmail.Location = new System.Drawing.Point(1083, 522);
             this.btnEnviarEmail.Name = "btnEnviarEmail";
             this.btnEnviarEmail.Size = new System.Drawing.Size(226, 43);
             this.btnEnviarEmail.TabIndex = 8;
             this.btnEnviarEmail.Text = "Enviar E-mail";
-            this.btnEnviarEmail.UseVisualStyleBackColor = true;
+            this.btnEnviarEmail.UseVisualStyleBackColor = false;
             this.btnEnviarEmail.Click += new System.EventHandler(this.btnEnviarEmail_Click);
             // 
             // btnVerify
             // 
+            this.btnVerify.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnVerify.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnVerify.Location = new System.Drawing.Point(445, 113);
+            this.btnVerify.Location = new System.Drawing.Point(1083, 597);
             this.btnVerify.Name = "btnVerify";
             this.btnVerify.Size = new System.Drawing.Size(226, 43);
             this.btnVerify.TabIndex = 11;
@@ -77,7 +80,7 @@
             // 
             // txtCodeVerify
             // 
-            this.txtCodeVerify.Location = new System.Drawing.Point(301, 87);
+            this.txtCodeVerify.Location = new System.Drawing.Point(939, 571);
             this.txtCodeVerify.Name = "txtCodeVerify";
             this.txtCodeVerify.Size = new System.Drawing.Size(370, 20);
             this.txtCodeVerify.TabIndex = 10;
@@ -86,7 +89,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(12, 88);
+            this.label2.Location = new System.Drawing.Point(650, 572);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(226, 18);
             this.label2.TabIndex = 9;
@@ -96,7 +99,9 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(683, 588);
+            this.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.BackgroundImage = global::TCCControleDeAcesso.Properties.Resources.Design_sem_nome__7_;
+            this.ClientSize = new System.Drawing.Size(1852, 929);
             this.Controls.Add(this.btnVerify);
             this.Controls.Add(this.txtCodeVerify);
             this.Controls.Add(this.label2);

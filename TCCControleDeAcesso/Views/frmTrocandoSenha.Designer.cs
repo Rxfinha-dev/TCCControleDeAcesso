@@ -38,7 +38,7 @@
             // 
             // txtNovaSenha
             // 
-            this.txtNovaSenha.Location = new System.Drawing.Point(149, 12);
+            this.txtNovaSenha.Location = new System.Drawing.Point(994, 522);
             this.txtNovaSenha.Name = "txtNovaSenha";
             this.txtNovaSenha.Size = new System.Drawing.Size(209, 20);
             this.txtNovaSenha.TabIndex = 3;
@@ -46,15 +46,16 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 15);
+            this.label2.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(795, 521);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(65, 14);
+            this.label2.Size = new System.Drawing.Size(94, 18);
             this.label2.TabIndex = 2;
-            this.label2.Text = "Nova senha";
+            this.label2.Text = "Nova senha:";
             // 
             // txtNovaSenha2
             // 
-            this.txtNovaSenha2.Location = new System.Drawing.Point(149, 68);
+            this.txtNovaSenha2.Location = new System.Drawing.Point(994, 569);
             this.txtNovaSenha2.Name = "txtNovaSenha2";
             this.txtNovaSenha2.Size = new System.Drawing.Size(209, 20);
             this.txtNovaSenha2.TabIndex = 5;
@@ -62,30 +63,35 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(9, 71);
+            this.label3.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(796, 570);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(134, 14);
+            this.label3.Size = new System.Drawing.Size(192, 18);
             this.label3.TabIndex = 4;
-            this.label3.Text = "Repetir a sua nova senha ";
+            this.label3.Text = "Repetir a sua nova senha: ";
             // 
             // btnAlterarSenha
             // 
-            this.btnAlterarSenha.Location = new System.Drawing.Point(283, 113);
+            this.btnAlterarSenha.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.btnAlterarSenha.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btnAlterarSenha.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnAlterarSenha.Location = new System.Drawing.Point(994, 603);
             this.btnAlterarSenha.Name = "btnAlterarSenha";
-            this.btnAlterarSenha.Size = new System.Drawing.Size(75, 25);
+            this.btnAlterarSenha.Size = new System.Drawing.Size(108, 48);
             this.btnAlterarSenha.TabIndex = 6;
             this.btnAlterarSenha.Text = "Alterar Senha";
-            this.btnAlterarSenha.UseVisualStyleBackColor = true;
+            this.btnAlterarSenha.UseVisualStyleBackColor = false;
             this.btnAlterarSenha.Click += new System.EventHandler(this.btnAlterarSenha_Click);
             // 
             // chkBoxMostrarSenha
             // 
             this.chkBoxMostrarSenha.AutoSize = true;
-            this.chkBoxMostrarSenha.Location = new System.Drawing.Point(180, 116);
+            this.chkBoxMostrarSenha.Font = new System.Drawing.Font("Arial Narrow", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chkBoxMostrarSenha.Location = new System.Drawing.Point(879, 615);
             this.chkBoxMostrarSenha.Name = "chkBoxMostrarSenha";
-            this.chkBoxMostrarSenha.Size = new System.Drawing.Size(97, 18);
+            this.chkBoxMostrarSenha.Size = new System.Drawing.Size(107, 24);
             this.chkBoxMostrarSenha.TabIndex = 7;
-            this.chkBoxMostrarSenha.Text = "Mostrar Senha";
+            this.chkBoxMostrarSenha.Text = "Mostrar senha";
             this.chkBoxMostrarSenha.UseVisualStyleBackColor = true;
             this.chkBoxMostrarSenha.CheckedChanged += new System.EventHandler(this.chkBoxMostrarSenha_CheckedChanged);
             // 
@@ -93,7 +99,9 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(490, 485);
+            this.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.BackgroundImage = global::TCCControleDeAcesso.Properties.Resources.Design_sem_nome__7_;
+            this.ClientSize = new System.Drawing.Size(1853, 933);
             this.Controls.Add(this.chkBoxMostrarSenha);
             this.Controls.Add(this.btnAlterarSenha);
             this.Controls.Add(this.txtNovaSenha2);
