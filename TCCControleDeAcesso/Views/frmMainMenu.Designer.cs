@@ -39,11 +39,11 @@
             this.button5 = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             this.SuspendLayout();
             // 
             // label2
@@ -139,8 +139,6 @@
             this.btnAluno.Click += new System.EventHandler(this.btnAluno_Click);
             // 
             // btnCurso
-
-            // button6
             // 
             this.btnCurso.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.btnCurso.Dock = System.Windows.Forms.DockStyle.Top;
@@ -158,8 +156,7 @@
             this.btnCurso.UseVisualStyleBackColor = false;
             this.btnCurso.Click += new System.EventHandler(this.btnCurso_Click);
             // 
-            // 
-            // button3
+            // btnVerificao
             // 
             this.btnVerificao.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.btnVerificao.Dock = System.Windows.Forms.DockStyle.Top;
@@ -177,7 +174,6 @@
             this.btnVerificao.UseVisualStyleBackColor = false;
             this.btnVerificao.Click += new System.EventHandler(this.btnVerificao_Click);
             // 
-     // 
             // button5
             // 
             this.button5.BackColor = System.Drawing.SystemColors.ControlLightLight;
@@ -219,14 +215,14 @@
             this.pictureBox2.TabIndex = 32;
             this.pictureBox2.TabStop = false;
             // 
-            // pictureBox1
+            // pictureBox3
             // 
-            this.pictureBox1.Image = global::TCCControleDeAcesso.Properties.Resources._13;
-            this.pictureBox1.Location = new System.Drawing.Point(229, 0);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(1429, 1357);
-            this.pictureBox1.TabIndex = 32;
-            this.pictureBox1.TabStop = false;
+            this.pictureBox3.Image = global::TCCControleDeAcesso.Properties.Resources.Texto_do_seu_parágrafo1;
+            this.pictureBox3.Location = new System.Drawing.Point(1177, 214);
+            this.pictureBox3.Name = "pictureBox3";
+            this.pictureBox3.Size = new System.Drawing.Size(642, 637);
+            this.pictureBox3.TabIndex = 46;
+            this.pictureBox3.TabStop = false;
             // 
             // frmMainMenu
             // 
@@ -234,9 +230,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.BackgroundImage = global::TCCControleDeAcesso.Properties.Resources.Design_sem_nome__11_;
+            this.BackgroundImage = global::TCCControleDeAcesso.Properties.Resources.Design_Sem_Nome___1___Editado1;
             this.ClientSize = new System.Drawing.Size(1639, 841);
-            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.pictureBox3);
             this.Controls.Add(this.panel1);
             this.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
@@ -248,7 +244,7 @@
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -265,6 +261,6 @@
         private System.Windows.Forms.Button btnVerificao;
         private System.Windows.Forms.Button btnConfig;
         private System.Windows.Forms.Button button5;
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox pictureBox3;
     }
 }
