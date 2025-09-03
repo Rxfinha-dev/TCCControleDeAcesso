@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using MySql.Data;
 using MySql.Data.MySqlClient;
 
 namespace TCCControleDeAcesso.Models
@@ -16,6 +10,7 @@ namespace TCCControleDeAcesso.Models
 
         public static MySqlConnection Connection { get; set; }
         public static MySqlCommand Command { get; set; }
+      
         public static MySqlDataAdapter DataAdapter { get; set; }
         public static DataTable datTable { get; set; }
 
@@ -30,6 +25,7 @@ namespace TCCControleDeAcesso.Models
                 //port =3307
                 //uid=root
 
+                
 
 
 
@@ -54,6 +50,7 @@ namespace TCCControleDeAcesso.Models
             }
         }
 
+     
         public static void CreateDatabase()
         {
             try

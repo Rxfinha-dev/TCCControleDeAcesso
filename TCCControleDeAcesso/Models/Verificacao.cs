@@ -26,7 +26,7 @@ namespace TCCControleDeAcesso.Models
                 Banco.Command = new MySqlCommand("select id,nome, rm,idade, serie, curso from Alunos where id=@id", Banco.Connection);
                 Banco.Command.Parameters.AddWithValue("@id", Id);
                 Banco.DataAdapter = new MySqlDataAdapter(Banco.Command);
-                Banco.datTable = new DataTable();
+                Banco.datTable = new DataTable();                
                 Banco.DataAdapter.Fill(Banco.datTable);
                 Banco.CloseConnection();
                 return Banco.datTable;

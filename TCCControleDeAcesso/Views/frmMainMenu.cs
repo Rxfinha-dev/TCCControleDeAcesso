@@ -1,18 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using MySql.Data.MySqlClient;
+using TCCControleDeAcesso.Models;
+
 
 
 namespace TCCControleDeAcesso.Views
 {
-   
+
     public partial class frmMainMenu : Form
     {
 
@@ -89,7 +85,33 @@ int nHeightEllipse
 
         private void button8_Click(object sender, EventArgs e)
         {
+            var arquivoDestino = @"X:\Backup\meuBanco.sql";
+            var result = Backup(arquivoDestino);
+            MessageBox.Show(result);
             Application.Exit();
+        }
+
+        private string Backup(string arquivoDestino)
+        {
+            try
+            {
+                using (var cn = new MySqlConnection(DatabaseServices.Connection))
+                {
+                    cn.Open();
+                    using (var cmd = new MySqlCommand(null, cn))
+                    {
+                        using (var backupMysql = new MySqlBackup(cmd))
+                        {
+                            backupMysql.ExportToFile(arquivoDestino);
+                        }
+                    }
+                }
+                return "backup realizado";
+            }
+            catch (Exception ex)
+            {
+                return "Falha: " + ex.Message;
+            }
         }
 
         private void btnVerificao_Click(object sender, EventArgs e)
