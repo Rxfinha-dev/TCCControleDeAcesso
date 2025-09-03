@@ -19,7 +19,7 @@ namespace TCCControleDeAcesso
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Views.frmNovaSenha());
+            Application.Run(new Views.frmMainMenu("", 0));
         }
     }
 }
