@@ -48,7 +48,7 @@
             // 
             this.aluno.AutoSize = true;
             this.aluno.Font = new System.Drawing.Font("Arial", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.aluno.Location = new System.Drawing.Point(550, 389);
+            this.aluno.Location = new System.Drawing.Point(545, 594);
             this.aluno.Name = "aluno";
             this.aluno.Size = new System.Drawing.Size(43, 24);
             this.aluno.TabIndex = 0;
@@ -59,7 +59,7 @@
             this.btnVerificar.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.btnVerificar.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnVerificar.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnVerificar.Location = new System.Drawing.Point(496, 305);
+            this.btnVerificar.Location = new System.Drawing.Point(496, 495);
             this.btnVerificar.Name = "btnVerificar";
             this.btnVerificar.Size = new System.Drawing.Size(150, 50);
             this.btnVerificar.TabIndex = 1;
@@ -69,7 +69,7 @@
             // 
             // progressBarVerificar
             // 
-            this.progressBarVerificar.Location = new System.Drawing.Point(496, 361);
+            this.progressBarVerificar.Location = new System.Drawing.Point(496, 559);
             this.progressBarVerificar.MarqueeAnimationSpeed = 0;
             this.progressBarVerificar.Name = "progressBarVerificar";
             this.progressBarVerificar.Size = new System.Drawing.Size(150, 25);
@@ -99,13 +99,12 @@
             // 
             this.lblCurso.AutoSize = true;
             this.lblCurso.Font = new System.Drawing.Font("Arial", 14F);
-            this.lblCurso.Location = new System.Drawing.Point(420, 269);
+            this.lblCurso.Location = new System.Drawing.Point(412, 447);
             this.lblCurso.Name = "lblCurso";
             this.lblCurso.Size = new System.Drawing.Size(66, 22);
             this.lblCurso.TabIndex = 5;
             this.lblCurso.Text = "Curso:";
             this.lblCurso.Click += new System.EventHandler(this.label1_Click);
-
             // 
             // label2
             // 
@@ -199,8 +198,8 @@
             this.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "frmVerificacao";
             this.Text = "frmVerificacao";
-            this.Load += new System.EventHandler(this.frmVerificacao_Load);
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.Load += new System.EventHandler(this.frmVerificacao_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
