@@ -174,5 +174,11 @@ int nHeightEllipse
             frmConfiguracoes check = new frmConfiguracoes();
             check.Show();
         }
+
+        private void btnLog_Click(object sender, EventArgs e)
+        {
+            frmLog check = new frmLog(id_escola);
+            check.Show();
+        }
     }
 }
