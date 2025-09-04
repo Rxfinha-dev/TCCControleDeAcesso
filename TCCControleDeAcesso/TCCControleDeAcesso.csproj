@@ -389,5 +389,11 @@
   <ItemGroup>
     <None Include="Resources\Design Sem Nome - 1 - Editado1.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ver-lista.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\search %282%291.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

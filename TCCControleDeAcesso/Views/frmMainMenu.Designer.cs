@@ -31,6 +31,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.btnLog = new System.Windows.Forms.Button();
             this.btnConfig = new System.Windows.Forms.Button();
             this.btnSair = new System.Windows.Forms.Button();
             this.btnAluno = new System.Windows.Forms.Button();
@@ -40,7 +41,6 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
-            this.btnLog = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -87,6 +87,24 @@
             this.panel1.TabIndex = 31;
             this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
             // 
+            // btnLog
+            // 
+            this.btnLog.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.btnLog.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnLog.FlatAppearance.BorderSize = 0;
+            this.btnLog.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnLog.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnLog.ForeColor = System.Drawing.Color.Black;
+            this.btnLog.Image = global::TCCControleDeAcesso.Properties.Resources.setting;
+            this.btnLog.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnLog.Location = new System.Drawing.Point(0, 467);
+            this.btnLog.Name = "btnLog";
+            this.btnLog.Size = new System.Drawing.Size(228, 74);
+            this.btnLog.TabIndex = 39;
+            this.btnLog.Text = "Configurações";
+            this.btnLog.UseVisualStyleBackColor = false;
+            this.btnLog.Click += new System.EventHandler(this.btnLog_Click);
+            // 
             // btnConfig
             // 
             this.btnConfig.BackColor = System.Drawing.SystemColors.ControlLightLight;
@@ -95,13 +113,13 @@
             this.btnConfig.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnConfig.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnConfig.ForeColor = System.Drawing.Color.Black;
-            this.btnConfig.Image = global::TCCControleDeAcesso.Properties.Resources.setting;
+            this.btnConfig.Image = global::TCCControleDeAcesso.Properties.Resources.search__2_;
             this.btnConfig.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnConfig.Location = new System.Drawing.Point(0, 393);
             this.btnConfig.Name = "btnConfig";
             this.btnConfig.Size = new System.Drawing.Size(228, 74);
             this.btnConfig.TabIndex = 38;
-            this.btnConfig.Text = "Configurações";
+            this.btnConfig.Text = "Entradas";
             this.btnConfig.UseVisualStyleBackColor = false;
             this.btnConfig.Click += new System.EventHandler(this.btnConfig_Click);
             // 
@@ -225,24 +243,6 @@
             this.pictureBox3.Size = new System.Drawing.Size(642, 637);
             this.pictureBox3.TabIndex = 46;
             this.pictureBox3.TabStop = false;
-            // 
-            // btnLog
-            // 
-            this.btnLog.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.btnLog.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnLog.FlatAppearance.BorderSize = 0;
-            this.btnLog.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnLog.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnLog.ForeColor = System.Drawing.Color.Black;
-            this.btnLog.Image = global::TCCControleDeAcesso.Properties.Resources.setting;
-            this.btnLog.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnLog.Location = new System.Drawing.Point(0, 467);
-            this.btnLog.Name = "btnLog";
-            this.btnLog.Size = new System.Drawing.Size(228, 74);
-            this.btnLog.TabIndex = 39;
-            this.btnLog.Text = "Entradas";
-            this.btnLog.UseVisualStyleBackColor = false;
-            this.btnLog.Click += new System.EventHandler(this.btnLog_Click);
             // 
             // frmMainMenu
             // 

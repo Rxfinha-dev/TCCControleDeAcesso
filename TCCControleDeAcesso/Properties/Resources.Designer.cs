@@ -723,6 +723,16 @@ namespace TCCControleDeAcesso.Properties {
         /// <summary>
         ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap search__2_1 {
+            get {
+                object obj = ResourceManager.GetObject("search (2)1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap search1 {
             get {
                 object obj = ResourceManager.GetObject("search1", resourceCulture);
@@ -816,6 +826,16 @@ namespace TCCControleDeAcesso.Properties {
         internal static System.Drawing.Bitmap UserIP {
             get {
                 object obj = ResourceManager.GetObject("UserIP", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ver_lista {
+            get {
+                object obj = ResourceManager.GetObject("ver-lista", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
