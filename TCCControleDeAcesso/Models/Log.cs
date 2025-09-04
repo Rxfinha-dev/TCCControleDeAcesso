@@ -31,7 +31,7 @@ namespace TCCControleDeAcesso.Models
             try
             {
 				Banco.OpenConnection();
-				Banco.Command = new MySqlCommand("select * from entradas where idEscola=@idEscola", Banco.Connection);
+				Banco.Command = new MySqlCommand("select idAluno, DataEntrada from entradas where idEscola=@idEscola", Banco.Connection);
 				Banco.Command.Parameters.AddWithValue("@idEscola", idEscola);
 				Banco.DataAdapter = new MySqlDataAdapter(Banco.Command);
 				Banco.datTable = new DataTable();

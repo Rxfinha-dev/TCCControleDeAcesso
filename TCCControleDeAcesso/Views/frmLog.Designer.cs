@@ -39,6 +39,7 @@
             this.dgvLog.Name = "dgvLog";
             this.dgvLog.Size = new System.Drawing.Size(903, 425);
             this.dgvLog.TabIndex = 0;
+            this.dgvLog.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvLog_CellContentClick);
             // 
             // frmLog
             // 
@@ -49,6 +50,7 @@
             this.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "frmLog";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.frmLog_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvLog)).EndInit();
             this.ResumeLayout(false);
 
