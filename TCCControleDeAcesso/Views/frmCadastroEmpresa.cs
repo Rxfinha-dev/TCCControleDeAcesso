@@ -39,6 +39,7 @@ namespace TCCControleDeAcesso.Views
 
         private void btnCadastrar_Click(object sender, EventArgs e)
         {
+            //acredito que seja esse comando o responsavel pelo envio dos campos para o banco de dados
             _cadastroEmpresas = new CadastroEmpresas()
             {
                 Email = txtEmail.Text,
@@ -89,17 +90,19 @@ namespace TCCControleDeAcesso.Views
 
 
                
-                //string senha = txtSenha.Text;
+                string senha = txtSenha.Text;
 
 
-                //// gera hash com salt automático (interno do bcrypt)
-                //string hash = BCrypt.Net.BCrypt.HashPassword(senha);
+
+                 //gera hash com salt automático (interno do bcrypt)
+                 //bcrypt é uma biblioteca importada
+                string hash = BCrypt.Net.BCrypt.HashPassword(senha);
 
 
-                //Console.WriteLine("hash que vai ser armazenado no banco:");
-
-                //Console.WriteLine(hash);
-                //HashDobanco.Text = hash;
+                //hash que vai ser armazenado no banco:
+                //tenhamos em mente que estamos pegando o valor da hash que foi gerada juntamente com o SaltKey e estamos atribuindo +
+                //ela novamente ao campo txtSenha para poder enviarmos ela ao banco de dados sem problemas
+                txtSenha.Text = hash;
 
                
                 ////------------------fim da implementação------------------//
