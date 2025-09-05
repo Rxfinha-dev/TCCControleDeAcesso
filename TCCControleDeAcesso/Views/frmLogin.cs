@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -46,9 +47,34 @@ namespace TCCControleDeAcesso.Views
                 
 
             };
+            //estou a fazer isso aqui 
+            //////////////////////////////
+
+            //// --------- login ---------
+            ////aqui vamos ter a parte de login com hash e salt key sempre tentando seguir a lógica do bcrypt.net
+            //Console.WriteLine("\ndigite sua senha para login:");
+            //string senhadigitada = Console.ReadLine();
+
+            ////  verifica automaticamente se a senha digitada gera o mesmo hash
+            //bool valido = BCrypt.Net.BCrypt.Verify(senhadigitada, hash);
+
+
+            //if (valido)
+            //{
+            //    Console.WriteLine("booooooooooaaaaaaaaa mano! tu é parceiro. ");
+            //}
+
+            //else
+            //{
+            //    Console.WriteLine("errou vacilão." +
+            //        "míssil lançado.");
+            //}
+
+            //////////////////////////////
+
 
             //frmMainMenu mainMenu = new frmMainMenu(txtLogin.Text,);
-           _login.SignIn();
+            _login.SignIn();
 
             CleanAll();
 

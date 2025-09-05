@@ -39,6 +39,7 @@
             this.txtNome = new System.Windows.Forms.TextBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
+            this.HashDobanco = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
             // 
@@ -140,6 +141,15 @@
             this.textBox1.TabIndex = 48;
             this.textBox1.Visible = false;
             // 
+            // HashDobanco
+            // 
+            this.HashDobanco.AutoSize = true;
+            this.HashDobanco.Location = new System.Drawing.Point(141, 415);
+            this.HashDobanco.Name = "HashDobanco";
+            this.HashDobanco.Size = new System.Drawing.Size(32, 14);
+            this.HashDobanco.TabIndex = 49;
+            this.HashDobanco.Text = "Hash";
+            // 
             // frmCadastroEmpresa
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 14F);
@@ -147,6 +157,7 @@
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.BackgroundImage = global::TCCControleDeAcesso.Properties.Resources.Design_sem_nome__13_;
             this.ClientSize = new System.Drawing.Size(1793, 1003);
+            this.Controls.Add(this.HashDobanco);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.label6);
@@ -181,5 +192,6 @@
         private System.Windows.Forms.TextBox txtNome;
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Label HashDobanco;
     }
 }

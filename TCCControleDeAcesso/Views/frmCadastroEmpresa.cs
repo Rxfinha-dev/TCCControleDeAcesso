@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Mail;
+using BCrypt.Net;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -11,6 +12,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 using TCCControleDeAcesso.Models;
+using Org.BouncyCastle.Crypto.Generators;
+using System.Security.Cryptography;
+
 
 namespace TCCControleDeAcesso.Views
 {
@@ -41,6 +45,8 @@ namespace TCCControleDeAcesso.Views
                 Name = txtNome.Text,
                 Senha = txtSenha.Text,
             };
+
+
 
             int count = 0;
             try
@@ -78,6 +84,26 @@ namespace TCCControleDeAcesso.Views
 
             if (txtSenha.Text == txtConfirmarSenha.Text)
             {
+
+                ////------------------Vamos tentar implementar A hash e a salt key------------------//
+
+
+               
+                //string senha = txtSenha.Text;
+
+
+                //// gera hash com salt automático (interno do bcrypt)
+                //string hash = BCrypt.Net.BCrypt.HashPassword(senha);
+
+
+                //Console.WriteLine("hash que vai ser armazenado no banco:");
+
+                //Console.WriteLine(hash);
+                //HashDobanco.Text = hash;
+
+               
+                ////------------------fim da implementação------------------//
+
                 btnCadastrar.Enabled = false;
 
                 // Gerando código aleatório
