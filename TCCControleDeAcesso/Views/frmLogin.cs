@@ -52,7 +52,7 @@ namespace TCCControleDeAcesso.Views
 
             //// --------- login ---------
             ////aqui vamos ter a parte de login com hash e salt key sempre tentando seguir a lógica do bcrypt.net
-            //Console.WriteLine("\ndigite sua senha para login:");
+
             //string senhadigitada = Console.ReadLine();
 
             ////  verifica automaticamente se a senha digitada gera o mesmo hash
