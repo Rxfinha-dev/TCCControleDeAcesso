@@ -57,7 +57,7 @@ namespace TCCControleDeAcesso.Views
             }
             else
             {
-                combo.SelectedIndex = 0;
+                combo.SelectedIndex = -1;
             }
         }
 

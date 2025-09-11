@@ -99,7 +99,7 @@
             // 
             this.lblCurso.AutoSize = true;
             this.lblCurso.Font = new System.Drawing.Font("Arial", 14F);
-            this.lblCurso.Location = new System.Drawing.Point(412, 447);
+            this.lblCurso.Location = new System.Drawing.Point(904, 572);
             this.lblCurso.Name = "lblCurso";
             this.lblCurso.Size = new System.Drawing.Size(66, 22);
             this.lblCurso.TabIndex = 5;
@@ -148,7 +148,7 @@
             // 
             this.lblAno.AutoSize = true;
             this.lblAno.Font = new System.Drawing.Font("Arial", 14F);
-            this.lblAno.Location = new System.Drawing.Point(917, 594);
+            this.lblAno.Location = new System.Drawing.Point(904, 594);
             this.lblAno.Name = "lblAno";
             this.lblAno.Size = new System.Drawing.Size(0, 22);
             this.lblAno.TabIndex = 9;

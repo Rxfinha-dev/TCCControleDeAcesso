@@ -18,10 +18,14 @@ namespace TCCControleDeAcesso.Views
 
         Verificacao verificacao;
 
-        public frmVerificacao()
+        string _CurrentUsername;
+
+        public frmVerificacao(string currentUsername, int idEscola)
         {
             InitializeComponent();
             SerialPortManager.Port.DataReceived += serialPort_DataReceived;
+            _CurrentUsername = currentUsername;
+            id_escola = idEscola;
         }
 
         private void btnVerificar_Click(object sender, EventArgs e)
@@ -44,7 +48,7 @@ namespace TCCControleDeAcesso.Views
 
         private void CarregarImagemDoAluno(int id)
         {
-            string connectionString = "server=localhost;port=3306;uid=root;pwd=1234;database=accesscontrol;"; // Atualize conforme necessário
+            string connectionString = "server=localhost;port=3307;uid=root;pwd=etecjau;database=accesscontrol;"; // Atualize conforme necessário
             string query = "SELECT foto FROM alunos WHERE id = @id";
 
             using (MySqlConnection conn = new MySqlConnection(connectionString))
@@ -140,14 +144,14 @@ namespace TCCControleDeAcesso.Views
 
         private void btnVoltar_Click(object sender, EventArgs e)
         {
-            frmMainMenu check = new frmMainMenu("", 0);
+            frmMainMenu check = new frmMainMenu(_CurrentUsername, id_escola);
             check.Show();
             Hide();
         }
 
         private void frmVerificacao_Load(object sender, EventArgs e)
         {
-           
+        
         }
     }
 }
