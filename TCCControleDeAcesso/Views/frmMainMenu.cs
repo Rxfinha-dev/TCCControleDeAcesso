@@ -25,6 +25,7 @@ int nHeightEllipse
 );
 
         public int id_escola;
+        public string _CurrentUsername;
 
         
         public frmMainMenu(string currentUsername, int idEscola)
@@ -33,6 +34,7 @@ int nHeightEllipse
             //Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, Width, Height, 25, 25));
             label2.Text = currentUsername;
             id_escola = idEscola;
+            _CurrentUsername = currentUsername;
         }
 
         private void btnLogout_Click(object sender, EventArgs e)
@@ -44,14 +46,14 @@ int nHeightEllipse
 
         private void btnAlunos_Click(object sender, EventArgs e)
         {
-            frmListaAlunos check = new frmListaAlunos(id_escola);
+            frmListaAlunos check = new frmListaAlunos(_CurrentUsername,id_escola);
             check.Show();
             Hide();
         }
 
         private void btnCursos_Click(object sender, EventArgs e)
         {
-            frmCadastroCurso check = new frmCadastroCurso(id_escola);
+            frmCadastroCurso check = new frmCadastroCurso(_CurrentUsername,id_escola);
             check.Show();
             Hide();
         }
@@ -113,7 +115,7 @@ int nHeightEllipse
 
         private void btnVerificacao_Click(object sender, EventArgs e)
         {
-            frmVerificacao check = new frmVerificacao();
+            frmVerificacao check = new frmVerificacao(_CurrentUsername, id_escola);
             check.Show();
         }
 
@@ -150,21 +152,21 @@ int nHeightEllipse
 
         private void btnVerificao_Click(object sender, EventArgs e)
         {
-            frmVerificacao check = new frmVerificacao();
+            frmVerificacao check = new frmVerificacao(_CurrentUsername, id_escola);
             check.Show();
             Hide();
         }
 
         private void btnCurso_Click(object sender, EventArgs e)
         {
-            frmCadastroCurso check = new frmCadastroCurso(id_escola);
+            frmCadastroCurso check = new frmCadastroCurso(_CurrentUsername, id_escola);
             check.Show();
             Hide();
         }
 
         private void btnAluno_Click(object sender, EventArgs e)
         {
-            frmListaAlunos check = new frmListaAlunos(id_escola);
+            frmListaAlunos check = new frmListaAlunos(_CurrentUsername, id_escola);
             check.Show();
             Hide();
         }

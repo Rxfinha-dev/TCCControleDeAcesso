@@ -63,7 +63,7 @@ namespace TCCControleDeAcesso.Models
 
         public void Insert()
         {
-            frmListaAlunos FrmListaAlunos = new frmListaAlunos(0);
+            frmListaAlunos FrmListaAlunos = new frmListaAlunos("",0);
 
             try
             {

@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
+using TCCControleDeAcesso.Controllers;
 using TCCControleDeAcesso.Models;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
@@ -18,10 +19,14 @@ namespace TCCControleDeAcesso.Views
         Curso _curso = new Curso();
         int id_escola;
         string idText;
-        public frmCadastroCurso(int id)
+        Login _login;
+        string _CurrentUsername;
+        public frmCadastroCurso(string currentUsername, int id)
         {
             InitializeComponent();
             id_escola = id;
+            _CurrentUsername = currentUsername;
+            CarregarGrid();
         }
         public void LimparCampos()
         {
@@ -30,9 +35,6 @@ namespace TCCControleDeAcesso.Views
         }
         public void CarregarGrid()
         {
-
-            _curso = new Curso() { };
-
             dgvCursos.DataSource = _curso.ListCourses(id_escola);
         }
         private void btnCadastrar_Click(object sender, EventArgs e)
@@ -56,6 +58,7 @@ namespace TCCControleDeAcesso.Views
             LimparCampos();
             CarregarGrid();
             dgvCursos.Columns["id"].Visible = false;
+            CarregarGrid();
 
         }
 
@@ -103,6 +106,7 @@ namespace TCCControleDeAcesso.Views
                 dgvCursos.DataSource = _curso.ListCourses(id_escola);
                 dgvCursos.Columns["id"].Visible = false;
                 LimparCampos();
+                CarregarGrid();
             
             }
 
@@ -110,9 +114,10 @@ namespace TCCControleDeAcesso.Views
 
         private void btnVoltar_Click(object sender, EventArgs e)
         {
-            frmMainMenu check = new frmMainMenu("", 0);
+            frmMainMenu check = new frmMainMenu(_CurrentUsername, id_escola);
             check.Show();
-            Hide();
+            Close();
+            CarregarGrid();
         }
     }
 }
