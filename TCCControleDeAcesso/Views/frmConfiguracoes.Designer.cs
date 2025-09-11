@@ -36,6 +36,8 @@
             // 
             // bntConectar
             // 
+            this.bntConectar.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.bntConectar.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.bntConectar.Font = new System.Drawing.Font("Arial", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.bntConectar.Location = new System.Drawing.Point(80, 81);
             this.bntConectar.Margin = new System.Windows.Forms.Padding(4);
@@ -43,7 +45,7 @@
             this.bntConectar.Size = new System.Drawing.Size(228, 39);
             this.bntConectar.TabIndex = 0;
             this.bntConectar.Text = "Conectar";
-            this.bntConectar.UseVisualStyleBackColor = true;
+            this.bntConectar.UseVisualStyleBackColor = false;
             this.bntConectar.Click += new System.EventHandler(this.bntConectar_Click);
             // 
             // progressBarConectado

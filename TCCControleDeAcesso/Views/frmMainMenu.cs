@@ -180,5 +180,6 @@ int nHeightEllipse
             frmLog check = new frmLog(id_escola);
             check.Show();
         }
+
     }
 }

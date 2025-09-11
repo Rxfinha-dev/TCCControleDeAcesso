@@ -140,6 +140,13 @@
             // 
             this.cboCurso.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cboCurso.FormattingEnabled = true;
+            this.cboCurso.Items.AddRange(new object[] {
+            "Administração\t",
+            "Desenvolvimento de Sistemas",
+            "Edificações",
+            "Informática",
+            "Mecânica",
+            "Mecatronica"});
             this.cboCurso.Location = new System.Drawing.Point(633, 509);
             this.cboCurso.Name = "cboCurso";
             this.cboCurso.Size = new System.Drawing.Size(203, 25);
