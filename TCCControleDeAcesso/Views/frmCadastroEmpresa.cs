@@ -45,6 +45,7 @@ namespace TCCControleDeAcesso.Views
                 Email = txtEmail.Text,
                 Name = txtNome.Text,
                 Senha = txtSenha.Text,
+                
             };
 
 
@@ -86,7 +87,7 @@ namespace TCCControleDeAcesso.Views
             if (txtSenha.Text == txtConfirmarSenha.Text)
             {
 
-                ////------------------Vamos tentar implementar A hash e a salt key------------------//
+                ////------------------Vamos tentar implementar A hash (que está com a salt key incluido ja)------------------//
 
 
                

@@ -17,12 +17,14 @@ namespace TCCControleDeAcesso.Views
     public partial class frmLogin : Form
     {
         Login _login;
+        CadastroEmpresas _empresas;
 
         // Variáveis de controle
         int baseY;
         double angle = 0;
         int amplitude = 5; // altura do "flutuar"
         double speed = 0.1;
+
 
 
         public frmLogin()
@@ -37,6 +39,7 @@ namespace TCCControleDeAcesso.Views
             txtSenha.Clear();
             txtLogin.Focus();
         }
+        
 
         private void btnEntrar_Click(object sender, EventArgs e)
         {
@@ -44,31 +47,42 @@ namespace TCCControleDeAcesso.Views
             {
                 nome = txtLogin.Text,
                 senha = txtSenha.Text,
-                
-
+              
             };
-            //estou a fazer isso aqui 
-            //////////////////////////////
 
-            //// --------- login ---------
-            ////aqui vamos ter a parte de login com hash e salt key sempre tentando seguir a lógica do bcrypt.net
 
-            //string senhadigitada = Console.ReadLine();
+
+            //estou a fazer isso aqui :
+
+
+            // --------- login ---------
+            //aqui vamos ter a parte de login com hash e salt key sempre tentando seguir a lógica do bcrypt.net
+            //essa lógica seria gerar uma hash que ja vai estar junto da saltkey e em seguida o próprio Bycript tbm ja faz a leitura e validação,
+            //sendo assim, desnecessário realizar o save da salt key de forma separada no banco de dados para validação posterior
+
+            //vamos chamar a função do banco de dados que vai puxar a senha do banco
+            _empresas = new CadastroEmpresas() { };
+            _empresas.PullSenha();
+            
+    
+
+            
+            string senhadigitada = txtSenha.Text;
 
             ////  verifica automaticamente se a senha digitada gera o mesmo hash
-            //bool valido = BCrypt.Net.BCrypt.Verify(senhadigitada, hash);
+            bool valido = BCrypt.Net.BCrypt.Verify(senhadigitada,_empresas.HashBanco);
 
 
-            //if (valido)
-            //{
-            //    Console.WriteLine("booooooooooaaaaaaaaa mano! tu é parceiro. ");
-            //}
+            if (valido)
+            {
+                Console.WriteLine("booooooooooaaaaaaaaa mano! tu é parceiro. ");
+            }
 
-            //else
-            //{
-            //    Console.WriteLine("errou vacilão." +
-            //        "míssil lançado.");
-            //}
+            else
+            {
+                Console.WriteLine("errou vacilão." +
+                    "míssil lançado.");
+            }
 
             //////////////////////////////
 

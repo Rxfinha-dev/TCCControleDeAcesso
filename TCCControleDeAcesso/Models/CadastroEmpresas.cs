@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 using System.Xml.Linq;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 
 namespace TCCControleDeAcesso.Models
 {
@@ -17,6 +18,10 @@ namespace TCCControleDeAcesso.Models
 
         public string Email { get; set; }
         public string Senha { get; set; }
+
+        public string HashBanco { get; set; }
+
+      
 
 
         public void Insert()
@@ -63,6 +68,34 @@ namespace TCCControleDeAcesso.Models
             catch (Exception e)
             {
                 MessageBox.Show(e.Message, "Erro Ao Atualizar Dados!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        //possivel caca a ser feita(Eu Bruno vou fazer uma função para uxar a senha do nosso banco de dados)
+
+        public void PullSenha()
+        {
+            try
+            {
+                Banco.OpenConnection();
+                string HashBanco = null;
+
+                using (var cmd = new MySqlCommand("SELECT senha FROM escolas WHERE Email = @email ", Banco.Connection))
+                {
+                    cmd.Parameters.AddWithValue("@email", Email);
+
+                    var result = cmd.ExecuteScalar(); // pega o primeiro valor da consulta
+
+                    if (result != null)
+                    {
+                        HashBanco = result.ToString(); // senha (hash) armazenada no banco
+                    }
+                }
+                Banco.CloseConnection();
+            }
+            catch
+            {
+                MessageBox.Show("Alguma coisa ai deu muito errada! ");
             }
         }
 

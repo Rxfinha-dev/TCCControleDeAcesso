@@ -35,6 +35,11 @@ int nHeightEllipse
             id_escola = idEscola;
         }
 
+        public frmMainMenu(string text)
+        {
+            Text = text;
+        }
+
         private void btnLogout_Click(object sender, EventArgs e)
         {
             frmLogin check = new frmLogin();         
