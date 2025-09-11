@@ -56,7 +56,7 @@
             // 
             this.btnCadastrar.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnCadastrar.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCadastrar.Location = new System.Drawing.Point(411, 95);
+            this.btnCadastrar.Location = new System.Drawing.Point(819, 485);
             this.btnCadastrar.Name = "btnCadastrar";
             this.btnCadastrar.Size = new System.Drawing.Size(150, 50);
             this.btnCadastrar.TabIndex = 2;
@@ -78,7 +78,7 @@
             this.btnVoltar.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.btnVoltar.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnVoltar.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnVoltar.Location = new System.Drawing.Point(897, 429);
+            this.btnVoltar.Location = new System.Drawing.Point(974, 485);
             this.btnVoltar.Name = "btnVoltar";
             this.btnVoltar.Size = new System.Drawing.Size(150, 50);
             this.btnVoltar.TabIndex = 13;
@@ -88,12 +88,14 @@
             // 
             // btnDelete
             // 
-            this.btnDelete.Location = new System.Drawing.Point(315, 95);
+            this.btnDelete.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btnDelete.Location = new System.Drawing.Point(934, 541);
             this.btnDelete.Name = "btnDelete";
             this.btnDelete.Size = new System.Drawing.Size(75, 25);
             this.btnDelete.TabIndex = 4;
             this.btnDelete.Text = "Delete";
-            this.btnDelete.UseVisualStyleBackColor = true;
+            this.btnDelete.UseVisualStyleBackColor = false;
             this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
             // 
             // frmCadastroCurso

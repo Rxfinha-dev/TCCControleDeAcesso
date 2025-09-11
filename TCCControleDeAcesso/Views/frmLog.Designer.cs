@@ -29,23 +29,40 @@
         private void InitializeComponent()
         {
             this.dgvLog = new System.Windows.Forms.DataGridView();
+            this.backBtn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvLog)).BeginInit();
             this.SuspendLayout();
             // 
             // dgvLog
             // 
+            this.dgvLog.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
             this.dgvLog.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvLog.Location = new System.Drawing.Point(248, 112);
+            this.dgvLog.Location = new System.Drawing.Point(506, 403);
             this.dgvLog.Name = "dgvLog";
             this.dgvLog.Size = new System.Drawing.Size(903, 425);
             this.dgvLog.TabIndex = 0;
             this.dgvLog.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvLog_CellContentClick);
             // 
+            // backBtn
+            // 
+            this.backBtn.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.backBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.backBtn.Image = global::TCCControleDeAcesso.Properties.Resources.sair__1_;
+            this.backBtn.Location = new System.Drawing.Point(41, 907);
+            this.backBtn.Name = "backBtn";
+            this.backBtn.Size = new System.Drawing.Size(77, 68);
+            this.backBtn.TabIndex = 1;
+            this.backBtn.UseVisualStyleBackColor = false;
+            this.backBtn.Click += new System.EventHandler(this.backBtn_Click);
+            // 
             // frmLog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1398, 648);
+            this.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.BackgroundImage = global::TCCControleDeAcesso.Properties.Resources.Design_sem_nome__7_;
+            this.ClientSize = new System.Drawing.Size(1721, 973);
+            this.Controls.Add(this.backBtn);
             this.Controls.Add(this.dgvLog);
             this.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "frmLog";
@@ -59,5 +76,6 @@
         #endregion
 
         private System.Windows.Forms.DataGridView dgvLog;
+        private System.Windows.Forms.Button backBtn;
     }
 }

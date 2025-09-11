@@ -22,13 +22,15 @@ namespace TCCControleDeAcesso.Views
             int id_escola;
             public string caminho;
             string idText;
+        string _CurrentUsername;
 
 
-            public frmListaAlunos(int idEsc)
+            public frmListaAlunos(string currentUsername ,int idEsc)
             {
                 InitializeComponent();
                 SerialPortManager.Port.DataReceived += serialPort_DataReceived;
                 id_escola = idEsc;
+            _CurrentUsername = currentUsername;
             }
 
         public void CleanAll()
@@ -279,7 +281,7 @@ namespace TCCControleDeAcesso.Views
 
         private void btnVoltar_Click(object sender, EventArgs e)
         {
-            frmMainMenu check = new frmMainMenu("", 0);
+            frmMainMenu check = new frmMainMenu(_CurrentUsername, id_escola);
             check.Show();
             Hide();
         }
