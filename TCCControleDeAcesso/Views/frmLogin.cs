@@ -60,9 +60,9 @@ namespace TCCControleDeAcesso.Views
             //essa lógica seria gerar uma hash que ja vai estar junto da saltkey e em seguida o próprio Bycript tbm ja faz a leitura e validação,
             //sendo assim, desnecessário realizar o save da salt key de forma separada no banco de dados para validação posterior
 
-            //vamos chamar a função do banco de dados que vai puxar a senha do banco
-            _empresas = new CadastroEmpresas() { };
-            _empresas.PullSenha();
+            //vamos chamar a função do banco de dados(login.Cs) que vai puxar a senha do banco
+            
+            _login.PullSenha();
             
     
 
@@ -70,29 +70,32 @@ namespace TCCControleDeAcesso.Views
             string senhadigitada = txtSenha.Text;
 
             ////  verifica automaticamente se a senha digitada gera o mesmo hash
-            bool valido = BCrypt.Net.BCrypt.Verify(senhadigitada,_empresas.HashBanco);
+            bool valido = BCrypt.Net.BCrypt.Verify(senhadigitada,_login.HashBanco);
 
-
-            if (valido)
+            if (valido == true)
             {
-                Console.WriteLine("booooooooooaaaaaaaaa mano! tu é parceiro. ");
+                _login.LoginPermissions();
+                MessageBox.Show("Login realizado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);          
+                frmMainMenu check = new frmMainMenu(_login.nome, _login.idEscola);                  
+                check.Show();
             }
-
             else
             {
-                Console.WriteLine("errou vacilão." +
-                    "míssil lançado.");
+                MessageBox.Show("Míssil lançado.", "Se ferrou nego");
             }
+
+
+
 
             //////////////////////////////
 
 
             //frmMainMenu mainMenu = new frmMainMenu(txtLogin.Text,);
-            _login.SignIn();
+            //_login.SignIn();
 
             CleanAll();
 
-            if (_login.count > 0) {
+            if (valido == true) {
                 Hide();
             }
         }
