@@ -59,20 +59,23 @@ namespace TCCControleDeAcesso.Controllers
             {
                 Banco.OpenConnection();
 
-                // Busca apenas a senha (hash) direto
-                using (var cmd = new MySqlCommand("SELECT senha FROM escolas WHERE nome=@nome LIMIT 1", Banco.Connection))
+                Banco.Command = new MySqlCommand("SELECT COUNT(*) FROM escolas WHERE nome=@nome", Banco.Connection);
+                Banco.Command.Parameters.AddWithValue("@nome", nome);
+                count = Convert.ToInt32(Banco.Command.ExecuteScalar());
+
+                if (count > 0)
                 {
-                    cmd.Parameters.AddWithValue("@nome", nome);
-
-                    var result = cmd.ExecuteScalar();
-
-                    if (result != null)
+                    // Busca apenas a senha (hash) direto
+                    using (var cmd = new MySqlCommand("SELECT senha FROM escolas WHERE nome=@nome LIMIT 1", Banco.Connection))
                     {
-                        HashBanco = result.ToString();
-                    }
-                    else
-                    {
-                        MessageBox.Show("Nome de usuário inexistente");
+                        cmd.Parameters.AddWithValue("@nome", nome);
+
+                        var result = cmd.ExecuteScalar();
+
+                        if (result != null)
+                        {
+                            HashBanco = result.ToString();
+                        }
                     }
                 }
             }

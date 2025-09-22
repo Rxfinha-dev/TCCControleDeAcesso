@@ -63,31 +63,42 @@ namespace TCCControleDeAcesso.Views
             //vamos chamar a função do banco de dados(login.Cs) que vai puxar a senha do banco
             
             _login.PullSenha();
-            
-    
 
-            
+            //pega a senha digitada e guarda na variável 
             string senhadigitada = txtSenha.Text;
+       
 
-            ////  verifica automaticamente se a senha digitada gera o mesmo hash
-            bool valido = BCrypt.Net.BCrypt.Verify(senhadigitada,_login.HashBanco);
-
-            if (valido == true)
+            if (_login.count == 1)
             {
-                _login.LoginPermissions();
-                MessageBox.Show("Login realizado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);          
-                frmMainMenu check = new frmMainMenu(_login.nome, _login.idEscola);                  
-                check.Show();
+                ////  verifica automaticamente se a senha digitada gera o mesmo hash
+                bool valido = BCrypt.Net.BCrypt.Verify(senhadigitada, _login.HashBanco);
+
+                if (valido == true)
+                {
+                    _login.LoginPermissions();
+                    MessageBox.Show("Login realizado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    frmMainMenu check = new frmMainMenu(_login.nome, _login.idEscola);
+                    check.Show();
+                    Hide();
+                    CleanAll();
+                }
+                else
+                {
+                    MessageBox.Show("Senha incorreta!", "Missíl lançado");
+                }
+                
             }
             else
             {
-                MessageBox.Show("Míssil lançado.", "Se ferrou nego");
+                MessageBox.Show("usuario inexistente", "Se ferrou nego");
+                CleanAll();
             }
 
 
 
 
-            //////////////////////////////
+
+            /////////// ---------- end login --------- //
 
 
             //frmMainMenu mainMenu = new frmMainMenu(txtLogin.Text,);
@@ -95,9 +106,7 @@ namespace TCCControleDeAcesso.Views
 
             CleanAll();
 
-            if (valido == true) {
-                Hide();
-            }
+ 
         }
 
         private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
