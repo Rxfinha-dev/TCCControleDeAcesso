@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.UI.WebControls;
 using System.Windows.Forms;
 using TCCControleDeAcesso.Controllers;
 using TCCControleDeAcesso.Models;
@@ -15,6 +16,8 @@ namespace TCCControleDeAcesso.Views
 {
     public partial class frmTrocandoSenha: Form
     {
+
+
         NovaSenha ns = new NovaSenha();
 
        public string EmailCadastrado;
@@ -51,17 +54,35 @@ namespace TCCControleDeAcesso.Views
 
         private void btnAlterarSenha_Click(object sender, EventArgs e)
         {
-
+            //////////////////////////
+            ///
             if (txtNovaSenha.Text == txtNovaSenha2.Text)
             {
+
+                ////------------------Vamos tentar implementar A hash (que está com a salt key incluido ja)------------------//
+
+
+
+                string senha = txtNovaSenha.Text;
+
+
+
+                //gera hash com salt automático (interno do bcrypt)
+                //bcrypt é uma biblioteca importada
+                string hash = BCrypt.Net.BCrypt.HashPassword(senha);
+
+
+                //hash que vai ser armazenado no banco:
+                //tenhamos em mente que estamos pegando o valor da hash que foi gerada juntamente com o SaltKey e estamos atribuindo +
+                //ela novamente ao campo txtSenha para poder enviarmos ela ao banco de dados sem problemas
                 ns = new NovaSenha()
                 {
-                    senha = txtNovaSenha.Text,
+                    senha = hash,
                     email = EmailCadastrado
                 };
                 ns.ChangePasswod();
 
-                MessageBox.Show("Senha alterada com sucesso!"," ", MessageBoxButtons.OK, MessageBoxIcon.None);
+                MessageBox.Show("Senha alterada com sucesso!", " ", MessageBoxButtons.OK, MessageBoxIcon.None);
                 this.Close();
                 frmLogin loginForm = new frmLogin();
                 loginForm.Show();
@@ -76,6 +97,15 @@ namespace TCCControleDeAcesso.Views
             txtNovaSenha.Text = "";
             txtNovaSenha2.Text = "";
 
+
+
+            ////------------------fim da implementação------------------//
         }
+
+
+
+
+
     }
 }
+

@@ -47,12 +47,6 @@ namespace TCCControleDeAcesso.Controllers
             }
         }
 
-
-        /// <summary>
-        /// ////////////////////////////////////////////
-        /// </summary>
-
-
         public void PullSenha()
         {
             try
@@ -90,53 +84,5 @@ namespace TCCControleDeAcesso.Controllers
         }
     }
 }
-/// <summary>
-/// ///////////////////////////////////////////
-/// </summary>
 
-
-//public void SignIn()
-//{
-//try
-//{
-
-//    Banco.OpenConnection();
-
-
-//    Banco.Command = new MySqlCommand("SELECT COUNT(*) FROM escolas WHERE nome=@nome AND senha=@senha", Banco.Connection);
-
-
-//    Banco.Command.Parameters.AddWithValue("@nome", nome);
-//    Banco.Command.Parameters.AddWithValue("@senha", senha);
-
-
-//    count = Convert.ToInt32(Banco.Command.ExecuteScalar());
-
-//    Banco.CloseConnection();
-//}
-
-//        if (count > 0)
-//        {
-//            LoginPermissions();
-//            MessageBox.Show("Login realizado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);          
-//            frmMainMenu check = new frmMainMenu(nome, idEscola);                  
-//            check.Show();
-
-
-
-//        }
-//        else
-//        {
-//            MessageBox.Show("Nome ou senha incorretos.", "Erro de Login", MessageBoxButtons.OK, MessageBoxIcon.Error);
-//        }
-//    }
-//    catch (Exception e)
-//    {
-//        MessageBox.Show(e.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-//    }
-//    finally
-//    {
-//        Banco.CloseConnection();
-//   }
-//}
 

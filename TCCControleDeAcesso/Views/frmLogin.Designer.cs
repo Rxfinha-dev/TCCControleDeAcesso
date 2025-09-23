@@ -41,6 +41,7 @@
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.chkMostrarSenha = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -80,7 +81,7 @@
             // 
             this.btnEntrar.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.btnEntrar.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnEntrar.Location = new System.Drawing.Point(1444, 643);
+            this.btnEntrar.Location = new System.Drawing.Point(1444, 665);
             this.btnEntrar.Name = "btnEntrar";
             this.btnEntrar.Size = new System.Drawing.Size(137, 55);
             this.btnEntrar.TabIndex = 40;
@@ -92,7 +93,7 @@
             // 
             this.button5.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.button5.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button5.Location = new System.Drawing.Point(1301, 643);
+            this.button5.Location = new System.Drawing.Point(1301, 665);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(137, 55);
             this.button5.TabIndex = 41;
@@ -166,12 +167,24 @@
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
+            // chkMostrarSenha
+            // 
+            this.chkMostrarSenha.AutoSize = true;
+            this.chkMostrarSenha.Location = new System.Drawing.Point(1306, 643);
+            this.chkMostrarSenha.Name = "chkMostrarSenha";
+            this.chkMostrarSenha.Size = new System.Drawing.Size(96, 18);
+            this.chkMostrarSenha.TabIndex = 47;
+            this.chkMostrarSenha.Text = "Mostrar senha";
+            this.chkMostrarSenha.UseVisualStyleBackColor = true;
+            this.chkMostrarSenha.CheckedChanged += new System.EventHandler(this.MostrarSenha_CheckedChanged);
+            // 
             // frmLogin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.ClientSize = new System.Drawing.Size(1828, 841);
+            this.Controls.Add(this.chkMostrarSenha);
             this.Controls.Add(this.linkLabel2);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.btnEntrar);
@@ -210,5 +223,6 @@
         private System.Windows.Forms.PictureBox pictureBox3;
         private System.Windows.Forms.TextBox txtLogin;
         private System.Windows.Forms.ErrorProvider errorProvider1;
+        private System.Windows.Forms.CheckBox chkMostrarSenha;
     }
 }

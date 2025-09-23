@@ -84,13 +84,13 @@ namespace TCCControleDeAcesso.Views
                 }
                 else
                 {
-                    MessageBox.Show("Senha incorreta!", "Missíl lançado");
+                    MessageBox.Show("Senha incorreta!", "Erro de Login");
                 }
                 
             }
             else
             {
-                MessageBox.Show("usuario inexistente", "Se ferrou nego");
+                MessageBox.Show("usuario inexistente", "Não encontrado");
                 CleanAll();
             }
 
@@ -128,6 +128,8 @@ namespace TCCControleDeAcesso.Views
                     pictureBox3.Top = baseY + (int)(Math.Sin(angle) * amplitude);
                 };
                 flutuarTimer.Start();
+
+            txtSenha.PasswordChar = '*';
 
         }
 
@@ -204,6 +206,18 @@ namespace TCCControleDeAcesso.Views
             {
                 txtSenha.Text = "";
                 txtSenha.ForeColor = Color.Gray;
+            }
+        }
+
+        private void MostrarSenha_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkMostrarSenha.Checked)
+            {
+                txtSenha.PasswordChar = '\u0000';
+            }
+            else
+            {
+                txtSenha.PasswordChar = '*';
             }
         }
     }
