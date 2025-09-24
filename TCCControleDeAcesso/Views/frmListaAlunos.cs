@@ -22,7 +22,8 @@ namespace TCCControleDeAcesso.Views
             int id_escola;
             public string caminho;
             string idText;
-        string _CurrentUsername;
+            string _CurrentUsername;
+        public int id_arduino {  get; set; }
 
 
             public frmListaAlunos(string currentUsername ,int idEsc)
@@ -129,20 +130,50 @@ namespace TCCControleDeAcesso.Views
                 foto = File.ReadAllBytes(caminho),
                 idEscola = id_escola
             };
-            cadastroAlunos.cadastrarAluno();
-         
-            
-           
+            cadastroAlunos.Insert();
+
+       
+
+            string connStr = "server=localhost;port=3307;uid=root;pwd=etecjau;database=AccessControl;";
+            int id = 0; // variável para armazenar o resultado
+
+            using (var conn = new MySqlConnection(connStr))
+            {
+                conn.Open();
+
+                string sql = "SELECT id FROM alunos where nome=@nome";
+                using (var cmd = new MySqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@nome", txtName.Text);
+
+                    object result = cmd.ExecuteScalar(); // pega a primeira coluna da primeira linha
+                    if (result != null)
+                    {
+                        id = Convert.ToInt32(result);
+                    }
+                }
+            }
+
+            Console.WriteLine("ID encontrado: " + id);
+
+
+
+
+
+
+
+
 
             cadastroAlunos = new CadastroAlunos()
             {
                 idEscola = id_escola
             };
             dgvAlunos.DataSource = cadastroAlunos.ListStudents();
-            dgvAlunos.Columns["id"].Visible = false;
+           // dgvAlunos.Columns["id"].Visible = false;
             CleanAll();
 
-            int id = cadastroAlunos.idArduino;
+           
+            txtArduino.Text = id.ToString();
             //SerialPortManager.Port.Write("!enroll" + id + "#");
         }
 
@@ -153,7 +184,7 @@ namespace TCCControleDeAcesso.Views
                 idEscola = id_escola
             };
             dgvAlunos.DataSource = cadastroAlunos.ListStudents();
-            dgvAlunos.Columns["id"].Visible = false;
+            //dgvAlunos.Columns["id"].Visible = false;
 
             CleanAll();
             CarregarCursos();
@@ -284,6 +315,11 @@ namespace TCCControleDeAcesso.Views
             frmMainMenu check = new frmMainMenu(_CurrentUsername, id_escola);
             check.Show();
             Hide();
+        }
+
+        private void dgvAlunos_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
         }
     }
 }

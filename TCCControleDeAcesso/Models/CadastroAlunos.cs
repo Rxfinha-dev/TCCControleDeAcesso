@@ -34,9 +34,10 @@ namespace TCCControleDeAcesso.Models
         
         public void cadastrarAluno()
         {
-            Insert();           
+                  
                 try
                 {
+                   
                     Banco.OpenConnection();
 
                     Banco.Command = new MySqlCommand("select id from escolas where nome=@nome", Banco.Connection);
@@ -47,6 +48,9 @@ namespace TCCControleDeAcesso.Models
                         if (reader.Read())
                         {
                             idArduino = reader.GetInt32("id");
+                        frmListaAlunos tela = new frmListaAlunos("",0);
+                        tela.id_arduino = idArduino;
+
                         }
                     }
 
