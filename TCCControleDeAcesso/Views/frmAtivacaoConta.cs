@@ -86,6 +86,14 @@ namespace TCCControleDeAcesso.Views
 
         
         }
+
+        private void btnEntrar_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Lembre-se de verificar a caixa de spam e no lixo! ", "Vamos tentar novamente!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            frmLogin rp = new frmLogin();
+            this.Hide();
+            rp.Show();
+        }
     }
     
 }

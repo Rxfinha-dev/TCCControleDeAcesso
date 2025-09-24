@@ -39,6 +39,7 @@
             this.txtNome = new System.Windows.Forms.TextBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
+            this.txtEnvioHash = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
             // 
@@ -140,6 +141,15 @@
             this.textBox1.TabIndex = 48;
             this.textBox1.Visible = false;
             // 
+            // txtEnvioHash
+            // 
+            this.txtEnvioHash.Enabled = false;
+            this.txtEnvioHash.Location = new System.Drawing.Point(922, 713);
+            this.txtEnvioHash.Name = "txtEnvioHash";
+            this.txtEnvioHash.Size = new System.Drawing.Size(100, 20);
+            this.txtEnvioHash.TabIndex = 49;
+            this.txtEnvioHash.Visible = false;
+            // 
             // frmCadastroEmpresa
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 14F);
@@ -147,6 +157,7 @@
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.BackgroundImage = global::TCCControleDeAcesso.Properties.Resources.Design_sem_nome__13_;
             this.ClientSize = new System.Drawing.Size(1793, 1003);
+            this.Controls.Add(this.txtEnvioHash);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.label6);
@@ -181,5 +192,6 @@
         private System.Windows.Forms.TextBox txtNome;
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox txtEnvioHash;
     }
 }

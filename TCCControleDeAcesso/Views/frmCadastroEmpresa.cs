@@ -103,11 +103,13 @@ namespace TCCControleDeAcesso.Views
                 //hash que vai ser armazenado no banco:
                 //tenhamos em mente que estamos pegando o valor da hash que foi gerada juntamente com o SaltKey e estamos atribuindo +
                 //ela novamente ao campo txtSenha para poder enviarmos ela ao banco de dados sem problemas
-                txtSenha.Text = hash;
 
-               
+                //enviando a hash através de um txtbox invisível 
+                txtEnvioHash.Text = hash;
+
                 ////------------------fim da implementação------------------//
 
+                //esse daqui evita q o usuário fique dando vários cliques
                 btnCadastrar.Enabled = false;
 
                 // Gerando código aleatório
@@ -141,7 +143,7 @@ namespace TCCControleDeAcesso.Views
                     smtp.Credentials = new NetworkCredential(from, pass);
 
                     // Criando a tela de ativação
-                    var frmAC = new frmAtivacaoConta(txtNome.Text, txtEmail.Text, txtSenha.Text);
+                    var frmAC = new frmAtivacaoConta(txtNome.Text, txtEmail.Text, txtEnvioHash.Text);
                     frmAC.propriedade = textBox1.Text;
 
                     // Abre a tela de carregamento, passando a de ativação como destino
@@ -153,17 +155,23 @@ namespace TCCControleDeAcesso.Views
                     {
                         smtp.Send(message);
                         btnCadastrar.Enabled = true;
+                        txtSenha.Clear();
+                        txtConfirmarSenha.Clear();
                     }
                     catch (Exception ex)
                     {
                         MessageBox.Show(ex.Message);
                         btnCadastrar.Enabled = true;
+                        txtSenha.Clear();
+                        txtConfirmarSenha.Clear();
                     }
                 }
                 catch (Exception)
                 {
                     MessageBox.Show("Endereço de email inválido!");
                     btnCadastrar.Enabled = true;
+                    txtSenha.Clear();
+                    txtConfirmarSenha.Clear();
                 }
             }
             else
@@ -176,7 +184,10 @@ namespace TCCControleDeAcesso.Views
 
         private void frmCadastroEmpresa_Load(object sender, EventArgs e)
         {
+            txtSenha.PasswordChar = '*';
+            txtConfirmarSenha.PasswordChar = '*';
             CleanAll();
+
         }
 
 
