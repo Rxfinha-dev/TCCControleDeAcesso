@@ -99,11 +99,6 @@ namespace TCCControleDeAcesso.Views
 
 
             /////////// ---------- end login --------- //
-
-
-            //frmMainMenu mainMenu = new frmMainMenu(txtLogin.Text,);
-            //_login.SignIn();
-
             CleanAll();
 
  
@@ -130,6 +125,11 @@ namespace TCCControleDeAcesso.Views
                 flutuarTimer.Start();
 
             txtSenha.PasswordChar = '*';
+            txtLogin.Text = "Digite seu Login";
+            txtLogin.ForeColor = Color.Gray;
+            txtSenha.Text = "Digite sua Senha";
+            txtSenha.ForeColor = Color.Gray;
+
 
         }
 
@@ -141,37 +141,6 @@ namespace TCCControleDeAcesso.Views
 
         }
 
-        private void pictureBox1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void pictureBox3_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txtLogin_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-        private void txtLogin_Enter(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txtLogin_Leave(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txtSenha_Enter(object sender, EventArgs e)
-        {
-        }
-
-        private void txtSenha_Leave(object sender, EventArgs e)
-        {
-        }
 
         private void txtLogin_Leave_1(object sender, EventArgs e)
         {
@@ -179,6 +148,7 @@ namespace TCCControleDeAcesso.Views
             {
                 txtLogin.Text = "Digite seu Login";
                 txtLogin.ForeColor = Color.Gray;
+
             }
         }
 
@@ -197,6 +167,7 @@ namespace TCCControleDeAcesso.Views
             {
                 txtSenha.Text = "Digite sua Senha";
                 txtSenha.ForeColor = Color.Gray;
+
             }
         }
 
