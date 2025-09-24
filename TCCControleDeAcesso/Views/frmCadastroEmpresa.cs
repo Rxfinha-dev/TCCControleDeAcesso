@@ -15,7 +15,6 @@ using TCCControleDeAcesso.Models;
 using Org.BouncyCastle.Crypto.Generators;
 using System.Security.Cryptography;
 
-
 namespace TCCControleDeAcesso.Views
 {
     public partial class frmCadastroEmpresa : Form
@@ -23,6 +22,7 @@ namespace TCCControleDeAcesso.Views
         String randomCode;
         public static String EmailDest;
         CadastroEmpresas _cadastroEmpresas;
+
         public frmCadastroEmpresa()
         {
             InitializeComponent();
@@ -39,16 +39,13 @@ namespace TCCControleDeAcesso.Views
 
         private void btnCadastrar_Click(object sender, EventArgs e)
         {
-            //acredito que seja esse comando o responsavel pelo envio dos campos para o banco de dados
+            // acredito que seja esse comando o responsavel pelo envio dos campos para o banco de dados
             _cadastroEmpresas = new CadastroEmpresas()
             {
                 Email = txtEmail.Text,
                 Name = txtNome.Text,
                 Senha = txtSenha.Text,
-                
             };
-
-
 
             int count = 0;
             try
@@ -86,30 +83,24 @@ namespace TCCControleDeAcesso.Views
 
             if (txtSenha.Text == txtConfirmarSenha.Text)
             {
-
                 ////------------------Vamos tentar implementar A hash (que está com a salt key incluido ja)------------------//
 
-
-               
                 string senha = txtSenha.Text;
 
-
-
-                 //gera hash com salt automático (interno do bcrypt)
-                 //bcrypt é uma biblioteca importada
+                // gera hash com salt automático (interno do bcrypt)
+                // bcrypt é uma biblioteca importada
                 string hash = BCrypt.Net.BCrypt.HashPassword(senha);
 
+                // hash que vai ser armazenado no banco:
+                // tenhamos em mente que estamos pegando o valor da hash que foi gerada juntamente com o SaltKey e estamos atribuindo +
+                // ela novamente ao campo txtSenha para poder enviarmos ela ao banco de dados sem problemas
 
-                //hash que vai ser armazenado no banco:
-                //tenhamos em mente que estamos pegando o valor da hash que foi gerada juntamente com o SaltKey e estamos atribuindo +
-                //ela novamente ao campo txtSenha para poder enviarmos ela ao banco de dados sem problemas
-
-                //enviando a hash através de um txtbox invisível 
+                // enviando a hash através de um txtbox invisível 
                 txtEnvioHash.Text = hash;
 
                 ////------------------fim da implementação------------------//
 
-                //esse daqui evita q o usuário fique dando vários cliques
+                // esse daqui evita q o usuário fique dando vários cliques
                 btnCadastrar.Enabled = false;
 
                 // Gerando código aleatório
@@ -120,7 +111,7 @@ namespace TCCControleDeAcesso.Views
 
                 MailMessage message = new MailMessage();
                 from = "suportehelpus@gmail.com"; // Email do remetente
-                pass = "vwec abnc veyc jvns";      // Senha de App
+                pass = "vwec abnc veyc jvns";     // Senha de App
                 messageBody = "Estamos felizes de termos você conosco! Seu código de ativação de conta é: " + randomCode;
                 EmailDest = txtEmail.Text;
 
@@ -129,9 +120,7 @@ namespace TCCControleDeAcesso.Views
                     MailAddress mailadress = new MailAddress(EmailDest);
 
                     MessageBox.Show("Para a ativação de conta estamos enviando um código de verificação no seu email! " +
-                       "Olhe o seu email e caixa de Spam!", "Ativação de conta", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                    /// Olhe aqui acima e veja o que vc pode fazer lindao
+                        "Olhe o seu email e caixa de Spam!", "Ativação de conta", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                     message.To.Add(EmailDest);
                     message.From = new MailAddress(from);
@@ -152,7 +141,6 @@ namespace TCCControleDeAcesso.Views
                     frmAC.propriedade = textBox1.Text;
                     this.Hide();
                     frmAC.Show();
-
 
                     try
                     {
@@ -184,15 +172,11 @@ namespace TCCControleDeAcesso.Views
             }
         }
 
-
         private void frmCadastroEmpresa_Load(object sender, EventArgs e)
         {
             txtSenha.PasswordChar = '*';
             txtConfirmarSenha.PasswordChar = '*';
             CleanAll();
-
         }
-
-
     }
 }
