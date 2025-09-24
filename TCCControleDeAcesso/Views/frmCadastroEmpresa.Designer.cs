@@ -86,6 +86,7 @@
             // btnCadastrar
             // 
             this.btnCadastrar.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.btnCadastrar.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnCadastrar.Font = new System.Drawing.Font("Arial", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnCadastrar.Location = new System.Drawing.Point(889, 640);
             this.btnCadastrar.Name = "btnCadastrar";

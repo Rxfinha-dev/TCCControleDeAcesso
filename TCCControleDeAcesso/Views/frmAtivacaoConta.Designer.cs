@@ -56,12 +56,14 @@
             // 
             // btnAtivacao
             // 
+            this.btnAtivacao.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.btnAtivacao.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnAtivacao.Location = new System.Drawing.Point(209, 199);
             this.btnAtivacao.Name = "btnAtivacao";
             this.btnAtivacao.Size = new System.Drawing.Size(75, 25);
             this.btnAtivacao.TabIndex = 12;
             this.btnAtivacao.Text = "Ativar Conta";
-            this.btnAtivacao.UseVisualStyleBackColor = true;
+            this.btnAtivacao.UseVisualStyleBackColor = false;
             this.btnAtivacao.Click += new System.EventHandler(this.btnAtivacao_Click);
             // 
             // textBox1
@@ -94,6 +96,7 @@
             // btnEntrar
             // 
             this.btnEntrar.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.btnEntrar.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnEntrar.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnEntrar.Location = new System.Drawing.Point(209, 299);
             this.btnEntrar.Name = "btnEntrar";
