@@ -48,6 +48,7 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.acao = new System.Windows.Forms.Label();
             this.btnVoltar = new System.Windows.Forms.Button();
+            this.txtArduino = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAlunos)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -89,6 +90,7 @@
             this.dgvAlunos.Size = new System.Drawing.Size(536, 311);
             this.dgvAlunos.TabIndex = 77;
             this.dgvAlunos.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvAlunos_CellClick);
+            this.dgvAlunos.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvAlunos_CellContentClick);
             // 
             // txtIdade
             // 
@@ -261,6 +263,14 @@
             this.btnVoltar.UseVisualStyleBackColor = false;
             this.btnVoltar.Click += new System.EventHandler(this.btnVoltar_Click);
             // 
+            // txtArduino
+            // 
+            this.txtArduino.HideSelection = false;
+            this.txtArduino.Location = new System.Drawing.Point(339, 575);
+            this.txtArduino.Name = "txtArduino";
+            this.txtArduino.Size = new System.Drawing.Size(100, 20);
+            this.txtArduino.TabIndex = 84;
+            // 
             // frmListaAlunos
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 14F);
@@ -268,6 +278,7 @@
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.BackgroundImage = global::TCCControleDeAcesso.Properties.Resources.Design_sem_nome__7_;
             this.ClientSize = new System.Drawing.Size(1607, 987);
+            this.Controls.Add(this.txtArduino);
             this.Controls.Add(this.btnVoltar);
             this.Controls.Add(this.acao);
             this.Controls.Add(this.txtIdOficial);
@@ -319,5 +330,6 @@
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Label acao;
         private System.Windows.Forms.Button btnVoltar;
+        private System.Windows.Forms.TextBox txtArduino;
     }
 }
