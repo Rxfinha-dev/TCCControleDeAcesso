@@ -129,7 +129,6 @@
             this.txtLogin.Name = "txtLogin";
             this.txtLogin.Size = new System.Drawing.Size(270, 20);
             this.txtLogin.TabIndex = 38;
-            this.txtLogin.TextChanged += new System.EventHandler(this.txtLogin_TextChanged);
             this.txtLogin.Enter += new System.EventHandler(this.txtLogin_Enter_1);
             this.txtLogin.Leave += new System.EventHandler(this.txtLogin_Leave_1);
             // 
@@ -145,7 +144,6 @@
             this.pictureBox3.Size = new System.Drawing.Size(249, 344);
             this.pictureBox3.TabIndex = 46;
             this.pictureBox3.TabStop = false;
-            this.pictureBox3.Click += new System.EventHandler(this.pictureBox3_Click);
             // 
             // pictureBox2
             // 
@@ -165,7 +163,6 @@
             this.pictureBox1.Size = new System.Drawing.Size(1462, 1412);
             this.pictureBox1.TabIndex = 44;
             this.pictureBox1.TabStop = false;
-            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
             // chkMostrarSenha
             // 

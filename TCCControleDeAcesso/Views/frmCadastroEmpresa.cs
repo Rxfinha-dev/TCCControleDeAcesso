@@ -146,11 +146,7 @@ namespace TCCControleDeAcesso.Views
                     var frmAC = new frmAtivacaoConta(txtNome.Text, txtEmail.Text, txtEnvioHash.Text);
                     frmAC.propriedade = textBox1.Text;
 
-                    // Abre a tela de carregamento, passando a de ativação como destino
-                    frmCarregamento carregamento = new frmCarregamento(frmAC);
-                    this.Hide();
-                    carregamento.Show();
-
+                    
                     try
                     {
                         smtp.Send(message);
