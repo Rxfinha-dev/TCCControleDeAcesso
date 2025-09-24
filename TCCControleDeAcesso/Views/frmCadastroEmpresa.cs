@@ -131,6 +131,8 @@ namespace TCCControleDeAcesso.Views
                     MessageBox.Show("Para a ativação de conta estamos enviando um código de verificação no seu email! " +
                        "Olhe o seu email e caixa de Spam!", "Ativação de conta", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
+                    /// Olhe aqui acima e veja o que vc pode fazer lindao
+
                     message.To.Add(EmailDest);
                     message.From = new MailAddress(from);
                     message.Body = messageBody;
@@ -146,7 +148,12 @@ namespace TCCControleDeAcesso.Views
                     var frmAC = new frmAtivacaoConta(txtNome.Text, txtEmail.Text, txtEnvioHash.Text);
                     frmAC.propriedade = textBox1.Text;
 
-                    
+                    // Abre a tela de carregamento, passando a de ativação como destino
+                    frmAC.propriedade = textBox1.Text;
+                    this.Hide();
+                    frmAC.Show();
+
+
                     try
                     {
                         smtp.Send(message);
