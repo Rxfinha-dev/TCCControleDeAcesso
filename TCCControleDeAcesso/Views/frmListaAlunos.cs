@@ -174,7 +174,7 @@ namespace TCCControleDeAcesso.Views
 
            
             txtArduino.Text = id.ToString();
-            //SerialPortManager.Port.Write("!enroll" + id + "#");
+            SerialPortManager.Port.Write("!enroll" + id + "#");
         }
 
         private void frmListaAlunos_Load(object sender, EventArgs e)

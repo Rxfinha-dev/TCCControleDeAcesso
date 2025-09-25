@@ -134,6 +134,7 @@ namespace TCCControleDeAcesso.Views
             if (SerialPortManager.Port.IsOpen)
             {
                 SerialPortManager.Port.DataReceived -= serialPort_DataReceived;
+                SerialPortManager.Port.Write("!a#");
             }
         }
 
@@ -144,6 +145,8 @@ namespace TCCControleDeAcesso.Views
 
         private void btnVoltar_Click(object sender, EventArgs e)
         {
+            SerialPortManager.Port.DataReceived -= serialPort_DataReceived;
+            SerialPortManager.Port.Write("!a#");
             frmMainMenu check = new frmMainMenu(_CurrentUsername, id_escola);
             check.Show();
             Hide();
