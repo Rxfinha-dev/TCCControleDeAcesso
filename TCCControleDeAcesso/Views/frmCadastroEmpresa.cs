@@ -42,8 +42,8 @@ namespace TCCControleDeAcesso.Views
             // acredito que seja esse comando o responsavel pelo envio dos campos para o banco de dados
             _cadastroEmpresas = new CadastroEmpresas()
             {
-                Email = txtEmail.Text,
-                Name = txtNome.Text,
+                Email = txtEmail.Text.Trim(),
+                Name = txtNome.Text.Trim(),
                 Senha = txtSenha.Text,
             };
 
@@ -83,9 +83,10 @@ namespace TCCControleDeAcesso.Views
 
             if (txtSenha.Text == txtConfirmarSenha.Text)
             {
-                ////------------------Vamos tentar implementar A hash (que está com a salt key incluido ja)------------------//
 
-                string senha = txtSenha.Text;
+                ////------------------Vamos tentar implementar A hash (que está com a salt key incluido ja)------------------//
+                string senha = txtSenha.Text.Trim();
+                
 
                 // gera hash com salt automático (interno do bcrypt)
                 // bcrypt é uma biblioteca importada
@@ -110,14 +111,17 @@ namespace TCCControleDeAcesso.Views
                 textBox1.Text = randomCode;
 
                 MailMessage message = new MailMessage();
-                from = "suportehelpus@gmail.com"; // Email do remetente
-                pass = "vwec abnc veyc jvns";     // Senha de App
+                //from = "suportehelpus@gmail.com"; // Email do remetente
+                
+                
+                from = "brunootaviocostadefreitas@gmail.com";
+                pass = "ajpm nzel lhzi ybqt";
                 messageBody = "Estamos felizes de termos você conosco! Seu código de ativação de conta é: " + randomCode;
                 EmailDest = txtEmail.Text;
 
                 try
                 {
-                    MailAddress mailadress = new MailAddress(EmailDest);
+                    MailAddress mailadress = new MailAddress(EmailDest);    
 
                     MessageBox.Show("Para a ativação de conta estamos enviando um código de verificação no seu email! " +
                         "Olhe o seu email e caixa de Spam!", "Ativação de conta", MessageBoxButtons.OK, MessageBoxIcon.Information);
