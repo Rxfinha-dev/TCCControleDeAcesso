@@ -15,7 +15,7 @@ namespace TCCControleDeAcesso.Models
         {
             try {
                 Banco.OpenConnection();
-                Banco.Command = new MySqlCommand("insert into entrada(idAluno, dataEntrada, idEscola) values (@idAluno, @dataEntrada, @idEscola)", Banco.Connection);
+                Banco.Command = new MySqlCommand("insert into entradas(idAluno, dataEntrada, idEscola) values (@idAluno, @dataEntrada, @idEscola)", Banco.Connection);
                 Banco.Command.Parameters.AddWithValue("@idAluno", idAluno);
                 Banco.Command.Parameters.AddWithValue("@dataEntrada", dataEntrada);
                 Banco.Command.Parameters.AddWithValue("@idEscola", idEscola);
