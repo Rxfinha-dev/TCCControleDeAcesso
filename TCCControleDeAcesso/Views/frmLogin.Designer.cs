@@ -38,21 +38,22 @@
             this.linkLabel2 = new System.Windows.Forms.LinkLabel();
             this.txtLogin = new System.Windows.Forms.TextBox();
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
-            this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.chkMostrarSenha = new System.Windows.Forms.CheckBox();
+            this.pictureBox3 = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             this.SuspendLayout();
             // 
             // a
             // 
             this.a.AutoSize = true;
+            this.a.BackColor = System.Drawing.Color.Transparent;
             this.a.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.a.Location = new System.Drawing.Point(1302, 595);
+            this.a.Location = new System.Drawing.Point(1297, 598);
             this.a.Name = "a";
             this.a.Size = new System.Drawing.Size(64, 19);
             this.a.TabIndex = 36;
@@ -61,8 +62,9 @@
             // label7
             // 
             this.label7.AutoSize = true;
+            this.label7.BackColor = System.Drawing.Color.Transparent;
             this.label7.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(1302, 550);
+            this.label7.Location = new System.Drawing.Point(1297, 553);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(60, 19);
             this.label7.TabIndex = 37;
@@ -70,7 +72,7 @@
             // 
             // txtSenha
             // 
-            this.txtSenha.Location = new System.Drawing.Point(1306, 617);
+            this.txtSenha.Location = new System.Drawing.Point(1301, 620);
             this.txtSenha.Name = "txtSenha";
             this.txtSenha.Size = new System.Drawing.Size(270, 20);
             this.txtSenha.TabIndex = 39;
@@ -81,7 +83,7 @@
             // 
             this.btnEntrar.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.btnEntrar.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnEntrar.Location = new System.Drawing.Point(1444, 665);
+            this.btnEntrar.Location = new System.Drawing.Point(1439, 668);
             this.btnEntrar.Name = "btnEntrar";
             this.btnEntrar.Size = new System.Drawing.Size(137, 55);
             this.btnEntrar.TabIndex = 40;
@@ -93,7 +95,7 @@
             // 
             this.button5.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.button5.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button5.Location = new System.Drawing.Point(1301, 665);
+            this.button5.Location = new System.Drawing.Point(1296, 668);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(137, 55);
             this.button5.TabIndex = 41;
@@ -104,8 +106,9 @@
             // label5
             // 
             this.label5.AutoSize = true;
+            this.label5.BackColor = System.Drawing.Color.Transparent;
             this.label5.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(1377, 742);
+            this.label5.Location = new System.Drawing.Point(1372, 745);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(129, 16);
             this.label5.TabIndex = 42;
@@ -114,8 +117,9 @@
             // linkLabel2
             // 
             this.linkLabel2.AutoSize = true;
+            this.linkLabel2.BackColor = System.Drawing.Color.Transparent;
             this.linkLabel2.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.linkLabel2.Location = new System.Drawing.Point(1401, 758);
+            this.linkLabel2.Location = new System.Drawing.Point(1396, 761);
             this.linkLabel2.Name = "linkLabel2";
             this.linkLabel2.Size = new System.Drawing.Size(81, 16);
             this.linkLabel2.TabIndex = 43;
@@ -125,7 +129,7 @@
             // 
             // txtLogin
             // 
-            this.txtLogin.Location = new System.Drawing.Point(1306, 572);
+            this.txtLogin.Location = new System.Drawing.Point(1301, 575);
             this.txtLogin.Name = "txtLogin";
             this.txtLogin.Size = new System.Drawing.Size(270, 20);
             this.txtLogin.TabIndex = 38;
@@ -135,15 +139,6 @@
             // errorProvider1
             // 
             this.errorProvider1.ContainerControl = this;
-            // 
-            // pictureBox3
-            // 
-            this.pictureBox3.Image = global::TCCControleDeAcesso.Properties.Resources.UserIP;
-            this.pictureBox3.Location = new System.Drawing.Point(1317, 168);
-            this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(249, 344);
-            this.pictureBox3.TabIndex = 46;
-            this.pictureBox3.TabStop = false;
             // 
             // pictureBox2
             // 
@@ -160,27 +155,40 @@
             this.pictureBox1.Image = global::TCCControleDeAcesso.Properties.Resources.FAInicialPage;
             this.pictureBox1.Location = new System.Drawing.Point(-10, -20);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(1462, 1412);
+            this.pictureBox1.Size = new System.Drawing.Size(1202, 1412);
             this.pictureBox1.TabIndex = 44;
             this.pictureBox1.TabStop = false;
             // 
             // chkMostrarSenha
             // 
             this.chkMostrarSenha.AutoSize = true;
-            this.chkMostrarSenha.Location = new System.Drawing.Point(1306, 643);
+            this.chkMostrarSenha.BackColor = System.Drawing.Color.Transparent;
+            this.chkMostrarSenha.Location = new System.Drawing.Point(1301, 646);
             this.chkMostrarSenha.Name = "chkMostrarSenha";
             this.chkMostrarSenha.Size = new System.Drawing.Size(96, 18);
             this.chkMostrarSenha.TabIndex = 47;
             this.chkMostrarSenha.Text = "Mostrar senha";
-            this.chkMostrarSenha.UseVisualStyleBackColor = true;
+            this.chkMostrarSenha.UseVisualStyleBackColor = false;
             this.chkMostrarSenha.CheckedChanged += new System.EventHandler(this.MostrarSenha_CheckedChanged);
+            // 
+            // pictureBox3
+            // 
+            this.pictureBox3.Image = global::TCCControleDeAcesso.Properties.Resources.Design_sem_nome__6_2;
+            this.pictureBox3.Location = new System.Drawing.Point(1310, 246);
+            this.pictureBox3.Name = "pictureBox3";
+            this.pictureBox3.Size = new System.Drawing.Size(248, 263);
+            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox3.TabIndex = 49;
+            this.pictureBox3.TabStop = false;
             // 
             // frmLogin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.BackgroundImage = global::TCCControleDeAcesso.Properties.Resources.Design_sem_nome__3_2;
             this.ClientSize = new System.Drawing.Size(1828, 841);
+            this.Controls.Add(this.pictureBox3);
             this.Controls.Add(this.chkMostrarSenha);
             this.Controls.Add(this.linkLabel2);
             this.Controls.Add(this.label5);
@@ -190,7 +198,6 @@
             this.Controls.Add(this.a);
             this.Controls.Add(this.txtLogin);
             this.Controls.Add(this.label7);
-            this.Controls.Add(this.pictureBox3);
             this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.pictureBox1);
             this.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -199,9 +206,9 @@
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.frmLogin_Load);
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -217,9 +224,9 @@
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.LinkLabel linkLabel2;
-        private System.Windows.Forms.PictureBox pictureBox3;
         private System.Windows.Forms.TextBox txtLogin;
         private System.Windows.Forms.ErrorProvider errorProvider1;
         private System.Windows.Forms.CheckBox chkMostrarSenha;
+        private System.Windows.Forms.PictureBox pictureBox3;
     }
 }

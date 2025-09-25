@@ -339,5 +339,15 @@ namespace TCCControleDeAcesso.Views
                 txtSenha.PasswordChar = '*';
             }
         }
+
+        private void pictureBox3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pictureBox4_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
