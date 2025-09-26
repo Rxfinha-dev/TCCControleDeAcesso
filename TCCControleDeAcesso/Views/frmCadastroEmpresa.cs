@@ -111,11 +111,10 @@ namespace TCCControleDeAcesso.Views
                 textBox1.Text = randomCode;
 
                 MailMessage message = new MailMessage();
-                //from = "suportehelpus@gmail.com"; // Email do remetente
-                
-                
-                from = "brunootaviocostadefreitas@gmail.com";
-                pass = "ajpm nzel lhzi ybqt";
+                from = "suportehelpus@gmail.com"; // Email do remetente
+                pass = "vwec abnc veyc jvns";     // Senha de App
+
+
                 messageBody = "Estamos felizes de termos você conosco! Seu código de ativação de conta é: " + randomCode;
                 EmailDest = txtEmail.Text;
 
