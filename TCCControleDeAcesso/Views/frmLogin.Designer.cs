@@ -82,7 +82,7 @@
             // btnEntrar
             // 
             this.btnEntrar.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.btnEntrar.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnEntrar.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnEntrar.Location = new System.Drawing.Point(1468, 702);
             this.btnEntrar.Name = "btnEntrar";
             this.btnEntrar.Size = new System.Drawing.Size(137, 55);
@@ -94,7 +94,7 @@
             // button5
             // 
             this.button5.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.button5.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button5.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button5.Location = new System.Drawing.Point(1325, 702);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(137, 55);

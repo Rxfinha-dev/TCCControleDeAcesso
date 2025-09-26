@@ -15,6 +15,7 @@ using System.Windows.Forms;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.ComponentModel;
+using System.Runtime.InteropServices;
 
 namespace TCCControleDeAcesso.Views
 {
@@ -22,6 +23,18 @@ namespace TCCControleDeAcesso.Views
     {
         Login _login;
         CadastroEmpresas _empresas;
+
+        [DllImport("Gdi32.dll", EntryPoint = "CreateRoundRectRgn")]
+
+        private static extern IntPtr CreateRoundRectRgn
+            (
+                int nLeft,
+                int nTop,
+                int nRight,
+                int nBottom,
+                int nWidthEllipse,
+                int nHeightEllipse
+            );
 
         // Variáveis de controle
         int baseY;
@@ -106,6 +119,13 @@ namespace TCCControleDeAcesso.Views
  
         }
 
+
+        private void CentralizarControles()
+        {
+            button5.Left = (this.ClientSize.Width - button5.Width) / 2;
+            btnEntrar.Left = (this.ClientSize.Width - btnEntrar.Width) / 2;
+        }
+
         private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             frmCadastroEmpresa check = new frmCadastroEmpresa();
@@ -137,8 +157,13 @@ namespace TCCControleDeAcesso.Views
             button5.BackColor = Color.FromArgb(52, 188, 251); // #34BCFB
             button5.ForeColor = Color.White; // texto branco
 
+            btnEntrar.FlatStyle = FlatStyle.Flat;
+            btnEntrar.FlatAppearance.BorderSize = 1;  // sem borda
+            btnEntrar.BackColor = Color.FromArgb(52, 188, 251); // #34BCFB
+            btnEntrar.ForeColor = Color.White; // texto branco
 
-
+            button5.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, button5.Width, button5.Height, 20, 20));
+            btnEntrar.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, btnEntrar.Width, btnEntrar.Height, 20, 20));
         }
 
         private void button5_Click(object sender, EventArgs e)
