@@ -53,7 +53,7 @@
             this.a.AutoSize = true;
             this.a.BackColor = System.Drawing.Color.Transparent;
             this.a.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.a.Location = new System.Drawing.Point(1297, 598);
+            this.a.Location = new System.Drawing.Point(1326, 622);
             this.a.Name = "a";
             this.a.Size = new System.Drawing.Size(64, 19);
             this.a.TabIndex = 36;
@@ -64,7 +64,7 @@
             this.label7.AutoSize = true;
             this.label7.BackColor = System.Drawing.Color.Transparent;
             this.label7.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(1297, 553);
+            this.label7.Location = new System.Drawing.Point(1326, 567);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(60, 19);
             this.label7.TabIndex = 37;
@@ -72,7 +72,7 @@
             // 
             // txtSenha
             // 
-            this.txtSenha.Location = new System.Drawing.Point(1301, 620);
+            this.txtSenha.Location = new System.Drawing.Point(1330, 644);
             this.txtSenha.Name = "txtSenha";
             this.txtSenha.Size = new System.Drawing.Size(270, 20);
             this.txtSenha.TabIndex = 39;
@@ -83,7 +83,7 @@
             // 
             this.btnEntrar.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.btnEntrar.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnEntrar.Location = new System.Drawing.Point(1439, 668);
+            this.btnEntrar.Location = new System.Drawing.Point(1468, 702);
             this.btnEntrar.Name = "btnEntrar";
             this.btnEntrar.Size = new System.Drawing.Size(137, 55);
             this.btnEntrar.TabIndex = 40;
@@ -95,7 +95,7 @@
             // 
             this.button5.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.button5.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button5.Location = new System.Drawing.Point(1296, 668);
+            this.button5.Location = new System.Drawing.Point(1325, 702);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(137, 55);
             this.button5.TabIndex = 41;
@@ -107,10 +107,10 @@
             // 
             this.label5.AutoSize = true;
             this.label5.BackColor = System.Drawing.Color.Transparent;
-            this.label5.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(1372, 745);
+            this.label5.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(1392, 779);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(129, 16);
+            this.label5.Size = new System.Drawing.Size(144, 17);
             this.label5.TabIndex = 42;
             this.label5.Text = "Ainda não é usuário?";
             // 
@@ -119,7 +119,7 @@
             this.linkLabel2.AutoSize = true;
             this.linkLabel2.BackColor = System.Drawing.Color.Transparent;
             this.linkLabel2.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.linkLabel2.Location = new System.Drawing.Point(1396, 761);
+            this.linkLabel2.Location = new System.Drawing.Point(1425, 794);
             this.linkLabel2.Name = "linkLabel2";
             this.linkLabel2.Size = new System.Drawing.Size(81, 16);
             this.linkLabel2.TabIndex = 43;
@@ -129,7 +129,7 @@
             // 
             // txtLogin
             // 
-            this.txtLogin.Location = new System.Drawing.Point(1301, 575);
+            this.txtLogin.Location = new System.Drawing.Point(1330, 589);
             this.txtLogin.Name = "txtLogin";
             this.txtLogin.Size = new System.Drawing.Size(270, 20);
             this.txtLogin.TabIndex = 38;
@@ -163,9 +163,10 @@
             // 
             this.chkMostrarSenha.AutoSize = true;
             this.chkMostrarSenha.BackColor = System.Drawing.Color.Transparent;
-            this.chkMostrarSenha.Location = new System.Drawing.Point(1301, 646);
+            this.chkMostrarSenha.Font = new System.Drawing.Font("Leelawadee UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chkMostrarSenha.Location = new System.Drawing.Point(1330, 670);
             this.chkMostrarSenha.Name = "chkMostrarSenha";
-            this.chkMostrarSenha.Size = new System.Drawing.Size(96, 18);
+            this.chkMostrarSenha.Size = new System.Drawing.Size(112, 21);
             this.chkMostrarSenha.TabIndex = 47;
             this.chkMostrarSenha.Text = "Mostrar senha";
             this.chkMostrarSenha.UseVisualStyleBackColor = false;
@@ -173,20 +174,22 @@
             // 
             // pictureBox3
             // 
+            this.pictureBox3.BackColor = System.Drawing.Color.Transparent;
             this.pictureBox3.Image = global::TCCControleDeAcesso.Properties.Resources.Design_sem_nome__6_2;
-            this.pictureBox3.Location = new System.Drawing.Point(1310, 246);
+            this.pictureBox3.Location = new System.Drawing.Point(1339, 270);
             this.pictureBox3.Name = "pictureBox3";
             this.pictureBox3.Size = new System.Drawing.Size(248, 263);
             this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox3.TabIndex = 49;
             this.pictureBox3.TabStop = false;
+            this.pictureBox3.Click += new System.EventHandler(this.pictureBox3_Click_1);
             // 
             // frmLogin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.BackgroundImage = global::TCCControleDeAcesso.Properties.Resources.Design_sem_nome__3_2;
+            this.BackgroundImage = global::TCCControleDeAcesso.Properties.Resources.Design_sem_nome7;
             this.ClientSize = new System.Drawing.Size(1828, 841);
             this.Controls.Add(this.pictureBox3);
             this.Controls.Add(this.chkMostrarSenha);
