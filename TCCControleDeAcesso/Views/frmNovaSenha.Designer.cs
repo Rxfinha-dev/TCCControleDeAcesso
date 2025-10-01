@@ -109,7 +109,7 @@
             this.panel1.Controls.Add(this.label2);
             this.panel1.Location = new System.Drawing.Point(781, 230);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(478, 559);
+            this.panel1.Size = new System.Drawing.Size(477, 559);
             this.panel1.TabIndex = 12;
             this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
             // 
@@ -121,8 +121,10 @@
             this.ClientSize = new System.Drawing.Size(1852, 929);
             this.Controls.Add(this.panel1);
             this.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "frmNovaSenha";
             this.Text = "NovaSenha";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.frmNovaSenha_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();

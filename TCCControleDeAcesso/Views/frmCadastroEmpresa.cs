@@ -42,8 +42,8 @@ namespace TCCControleDeAcesso.Views
             // acredito que seja esse comando o responsavel pelo envio dos campos para o banco de dados
             _cadastroEmpresas = new CadastroEmpresas()
             {
-                Email = txtEmail.Text.Trim(),
-                Name = txtNome.Text.Trim(),
+                Email = txtEmail.Text,
+                Name = txtNome.Text,
                 Senha = txtSenha.Text,
             };
 

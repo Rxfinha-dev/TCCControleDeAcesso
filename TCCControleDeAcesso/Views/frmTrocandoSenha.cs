@@ -63,7 +63,7 @@ namespace TCCControleDeAcesso.Views
 
 
 
-                string senha = txtNovaSenha.Text;
+                string senha = txtNovaSenha.Text.Trim();
 
 
 
