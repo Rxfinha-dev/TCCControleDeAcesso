@@ -80,98 +80,105 @@ namespace TCCControleDeAcesso.Views
                 MessageBox.Show("Todos os campos devem ser preenchidos corretamente!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-
-            if (txtSenha.Text == txtConfirmarSenha.Text)
+            int ContSenha = txtSenha.Text.Length;
+            if (ContSenha > 8)
             {
-
-                ////------------------Vamos tentar implementar A hash (que está com a salt key incluido ja)------------------//
-                string senha = txtSenha.Text.Trim();
-                
-
-                // gera hash com salt automático (interno do bcrypt)
-                // bcrypt é uma biblioteca importada
-                string hash = BCrypt.Net.BCrypt.HashPassword(senha);
-
-                // hash que vai ser armazenado no banco:
-                // tenhamos em mente que estamos pegando o valor da hash que foi gerada juntamente com o SaltKey e estamos atribuindo +
-                // ela novamente ao campo txtSenha para poder enviarmos ela ao banco de dados sem problemas
-
-                // enviando a hash através de um txtbox invisível 
-                txtEnvioHash.Text = hash;
-
-                ////------------------fim da implementação------------------//
-
-                // esse daqui evita q o usuário fique dando vários cliques
-                btnCadastrar.Enabled = false;
-
-                // Gerando código aleatório
-                String from, pass, messageBody;
-                Random rand = new Random();
-                randomCode = (rand.Next(99999999)).ToString();
-                textBox1.Text = randomCode;
-
-                MailMessage message = new MailMessage();
-                from = "suportehelpus@gmail.com"; // Email do remetente
-                pass = "vwec abnc veyc jvns";     // Senha de App
-
-
-                messageBody = "Estamos felizes de termos você conosco! Seu código de ativação de conta é: " + randomCode;
-                EmailDest = txtEmail.Text;
-
-                try
+                if (txtSenha.Text == txtConfirmarSenha.Text)
                 {
-                    MailAddress mailadress = new MailAddress(EmailDest);    
 
-                    MessageBox.Show("Para a ativação de conta estamos enviando um código de verificação no seu email! " +
-                        "Olhe o seu email e caixa de Spam!", "Ativação de conta", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    ////------------------Vamos tentar implementar A hash (que está com a salt key incluido ja)------------------//
+                    string senha = txtSenha.Text.Trim();
 
-                    message.To.Add(EmailDest);
-                    message.From = new MailAddress(from);
-                    message.Body = messageBody;
-                    message.Subject = "Bem vindo ao HelpUS! ";
 
-                    SmtpClient smtp = new SmtpClient("smtp.gmail.com");
-                    smtp.EnableSsl = true;
-                    smtp.Port = 587;
-                    smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
-                    smtp.Credentials = new NetworkCredential(from, pass);
+                    // gera hash com salt automático (interno do bcrypt)
+                    // bcrypt é uma biblioteca importada
+                    string hash = BCrypt.Net.BCrypt.HashPassword(senha);
 
-                    // Criando a tela de ativação
-                    var frmAC = new frmAtivacaoConta(txtNome.Text, txtEmail.Text, txtEnvioHash.Text);
-                    frmAC.propriedade = textBox1.Text;
+                    // hash que vai ser armazenado no banco:
+                    // tenhamos em mente que estamos pegando o valor da hash que foi gerada juntamente com o SaltKey e estamos atribuindo +
+                    // ela novamente ao campo txtSenha para poder enviarmos ela ao banco de dados sem problemas
 
-                    // Abre a tela de carregamento, passando a de ativação como destino
-                    frmAC.propriedade = textBox1.Text;
-                    this.Hide();
-                    frmAC.Show();
+                    // enviando a hash através de um txtbox invisível 
+                    txtEnvioHash.Text = hash;
+
+                    ////------------------fim da implementação------------------//
+
+                    // esse daqui evita q o usuário fique dando vários cliques
+                    btnCadastrar.Enabled = false;
+
+                    // Gerando código aleatório
+                    String from, pass, messageBody;
+                    Random rand = new Random();
+                    randomCode = (rand.Next(99999999)).ToString();
+                    textBox1.Text = randomCode;
+
+                    MailMessage message = new MailMessage();
+                    from = "suportehelpus@gmail.com"; // Email do remetente
+                    pass = "vwec abnc veyc jvns";     // Senha de App
+
+
+                    messageBody = "Estamos felizes de termos você conosco! Seu código de ativação de conta é: " + randomCode;
+                    EmailDest = txtEmail.Text;
 
                     try
                     {
-                        smtp.Send(message);
-                        btnCadastrar.Enabled = true;
-                        txtSenha.Clear();
-                        txtConfirmarSenha.Clear();
+                        MailAddress mailadress = new MailAddress(EmailDest);
+
+                        MessageBox.Show("Para a ativação de conta estamos enviando um código de verificação no seu email! " +
+                            "Olhe o seu email e caixa de Spam!", "Ativação de conta", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                        message.To.Add(EmailDest);
+                        message.From = new MailAddress(from);
+                        message.Body = messageBody;
+                        message.Subject = "Bem vindo ao HelpUS! ";
+
+                        SmtpClient smtp = new SmtpClient("smtp.gmail.com");
+                        smtp.EnableSsl = true;
+                        smtp.Port = 587;
+                        smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                        smtp.Credentials = new NetworkCredential(from, pass);
+
+                        // Criando a tela de ativação
+                        var frmAC = new frmAtivacaoConta(txtNome.Text, txtEmail.Text, txtEnvioHash.Text);
+                        frmAC.propriedade = textBox1.Text;
+
+                        // Abre a tela de carregamento, passando a de ativação como destino
+                        frmAC.propriedade = textBox1.Text;
+                        this.Hide();
+                        frmAC.Show();
+
+                        try
+                        {
+                            smtp.Send(message);
+                            btnCadastrar.Enabled = true;
+                            txtSenha.Clear();
+                            txtConfirmarSenha.Clear();
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.Message);
+                            btnCadastrar.Enabled = true;
+                            txtSenha.Clear();
+                            txtConfirmarSenha.Clear();
+                        }
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
-                        MessageBox.Show(ex.Message);
+                        MessageBox.Show("Endereço de email inválido!");
                         btnCadastrar.Enabled = true;
                         txtSenha.Clear();
                         txtConfirmarSenha.Clear();
                     }
                 }
-                catch (Exception)
+                else
                 {
-                    MessageBox.Show("Endereço de email inválido!");
-                    btnCadastrar.Enabled = true;
-                    txtSenha.Clear();
-                    txtConfirmarSenha.Clear();
+                    MessageBox.Show("As Senhas Não Coincidem", "Erro No Login", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
                 }
             }
             else
             {
-                MessageBox.Show("As Senhas Não Coincidem", "Erro No Login", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                MessageBox.Show("A senha deve ter no minímo 8 caracteres!", "Senha muito fraca", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
