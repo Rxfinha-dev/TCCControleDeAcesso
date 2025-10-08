@@ -76,7 +76,9 @@ namespace TCCControleDeAcesso.Views
         {
             //////////////////////////
             ///
-            if (txtNovaSenha.Text == txtNovaSenha2.Text)
+            int ContSenha = txtNovaSenha.Text.Length;
+
+            if (txtNovaSenha.Text == txtNovaSenha2.Text && ContSenha > 8 )
             {
 
                 ////------------------Vamos tentar implementar A hash (que está com a salt key incluido ja)------------------//
@@ -102,7 +104,7 @@ namespace TCCControleDeAcesso.Views
                 };
                 ns.ChangePasswod();
 
-                MessageBox.Show("Senha alterada com sucesso!", " ", MessageBoxButtons.OK, MessageBoxIcon.None);
+                MessageBox.Show("Senha alterada com sucesso!", "SUCESSO", MessageBoxButtons.OK, MessageBoxIcon.None);
                 this.Close();
                 frmLogin loginForm = new frmLogin();
                 loginForm.Show();
@@ -111,7 +113,7 @@ namespace TCCControleDeAcesso.Views
             else
             {
 
-                MessageBox.Show("As senhas inseridas não coincidem!", " ", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("As senhas inseridas são diferentes ou a senha não tem a quantidade miníma de 8 caracteres", "ERRO", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
             }
             txtNovaSenha.Text = "";
