@@ -5,6 +5,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.UI.WebControls;
@@ -17,6 +18,20 @@ namespace TCCControleDeAcesso.Views
     public partial class frmTrocandoSenha: Form
     {
 
+        [DllImport("Gdi32.dll", EntryPoint = "CreateRoundRectRgn")]
+
+        private static extern IntPtr CreateRoundRectRgn
+   (
+       int nLeft,
+       int nTop,
+       int nRight,
+       int nBottom,
+       int nWidthEllipse,
+       int nHeightEllipse
+   );
+
+        String randomCode;
+        public static String to;
 
         NovaSenha ns = new NovaSenha();
 
@@ -48,8 +63,13 @@ namespace TCCControleDeAcesso.Views
         {
             txtNovaSenha.PasswordChar = '*';
             txtNovaSenha2.PasswordChar = '*';
-           
-            
+
+            btnAlterarSenha.Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, btnAlterarSenha.Width, btnAlterarSenha.Height, 20, 20));
+            btnAlterarSenha.FlatStyle = FlatStyle.Flat;
+            btnAlterarSenha.FlatAppearance.BorderSize = 1;  // sem borda
+            btnAlterarSenha.BackColor = Color.FromArgb(52, 188, 251); // #34BCFB
+            btnAlterarSenha.ForeColor = Color.White; // texto branco
+
         }
 
         private void btnAlterarSenha_Click(object sender, EventArgs e)
@@ -108,4 +128,3 @@ namespace TCCControleDeAcesso.Views
 
     }
 }
-

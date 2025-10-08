@@ -28,15 +28,30 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
-            this.txtEmailDestinatario = new System.Windows.Forms.TextBox();
-            this.btnEnviarEmail = new System.Windows.Forms.Button();
-            this.btnVerify = new System.Windows.Forms.Button();
-            this.txtCodeVerify = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.btnVerify = new System.Windows.Forms.Button();
+            this.txtEmailDestinatario = new System.Windows.Forms.TextBox();
+            this.txtCodeVerify = new System.Windows.Forms.TextBox();
+            this.btnEnviarEmail = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // panel1
+            // 
+            this.panel1.BackgroundImage = global::TCCControleDeAcesso.Properties.Resources.Design_sem_nome__13_1;
+            this.panel1.Controls.Add(this.label1);
+            this.panel1.Controls.Add(this.btnVerify);
+            this.panel1.Controls.Add(this.txtEmailDestinatario);
+            this.panel1.Controls.Add(this.txtCodeVerify);
+            this.panel1.Controls.Add(this.btnEnviarEmail);
+            this.panel1.Controls.Add(this.label2);
+            this.panel1.Location = new System.Drawing.Point(785, 230);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(476, 558);
+            this.panel1.TabIndex = 12;
+            this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
             // 
             // label1
             // 
@@ -48,12 +63,31 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Digite seu e-mail:";
             // 
+            // btnVerify
+            // 
+            this.btnVerify.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btnVerify.Font = new System.Drawing.Font("Dubai", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnVerify.Location = new System.Drawing.Point(86, 450);
+            this.btnVerify.Name = "btnVerify";
+            this.btnVerify.Size = new System.Drawing.Size(293, 43);
+            this.btnVerify.TabIndex = 11;
+            this.btnVerify.Text = "VERIFICAR";
+            this.btnVerify.UseVisualStyleBackColor = true;
+            this.btnVerify.Click += new System.EventHandler(this.btnVerify_Click);
+            // 
             // txtEmailDestinatario
             // 
             this.txtEmailDestinatario.Location = new System.Drawing.Point(68, 282);
             this.txtEmailDestinatario.Name = "txtEmailDestinatario";
             this.txtEmailDestinatario.Size = new System.Drawing.Size(325, 20);
             this.txtEmailDestinatario.TabIndex = 3;
+            // 
+            // txtCodeVerify
+            // 
+            this.txtCodeVerify.Location = new System.Drawing.Point(68, 335);
+            this.txtCodeVerify.Name = "txtCodeVerify";
+            this.txtCodeVerify.Size = new System.Drawing.Size(325, 20);
+            this.txtCodeVerify.TabIndex = 10;
             // 
             // btnEnviarEmail
             // 
@@ -68,25 +102,6 @@
             this.btnEnviarEmail.UseVisualStyleBackColor = false;
             this.btnEnviarEmail.Click += new System.EventHandler(this.btnEnviarEmail_Click);
             // 
-            // btnVerify
-            // 
-            this.btnVerify.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnVerify.Font = new System.Drawing.Font("Dubai", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnVerify.Location = new System.Drawing.Point(86, 450);
-            this.btnVerify.Name = "btnVerify";
-            this.btnVerify.Size = new System.Drawing.Size(293, 43);
-            this.btnVerify.TabIndex = 11;
-            this.btnVerify.Text = "VERIFICAR";
-            this.btnVerify.UseVisualStyleBackColor = true;
-            this.btnVerify.Click += new System.EventHandler(this.btnVerify_Click);
-            // 
-            // txtCodeVerify
-            // 
-            this.txtCodeVerify.Location = new System.Drawing.Point(68, 335);
-            this.txtCodeVerify.Name = "txtCodeVerify";
-            this.txtCodeVerify.Size = new System.Drawing.Size(325, 20);
-            this.txtCodeVerify.TabIndex = 10;
-            // 
             // label2
             // 
             this.label2.AutoSize = true;
@@ -96,22 +111,6 @@
             this.label2.Size = new System.Drawing.Size(194, 18);
             this.label2.TabIndex = 9;
             this.label2.Text = "Digite o Código de verificação:";
-            // 
-            // panel1
-            // 
-            this.panel1.BackgroundImage = global::TCCControleDeAcesso.Properties.Resources.Design_sem_nome__8_;
-            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel1.Controls.Add(this.label1);
-            this.panel1.Controls.Add(this.btnVerify);
-            this.panel1.Controls.Add(this.txtEmailDestinatario);
-            this.panel1.Controls.Add(this.txtCodeVerify);
-            this.panel1.Controls.Add(this.btnEnviarEmail);
-            this.panel1.Controls.Add(this.label2);
-            this.panel1.Location = new System.Drawing.Point(781, 230);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(477, 559);
-            this.panel1.TabIndex = 12;
-            this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
             // 
             // frmNovaSenha
             // 
