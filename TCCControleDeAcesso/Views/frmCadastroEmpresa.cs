@@ -109,7 +109,7 @@ namespace TCCControleDeAcesso.Views
                     // Gerando código aleatório
                     String from, pass, messageBody;
                     Random rand = new Random();
-                    randomCode = (rand.Next(99999999)).ToString();
+                    randomCode = (rand.Next(999999)).ToString();
                     textBox1.Text = randomCode;
 
                     MailMessage message = new MailMessage();
@@ -144,8 +144,9 @@ namespace TCCControleDeAcesso.Views
 
                         // Abre a tela de carregamento, passando a de ativação como destino
                         frmAC.propriedade = textBox1.Text;
-                        this.Hide();
+                        this.Close();
                         frmAC.Show();
+                        CleanAll();
 
                         try
                         {
@@ -184,9 +185,18 @@ namespace TCCControleDeAcesso.Views
 
         private void frmCadastroEmpresa_Load(object sender, EventArgs e)
         {
+
             txtSenha.PasswordChar = '*';
             txtConfirmarSenha.PasswordChar = '*';
             CleanAll();
+        }
+
+        private void btnVoltar_Click(object sender, EventArgs e)
+        {
+            this.Close();
+            frmLogin frmLogin = new frmLogin();
+            frmLogin.ShowDialog();
+ 
         }
     }
 }

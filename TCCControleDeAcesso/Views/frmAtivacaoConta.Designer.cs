@@ -120,6 +120,7 @@
             this.Controls.Add(this.lblConfirmacao);
             this.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "frmAtivacaoConta";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "frmAtivacaoConta";
             this.Load += new System.EventHandler(this.frmAtivacaoConta_Load);
             this.ResumeLayout(false);

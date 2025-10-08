@@ -188,5 +188,11 @@ int nHeightEllipse
             check.Show();
         }
 
+        private void btnVoltar_Click(object sender, EventArgs e)
+        {
+            frmLogin FrmGuin = new frmLogin();
+            this.Close();
+            FrmGuin.Show();
+        }
     }
 }

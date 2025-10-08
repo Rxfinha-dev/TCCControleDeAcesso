@@ -55,12 +55,11 @@ namespace TCCControleDeAcesso.Views
         {
             //    txtAtivacao 
             //    int VarAtivacao = txtAtivacao.Text;
-            if (txtAtivacao.Text == (textBox1.Text).ToString())
+            //aqui o trim nao funcionou, lembre bruno, guarda issae numa variavel e dps aplica o trim e boa
+            if (txtAtivacao.Text == (textBox1.Text.Trim()).ToString())
             {
                 MessageBox.Show("Sua conta foi ativada!", "Ativação da conta", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                frmLogin rp = new frmLogin();
-                this.Hide();
-                rp.Show();
+
                 
 
 
@@ -77,6 +76,14 @@ namespace TCCControleDeAcesso.Views
 
                 };
                 _cadastroEmpresas.Insert();
+
+                frmLogin rp = new frmLogin();
+                rp.Show();
+                this.Close();
+                frmCadastroEmpresa frmCadEmp = new frmCadastroEmpresa();
+                frmCadEmp.Close();
+                
+
             }
             else
             {
@@ -90,9 +97,9 @@ namespace TCCControleDeAcesso.Views
         private void btnEntrar_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Lembre-se de verificar a caixa de spam e no lixo! ", "Vamos tentar novamente!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-            frmLogin rp = new frmLogin();
-            this.Hide();
-            rp.Show();
+            frmCadastroEmpresa CE = new frmCadastroEmpresa();
+            this.Close();
+            CE.Show();
         }
     }
     
