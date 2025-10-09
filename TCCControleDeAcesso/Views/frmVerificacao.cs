@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 using Org.BouncyCastle.Asn1.Ocsp;
@@ -10,6 +11,19 @@ namespace TCCControleDeAcesso.Views
 {
     public partial class frmVerificacao : Form
     {
+
+        [DllImport("Gdi32.dll", EntryPoint = "CreateRoundRectRgn")]
+
+                private static extern IntPtr CreateRoundRectRgn
+        (
+        int nLeft,
+        int nTop,
+        int nRight,
+        int nBottom,
+        int nWidthEllipse,
+        int nHeightEllipse
+        );
+
         bool verificando;
         Log log;
         int idAluno;
@@ -154,7 +168,24 @@ namespace TCCControleDeAcesso.Views
 
         private void frmVerificacao_Load(object sender, EventArgs e)
         {
-        
+
+            btnVerificar.Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, btnVerificar.Width, btnVerificar.Height, 20, 20));
+            btnVerificar.FlatStyle = FlatStyle.Flat;
+            btnVerificar.FlatAppearance.BorderSize = 1;  // sem borda
+            btnVerificar.BackColor = Color.FromArgb(52, 188, 251); // #34BCFB
+            btnVerificar.ForeColor = Color.White; // texto branco
+
+            btnVoltar.Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, btnVoltar.Width, btnVoltar.Height, 20, 20));
+            btnVoltar.FlatStyle = FlatStyle.Flat;
+            btnVoltar.FlatAppearance.BorderSize = 1;  // sem borda
+            btnVoltar.BackColor = Color.FromArgb(52, 188, 251); // #34BCFB
+            btnVoltar.ForeColor = Color.White; // texto branco
+
+        }
+
+        private void label1_Click_1(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -73,10 +73,11 @@
             // linkSelectPhoto
             // 
             this.linkSelectPhoto.AutoSize = true;
+            this.linkSelectPhoto.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.linkSelectPhoto.LinkColor = System.Drawing.Color.Black;
-            this.linkSelectPhoto.Location = new System.Drawing.Point(1218, 629);
+            this.linkSelectPhoto.Location = new System.Drawing.Point(1210, 629);
             this.linkSelectPhoto.Name = "linkSelectPhoto";
-            this.linkSelectPhoto.Size = new System.Drawing.Size(73, 14);
+            this.linkSelectPhoto.Size = new System.Drawing.Size(91, 17);
             this.linkSelectPhoto.TabIndex = 78;
             this.linkSelectPhoto.TabStop = true;
             this.linkSelectPhoto.Text = "Escolher Foto";
@@ -114,7 +115,7 @@
             // 
             this.BtnDelete.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.BtnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.BtnDelete.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BtnDelete.Font = new System.Drawing.Font("Dubai", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.BtnDelete.ForeColor = System.Drawing.SystemColors.WindowText;
             this.BtnDelete.Location = new System.Drawing.Point(923, 537);
             this.BtnDelete.Margin = new System.Windows.Forms.Padding(0);
@@ -158,7 +159,7 @@
             // 
             this.btnSave.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSave.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSave.Font = new System.Drawing.Font("Dubai", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSave.ForeColor = System.Drawing.SystemColors.WindowText;
             this.btnSave.Location = new System.Drawing.Point(1028, 537);
             this.btnSave.Margin = new System.Windows.Forms.Padding(0);
@@ -254,7 +255,7 @@
             // 
             this.btnVoltar.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.btnVoltar.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnVoltar.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnVoltar.Font = new System.Drawing.Font("Dubai", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnVoltar.Location = new System.Drawing.Point(1183, 890);
             this.btnVoltar.Name = "btnVoltar";
             this.btnVoltar.Size = new System.Drawing.Size(150, 50);

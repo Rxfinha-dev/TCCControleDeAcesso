@@ -12,12 +12,13 @@ using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Xml.Linq;
 using TCCControleDeAcesso.Models;
+using System.Runtime.InteropServices;
 
 
 namespace TCCControleDeAcesso.Views
     {
-        public partial class frmListaAlunos : Form
-        {
+        public partial class frmListaAlunos : Form  
+    {
             CadastroAlunos cadastroAlunos;
             int id_escola;
             public string caminho;
@@ -26,7 +27,19 @@ namespace TCCControleDeAcesso.Views
         public int id_arduino {  get; set; }
 
 
-            public frmListaAlunos(string currentUsername ,int idEsc)
+        [DllImport("Gdi32.dll", EntryPoint = "CreateRoundRectRgn")]
+
+                    private static extern IntPtr CreateRoundRectRgn
+            (
+            int nLeft,
+            int nTop,
+            int nRight,
+            int nBottom,
+            int nWidthEllipse,
+            int nHeightEllipse
+            );
+
+        public frmListaAlunos(string currentUsername ,int idEsc)
             {
                 InitializeComponent();
                 SerialPortManager.Port.DataReceived += serialPort_DataReceived;
@@ -188,6 +201,25 @@ namespace TCCControleDeAcesso.Views
 
             CleanAll();
             CarregarCursos();
+
+            BtnDelete.Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, BtnDelete.Width, BtnDelete.Height, 20, 20));
+            BtnDelete.FlatStyle = FlatStyle.Flat;
+            BtnDelete.FlatAppearance.BorderSize = 1;  // sem borda
+            BtnDelete.BackColor = Color.FromArgb(52, 188, 251); // #34BCFB
+            BtnDelete.ForeColor = Color.White; // texto branco
+
+            btnVoltar.Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, btnVoltar.Width, btnVoltar.Height, 20, 20));
+            btnVoltar.FlatStyle = FlatStyle.Flat;
+            btnVoltar.FlatAppearance.BorderSize = 1;  // sem borda
+            btnVoltar.BackColor = Color.FromArgb(52, 188, 251); // #34BCFB
+            btnVoltar.ForeColor = Color.White; // texto branco
+
+            btnSave.Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, btnSave.Width, btnSave.Height, 20, 20));
+            btnSave.FlatStyle = FlatStyle.Flat;
+            btnSave.FlatAppearance.BorderSize = 1;  // sem borda
+            btnSave.BackColor = Color.FromArgb(52, 188, 251); // #34BCFB
+            btnSave.ForeColor = Color.White; // texto branco
+
         }
 
         private void linkSelectPhoto_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
