@@ -39,7 +39,7 @@
             // 
             // txtAtivacao
             // 
-            this.txtAtivacao.Location = new System.Drawing.Point(142, 173);
+            this.txtAtivacao.Location = new System.Drawing.Point(602, 329);
             this.txtAtivacao.Name = "txtAtivacao";
             this.txtAtivacao.Size = new System.Drawing.Size(209, 20);
             this.txtAtivacao.TabIndex = 9;
@@ -48,7 +48,7 @@
             // 
             this.lblConfirmacao.AutoSize = true;
             this.lblConfirmacao.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblConfirmacao.Location = new System.Drawing.Point(13, 153);
+            this.lblConfirmacao.Location = new System.Drawing.Point(473, 309);
             this.lblConfirmacao.Name = "lblConfirmacao";
             this.lblConfirmacao.Size = new System.Drawing.Size(467, 17);
             this.lblConfirmacao.TabIndex = 8;
@@ -58,7 +58,7 @@
             // 
             this.btnAtivacao.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.btnAtivacao.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnAtivacao.Location = new System.Drawing.Point(209, 199);
+            this.btnAtivacao.Location = new System.Drawing.Point(669, 355);
             this.btnAtivacao.Name = "btnAtivacao";
             this.btnAtivacao.Size = new System.Drawing.Size(75, 25);
             this.btnAtivacao.TabIndex = 12;
@@ -69,7 +69,7 @@
             // textBox1
             // 
             this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox1.Location = new System.Drawing.Point(196, 230);
+            this.textBox1.Location = new System.Drawing.Point(656, 386);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(100, 13);
             this.textBox1.TabIndex = 13;
@@ -78,7 +78,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(155, 268);
+            this.label1.Location = new System.Drawing.Point(615, 424);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(189, 14);
             this.label1.TabIndex = 15;
@@ -87,7 +87,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(174, 282);
+            this.label2.Location = new System.Drawing.Point(634, 438);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(125, 14);
             this.label2.TabIndex = 16;
@@ -98,7 +98,7 @@
             this.btnEntrar.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.btnEntrar.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnEntrar.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnEntrar.Location = new System.Drawing.Point(209, 299);
+            this.btnEntrar.Location = new System.Drawing.Point(669, 455);
             this.btnEntrar.Name = "btnEntrar";
             this.btnEntrar.Size = new System.Drawing.Size(71, 28);
             this.btnEntrar.TabIndex = 41;
@@ -110,7 +110,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(492, 396);
+            this.ClientSize = new System.Drawing.Size(1456, 847);
             this.Controls.Add(this.btnEntrar);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);

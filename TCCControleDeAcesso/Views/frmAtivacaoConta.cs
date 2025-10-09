@@ -45,7 +45,7 @@ namespace TCCControleDeAcesso.Views
                 textBox1.Text = this.propriedade; // trazendo o valor do randonCode para a variavel codigoAtivacao
                 string randonCode = textBox1.Text;
 
-
+                
 
 
             }
@@ -53,10 +53,9 @@ namespace TCCControleDeAcesso.Views
 
         private void btnAtivacao_Click(object sender, EventArgs e)
         {
-            //    txtAtivacao 
-            //    int VarAtivacao = txtAtivacao.Text;
-            //aqui o trim nao funcionou, lembre bruno, guarda issae numa variavel e dps aplica o trim e boa
-            if (txtAtivacao.Text == (textBox1.Text.Trim()).ToString())
+
+
+            if (txtAtivacao.Text == (textBox1.Text.Trim().ToString()))
             {
                 MessageBox.Show("Sua conta foi ativada!", "Ativação da conta", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
@@ -80,8 +79,9 @@ namespace TCCControleDeAcesso.Views
                 frmLogin rp = new frmLogin();
                 rp.Show();
                 this.Close();
-                frmCadastroEmpresa frmCadEmp = new frmCadastroEmpresa();
-                frmCadEmp.Close();
+
+                this.Hide();
+
                 
 
             }
