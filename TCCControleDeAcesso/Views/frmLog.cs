@@ -15,10 +15,13 @@ namespace TCCControleDeAcesso.Views
     {
         Log _log;
         int id_escola;
-        public frmLog(int idEscola)
+        string _currentUsername;
+
+        public frmLog(int idEscola, string currentUsername)
         {
             InitializeComponent();
             id_escola = idEscola;
+            _currentUsername = currentUsername;
         }
 
         void carregarGrid()
@@ -41,7 +44,10 @@ namespace TCCControleDeAcesso.Views
 
         private void backBtn_Click(object sender, EventArgs e)
         {
-
+            frmMainMenu check = new frmMainMenu(_currentUsername, id_escola);
+            check.Show();
+            Close();
+            
         }
     }
 }

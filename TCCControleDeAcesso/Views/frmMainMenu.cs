@@ -66,40 +66,6 @@ int nHeightEllipse
         private void frmMainMenu_Load(object sender, EventArgs e)
         {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         }
 
         private void button5_Click(object sender, EventArgs e)
@@ -178,13 +144,14 @@ int nHeightEllipse
 
         private void btnConfig_Click(object sender, EventArgs e)
         {
-            frmConfiguracoes check = new frmConfiguracoes();
+         
+            frmLog check = new frmLog(id_escola, _CurrentUsername);
             check.Show();
         }
 
         private void btnLog_Click(object sender, EventArgs e)
         {
-            frmLog check = new frmLog(id_escola);
+            frmConfiguracoes check = new frmConfiguracoes();
             check.Show();
         }
 

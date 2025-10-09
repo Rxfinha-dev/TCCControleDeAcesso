@@ -24,6 +24,7 @@ namespace TCCControleDeAcesso.Views
             public string caminho;
             string idText;
             string _CurrentUsername;
+            int UpdateOrCreate = 0;
         public int id_arduino {  get; set; }
 
 
@@ -125,69 +126,8 @@ namespace TCCControleDeAcesso.Views
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            
-            if (txtName.Text == string.Empty || txtRm.Text == string.Empty || txtIdade.Text == string.Empty || comboBox2.SelectedIndex == -1 || caminho == null || cboCurso.SelectedIndex == -1)
-            {
-
-                MessageBox.Show("Preencha todos os campos.", "Erro de Preenchimento.", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            cadastroAlunos = new CadastroAlunos()
-            {
-                Name = txtName.Text,
-                rm = txtRm.Text,
-                NomeCurso = cboCurso.SelectedItem.ToString(),
-                idade = txtIdade.Text,
-                serie = comboBox2.SelectedItem.ToString(),
-                foto = File.ReadAllBytes(caminho),
-                idEscola = id_escola
-            };
-            cadastroAlunos.Insert();
-
-       
-
-            string connStr = "server=localhost;port=3307;uid=root;pwd=etecjau;database=AccessControl;";
-            int id = 0; // variável para armazenar o resultado
-
-            using (var conn = new MySqlConnection(connStr))
-            {
-                conn.Open();
-
-                string sql = "SELECT id FROM alunos where nome=@nome";
-                using (var cmd = new MySqlCommand(sql, conn))
-                {
-                    cmd.Parameters.AddWithValue("@nome", txtName.Text);
-
-                    object result = cmd.ExecuteScalar(); // pega a primeira coluna da primeira linha
-                    if (result != null)
-                    {
-                        id = Convert.ToInt32(result);
-                    }
-                }
-            }
-
-            Console.WriteLine("ID encontrado: " + id);
-
-
-
-
-
-
-
-
-
-            cadastroAlunos = new CadastroAlunos()
-            {
-                idEscola = id_escola
-            };
-            dgvAlunos.DataSource = cadastroAlunos.ListStudents();
-           // dgvAlunos.Columns["id"].Visible = false;
-            CleanAll();
-
            
-            txtArduino.Text = id.ToString();
-            SerialPortManager.Port.Write("!enroll" + id + "#");
+         
         }
 
         private void frmListaAlunos_Load(object sender, EventArgs e)
@@ -235,7 +175,10 @@ namespace TCCControleDeAcesso.Views
         }
 
         private void dgvAlunos_CellClick(object sender, DataGridViewCellEventArgs e)
+
+
         {
+            UpdateOrCreate = 1;
             if (e.RowIndex >= 0)
             {
                 DataGridViewRow row = dgvAlunos.Rows[e.RowIndex];
@@ -258,7 +201,11 @@ namespace TCCControleDeAcesso.Views
                 cboCurso.SelectedItem = curso;
                 comboBox2.SelectedItem = serie;
 
+
                 CarregarImagemDoAluno(nome);
+                pictureBox1.ImageLocation = caminho;
+
+                UpdateOrCreate = 1;
 
 
 
@@ -267,27 +214,7 @@ namespace TCCControleDeAcesso.Views
 
         private void BtnDelete_Click(object sender, EventArgs e)
         {
-            if (idText == null)
-            {
-                return;
-            }
-            else
-            {
-
-                cadastroAlunos = new CadastroAlunos()
-                {
-                    Id = int.Parse(idText)
-                };
-                cadastroAlunos.Delete();
-
-                cadastroAlunos = new CadastroAlunos()
-                {
-                    idEscola = id_escola
-                };
-                dgvAlunos.DataSource = cadastroAlunos.ListStudents();
-                dgvAlunos.Columns["id"].Visible = false;
-                CleanAll();
-            }
+           
         }
 
         private void serialPort_DataReceived(object sender, EventArgs e)
@@ -356,6 +283,126 @@ namespace TCCControleDeAcesso.Views
 
         private void BtnDelete_Click_1(object sender, EventArgs e)
         {
+            if (idText == null)
+            {
+                return;
+            }
+            else
+            {
+
+                cadastroAlunos = new CadastroAlunos()
+                {
+                    Id = int.Parse(idText)
+                };
+                cadastroAlunos.Delete();
+
+                cadastroAlunos = new CadastroAlunos()
+                {
+                    idEscola = id_escola
+                };
+                dgvAlunos.DataSource = cadastroAlunos.ListStudents();
+                dgvAlunos.Columns["id"].Visible = false;
+                CleanAll();
+            }
+        }
+
+        private void btnSave_Click_1(object sender, EventArgs e)
+        {
+                   
+
+
+            if (UpdateOrCreate == 0)
+            {
+                
+                if (txtName.Text == string.Empty || txtRm.Text == string.Empty || txtIdade.Text == string.Empty || comboBox2.SelectedIndex == -1 || caminho == null || cboCurso.SelectedIndex == -1)
+                {
+
+                    MessageBox.Show("Preencha todos os campos.", "Erro de Preenchimento.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+
+
+                cadastroAlunos = new CadastroAlunos()
+                {
+                    Name = txtName.Text,
+                    rm = txtRm.Text,
+                    NomeCurso = cboCurso.SelectedItem.ToString(),
+                    idade = txtIdade.Text,
+                    serie = comboBox2.SelectedItem.ToString(),
+                    foto = File.ReadAllBytes(caminho),
+                    idEscola = id_escola
+                };
+                cadastroAlunos.Insert();
+
+
+
+                string connStr = "server=localhost;port=3307;uid=root;pwd=etecjau;database=AccessControl;";
+                int id = 0; // variável para armazenar o resultado
+
+                using (var conn = new MySqlConnection(connStr))
+                {
+                    conn.Open();
+
+                    string sql = "SELECT id FROM alunos where nome=@nome";
+                    using (var cmd = new MySqlCommand(sql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@nome", txtName.Text);
+
+                        object result = cmd.ExecuteScalar(); // pega a primeira coluna da primeira linha
+                        if (result != null)
+                        {
+                            id = Convert.ToInt32(result);
+                        }
+                    }
+                }
+
+                Console.WriteLine("ID encontrado: " + id);
+
+                txtArduino.Text = id.ToString();
+                SerialPortManager.Port.Write("!enroll" + id + "#");
+
+                
+            }
+            else
+            {
+
+                OpenFileDialog ofd = new OpenFileDialog();
+                ofd.Filter = "Imagens|*.jpg;*.jpeg;*.png;*.bmp";
+
+                CarregarImagemDoAluno(txtName.Text);
+
+                cadastroAlunos = new CadastroAlunos()
+                {
+                    Id = int.Parse(idText),
+                    Name = txtName.Text,
+                    rm = txtRm.Text,
+                    NomeCurso = cboCurso.SelectedItem.ToString(),
+                    idade = txtIdade.Text,
+                    serie = comboBox2.SelectedItem.ToString(),
+                    foto = File.ReadAllBytes(caminho),
+                    idEscola = id_escola
+                };
+                cadastroAlunos.Update();
+
+                UpdateOrCreate = 0;
+            }
+
+
+
+
+
+
+
+
+            cadastroAlunos = new CadastroAlunos()
+            {
+                idEscola = id_escola
+            };
+            dgvAlunos.DataSource = cadastroAlunos.ListStudents();
+            // dgvAlunos.Columns["id"].Visible = false;
+            CleanAll();
+
 
         }
     }

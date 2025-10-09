@@ -108,14 +108,16 @@
             this.dgvAlunos.Name = "dgvAlunos";
             this.dgvAlunos.Size = new System.Drawing.Size(958, 363);
             this.dgvAlunos.TabIndex = 97;
+            this.dgvAlunos.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvAlunos_CellClick);
             // 
             // txtArduino
             // 
             this.txtArduino.HideSelection = false;
-            this.txtArduino.Location = new System.Drawing.Point(943, 592);
+            this.txtArduino.Location = new System.Drawing.Point(942, 609);
             this.txtArduino.Name = "txtArduino";
             this.txtArduino.Size = new System.Drawing.Size(100, 20);
             this.txtArduino.TabIndex = 100;
+            this.txtArduino.Visible = false;
             // 
             // txtIdOficial
             // 
@@ -217,13 +219,14 @@
             this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSave.Font = new System.Drawing.Font("Dubai", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSave.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.btnSave.Location = new System.Drawing.Point(995, 530);
+            this.btnSave.Location = new System.Drawing.Point(994, 547);
             this.btnSave.Margin = new System.Windows.Forms.Padding(0);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(99, 58);
             this.btnSave.TabIndex = 91;
             this.btnSave.Text = "SALVAR";
             this.btnSave.UseVisualStyleBackColor = false;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click_1);
             // 
             // BtnDelete
             // 
@@ -231,7 +234,7 @@
             this.BtnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.BtnDelete.Font = new System.Drawing.Font("Dubai", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.BtnDelete.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.BtnDelete.Location = new System.Drawing.Point(890, 530);
+            this.BtnDelete.Location = new System.Drawing.Point(889, 547);
             this.BtnDelete.Margin = new System.Windows.Forms.Padding(0);
             this.BtnDelete.Name = "BtnDelete";
             this.BtnDelete.Size = new System.Drawing.Size(99, 59);

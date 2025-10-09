@@ -119,16 +119,17 @@ namespace TCCControleDeAcesso.Models
         {
             try
             {
+               
                 Banco.OpenConnection();
-                Banco.Command = new MySqlCommand("update Alunos set nome = @nome, rm = @rm, serie = @serie, idEscola = @idEscola, idCurso = @idCurso, foto = @foto, digital = @digital where id = @id", Banco.Connection);
+                Banco.Command = new MySqlCommand("update Alunos set nome = @nome, rm = @rm, serie = @serie, idEscola = @idEscola, Curso = @Curso, foto=@foto   where id = @id", Banco.Connection);
                 Banco.Command.Parameters.AddWithValue("@id", Id);
                 Banco.Command.Parameters.AddWithValue("@nome", Name);
                 Banco.Command.Parameters.AddWithValue("@rm", rm);
                 Banco.Command.Parameters.AddWithValue("@serie", serie);
                 Banco.Command.Parameters.AddWithValue("@idEscola", idEscola);
                 Banco.Command.Parameters.AddWithValue("@Curso", NomeCurso);
-                Banco.Command.Parameters.AddWithValue("@foto", foto);
-                Banco.Command.Parameters.AddWithValue("@digital", digital);
+                Banco.Command.Parameters.Add("@foto", MySqlDbType.LongBlob).Value = foto;
+
                 Banco.Command.ExecuteNonQuery();
                 Banco.CloseConnection();
             }
