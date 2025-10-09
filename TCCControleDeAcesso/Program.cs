@@ -19,7 +19,7 @@ namespace TCCControleDeAcesso
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Views.frmListaAlunos("",0));
+            Application.Run(new Views.frmMainMenu("",0));
         }
     }
 }

@@ -353,5 +353,10 @@ namespace TCCControleDeAcesso.Views
         {
 
         }
+
+        private void BtnDelete_Click_1(object sender, EventArgs e)
+        {
+
+        }
     }
 }
