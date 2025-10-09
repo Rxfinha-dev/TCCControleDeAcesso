@@ -81,10 +81,9 @@ namespace TCCControleDeAcesso.Views
                 return;
             }
             int ContSenha = txtSenha.Text.Length;
-            if (ContSenha > 8)
-            {
-                if (txtSenha.Text == txtConfirmarSenha.Text)
+                if (txtSenha.Text == txtConfirmarSenha.Text && ContSenha > 8)
                 {
+                
 
                     ////------------------Vamos tentar implementar A hash (que está com a salt key incluido ja)------------------//
                     string senha = txtSenha.Text.Trim();
@@ -120,7 +119,8 @@ namespace TCCControleDeAcesso.Views
                     messageBody = "Estamos felizes de termos você conosco! Seu código de ativação de conta é: " + randomCode;
                     EmailDest = txtEmail.Text;
 
-                    try
+                    
+                try
                     {
                         MailAddress mailadress = new MailAddress(EmailDest);
 
@@ -140,21 +140,24 @@ namespace TCCControleDeAcesso.Views
 
                         // Criando a tela de ativação
                         var frmAC = new frmAtivacaoConta(txtNome.Text, txtEmail.Text, txtEnvioHash.Text);
+
                         frmAC.propriedade = textBox1.Text;
 
-                        // Abre a tela de carregamento, passando a de ativação como destino
-                        frmAC.propriedade = textBox1.Text;
                         this.Close();
                         frmAC.Show();
-                        CleanAll();
 
-                        try
+
+
+
+
+
+                    try
                         {
                             smtp.Send(message);
                             btnCadastrar.Enabled = true;
-                            txtSenha.Clear();
-                            txtConfirmarSenha.Clear();
-                        }
+                            CleanAll();
+                            
+                    }
                         catch (Exception ex)
                         {
                             MessageBox.Show(ex.Message);
@@ -173,14 +176,10 @@ namespace TCCControleDeAcesso.Views
                 }
                 else
                 {
-                    MessageBox.Show("As Senhas Não Coincidem", "Erro No Login", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("As Senhas Não Coincidem ou não atendem requisição de no minímo oito caracteres", "Erro No Cadastro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-            }
-            else
-            {
-                MessageBox.Show("A senha deve ter no minímo 8 caracteres!", "Senha muito fraca", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+           
         }
 
         private void frmCadastroEmpresa_Load(object sender, EventArgs e)
