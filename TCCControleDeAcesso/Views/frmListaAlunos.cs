@@ -371,7 +371,15 @@ namespace TCCControleDeAcesso.Views
                 ofd.Filter = "Imagens|*.jpg;*.jpeg;*.png;*.bmp";
 
                 CarregarImagemDoAluno(txtName.Text);
-
+                if (!string.IsNullOrEmpty(caminho))
+                {
+                    cadastroAlunos = new CadastroAlunos()
+                    {
+                        Id = int.Parse(idText),
+                        foto = File.ReadAllBytes(caminho),
+                    };
+                    cadastroAlunos.UpdateFoto();
+                }
                 cadastroAlunos = new CadastroAlunos()
                 {
                     Id = int.Parse(idText),
@@ -380,7 +388,7 @@ namespace TCCControleDeAcesso.Views
                     NomeCurso = cboCurso.SelectedItem.ToString(),
                     idade = txtIdade.Text,
                     serie = comboBox2.SelectedItem.ToString(),
-                    foto = File.ReadAllBytes(caminho),
+                    
                     idEscola = id_escola
                 };
                 cadastroAlunos.Update();

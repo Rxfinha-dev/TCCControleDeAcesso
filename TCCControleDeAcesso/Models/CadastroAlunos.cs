@@ -121,14 +121,14 @@ namespace TCCControleDeAcesso.Models
             {
                
                 Banco.OpenConnection();
-                Banco.Command = new MySqlCommand("update Alunos set nome = @nome, rm = @rm, serie = @serie, idEscola = @idEscola, Curso = @Curso, foto=@foto   where id = @id", Banco.Connection);
+                Banco.Command = new MySqlCommand("update Alunos set nome = @nome, rm = @rm, serie = @serie, idEscola = @idEscola, Curso = @Curso where id = @id", Banco.Connection);
                 Banco.Command.Parameters.AddWithValue("@id", Id);
                 Banco.Command.Parameters.AddWithValue("@nome", Name);
                 Banco.Command.Parameters.AddWithValue("@rm", rm);
                 Banco.Command.Parameters.AddWithValue("@serie", serie);
                 Banco.Command.Parameters.AddWithValue("@idEscola", idEscola);
                 Banco.Command.Parameters.AddWithValue("@Curso", NomeCurso);
-                Banco.Command.Parameters.Add("@foto", MySqlDbType.LongBlob).Value = foto;
+               
 
                 Banco.Command.ExecuteNonQuery();
                 Banco.CloseConnection();
@@ -138,6 +138,27 @@ namespace TCCControleDeAcesso.Models
                 MessageBox.Show(e.Message, "Erro Ao Atualizar Dados!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        public void UpdateFoto()
+        {
+            try
+            {
+                Banco.OpenConnection();
+                Banco.Command = new MySqlCommand("update Alunos set foto=@foto where id=@id", Banco.Connection);
+                Banco.Command.Parameters.AddWithValue("@id", Id);
+                Banco.Command.Parameters.Add("@foto", MySqlDbType.LongBlob).Value = foto;
+
+                Banco.Command.ExecuteNonQuery();
+                Banco.CloseConnection();
+            }
+            catch(Exception e)
+            {
+                MessageBox.Show(e.Message, "Erro Ao Atualizar Foto!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+
+        }
+
 
         public DataTable ListStudents()
         {
