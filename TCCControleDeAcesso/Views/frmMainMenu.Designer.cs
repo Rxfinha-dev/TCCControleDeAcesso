@@ -31,6 +31,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.btnVoltar = new System.Windows.Forms.Button();
             this.btnLog = new System.Windows.Forms.Button();
             this.btnConfig = new System.Windows.Forms.Button();
             this.btnSair = new System.Windows.Forms.Button();
@@ -41,7 +42,6 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
-            this.btnVoltar = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -86,9 +86,26 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(232, 841);
+            this.panel1.Size = new System.Drawing.Size(232, 864);
             this.panel1.TabIndex = 31;
             this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
+            // 
+            // btnVoltar
+            // 
+            this.btnVoltar.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.btnVoltar.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.btnVoltar.FlatAppearance.BorderSize = 0;
+            this.btnVoltar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnVoltar.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnVoltar.ForeColor = System.Drawing.Color.Black;
+            this.btnVoltar.Location = new System.Drawing.Point(0, 666);
+            this.btnVoltar.Name = "btnVoltar";
+            this.btnVoltar.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.btnVoltar.Size = new System.Drawing.Size(228, 97);
+            this.btnVoltar.TabIndex = 40;
+            this.btnVoltar.Text = "Voltar";
+            this.btnVoltar.UseVisualStyleBackColor = false;
+            this.btnVoltar.Click += new System.EventHandler(this.btnVoltar_Click);
             // 
             // btnLog
             // 
@@ -134,7 +151,7 @@
             this.btnSair.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSair.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSair.ForeColor = System.Drawing.Color.Black;
-            this.btnSair.Location = new System.Drawing.Point(0, 740);
+            this.btnSair.Location = new System.Drawing.Point(0, 763);
             this.btnSair.Name = "btnSair";
             this.btnSair.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.btnSair.Size = new System.Drawing.Size(228, 97);
@@ -247,23 +264,6 @@
             this.pictureBox3.TabIndex = 46;
             this.pictureBox3.TabStop = false;
             // 
-            // btnVoltar
-            // 
-            this.btnVoltar.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.btnVoltar.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.btnVoltar.FlatAppearance.BorderSize = 0;
-            this.btnVoltar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnVoltar.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnVoltar.ForeColor = System.Drawing.Color.Black;
-            this.btnVoltar.Location = new System.Drawing.Point(0, 643);
-            this.btnVoltar.Name = "btnVoltar";
-            this.btnVoltar.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.btnVoltar.Size = new System.Drawing.Size(228, 97);
-            this.btnVoltar.TabIndex = 40;
-            this.btnVoltar.Text = "Voltar";
-            this.btnVoltar.UseVisualStyleBackColor = false;
-            this.btnVoltar.Click += new System.EventHandler(this.btnVoltar_Click);
-            // 
             // frmMainMenu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 14F);
@@ -271,7 +271,7 @@
             this.AutoSize = true;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.BackgroundImage = global::TCCControleDeAcesso.Properties.Resources.Design_Sem_Nome___1___Editado1;
-            this.ClientSize = new System.Drawing.Size(1639, 841);
+            this.ClientSize = new System.Drawing.Size(1639, 864);
             this.Controls.Add(this.pictureBox3);
             this.Controls.Add(this.panel1);
             this.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));

@@ -197,6 +197,12 @@
     <Compile Include="Views\frmVerificacao.Designer.cs">
       <DependentUpon>frmVerificacao.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\MenuPrincipal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\MenuPrincipal.Designer.cs">
+      <DependentUpon>MenuPrincipal.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\NetworCredential.cs" />
     <Compile Include="Views\frmNovaSenha.cs">
       <SubType>Form</SubType>
@@ -252,6 +258,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\frmVerificacao.resx">
       <DependentUpon>frmVerificacao.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\MenuPrincipal.resx">
+      <DependentUpon>MenuPrincipal.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
