@@ -17,9 +17,10 @@ namespace TCCControleDeAcesso
         static void Main()
         {
 
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Views.MenuPrincipal());
+            string usuarioAtual = "admin";
+            int idEscola = 1;
+            Application.Run(new Views.MenuPrincipal(usuarioAtual, idEscola));
+
         }
     }
 }

@@ -59,6 +59,7 @@
             this.label2.TabIndex = 24;
             this.label2.Text = "ProjetoTcc123";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // label1
             // 
@@ -69,6 +70,7 @@
             this.label1.Size = new System.Drawing.Size(79, 19);
             this.label1.TabIndex = 23;
             this.label1.Text = "Usuário: ";
+            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // panel1
             // 
@@ -254,6 +256,7 @@
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox2.TabIndex = 32;
             this.pictureBox2.TabStop = false;
+            this.pictureBox2.Click += new System.EventHandler(this.pictureBox2_Click);
             // 
             // pictureBox3
             // 
