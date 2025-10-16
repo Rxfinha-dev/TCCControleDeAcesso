@@ -91,6 +91,7 @@ namespace TCCControleDeAcesso.Views
 
                     // gera hash com salt automático (interno do bcrypt)
                     // bcrypt é uma biblioteca importada
+
                     string hash = BCrypt.Net.BCrypt.HashPassword(senha);
 
                     // hash que vai ser armazenado no banco:
@@ -112,8 +113,8 @@ namespace TCCControleDeAcesso.Views
                     textBox1.Text = randomCode;
 
                     MailMessage message = new MailMessage();
-                    from = "suportehelpus@gmail.com"; // Email do remetente
-                    pass = "vwec abnc veyc jvns";     // Senha de App
+                    from = "suportehelpus75@gmail.com"; // Email do remetente
+                    pass = "raot mngl bxqx hceb";     // Senha de App
 
 
                     messageBody = "Estamos felizes de termos você conosco! Seu código de ativação de conta é: " + randomCode;
@@ -145,10 +146,6 @@ namespace TCCControleDeAcesso.Views
 
                         this.Close();
                         frmAC.Show();
-
-
-
-
 
 
                     try

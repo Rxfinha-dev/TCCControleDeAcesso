@@ -66,9 +66,9 @@
             this.label7.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label7.Location = new System.Drawing.Point(1326, 567);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(60, 19);
+            this.label7.Size = new System.Drawing.Size(57, 19);
             this.label7.TabIndex = 37;
-            this.label7.Text = "Nome:";
+            this.label7.Text = "Email:";
             // 
             // txtSenha
             // 

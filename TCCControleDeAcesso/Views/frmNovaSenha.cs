@@ -61,8 +61,8 @@ namespace TCCControleDeAcesso.Views
                     Random rand = new Random();
                     randomCode = (rand.Next(999999)).ToString();
                     MailMessage message = new MailMessage();                    //txtEmail do cara = meu txtEmailDestinatario
-                    from = "suportehelpus@gmail.com"; //Email do remetente
-                    pass = "vwec abnc veyc jvns"; //Senha de App
+                    from = "suportehelpus75@gmail.com"; // Email do remetente
+                    pass = "raot mngl bxqx hceb";     // Senha de App
                     messageBody = "Seu código de verificação é: " + randomCode;
                     to = txtEmailDestinatario.Text; // Obtendo o e-mail do destinatário
                     message.To.Add(to);                                                                 //deu erro == Escrever a linha de cima e essa novamente

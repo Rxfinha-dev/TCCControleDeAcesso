@@ -15,6 +15,7 @@ namespace TCCControleDeAcesso.Controllers
         public int id { get; set; }
         public string nome { get; set; }
         public string senha { get; set; }
+        public string email { get; set; }
         public int idEscola { get; set; }
 
         public string HashBanco { get; set; }
@@ -29,8 +30,8 @@ namespace TCCControleDeAcesso.Controllers
             {
                 Banco.OpenConnection();
 
-                Banco.Command = new MySqlCommand("select id from escolas where nome=@nome", Banco.Connection);
-                Banco.Command.Parameters.AddWithValue("@nome", nome);
+                Banco.Command = new MySqlCommand("select id from escolas where email=@email", Banco.Connection);
+                Banco.Command.Parameters.AddWithValue("@email", email);
 
                 using (MySqlDataReader reader = Banco.Command.ExecuteReader())
                 {
@@ -53,16 +54,16 @@ namespace TCCControleDeAcesso.Controllers
             {
                 Banco.OpenConnection();
 
-                Banco.Command = new MySqlCommand("SELECT COUNT(*) FROM escolas WHERE nome=@nome", Banco.Connection);
-                Banco.Command.Parameters.AddWithValue("@nome", nome);
+                Banco.Command = new MySqlCommand("SELECT COUNT(*) FROM escolas WHERE email=@email", Banco.Connection);
+                Banco.Command.Parameters.AddWithValue("@email", email);
                 count = Convert.ToInt32(Banco.Command.ExecuteScalar());
 
                 if (count > 0)
                 {
                     // Busca apenas a senha (hash) direto
-                    using (var cmd = new MySqlCommand("SELECT senha FROM escolas WHERE nome=@nome LIMIT 1", Banco.Connection))
+                    using (var cmd = new MySqlCommand("SELECT senha FROM escolas WHERE email=@email LIMIT 1", Banco.Connection))
                     {
-                        cmd.Parameters.AddWithValue("@nome", nome);
+                        cmd.Parameters.AddWithValue("@email", email);
 
                         var result = cmd.ExecuteScalar();
 

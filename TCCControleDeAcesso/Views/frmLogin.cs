@@ -60,7 +60,7 @@ namespace TCCControleDeAcesso.Views
         {
             _login = new Login()
             {
-                nome = txtLogin.Text,
+                email = txtLogin.Text,
                 senha = txtSenha.Text,
               
             };
@@ -105,7 +105,7 @@ namespace TCCControleDeAcesso.Views
             }
             else
             {
-                MessageBox.Show("usuario inexistente", "Não encontrado");
+                MessageBox.Show("Email inexistente", "Email Não encontrado");
                 CleanAll();
             }
 
