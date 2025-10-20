@@ -125,12 +125,6 @@
     <Compile Include="Models\Verificacao.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Views\frmCadastro.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\frmCadastro.Designer.cs">
-      <DependentUpon>frmCadastro.cs</DependentUpon>
-    </Compile>
     <Compile Include="Views\frmExcluir.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -222,9 +216,6 @@
     </Compile>
     <EmbeddedResource Include="Views\frmAtivacaoConta.resx">
       <DependentUpon>frmAtivacaoConta.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\frmCadastro.resx">
-      <DependentUpon>frmCadastro.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\frmCadastroCurso.resx">
       <DependentUpon>frmCadastroCurso.cs</DependentUpon>

@@ -14,14 +14,30 @@ using MySql.Data.MySqlClient;
 using TCCControleDeAcesso.Models;
 using Org.BouncyCastle.Crypto.Generators;
 using System.Security.Cryptography;
+using System.Runtime.InteropServices;
 
 namespace TCCControleDeAcesso.Views
 {
     public partial class frmCadastroEmpresa : Form
     {
+
+        CadastroEmpresas _cadastroEmpresas;
+
+        [DllImport("Gdi32.dll", EntryPoint = "CreateRoundRectRgn")]
+
+        private static extern IntPtr CreateRoundRectRgn
+           (
+               int nLeft,
+               int nTop,
+               int nRight,
+               int nBottom,
+               int nWidthEllipse,
+               int nHeightEllipse
+           );
+
         String randomCode;
         public static String EmailDest;
-        CadastroEmpresas _cadastroEmpresas;
+        CadastroEmpresas _CadastroEmpresas;
 
         public frmCadastroEmpresa()
         {
@@ -181,6 +197,20 @@ namespace TCCControleDeAcesso.Views
 
         private void frmCadastroEmpresa_Load(object sender, EventArgs e)
         {
+            btnCadastrar.Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, btnCadastrar.Width, btnCadastrar.Height, 20, 20));
+            btnVoltar.Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, btnVoltar.Width, btnVoltar.Height, 20, 20));
+
+            btnCadastrar.FlatStyle = FlatStyle.Flat;
+            btnCadastrar.FlatAppearance.BorderSize = 1;  // sem borda
+            btnCadastrar.BackColor = Color.FromArgb(52, 188, 251); // #34BCFB
+            btnCadastrar.ForeColor = Color.White;
+            btnCadastrar.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+
+            btnVoltar.FlatStyle = FlatStyle.Flat;
+            btnVoltar.FlatAppearance.BorderSize = 1;
+            btnVoltar.BackColor = Color.FromArgb(52, 188, 251); // #34BCFB
+            btnVoltar.ForeColor = Color.White;
+            btnVoltar.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
 
             txtSenha.PasswordChar = '*';
             txtConfirmarSenha.PasswordChar = '*';

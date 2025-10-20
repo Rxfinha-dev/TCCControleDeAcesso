@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TCCControleDeAcesso.Models;
+using System.Runtime.InteropServices;
 
 namespace TCCControleDeAcesso.Views
 {
@@ -18,6 +19,17 @@ namespace TCCControleDeAcesso.Views
     {
         CadastroEmpresas _cadastroEmpresas;
 
+        [DllImport("Gdi32.dll", EntryPoint = "CreateRoundRectRgn")]
+
+        private static extern IntPtr CreateRoundRectRgn
+           (
+               int nLeft,
+               int nTop,
+               int nRight,
+               int nBottom,
+               int nWidthEllipse,
+               int nHeightEllipse
+           );
 
 
         public frmAtivacaoConta(string text1, string text2, string text3)
@@ -39,16 +51,33 @@ namespace TCCControleDeAcesso.Views
         {
 
 
-            if (!this.propriedade.Equals(""))
-            {
+            //if (!this.propriedade.Equals(""))
+            //{
 
-                textBox1.Text = this.propriedade; // trazendo o valor do randonCode para a variavel codigoAtivacao
-                string randonCode = textBox1.Text;
-
-                
+            //    textBox1.Text = this.propriedade; // trazendo o valor do randonCode para a variavel codigoAtivacao
+            //    string randonCode = textBox1.Text;
 
 
-            }
+
+
+            //}
+
+            btnAtivacao.Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, btnAtivacao.Width, btnAtivacao.Height, 20, 20));
+            btnEntrar.Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, btnEntrar.Width, btnEntrar.Height, 20, 20));
+
+            btnEntrar.FlatStyle = FlatStyle.Flat;
+            btnEntrar.FlatAppearance.BorderSize = 1;  // sem borda
+            btnEntrar.BackColor = Color.FromArgb(52, 188, 251); // #34BCFB
+            btnEntrar.ForeColor = Color.White;
+            btnEntrar.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+
+            btnAtivacao.FlatStyle = FlatStyle.Flat;
+            btnAtivacao.FlatAppearance.BorderSize = 1;
+            btnAtivacao.BackColor = Color.FromArgb(52, 188, 251); // #34BCFB
+            btnAtivacao.ForeColor = Color.White;
+            btnAtivacao.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+
+
         }
 
         private void btnAtivacao_Click(object sender, EventArgs e)
@@ -100,6 +129,11 @@ namespace TCCControleDeAcesso.Views
             frmCadastroEmpresa CE = new frmCadastroEmpresa();
             this.Close();
             CE.Show();
+        }
+
+        private void lblConfirmacao_Click(object sender, EventArgs e)
+        {
+            btnAtivacao.Font = new Font("Segoe UI", 12F, FontStyle.Regular);
         }
     }
     
