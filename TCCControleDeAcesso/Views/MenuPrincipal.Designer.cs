@@ -28,11 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.btnHam = new System.Windows.Forms.Button();
             this.guna2ControlBox1 = new Guna.UI2.WinForms.Guna2ControlBox();
             this.label1 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.sidebar = new System.Windows.Forms.FlowLayoutPanel();
             this.panel2 = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
@@ -48,9 +50,11 @@
             this.guna2CustomGradientPanel2 = new Guna.UI2.WinForms.Guna2CustomGradientPanel();
             this.button2 = new System.Windows.Forms.Button();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
+            this.menuTransition_Tick = new System.Windows.Forms.Timer(this.components);
+            this.sidebarTransition = new System.Windows.Forms.Timer(this.components);
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            this.flowLayoutPanel1.SuspendLayout();
+            this.sidebar.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.guna2CustomGradientPanel1.SuspendLayout();
@@ -64,6 +68,7 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.panel1.Controls.Add(this.btnHam);
             this.panel1.Controls.Add(this.guna2ControlBox1);
             this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.pictureBox1);
@@ -72,6 +77,18 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1856, 54);
             this.panel1.TabIndex = 0;
+            // 
+            // btnHam
+            // 
+            this.btnHam.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnHam.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.btnHam.Image = global::TCCControleDeAcesso.Properties.Resources.menu_aberto__1_1;
+            this.btnHam.Location = new System.Drawing.Point(18, 14);
+            this.btnHam.Name = "btnHam";
+            this.btnHam.Size = new System.Drawing.Size(33, 28);
+            this.btnHam.TabIndex = 48;
+            this.btnHam.UseVisualStyleBackColor = true;
+            this.btnHam.Click += new System.EventHandler(this.btnHam_Click);
             // 
             // guna2ControlBox1
             // 
@@ -105,20 +122,21 @@
             this.pictureBox1.TabIndex = 1;
             this.pictureBox1.TabStop = false;
             // 
-            // flowLayoutPanel1
+            // sidebar
             // 
-            this.flowLayoutPanel1.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.flowLayoutPanel1.Controls.Add(this.panel2);
-            this.flowLayoutPanel1.Controls.Add(this.guna2CustomGradientPanel1);
-            this.flowLayoutPanel1.Controls.Add(this.guna2CustomGradientPanel5);
-            this.flowLayoutPanel1.Controls.Add(this.guna2CustomGradientPanel4);
-            this.flowLayoutPanel1.Controls.Add(this.guna2CustomGradientPanel3);
-            this.flowLayoutPanel1.Controls.Add(this.guna2CustomGradientPanel2);
-            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 54);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(200, 984);
-            this.flowLayoutPanel1.TabIndex = 1;
+            this.sidebar.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.sidebar.Controls.Add(this.panel2);
+            this.sidebar.Controls.Add(this.guna2CustomGradientPanel1);
+            this.sidebar.Controls.Add(this.guna2CustomGradientPanel5);
+            this.sidebar.Controls.Add(this.guna2CustomGradientPanel4);
+            this.sidebar.Controls.Add(this.guna2CustomGradientPanel3);
+            this.sidebar.Controls.Add(this.guna2CustomGradientPanel2);
+            this.sidebar.Dock = System.Windows.Forms.DockStyle.Left;
+            this.sidebar.Location = new System.Drawing.Point(0, 54);
+            this.sidebar.Name = "sidebar";
+            this.sidebar.Size = new System.Drawing.Size(251, 984);
+            this.sidebar.TabIndex = 1;
+            this.sidebar.Paint += new System.Windows.Forms.PaintEventHandler(this.sidebar_Paint);
             // 
             // panel2
             // 
@@ -134,7 +152,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(63, 93);
+            this.label2.Location = new System.Drawing.Point(85, 57);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(79, 19);
             this.label2.TabIndex = 33;
@@ -145,9 +163,9 @@
             // 
             this.pictureBox2.BackColor = System.Drawing.Color.Transparent;
             this.pictureBox2.Image = global::TCCControleDeAcesso.Properties.Resources.UserIP;
-            this.pictureBox2.Location = new System.Drawing.Point(38, 3);
+            this.pictureBox2.Location = new System.Drawing.Point(-7, 36);
             this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(118, 102);
+            this.pictureBox2.Size = new System.Drawing.Size(79, 76);
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox2.TabIndex = 35;
             this.pictureBox2.TabStop = false;
@@ -157,7 +175,7 @@
             this.lbl.AutoSize = true;
             this.lbl.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbl.ForeColor = System.Drawing.Color.Blue;
-            this.lbl.Location = new System.Drawing.Point(40, 112);
+            this.lbl.Location = new System.Drawing.Point(66, 76);
             this.lbl.Name = "lbl";
             this.lbl.Size = new System.Drawing.Size(109, 18);
             this.lbl.TabIndex = 34;
@@ -185,7 +203,7 @@
             this.button1.Padding = new System.Windows.Forms.Padding(25, 0, 0, 0);
             this.button1.Size = new System.Drawing.Size(230, 72);
             this.button1.TabIndex = 2;
-            this.button1.Text = "         Verificação";
+            this.button1.Text = "           Verificação";
             this.button1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.button1.UseVisualStyleBackColor = false;
             // 
@@ -209,7 +227,7 @@
             this.button5.Padding = new System.Windows.Forms.Padding(25, 0, 0, 0);
             this.button5.Size = new System.Drawing.Size(230, 72);
             this.button5.TabIndex = 2;
-            this.button5.Text = "         Cursos";
+            this.button5.Text = "           Cursos";
             this.button5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.button5.UseVisualStyleBackColor = false;
             // 
@@ -233,7 +251,7 @@
             this.button4.Padding = new System.Windows.Forms.Padding(25, 0, 0, 0);
             this.button4.Size = new System.Drawing.Size(230, 72);
             this.button4.TabIndex = 2;
-            this.button4.Text = "         Alunos";
+            this.button4.Text = "           Alunos";
             this.button4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.button4.UseVisualStyleBackColor = false;
             // 
@@ -257,7 +275,7 @@
             this.button3.Padding = new System.Windows.Forms.Padding(25, 0, 0, 0);
             this.button3.Size = new System.Drawing.Size(230, 72);
             this.button3.TabIndex = 2;
-            this.button3.Text = "         Entradas";
+            this.button3.Text = "           Entradas";
             this.button3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.button3.UseVisualStyleBackColor = false;
             // 
@@ -281,7 +299,7 @@
             this.button2.Padding = new System.Windows.Forms.Padding(25, 0, 0, 0);
             this.button2.Size = new System.Drawing.Size(230, 72);
             this.button2.TabIndex = 2;
-            this.button2.Text = "         Configurações";
+            this.button2.Text = "           Configurações";
             this.button2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.button2.UseVisualStyleBackColor = false;
             // 
@@ -294,6 +312,15 @@
             this.pictureBox3.TabIndex = 47;
             this.pictureBox3.TabStop = false;
             // 
+            // menuTransition_Tick
+            // 
+            this.menuTransition_Tick.Tick += new System.EventHandler(this.menuTransition_Tick_Tick);
+            // 
+            // sidebarTransition
+            // 
+            this.sidebarTransition.Interval = 10;
+            this.sidebarTransition.Tick += new System.EventHandler(this.sidebarTransition_Tick);
+            // 
             // MenuPrincipal
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -302,14 +329,14 @@
             this.BackgroundImage = global::TCCControleDeAcesso.Properties.Resources.Design_Sem_Nome___1___Editado1;
             this.ClientSize = new System.Drawing.Size(1856, 1038);
             this.Controls.Add(this.pictureBox3);
-            this.Controls.Add(this.flowLayoutPanel1);
+            this.Controls.Add(this.sidebar);
             this.Controls.Add(this.panel1);
             this.Name = "MenuPrincipal";
             this.Text = "MenuPrincipal";
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            this.flowLayoutPanel1.ResumeLayout(false);
+            this.sidebar.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
@@ -329,7 +356,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.PictureBox pictureBox1;
         private Guna.UI2.WinForms.Guna2ControlBox guna2ControlBox1;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+        private System.Windows.Forms.FlowLayoutPanel sidebar;
         private System.Windows.Forms.Button button1;
         private Guna.UI2.WinForms.Guna2CustomGradientPanel guna2CustomGradientPanel1;
         private Guna.UI2.WinForms.Guna2CustomGradientPanel guna2CustomGradientPanel2;
@@ -345,5 +372,8 @@
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.Label lbl;
         private System.Windows.Forms.PictureBox pictureBox3;
+        private System.Windows.Forms.Button btnHam;
+        private System.Windows.Forms.Timer menuTransition_Tick;
+        private System.Windows.Forms.Timer sidebarTransition;
     }
 }
