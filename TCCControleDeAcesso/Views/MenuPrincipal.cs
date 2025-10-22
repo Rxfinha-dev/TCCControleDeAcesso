@@ -38,8 +38,8 @@ namespace TCCControleDeAcesso.Views
         {
             if (sidebarExpand)
             {
-                sidebar.Width -= 100;
-                if (sidebar.Width <= 70)
+                sidebar.Width -= 10;
+                if (sidebar.Width <= 80)
                 {
                     sidebarExpand = false;
                     sidebarTransition.Stop();
@@ -62,6 +62,11 @@ namespace TCCControleDeAcesso.Views
         private void btnHam_Click(object sender, EventArgs e)
         {
             sidebarTransition.Start();
+        }
+
+        private void pictureBox2_Click(object sender, EventArgs e)
+        {
+
         }
     } 
 }
