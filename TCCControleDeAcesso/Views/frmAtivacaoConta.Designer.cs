@@ -34,8 +34,8 @@
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.btnEntrar = new System.Windows.Forms.Button();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -104,15 +104,6 @@
             this.btnEntrar.UseVisualStyleBackColor = false;
             this.btnEntrar.Click += new System.EventHandler(this.btnEntrar_Click);
             // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Image = global::TCCControleDeAcesso.Properties.Resources.Design_sem_nome__12_;
-            this.pictureBox1.Location = new System.Drawing.Point(771, 214);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(475, 560);
-            this.pictureBox1.TabIndex = 42;
-            this.pictureBox1.TabStop = false;
-            // 
             // label2
             // 
             this.label2.AutoSize = true;
@@ -122,6 +113,15 @@
             this.label2.Size = new System.Drawing.Size(116, 15);
             this.label2.TabIndex = 16;
             this.label2.Text = "Digite-o novamente!";
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::TCCControleDeAcesso.Properties.Resources.Design_sem_nome__17_1;
+            this.pictureBox1.Location = new System.Drawing.Point(771, 214);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(475, 560);
+            this.pictureBox1.TabIndex = 42;
+            this.pictureBox1.TabStop = false;
             // 
             // frmAtivacaoConta
             // 
@@ -139,8 +139,9 @@
             this.Controls.Add(this.pictureBox1);
             this.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "frmAtivacaoConta";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "frmAtivacaoConta";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.frmAtivacaoConta_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);

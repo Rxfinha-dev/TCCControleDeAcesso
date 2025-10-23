@@ -465,5 +465,20 @@
   <ItemGroup>
     <None Include="Resources\menu-aberto %281%291.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Design sem nome %2813%292.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Design sem nome %2815%291.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Design sem nome %2816%291.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Design sem nome %2817%291.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Design sem nome %2817%292.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
