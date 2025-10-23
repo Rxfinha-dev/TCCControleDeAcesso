@@ -189,7 +189,7 @@ namespace TCCControleDeAcesso.Views
                 }
                 else
                 {
-                    MessageBox.Show("As Senhas Não Coincidem ou não atendem requisição de no minímo oito caracteres", "Erro No Cadastro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("As Senhas Não Coincidem ou não atendem requisição de no minímo nove caracteres", "Erro No Cadastro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
            

@@ -51,16 +51,16 @@ namespace TCCControleDeAcesso.Views
         {
 
 
-            //if (!this.propriedade.Equals(""))
-            //{
+            if (!this.propriedade.Equals(""))
+            {
 
-            //    textBox1.Text = this.propriedade; // trazendo o valor do randonCode para a variavel codigoAtivacao
-            //    string randonCode = textBox1.Text;
-
-
+                textBox1.Text = this.propriedade; // trazendo o valor do randonCode para a variavel codigoAtivacao
+                string randonCode = textBox1.Text;
 
 
-            //}
+
+
+            }
 
             btnAtivacao.Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, btnAtivacao.Width, btnAtivacao.Height, 20, 20));
             btnEntrar.Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, btnEntrar.Width, btnEntrar.Height, 20, 20));
