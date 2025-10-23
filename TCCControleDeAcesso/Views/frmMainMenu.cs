@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
+using System.Drawing;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 using TCCControleDeAcesso.Models;
@@ -65,7 +66,53 @@ int nHeightEllipse
 
         private void frmMainMenu_Load(object sender, EventArgs e)
         {
+            // Apply visual styling aligned with HelpUs palette
+            Color accentColor = Color.FromArgb(0x34, 0xBC, 0xFB);
 
+            if (lblTagline != null)
+            {
+                lblTagline.ForeColor = accentColor;
+            }
+
+            // Style and round cards if they exist (designer adds them)
+            ApplyCardStyle(cardVerificacao);
+            ApplyCardStyle(cardCursos);
+            ApplyCardStyle(cardAlunos);
+            ApplyCardStyle(cardEntradas);
+            ApplyCardStyle(cardConfig);
+
+            // Hover effects
+            AttachHover(cardVerificacao, pbVerificacao, lblCardVerificacao);
+            AttachHover(cardCursos, pbCursos, lblCardCursos);
+            AttachHover(cardAlunos, pbAlunos, lblCardAlunos);
+            AttachHover(cardEntradas, pbEntradas, lblCardEntradas);
+            AttachHover(cardConfig, pbConfig, lblCardConfig);
+        }
+
+        private void ApplyCardStyle(Panel card)
+        {
+            if (card == null)
+            {
+                return;
+            }
+            card.BackColor = Color.White;
+            card.BorderStyle = BorderStyle.FixedSingle;
+            int radius = 18;
+            card.Region = System.Drawing.Region.FromHrgn(CreateRoundRgn(0, 0, card.Width, card.Height, radius, radius));
+            card.Padding = new Padding(8);
+        }
+
+        private void AttachHover(Panel card, Control icon, Control label)
+        {
+            if (card == null)
+            {
+                return;
+            }
+            EventHandler onEnter = (s, e) => { card.BackColor = Color.FromArgb(242, 250, 255); };
+            EventHandler onLeave = (s, e) => { card.BackColor = Color.White; };
+            card.MouseEnter += onEnter; card.MouseLeave += onLeave;
+            if (icon != null) { icon.MouseEnter += onEnter; icon.MouseLeave += onLeave; }
+            if (label != null) { label.MouseEnter += onEnter; label.MouseLeave += onLeave; }
         }
 
         private void button5_Click(object sender, EventArgs e)
@@ -171,6 +218,32 @@ int nHeightEllipse
         private void pictureBox2_Click(object sender, EventArgs e)
         {
 
+        }
+
+        // New card click handlers mapped to existing navigation
+        private void cardVerificacao_Click(object sender, EventArgs e)
+        {
+            btnVerificao_Click(sender, e);
+        }
+
+        private void cardCursos_Click(object sender, EventArgs e)
+        {
+            btnCurso_Click(sender, e);
+        }
+
+        private void cardAlunos_Click(object sender, EventArgs e)
+        {
+            btnAluno_Click(sender, e);
+        }
+
+        private void cardEntradas_Click(object sender, EventArgs e)
+        {
+            btnConfig_Click(sender, e);
+        }
+
+        private void cardConfig_Click(object sender, EventArgs e)
+        {
+            btnLog_Click(sender, e);
         }
     }
 }
