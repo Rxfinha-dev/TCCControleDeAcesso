@@ -1,4 +1,4 @@
-﻿namespace TCCControleDeAcesso.Views
+namespace TCCControleDeAcesso.Views
 {
     partial class frmMainMenu
     {
@@ -42,10 +42,41 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
+            this.contentPanel = new System.Windows.Forms.Panel();
+            this.flowCards = new System.Windows.Forms.FlowLayoutPanel();
+            this.cardVerificacao = new System.Windows.Forms.Panel();
+            this.pbVerificacao = new System.Windows.Forms.PictureBox();
+            this.lblCardVerificacao = new System.Windows.Forms.Label();
+            this.cardCursos = new System.Windows.Forms.Panel();
+            this.pbCursos = new System.Windows.Forms.PictureBox();
+            this.lblCardCursos = new System.Windows.Forms.Label();
+            this.cardAlunos = new System.Windows.Forms.Panel();
+            this.pbAlunos = new System.Windows.Forms.PictureBox();
+            this.lblCardAlunos = new System.Windows.Forms.Label();
+            this.cardEntradas = new System.Windows.Forms.Panel();
+            this.pbEntradas = new System.Windows.Forms.PictureBox();
+            this.lblCardEntradas = new System.Windows.Forms.Label();
+            this.cardConfig = new System.Windows.Forms.Panel();
+            this.pbConfig = new System.Windows.Forms.PictureBox();
+            this.lblCardConfig = new System.Windows.Forms.Label();
+            this.lblWelcome = new System.Windows.Forms.Label();
+            this.lblTagline = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
+            this.contentPanel.SuspendLayout();
+            this.flowCards.SuspendLayout();
+            this.cardVerificacao.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbVerificacao)).BeginInit();
+            this.cardCursos.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbCursos)).BeginInit();
+            this.cardAlunos.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbAlunos)).BeginInit();
+            this.cardEntradas.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbEntradas)).BeginInit();
+            this.cardConfig.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbConfig)).BeginInit();
             this.SuspendLayout();
             // 
             // label2
@@ -261,11 +292,245 @@
             // pictureBox3
             // 
             this.pictureBox3.Image = global::TCCControleDeAcesso.Properties.Resources.Texto_do_seu_parágrafo1;
-            this.pictureBox3.Location = new System.Drawing.Point(1177, 214);
+            this.pictureBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.pictureBox3.Location = new System.Drawing.Point(900, 140);
             this.pictureBox3.Name = "pictureBox3";
             this.pictureBox3.Size = new System.Drawing.Size(642, 637);
             this.pictureBox3.TabIndex = 46;
             this.pictureBox3.TabStop = false;
+            // 
+            // contentPanel
+            // 
+            this.contentPanel.BackColor = System.Drawing.Color.White;
+            this.contentPanel.Controls.Add(this.flowCards);
+            this.contentPanel.Controls.Add(this.lblTagline);
+            this.contentPanel.Controls.Add(this.lblWelcome);
+            this.contentPanel.Controls.Add(this.pictureBox3);
+            this.contentPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.contentPanel.Location = new System.Drawing.Point(232, 0);
+            this.contentPanel.Name = "contentPanel";
+            this.contentPanel.Padding = new System.Windows.Forms.Padding(24);
+            this.contentPanel.Size = new System.Drawing.Size(1407, 864);
+            this.contentPanel.TabIndex = 47;
+            // 
+            // flowCards
+            // 
+            this.flowCards.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.flowCards.AutoScroll = true;
+            this.flowCards.BackColor = System.Drawing.Color.White;
+            this.flowCards.Controls.Add(this.cardVerificacao);
+            this.flowCards.Controls.Add(this.cardCursos);
+            this.flowCards.Controls.Add(this.cardAlunos);
+            this.flowCards.Controls.Add(this.cardEntradas);
+            this.flowCards.Controls.Add(this.cardConfig);
+            this.flowCards.Location = new System.Drawing.Point(28, 160);
+            this.flowCards.Name = "flowCards";
+            this.flowCards.Padding = new System.Windows.Forms.Padding(4);
+            this.flowCards.Size = new System.Drawing.Size(850, 620);
+            this.flowCards.TabIndex = 51;
+            // 
+            // cardVerificacao
+            // 
+            this.cardVerificacao.BackColor = System.Drawing.Color.White;
+            this.cardVerificacao.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.cardVerificacao.Controls.Add(this.lblCardVerificacao);
+            this.cardVerificacao.Controls.Add(this.pbVerificacao);
+            this.cardVerificacao.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.cardVerificacao.Margin = new System.Windows.Forms.Padding(10);
+            this.cardVerificacao.Name = "cardVerificacao";
+            this.cardVerificacao.Size = new System.Drawing.Size(240, 130);
+            this.cardVerificacao.TabIndex = 0;
+            this.cardVerificacao.Click += new System.EventHandler(this.cardVerificacao_Click);
+            // 
+            // pbVerificacao
+            // 
+            this.pbVerificacao.Image = global::TCCControleDeAcesso.Properties.Resources.id;
+            this.pbVerificacao.Location = new System.Drawing.Point(16, 32);
+            this.pbVerificacao.Name = "pbVerificacao";
+            this.pbVerificacao.Size = new System.Drawing.Size(56, 56);
+            this.pbVerificacao.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pbVerificacao.TabIndex = 1;
+            this.pbVerificacao.TabStop = false;
+            this.pbVerificacao.Click += new System.EventHandler(this.cardVerificacao_Click);
+            // 
+            // lblCardVerificacao
+            // 
+            this.lblCardVerificacao.AutoSize = true;
+            this.lblCardVerificacao.Font = new System.Drawing.Font("Arial", 14F, System.Drawing.FontStyle.Bold);
+            this.lblCardVerificacao.ForeColor = System.Drawing.Color.Black;
+            this.lblCardVerificacao.Location = new System.Drawing.Point(88, 52);
+            this.lblCardVerificacao.Name = "lblCardVerificacao";
+            this.lblCardVerificacao.Size = new System.Drawing.Size(111, 22);
+            this.lblCardVerificacao.TabIndex = 2;
+            this.lblCardVerificacao.Text = "Verificação";
+            this.lblCardVerificacao.Click += new System.EventHandler(this.cardVerificacao_Click);
+            // 
+            // cardCursos
+            // 
+            this.cardCursos.BackColor = System.Drawing.Color.White;
+            this.cardCursos.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.cardCursos.Controls.Add(this.lblCardCursos);
+            this.cardCursos.Controls.Add(this.pbCursos);
+            this.cardCursos.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.cardCursos.Margin = new System.Windows.Forms.Padding(10);
+            this.cardCursos.Name = "cardCursos";
+            this.cardCursos.Size = new System.Drawing.Size(240, 130);
+            this.cardCursos.TabIndex = 1;
+            this.cardCursos.Click += new System.EventHandler(this.cardCursos_Click);
+            // 
+            // pbCursos
+            // 
+            this.pbCursos.Image = global::TCCControleDeAcesso.Properties.Resources.open_book;
+            this.pbCursos.Location = new System.Drawing.Point(16, 32);
+            this.pbCursos.Name = "pbCursos";
+            this.pbCursos.Size = new System.Drawing.Size(56, 56);
+            this.pbCursos.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pbCursos.TabIndex = 1;
+            this.pbCursos.TabStop = false;
+            this.pbCursos.Click += new System.EventHandler(this.cardCursos_Click);
+            // 
+            // lblCardCursos
+            // 
+            this.lblCardCursos.AutoSize = true;
+            this.lblCardCursos.Font = new System.Drawing.Font("Arial", 14F, System.Drawing.FontStyle.Bold);
+            this.lblCardCursos.ForeColor = System.Drawing.Color.Black;
+            this.lblCardCursos.Location = new System.Drawing.Point(88, 52);
+            this.lblCardCursos.Name = "lblCardCursos";
+            this.lblCardCursos.Size = new System.Drawing.Size(74, 22);
+            this.lblCardCursos.TabIndex = 2;
+            this.lblCardCursos.Text = "Cursos";
+            this.lblCardCursos.Click += new System.EventHandler(this.cardCursos_Click);
+            // 
+            // cardAlunos
+            // 
+            this.cardAlunos.BackColor = System.Drawing.Color.White;
+            this.cardAlunos.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.cardAlunos.Controls.Add(this.lblCardAlunos);
+            this.cardAlunos.Controls.Add(this.pbAlunos);
+            this.cardAlunos.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.cardAlunos.Margin = new System.Windows.Forms.Padding(10);
+            this.cardAlunos.Name = "cardAlunos";
+            this.cardAlunos.Size = new System.Drawing.Size(240, 130);
+            this.cardAlunos.TabIndex = 2;
+            this.cardAlunos.Click += new System.EventHandler(this.cardAlunos_Click);
+            // 
+            // pbAlunos
+            // 
+            this.pbAlunos.Image = global::TCCControleDeAcesso.Properties.Resources.student;
+            this.pbAlunos.Location = new System.Drawing.Point(16, 32);
+            this.pbAlunos.Name = "pbAlunos";
+            this.pbAlunos.Size = new System.Drawing.Size(56, 56);
+            this.pbAlunos.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pbAlunos.TabIndex = 1;
+            this.pbAlunos.TabStop = false;
+            this.pbAlunos.Click += new System.EventHandler(this.cardAlunos_Click);
+            // 
+            // lblCardAlunos
+            // 
+            this.lblCardAlunos.AutoSize = true;
+            this.lblCardAlunos.Font = new System.Drawing.Font("Arial", 14F, System.Drawing.FontStyle.Bold);
+            this.lblCardAlunos.ForeColor = System.Drawing.Color.Black;
+            this.lblCardAlunos.Location = new System.Drawing.Point(88, 52);
+            this.lblCardAlunos.Name = "lblCardAlunos";
+            this.lblCardAlunos.Size = new System.Drawing.Size(77, 22);
+            this.lblCardAlunos.TabIndex = 2;
+            this.lblCardAlunos.Text = "Alunos";
+            this.lblCardAlunos.Click += new System.EventHandler(this.cardAlunos_Click);
+            // 
+            // cardEntradas
+            // 
+            this.cardEntradas.BackColor = System.Drawing.Color.White;
+            this.cardEntradas.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.cardEntradas.Controls.Add(this.lblCardEntradas);
+            this.cardEntradas.Controls.Add(this.pbEntradas);
+            this.cardEntradas.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.cardEntradas.Margin = new System.Windows.Forms.Padding(10);
+            this.cardEntradas.Name = "cardEntradas";
+            this.cardEntradas.Size = new System.Drawing.Size(240, 130);
+            this.cardEntradas.TabIndex = 3;
+            this.cardEntradas.Click += new System.EventHandler(this.cardEntradas_Click);
+            // 
+            // pbEntradas
+            // 
+            this.pbEntradas.Image = global::TCCControleDeAcesso.Properties.Resources.ver_lista;
+            this.pbEntradas.Location = new System.Drawing.Point(16, 32);
+            this.pbEntradas.Name = "pbEntradas";
+            this.pbEntradas.Size = new System.Drawing.Size(56, 56);
+            this.pbEntradas.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pbEntradas.TabIndex = 1;
+            this.pbEntradas.TabStop = false;
+            this.pbEntradas.Click += new System.EventHandler(this.cardEntradas_Click);
+            // 
+            // lblCardEntradas
+            // 
+            this.lblCardEntradas.AutoSize = true;
+            this.lblCardEntradas.Font = new System.Drawing.Font("Arial", 14F, System.Drawing.FontStyle.Bold);
+            this.lblCardEntradas.ForeColor = System.Drawing.Color.Black;
+            this.lblCardEntradas.Location = new System.Drawing.Point(88, 52);
+            this.lblCardEntradas.Name = "lblCardEntradas";
+            this.lblCardEntradas.Size = new System.Drawing.Size(95, 22);
+            this.lblCardEntradas.TabIndex = 2;
+            this.lblCardEntradas.Text = "Entradas";
+            this.lblCardEntradas.Click += new System.EventHandler(this.cardEntradas_Click);
+            // 
+            // cardConfig
+            // 
+            this.cardConfig.BackColor = System.Drawing.Color.White;
+            this.cardConfig.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.cardConfig.Controls.Add(this.lblCardConfig);
+            this.cardConfig.Controls.Add(this.pbConfig);
+            this.cardConfig.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.cardConfig.Margin = new System.Windows.Forms.Padding(10);
+            this.cardConfig.Name = "cardConfig";
+            this.cardConfig.Size = new System.Drawing.Size(240, 130);
+            this.cardConfig.TabIndex = 4;
+            this.cardConfig.Click += new System.EventHandler(this.cardConfig_Click);
+            // 
+            // pbConfig
+            // 
+            this.pbConfig.Image = global::TCCControleDeAcesso.Properties.Resources.setting;
+            this.pbConfig.Location = new System.Drawing.Point(16, 32);
+            this.pbConfig.Name = "pbConfig";
+            this.pbConfig.Size = new System.Drawing.Size(56, 56);
+            this.pbConfig.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pbConfig.TabIndex = 1;
+            this.pbConfig.TabStop = false;
+            this.pbConfig.Click += new System.EventHandler(this.cardConfig_Click);
+            // 
+            // lblCardConfig
+            // 
+            this.lblCardConfig.AutoSize = true;
+            this.lblCardConfig.Font = new System.Drawing.Font("Arial", 14F, System.Drawing.FontStyle.Bold);
+            this.lblCardConfig.ForeColor = System.Drawing.Color.Black;
+            this.lblCardConfig.Location = new System.Drawing.Point(88, 52);
+            this.lblCardConfig.Name = "lblCardConfig";
+            this.lblCardConfig.Size = new System.Drawing.Size(149, 22);
+            this.lblCardConfig.TabIndex = 2;
+            this.lblCardConfig.Text = "Configurações";
+            this.lblCardConfig.Click += new System.EventHandler(this.cardConfig_Click);
+            // 
+            // lblWelcome
+            // 
+            this.lblWelcome.AutoSize = true;
+            this.lblWelcome.Font = new System.Drawing.Font("Arial", 24F, System.Drawing.FontStyle.Bold);
+            this.lblWelcome.ForeColor = System.Drawing.Color.Black;
+            this.lblWelcome.Location = new System.Drawing.Point(24, 48);
+            this.lblWelcome.Name = "lblWelcome";
+            this.lblWelcome.Size = new System.Drawing.Size(386, 37);
+            this.lblWelcome.TabIndex = 48;
+            this.lblWelcome.Text = "Bem-vindo ao HelpUs";
+            // 
+            // lblTagline
+            // 
+            this.lblTagline.AutoSize = true;
+            this.lblTagline.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular);
+            this.lblTagline.ForeColor = System.Drawing.Color.FromArgb(52, 188, 251);
+            this.lblTagline.Location = new System.Drawing.Point(28, 96);
+            this.lblTagline.Name = "lblTagline";
+            this.lblTagline.Size = new System.Drawing.Size(332, 18);
+            this.lblTagline.TabIndex = 49;
+            this.lblTagline.Text = "Gerencie acessos com rapidez e segurança";
             // 
             // frmMainMenu
             // 
@@ -275,7 +540,7 @@
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.BackgroundImage = global::TCCControleDeAcesso.Properties.Resources.Design_Sem_Nome___1___Editado1;
             this.ClientSize = new System.Drawing.Size(1639, 864);
-            this.Controls.Add(this.pictureBox3);
+            this.Controls.Add(this.contentPanel);
             this.Controls.Add(this.panel1);
             this.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
@@ -288,6 +553,24 @@
             this.panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
+            this.contentPanel.ResumeLayout(false);
+            this.contentPanel.PerformLayout();
+            this.flowCards.ResumeLayout(false);
+            this.cardVerificacao.ResumeLayout(false);
+            this.cardVerificacao.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbVerificacao)).EndInit();
+            this.cardCursos.ResumeLayout(false);
+            this.cardCursos.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbCursos)).EndInit();
+            this.cardAlunos.ResumeLayout(false);
+            this.cardAlunos.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbAlunos)).EndInit();
+            this.cardEntradas.ResumeLayout(false);
+            this.cardEntradas.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbEntradas)).EndInit();
+            this.cardConfig.ResumeLayout(false);
+            this.cardConfig.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbConfig)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -307,5 +590,24 @@
         private System.Windows.Forms.PictureBox pictureBox3;
         private System.Windows.Forms.Button btnLog;
         private System.Windows.Forms.Button btnVoltar;
+        private System.Windows.Forms.Panel contentPanel;
+        private System.Windows.Forms.Label lblWelcome;
+        private System.Windows.Forms.Label lblTagline;
+        private System.Windows.Forms.FlowLayoutPanel flowCards;
+        private System.Windows.Forms.Panel cardVerificacao;
+        private System.Windows.Forms.PictureBox pbVerificacao;
+        private System.Windows.Forms.Label lblCardVerificacao;
+        private System.Windows.Forms.Panel cardCursos;
+        private System.Windows.Forms.PictureBox pbCursos;
+        private System.Windows.Forms.Label lblCardCursos;
+        private System.Windows.Forms.Panel cardAlunos;
+        private System.Windows.Forms.PictureBox pbAlunos;
+        private System.Windows.Forms.Label lblCardAlunos;
+        private System.Windows.Forms.Panel cardEntradas;
+        private System.Windows.Forms.PictureBox pbEntradas;
+        private System.Windows.Forms.Label lblCardEntradas;
+        private System.Windows.Forms.Panel cardConfig;
+        private System.Windows.Forms.PictureBox pbConfig;
+        private System.Windows.Forms.Label lblCardConfig;
     }
 }
