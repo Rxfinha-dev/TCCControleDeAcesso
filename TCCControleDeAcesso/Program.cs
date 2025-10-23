@@ -19,7 +19,7 @@ namespace TCCControleDeAcesso
 
             string usuarioAtual = "admin";
             int idEscola = 1;
-            Application.Run(new Views.MenuPrincipal("", 0));
+            Application.Run(new Views.RJTextBox());
 
         }
     }

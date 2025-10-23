@@ -116,7 +116,7 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Image = global::TCCControleDeAcesso.Properties.Resources.Design_sem_nome__17_1;
+            this.pictureBox1.Image = global::TCCControleDeAcesso.Properties.Resources.Design_sem_nome__18_;
             this.pictureBox1.Location = new System.Drawing.Point(771, 214);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(475, 560);

@@ -127,6 +127,9 @@
   <data name="user1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\user1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Design sem nome6" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Design sem nome6.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="setting" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\setting.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -166,14 +169,23 @@
   <data name="Design sem nome (4)1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Design sem nome (4)1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Design sem nome (17)2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Design sem nome (17)2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="ver-lista" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\ver-lista.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="3" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Captura de tela 2025-09-25 151747" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Captura de tela 2025-09-25 151747.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="12" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\11.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Design sem nome (9)1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Design sem nome (9)1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="okokok" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\okokok.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -183,9 +195,6 @@
   </data>
   <data name="Design sem nome (11)" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Design sem nome (11).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="search" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\search.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Design sem nome (13)2" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Design sem nome (13)2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -199,8 +208,14 @@
   <data name="Design sem nome7" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Design sem nome7.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="entradas" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\entradas.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Design sem nome (3)2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Design sem nome (3)2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Design sem nome (17)" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Design sem nome (17).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="search (2)1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\search (2)1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Texto do seu parágrafo1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Texto do seu parágrafo1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -216,9 +231,6 @@
   </data>
   <data name="Design sem nome1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Design sem nome1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="sair" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\sair.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Design sem nome2" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Design sem nome2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -238,9 +250,6 @@
   <data name="verificar3" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\verificar3.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Logo FAP1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Logo FAP1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="Design Sem Nome - 1 - Editado1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Design Sem Nome - 1 - Editado1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -249,9 +258,6 @@
   </data>
   <data name="FundoNovo" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\FundoNovo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Design sem nome (17)" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Design sem nome (17).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="bolha" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\bolha.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -282,9 +288,6 @@
   </data>
   <data name="lista" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\lista.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Design sem nome (3)1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Design sem nome (3)1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Design sem nome (1)1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Design sem nome (1)1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -319,11 +322,14 @@
   <data name="fundo" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\fundo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="FAInicialPage" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\FAInicialPage.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Logo FB1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Logo FB1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Design sem nome (9)1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Design sem nome (9)1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Logo FAP1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Logo FAP1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -343,9 +349,6 @@
   <data name="Design sem nome (5)" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Design sem nome (5).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="graduated (1)" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\graduated (1).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="sair (1)" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\sair (1).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -361,11 +364,11 @@
   <data name="Logo FAG" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Logo FAG.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Texto do seu parágrafo" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Texto do seu parágrafo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="entradas" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\entradas.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="FAInicialPage" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\FAInicialPage.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="sair" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\sair.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Design sem nome (16)1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Design sem nome (16)1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -385,8 +388,8 @@
   <data name="Design sem nome (15)1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Design sem nome (15)1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="search (2)1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\search (2)1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="graduated (1)" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\graduated (1).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="cadastro3" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\cadastro3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -406,22 +409,22 @@
   <data name="HelpUs" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\HelpUs.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Captura de tela 2025-09-25 151747" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Captura de tela 2025-09-25 151747.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Design sem nome (3)1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Design sem nome (3)1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="search" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\search.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="menu-aberto (1)" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\menu-aberto (1).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Design sem nome (3)2" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Design sem nome (3)2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="Design sem nome5" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Design sem nome5.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Design sem nome6" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Design sem nome6.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Texto do seu parágrafo" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Texto do seu parágrafo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Design sem nome (17)2" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Design sem nome (17)2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Design sem nome (18)" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Design sem nome (18).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

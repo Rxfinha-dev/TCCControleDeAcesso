@@ -59,7 +59,6 @@
             this.label2.TabIndex = 24;
             this.label2.Text = "ProjetoTcc123";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-           
             // 
             // label1
             // 
@@ -274,7 +273,7 @@
             this.AutoSize = true;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.BackgroundImage = global::TCCControleDeAcesso.Properties.Resources.Design_Sem_Nome___1___Editado1;
-            this.ClientSize = new System.Drawing.Size(1639, 864);
+            this.ClientSize = new System.Drawing.Size(1868, 864);
             this.Controls.Add(this.pictureBox3);
             this.Controls.Add(this.panel1);
             this.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));

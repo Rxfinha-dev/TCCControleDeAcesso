@@ -26,6 +26,7 @@ namespace TCCControleDeAcesso.Views
 
         [DllImport("Gdi32.dll", EntryPoint = "CreateRoundRectRgn")]
 
+
         private static extern IntPtr CreateRoundRectRgn
             (
                 int nLeft,
@@ -237,6 +238,21 @@ namespace TCCControleDeAcesso.Views
         }
 
         private void pictureBox3_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtLogin_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void a_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
         {
 
         }
