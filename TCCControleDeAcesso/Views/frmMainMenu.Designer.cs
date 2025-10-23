@@ -59,7 +59,7 @@
             this.label2.TabIndex = 24;
             this.label2.Text = "ProjetoTcc123";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.label2.Click += new System.EventHandler(this.label2_Click);
+           
             // 
             // label1
             // 
