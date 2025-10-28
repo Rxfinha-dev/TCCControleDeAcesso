@@ -159,10 +159,35 @@ namespace TCCControleDeAcesso.Views
 
         private void btnVoltar_Click(object sender, EventArgs e)
         {
-            SerialPortManager.Port.DataReceived -= serialPort_DataReceived;
-            SerialPortManager.Port.Write("!a#");
+            if (SerialPortManager.Port != null && SerialPortManager.Port.IsOpen)
+            {
+                // Remove o evento e envia o comando
+                SerialPortManager.Port.DataReceived -= serialPort_DataReceived;
+
+                try
+                {
+                    SerialPortManager.Port.Write("!a#");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Erro ao enviar comando para o Arduino: " + ex.Message,
+                                    "Erro de comunicação",
+                                    MessageBoxButtons.OK,
+                                    MessageBoxIcon.Warning);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Arduino não está conectado ou a porta serial não está aberta.",
+                                "Aviso",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Information);
+            }
+
+            // Continua a execução normalmente
             frmMainMenu check = new frmMainMenu(_CurrentUsername, id_escola);
             check.Show();
+
             Hide();
         }
 
