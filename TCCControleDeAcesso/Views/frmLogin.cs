@@ -1,21 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
-using System.Security.Policy;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using TCCControleDeAcesso.Controllers;
 using TCCControleDeAcesso.Models;
-using ZstdSharp.Unsafe;
-using System.Windows.Forms;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.ComponentModel;
-using System.Runtime.InteropServices;
 
 namespace TCCControleDeAcesso.Views
 {
@@ -25,8 +17,6 @@ namespace TCCControleDeAcesso.Views
         CadastroEmpresas _empresas;
 
         [DllImport("Gdi32.dll", EntryPoint = "CreateRoundRectRgn")]
-
-
         private static extern IntPtr CreateRoundRectRgn
             (
                 int nLeft,
@@ -43,6 +33,13 @@ namespace TCCControleDeAcesso.Views
         int amplitude = 5; // altura do "flutuar"
         double speed = 0.1;
 
+        Image senha_visivel = Properties.Resources.olho_aberto;
+        Image senha_invisivel = Properties.Resources.olho_fechado_24;
+
+        // DECLARAÇÃO ÚNICA DA VARIÁVEL senhaVisivel
+        private bool senhaVisivel = false;
+
+
         public frmLogin()
         {
             InitializeComponent();
@@ -51,11 +48,11 @@ namespace TCCControleDeAcesso.Views
 
         private void CleanAll()
         {
-            txtLogin.Clear();
-            txtSenha.Clear();
-            txtLogin.Focus();
+            txtLoginAntigo.Clear();
+            txtSenhaAntigo.Clear();
+            txtLoginAntigo.Focus();
         }
-        
+
 
         private void btnEntrar_Click(object sender, EventArgs e)
         {
@@ -63,7 +60,7 @@ namespace TCCControleDeAcesso.Views
             {
                 email = txtLogin.Text,
                 senha = txtSenha.Text,
-              
+
             };
 
 
@@ -77,12 +74,12 @@ namespace TCCControleDeAcesso.Views
             //sendo assim, desnecessário realizar o save da salt key de forma separada no banco de dados para validação posterior
 
             //vamos chamar a função do banco de dados(login.Cs) que vai puxar a senha do banco
-            
+
             _login.PullSenha();
 
             //pega a senha digitada e guarda na variável 
             string senhadigitada = txtSenha.Text;
-       
+
 
             if (_login.count == 1)
             {
@@ -102,7 +99,7 @@ namespace TCCControleDeAcesso.Views
                 {
                     MessageBox.Show("Senha incorreta!", "Erro de Login");
                 }
-                
+
             }
             else
             {
@@ -117,7 +114,7 @@ namespace TCCControleDeAcesso.Views
             /////////// ---------- end login --------- //
             CleanAll();
 
- 
+
         }
 
 
@@ -134,65 +131,90 @@ namespace TCCControleDeAcesso.Views
             Hide();
         }
 
+
         private void frmLogin_Load(object sender, EventArgs e)
         {
             Banco.CreateDatabase();
-                baseY = pictureBox3.Top; // salva a posição inicial
-                Timer flutuarTimer = new Timer();
-                flutuarTimer.Interval = 18; // 15 ms para uma animação suave
-                flutuarTimer.Tick += (s, ev) =>
-                {
-                    angle += speed;
-                    pictureBox3.Top = baseY + (int)(Math.Sin(angle) * amplitude);
-                };
-                flutuarTimer.Start();
 
-            txtSenha.PasswordChar = '*';
+            // Configura animação suave do PictureBox
+            baseY = pictureBox3.Top;
+            Timer flutuarTimer = new Timer();
+            flutuarTimer.Interval = 18;
+            flutuarTimer.Tick += (s, ev) =>
+            {
+                angle += speed;
+                pictureBox3.Top = baseY + (int)(Math.Sin(angle) * amplitude);
+            };
+            flutuarTimer.Start();
+
+            // Configuração inicial dos campos
+            txtSenha.PasswordChar = true; // Oculta o texto
             txtLogin.Text = "Digite seu Login";
             txtLogin.ForeColor = Color.Gray;
             txtSenha.Text = "Digite sua Senha";
             txtSenha.ForeColor = Color.Gray;
 
+            // Configuração visual dos botões
             button5.FlatStyle = FlatStyle.Flat;
-            button5.FlatAppearance.BorderSize = 1;  // sem borda
-            button5.BackColor = Color.FromArgb(52, 188, 251); // #34BCFB
-            button5.ForeColor = Color.White; // texto branco
+            button5.FlatAppearance.BorderSize = 1;
+            button5.FlatAppearance.BorderColor = Color.FromArgb(52, 188, 251);
+            button5.BackColor = Color.FromArgb(52, 188, 251); // Fundo transparente
+            button5.ForeColor = Color.White; // Texto azul
 
             btnEntrar.FlatStyle = FlatStyle.Flat;
-            btnEntrar.FlatAppearance.BorderSize = 1;  // sem borda
-            btnEntrar.BackColor = Color.FromArgb(52, 188, 251); // #34BCFB
-            btnEntrar.ForeColor = Color.White; // texto branco
+            btnEntrar.FlatAppearance.BorderSize = 1;
+            btnEntrar.BackColor = Color.FromArgb(52, 188, 251);
+            btnEntrar.ForeColor = Color.White;
 
             button5.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, button5.Width, button5.Height, 20, 20));
             btnEntrar.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, btnEntrar.Width, btnEntrar.Height, 20, 20));
+
+            // No frmLogin_Load
+            picOlho.SizeMode = PictureBoxSizeMode.CenterImage; // ou Zoom conforme preferir
+            picOlho.Image = Properties.Resources.olho_fechado_24; // imagem inicial (senha oculta)
+            picOlho.Cursor = Cursors.Hand;
         }
+
+        private void picOlho_Click(object sender, EventArgs e)
+        {
+            if (senhaVisivel)
+            {
+                txtSenha.PasswordChar = true; // RJTextBox: bool
+                picOlho.Image = Properties.Resources.olho_fechado_24;
+                senhaVisivel = false;
+            }
+            else
+            {
+                txtSenha.PasswordChar = false;
+                picOlho.Image = Properties.Resources.olho_aberto;
+                senhaVisivel = true;
+            }
+        }
+
 
         private void button5_Click(object sender, EventArgs e)
         {
-            frmNovaSenha form =  new frmNovaSenha();//IMPORTANTE---------------depois altere isso de volta para o "frmNovaSenha"
+            frmNovaSenha form = new frmNovaSenha();//IMPORTANTE---------------depois altere isso de volta para o "frmNovaSenha"
             form.Show();
             Hide();
-
-
         }
 
 
         private void txtLogin_Leave_1(object sender, EventArgs e)
         {
-            if (txtLogin.Text == "")
+            if (txtLoginAntigo.Text == "")
             {
-                txtLogin.Text = "Digite seu Login";
-                txtLogin.ForeColor = Color.Gray;
-
+                txtLoginAntigo.Text = "Digite seu Login";
+                txtLoginAntigo.ForeColor = Color.Gray;
             }
         }
 
         private void txtLogin_Enter_1(object sender, EventArgs e)
         {
-            if (txtLogin.Text == "Digite seu Login")
+            if (txtLoginAntigo.Text == "Digite seu Login")
             {
-                txtLogin.Text = "";
-                txtLogin.ForeColor = Color.Gray;
+                txtLoginAntigo.Text = "";
+                txtLoginAntigo.ForeColor = Color.Gray;
             }
         }
 
@@ -202,7 +224,6 @@ namespace TCCControleDeAcesso.Views
             {
                 txtSenha.Text = "Digite sua Senha";
                 txtSenha.ForeColor = Color.Gray;
-
             }
         }
 
@@ -219,42 +240,14 @@ namespace TCCControleDeAcesso.Views
         {
             if (chkMostrarSenha.Checked)
             {
-                txtSenha.PasswordChar = '\u0000';
+                // Mostra o texto
+                txtSenha.PasswordChar = false;
             }
             else
             {
-                txtSenha.PasswordChar = '*';
+                // Oculta o texto
+                txtSenha.PasswordChar = true;
             }
-        }
-
-        private void pictureBox3_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void pictureBox4_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void pictureBox3_Click_1(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txtLogin_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void a_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void pictureBox1_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }

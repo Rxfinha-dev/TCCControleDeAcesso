@@ -31,21 +31,27 @@
             this.components = new System.ComponentModel.Container();
             this.a = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
-            this.txtSenha = new System.Windows.Forms.TextBox();
+            this.txtSenhaAntigo = new System.Windows.Forms.TextBox();
             this.btnEntrar = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
             this.linkLabel2 = new System.Windows.Forms.LinkLabel();
-            this.txtLogin = new System.Windows.Forms.TextBox();
+            this.txtLoginAntigo = new System.Windows.Forms.TextBox();
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.chkMostrarSenha = new System.Windows.Forms.CheckBox();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
+            this.txtSenha = new RJCodeAdvance.RJControls.RJTextBox();
+            this.txtLogin = new RJCodeAdvance.RJControls.RJTextBox();
+            this.picOlho = new System.Windows.Forms.PictureBox();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picOlho)).BeginInit();
+            this.flowLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // a
@@ -58,7 +64,6 @@
             this.a.Size = new System.Drawing.Size(58, 21);
             this.a.TabIndex = 36;
             this.a.Text = "Senha:";
-            this.a.Click += new System.EventHandler(this.a_Click);
             // 
             // label7
             // 
@@ -71,21 +76,21 @@
             this.label7.TabIndex = 37;
             this.label7.Text = "Email:";
             // 
-            // txtSenha
+            // txtSenhaAntigo
             // 
-            this.txtSenha.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtSenha.Location = new System.Drawing.Point(1330, 644);
-            this.txtSenha.Name = "txtSenha";
-            this.txtSenha.Size = new System.Drawing.Size(270, 20);
-            this.txtSenha.TabIndex = 39;
-            this.txtSenha.Enter += new System.EventHandler(this.txtSenha_Enter_1);
-            this.txtSenha.Leave += new System.EventHandler(this.txtSenha_Leave_1);
+            this.txtSenhaAntigo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtSenhaAntigo.Location = new System.Drawing.Point(1317, 168);
+            this.txtSenhaAntigo.Name = "txtSenhaAntigo";
+            this.txtSenhaAntigo.Size = new System.Drawing.Size(270, 20);
+            this.txtSenhaAntigo.TabIndex = 39;
+            this.txtSenhaAntigo.Enter += new System.EventHandler(this.txtSenha_Enter_1);
+            this.txtSenhaAntigo.Leave += new System.EventHandler(this.txtSenha_Leave_1);
             // 
             // btnEntrar
             // 
             this.btnEntrar.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.btnEntrar.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnEntrar.Location = new System.Drawing.Point(1468, 702);
+            this.btnEntrar.Location = new System.Drawing.Point(146, 3);
             this.btnEntrar.Name = "btnEntrar";
             this.btnEntrar.Size = new System.Drawing.Size(137, 55);
             this.btnEntrar.TabIndex = 40;
@@ -97,7 +102,7 @@
             // 
             this.button5.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.button5.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button5.Location = new System.Drawing.Point(1325, 702);
+            this.button5.Location = new System.Drawing.Point(3, 3);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(137, 55);
             this.button5.TabIndex = 41;
@@ -129,16 +134,15 @@
             this.linkLabel2.Text = "Cadastre-se";
             this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked);
             // 
-            // txtLogin
+            // txtLoginAntigo
             // 
-            this.txtLogin.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtLogin.Location = new System.Drawing.Point(1330, 589);
-            this.txtLogin.Name = "txtLogin";
-            this.txtLogin.Size = new System.Drawing.Size(270, 20);
-            this.txtLogin.TabIndex = 38;
-            this.txtLogin.TextChanged += new System.EventHandler(this.txtLogin_TextChanged);
-            this.txtLogin.Enter += new System.EventHandler(this.txtLogin_Enter_1);
-            this.txtLogin.Leave += new System.EventHandler(this.txtLogin_Leave_1);
+            this.txtLoginAntigo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtLoginAntigo.Location = new System.Drawing.Point(1317, 131);
+            this.txtLoginAntigo.Name = "txtLoginAntigo";
+            this.txtLoginAntigo.Size = new System.Drawing.Size(270, 20);
+            this.txtLoginAntigo.TabIndex = 38;
+            this.txtLoginAntigo.Enter += new System.EventHandler(this.txtLogin_Enter_1);
+            this.txtLoginAntigo.Leave += new System.EventHandler(this.txtLogin_Leave_1);
             // 
             // errorProvider1
             // 
@@ -162,7 +166,6 @@
             this.pictureBox1.Size = new System.Drawing.Size(1202, 1412);
             this.pictureBox1.TabIndex = 44;
             this.pictureBox1.TabStop = false;
-            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
             // chkMostrarSenha
             // 
@@ -170,7 +173,7 @@
             this.chkMostrarSenha.BackColor = System.Drawing.Color.Transparent;
             this.chkMostrarSenha.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.chkMostrarSenha.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkMostrarSenha.Location = new System.Drawing.Point(1330, 670);
+            this.chkMostrarSenha.Location = new System.Drawing.Point(1330, 675);
             this.chkMostrarSenha.Name = "chkMostrarSenha";
             this.chkMostrarSenha.Size = new System.Drawing.Size(112, 21);
             this.chkMostrarSenha.TabIndex = 47;
@@ -181,14 +184,75 @@
             // pictureBox3
             // 
             this.pictureBox3.BackColor = System.Drawing.Color.Transparent;
-            this.pictureBox3.Image = global::TCCControleDeAcesso.Properties.Resources.Design_sem_nome__6_2;
+            this.pictureBox3.Image = global::TCCControleDeAcesso.Properties.Resources.Design_sem_nome__4_2;
             this.pictureBox3.Location = new System.Drawing.Point(1339, 270);
             this.pictureBox3.Name = "pictureBox3";
             this.pictureBox3.Size = new System.Drawing.Size(248, 263);
             this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox3.TabIndex = 49;
             this.pictureBox3.TabStop = false;
-            this.pictureBox3.Click += new System.EventHandler(this.pictureBox3_Click_1);
+            // 
+            // txtSenha
+            // 
+            this.txtSenha.BackColor = System.Drawing.SystemColors.Window;
+            this.txtSenha.BorderColor = System.Drawing.Color.DodgerBlue;
+            this.txtSenha.BorderFocusColor = System.Drawing.Color.DeepSkyBlue;
+            this.txtSenha.BorderRadius = 0;
+            this.txtSenha.BorderSize = 2;
+            this.txtSenha.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtSenha.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.txtSenha.Location = new System.Drawing.Point(1330, 639);
+            this.txtSenha.Margin = new System.Windows.Forms.Padding(4);
+            this.txtSenha.Multiline = false;
+            this.txtSenha.Name = "txtSenha";
+            this.txtSenha.Padding = new System.Windows.Forms.Padding(10, 7, 10, 7);
+            this.txtSenha.PasswordChar = false;
+            this.txtSenha.PlaceholderColor = System.Drawing.Color.DarkGray;
+            this.txtSenha.PlaceholderText = "";
+            this.txtSenha.Size = new System.Drawing.Size(250, 31);
+            this.txtSenha.TabIndex = 50;
+            this.txtSenha.Texts = "";
+            this.txtSenha.UnderlinedStyle = true;
+            // 
+            // txtLogin
+            // 
+            this.txtLogin.BackColor = System.Drawing.SystemColors.Window;
+            this.txtLogin.BorderColor = System.Drawing.Color.DodgerBlue;
+            this.txtLogin.BorderFocusColor = System.Drawing.Color.DeepSkyBlue;
+            this.txtLogin.BorderRadius = 0;
+            this.txtLogin.BorderSize = 2;
+            this.txtLogin.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtLogin.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.txtLogin.Location = new System.Drawing.Point(1331, 586);
+            this.txtLogin.Margin = new System.Windows.Forms.Padding(4);
+            this.txtLogin.Multiline = false;
+            this.txtLogin.Name = "txtLogin";
+            this.txtLogin.Padding = new System.Windows.Forms.Padding(10, 7, 10, 7);
+            this.txtLogin.PasswordChar = false;
+            this.txtLogin.PlaceholderColor = System.Drawing.Color.DarkGray;
+            this.txtLogin.PlaceholderText = "";
+            this.txtLogin.Size = new System.Drawing.Size(250, 31);
+            this.txtLogin.TabIndex = 51;
+            this.txtLogin.Texts = "";
+            this.txtLogin.UnderlinedStyle = true;
+            // 
+            // picOlho
+            // 
+            this.picOlho.Image = global::TCCControleDeAcesso.Properties.Resources.olho_aberto;
+            this.picOlho.Location = new System.Drawing.Point(1230, 71);
+            this.picOlho.Name = "picOlho";
+            this.picOlho.Size = new System.Drawing.Size(47, 31);
+            this.picOlho.TabIndex = 52;
+            this.picOlho.TabStop = false;
+            // 
+            // flowLayoutPanel1
+            // 
+            this.flowLayoutPanel1.Controls.Add(this.button5);
+            this.flowLayoutPanel1.Controls.Add(this.btnEntrar);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(1308, 702);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(296, 63);
+            this.flowLayoutPanel1.TabIndex = 53;
             // 
             // frmLogin
             // 
@@ -197,15 +261,17 @@
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.BackgroundImage = global::TCCControleDeAcesso.Properties.Resources.Design_sem_nome7;
             this.ClientSize = new System.Drawing.Size(1828, 841);
+            this.Controls.Add(this.flowLayoutPanel1);
+            this.Controls.Add(this.picOlho);
+            this.Controls.Add(this.txtLogin);
+            this.Controls.Add(this.txtSenha);
             this.Controls.Add(this.pictureBox3);
             this.Controls.Add(this.chkMostrarSenha);
             this.Controls.Add(this.linkLabel2);
             this.Controls.Add(this.label5);
-            this.Controls.Add(this.btnEntrar);
-            this.Controls.Add(this.button5);
-            this.Controls.Add(this.txtSenha);
+            this.Controls.Add(this.txtSenhaAntigo);
             this.Controls.Add(this.a);
-            this.Controls.Add(this.txtLogin);
+            this.Controls.Add(this.txtLoginAntigo);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.pictureBox1);
@@ -218,6 +284,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picOlho)).EndInit();
+            this.flowLayoutPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -228,14 +296,18 @@
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.Label a;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.TextBox txtSenha;
+        private System.Windows.Forms.TextBox txtSenhaAntigo;
         private System.Windows.Forms.Button btnEntrar;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.LinkLabel linkLabel2;
-        private System.Windows.Forms.TextBox txtLogin;
+        private System.Windows.Forms.TextBox txtLoginAntigo;
         private System.Windows.Forms.ErrorProvider errorProvider1;
         private System.Windows.Forms.CheckBox chkMostrarSenha;
         private System.Windows.Forms.PictureBox pictureBox3;
+        private RJCodeAdvance.RJControls.RJTextBox txtLogin;
+        private RJCodeAdvance.RJControls.RJTextBox txtSenha;
+        private System.Windows.Forms.PictureBox picOlho;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
     }
 }
