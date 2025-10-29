@@ -31,12 +31,10 @@
             this.components = new System.ComponentModel.Container();
             this.a = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
-            this.txtSenhaAntigo = new System.Windows.Forms.TextBox();
             this.btnEntrar = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
             this.linkLabel2 = new System.Windows.Forms.LinkLabel();
-            this.txtLoginAntigo = new System.Windows.Forms.TextBox();
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
@@ -75,16 +73,6 @@
             this.label7.Size = new System.Drawing.Size(52, 21);
             this.label7.TabIndex = 37;
             this.label7.Text = "Email:";
-            // 
-            // txtSenhaAntigo
-            // 
-            this.txtSenhaAntigo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtSenhaAntigo.Location = new System.Drawing.Point(1317, 168);
-            this.txtSenhaAntigo.Name = "txtSenhaAntigo";
-            this.txtSenhaAntigo.Size = new System.Drawing.Size(270, 20);
-            this.txtSenhaAntigo.TabIndex = 39;
-            this.txtSenhaAntigo.Enter += new System.EventHandler(this.txtSenha_Enter_1);
-            this.txtSenhaAntigo.Leave += new System.EventHandler(this.txtSenha_Leave_1);
             // 
             // btnEntrar
             // 
@@ -134,16 +122,6 @@
             this.linkLabel2.Text = "Cadastre-se";
             this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked);
             // 
-            // txtLoginAntigo
-            // 
-            this.txtLoginAntigo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtLoginAntigo.Location = new System.Drawing.Point(1317, 131);
-            this.txtLoginAntigo.Name = "txtLoginAntigo";
-            this.txtLoginAntigo.Size = new System.Drawing.Size(270, 20);
-            this.txtLoginAntigo.TabIndex = 38;
-            this.txtLoginAntigo.Enter += new System.EventHandler(this.txtLogin_Enter_1);
-            this.txtLoginAntigo.Leave += new System.EventHandler(this.txtLogin_Leave_1);
-            // 
             // errorProvider1
             // 
             this.errorProvider1.ContainerControl = this;
@@ -179,7 +157,7 @@
             this.chkMostrarSenha.TabIndex = 47;
             this.chkMostrarSenha.Text = "Mostrar senha";
             this.chkMostrarSenha.UseVisualStyleBackColor = false;
-            this.chkMostrarSenha.CheckedChanged += new System.EventHandler(this.MostrarSenha_CheckedChanged);
+this.chkMostrarSenha.CheckedChanged += new System.EventHandler(this.chkMostrarSenha_CheckedChanged);
             // 
             // pictureBox3
             // 
@@ -239,9 +217,10 @@
             // picOlho
             // 
             this.picOlho.Image = global::TCCControleDeAcesso.Properties.Resources.olho_aberto;
-            this.picOlho.Location = new System.Drawing.Point(1230, 71);
+            this.picOlho.Location = new System.Drawing.Point(1301, 676);
             this.picOlho.Name = "picOlho";
-            this.picOlho.Size = new System.Drawing.Size(47, 31);
+            this.picOlho.Size = new System.Drawing.Size(23, 20);
+            this.picOlho.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.picOlho.TabIndex = 52;
             this.picOlho.TabStop = false;
             // 
@@ -269,9 +248,7 @@
             this.Controls.Add(this.chkMostrarSenha);
             this.Controls.Add(this.linkLabel2);
             this.Controls.Add(this.label5);
-            this.Controls.Add(this.txtSenhaAntigo);
             this.Controls.Add(this.a);
-            this.Controls.Add(this.txtLoginAntigo);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.pictureBox1);
@@ -296,12 +273,10 @@
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.Label a;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.TextBox txtSenhaAntigo;
         private System.Windows.Forms.Button btnEntrar;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.LinkLabel linkLabel2;
-        private System.Windows.Forms.TextBox txtLoginAntigo;
         private System.Windows.Forms.ErrorProvider errorProvider1;
         private System.Windows.Forms.CheckBox chkMostrarSenha;
         private System.Windows.Forms.PictureBox pictureBox3;
