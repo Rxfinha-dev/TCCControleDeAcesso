@@ -128,6 +128,9 @@ namespace TCCControleDeAcesso.Views
 
                         CarregarImagemDoAluno(1);
 
+                        dataAtual = DateTime.Now;
+                        idAluno = int.Parse(received);
+
                         log = new Log();
                         log.insert(idAluno, dataAtual, id_escola);
 
@@ -207,6 +210,8 @@ namespace TCCControleDeAcesso.Views
             btnVoltar.ForeColor = Color.White; // texto branco
 
         }
+
+    
 
         private void label1_Click_1(object sender, EventArgs e)
         {

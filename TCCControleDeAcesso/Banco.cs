@@ -108,7 +108,7 @@ namespace TCCControleDeAcesso.Models
                 Command = new MySqlCommand("create table if not exists entradas " +
                     "(id integer primary key auto_increment," +
                     "idAluno int," +
-                    "dataEntrada timestamp," +
+                    "dataEntrada datetime," +
                     "idEscola int," +
                     "foreign key(idAluno) references alunos(id)," +
                     "foreign key(idEscola) references escolas(id))", Connection);
