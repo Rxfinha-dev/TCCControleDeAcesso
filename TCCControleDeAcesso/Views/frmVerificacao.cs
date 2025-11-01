@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 using Org.BouncyCastle.Asn1.Ocsp;
+using TCCControleDeAcesso.Controllers;
 using TCCControleDeAcesso.Models;
 
 namespace TCCControleDeAcesso.Views
@@ -62,41 +63,41 @@ namespace TCCControleDeAcesso.Views
 
         private void CarregarImagemDoAluno(int id)
         {
-            string connectionString = "server=localhost;port=3306;uid=root;pwd=etecjau;database=accesscontrol;"; // Atualize conforme necessário
+           
             string query = "SELECT foto FROM alunos WHERE id = @id";
-
-            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            try
             {
-                try
+                Banco.OpenConnection();
+                Banco.Command = new MySqlCommand(query,Banco.Connection);
+                Banco.Command.Parameters.AddWithValue("@id", id);
+
+                Banco.reader();
+
+                if (Banco.Reader.Read() && !Banco.Reader.IsDBNull(0))
                 {
-                    conn.Open();
-                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                    byte[] imagemBytes = (byte[])Banco.Reader["foto"];
+
+                    using (MemoryStream ms = new MemoryStream(imagemBytes))
                     {
-                        cmd.Parameters.AddWithValue("@id", id);
-
-                        using (MySqlDataReader reader = cmd.ExecuteReader())
-                        {
-                            if (reader.Read() && !reader.IsDBNull(0))
-                            {
-                                byte[] imagemBytes = (byte[])reader["foto"];
-
-                                using (MemoryStream ms = new MemoryStream(imagemBytes))
-                                {
-                                    pictureBox1.Image = Image.FromStream(ms);
-                                }
-                            }
-                            else
-                            {
-                                pictureBox1.Image = null; // ou imagem padrão
-                            }
-                        }
+                        pictureBox1.Image = Image.FromStream(ms);
                     }
                 }
-                catch (Exception ex)
+                else
                 {
-                    MessageBox.Show("Erro ao carregar imagem: " + ex.Message);
+                    pictureBox1.Image = null; // ou imagem padrão
                 }
+
+
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao carregar imagem: " + ex.Message);
+            }
+            finally
+            {
+                Banco.CloseConnection();
+            }
+
         }
 
         private void serialPort_DataReceived(object sender, EventArgs e)
@@ -125,11 +126,11 @@ namespace TCCControleDeAcesso.Views
                             lblCurso.Text = dt.Rows[0]["curso"].ToString();
                         }
 
-
-                        CarregarImagemDoAluno(1);
+                        idAluno = int.Parse(received);
+                        CarregarImagemDoAluno(idAluno);
 
                         dataAtual = DateTime.Now;
-                        idAluno = int.Parse(received);
+                        
 
                         log = new Log();
                         log.insert(idAluno, dataAtual, id_escola);
