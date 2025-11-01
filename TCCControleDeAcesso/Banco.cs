@@ -13,20 +13,25 @@ namespace TCCControleDeAcesso.Models
         public static MySqlCommand Command { get; set; }
       
         public static MySqlDataAdapter DataAdapter { get; set; }
+
+        public static MySqlDataReader Reader { get; set; }
         public static DataTable datTable { get; set; }
+
+        
 
 
         public static void OpenConnection()
         {
             try
             {
-                Connection = new MySqlConnection("server=localhost;port=3307;uid=root;pwd=etecjau;database=accesscontrol;");
+                Connection = new MySqlConnection("server=localhost;port=3306;uid=root;pwd=etecjau;database=accesscontrol;");
                 //Na escola:
                 //pwd=etecjau
                 //port=3307
                 //uid=root
 
-
+                
+                    
 
 
 
@@ -37,6 +42,10 @@ namespace TCCControleDeAcesso.Models
                 MessageBox.Show(e.Message, "Erro Ao Conectar com o Banco", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Console.WriteLine(e.ToString());
             }
+        }
+
+        public static void reader() {
+            Reader = Command.ExecuteReader();
         }
 
         public static void CloseConnection()

@@ -10,6 +10,7 @@ namespace TCCControleDeAcesso
     {
     
 
-        public static string Connection = "server = localhost; port=3307;uid=root;pwd=etecjau;database=AccessControl;";
+        public static string Connection = "server = localhost; port=3306;uid=root;pwd=etecjau;database=AccessControl;";
+
     }
 }

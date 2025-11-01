@@ -46,6 +46,10 @@ namespace TCCControleDeAcesso.Controllers
             {
                 MessageBox.Show(ex.Message, "Erro ao guardar o id ", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            finally
+            {
+                Banco.CloseConnection(); 
+            }
         }
 
         public void PullSenha()

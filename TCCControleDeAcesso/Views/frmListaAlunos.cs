@@ -13,6 +13,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Xml.Linq;
 using TCCControleDeAcesso.Models;
 using System.Runtime.InteropServices;
+using TCCControleDeAcesso.Controllers;
 
 
 namespace TCCControleDeAcesso.Views
@@ -20,6 +21,7 @@ namespace TCCControleDeAcesso.Views
         public partial class frmListaAlunos : Form  
     {
             CadastroAlunos cadastroAlunos;
+            CarregarImagem carregarImagem;
             int id_escola;
             public string caminho;
             string idText;
@@ -61,67 +63,66 @@ namespace TCCControleDeAcesso.Views
         }
         private void CarregarCursos()
         {
-            string conexao = "server=localhost;port=3307;uid=root;pwd=etecjau;database=AccessControl;";
+            
             string query = "SELECT nome FROM cursos where idEscola=@idEscola";
 
-            using (MySqlConnection conn = new MySqlConnection(conexao))
-            {
+           
                 try
                 {
-                    conn.Open();
-                    MySqlCommand cmd = new MySqlCommand(query, conn);
-                    cmd.Parameters.AddWithValue("@idEscola", id_escola);
-                    MySqlDataReader reader = cmd.ExecuteReader();
+                    Banco.OpenConnection();
+                    Banco.Command = new MySqlCommand(query, Banco.Connection);
+                    Banco.Command.Parameters.AddWithValue("@idEscola", id_escola);
+                    Banco.reader();
 
-                    while (reader.Read())
+                    while (Banco.Reader.Read())
                     {
-                        cboCurso.Items.Add(reader["nome"].ToString());
+                        cboCurso.Items.Add(Banco.Reader["nome"].ToString());
                     }
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show("Erro ao carregar cursos: " + ex.Message);
                 }
-            }
+            
         }
 
         private void CarregarImagemDoAluno(string nome)
-        {
-            string connectionString = "server=localhost;port=3307;uid=root;pwd=etecjau;database=AccessControl;"; // Atualize conforme necessário
-            string query = "SELECT foto FROM alunos WHERE nome = @nome";
-
-            using (MySqlConnection conn = new MySqlConnection(connectionString))
-            {
+        {    
+           
+            
                 try
-                {
-                    conn.Open();
-                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                {                   
+                    carregarImagem = new CarregarImagem();
+                    carregarImagem.LoadImage(nome);
+
+                Banco.reader();
+                
+                  if (Banco.Reader.Read() && !Banco.Reader.IsDBNull(0))
+                  {
+                    byte[] imagemBytes = (byte[])Banco.Reader["foto"];
+
+                    using (MemoryStream ms = new MemoryStream(imagemBytes))
                     {
-                        cmd.Parameters.AddWithValue("@nome", nome);
-
-                        using (MySqlDataReader reader = cmd.ExecuteReader())
-                        {
-                            if (reader.Read() && !reader.IsDBNull(0))
-                            {
-                                byte[] imagemBytes = (byte[])reader["foto"];
-
-                                using (MemoryStream ms = new MemoryStream(imagemBytes))
-                                {
-                                    pictureBox1.Image = Image.FromStream(ms);
-                                }
-                            }
-                            else
-                            {
-                                pictureBox1.Image = null; // ou imagem padrão
-                            }
-                        }
+                        pictureBox1.Image = Image.FromStream(ms);
                     }
+                  }
+                  else
+                  {
+                    pictureBox1.Image = null; // ou imagem padrão
+                  }
+                        
+                    
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show("Erro ao carregar imagem: " + ex.Message);
                 }
-            }
+                finally
+                {
+                    Banco.CloseConnection();
+                }
+             
+            
         }
 
         private void btnSave_Click(object sender, EventArgs e)
@@ -337,30 +338,30 @@ namespace TCCControleDeAcesso.Views
 
 
 
-                string connStr = "server=localhost;port=3307;uid=root;pwd=etecjau;database=AccessControl;";
+                
                 int id = 0; // variável para armazenar o resultado
 
-                using (var conn = new MySqlConnection(connStr))
-                {
-                    conn.Open();
 
-                    string sql = "SELECT id FROM alunos where nome=@nome";
-                    using (var cmd = new MySqlCommand(sql, conn))
+
+                Banco.OpenConnection();
+                string query = "SELECT id FROM alunos where nome=@nome";
+                Banco.Command = new MySqlCommand(query, Banco.Connection);
+                      
+
+                    object result = Banco.Command.ExecuteScalar(); // pega a primeira coluna da primeira linha
+                    if (result != null)
                     {
-                        cmd.Parameters.AddWithValue("@nome", txtName.Text);
-
-                        object result = cmd.ExecuteScalar(); // pega a primeira coluna da primeira linha
-                        if (result != null)
-                        {
-                            id = Convert.ToInt32(result);
-                        }
+                        id = Convert.ToInt32(result);
                     }
-                }
+                Banco.CloseConnection();
+                
+                   
+                
 
                 Console.WriteLine("ID encontrado: " + id);
 
                 txtArduino.Text = id.ToString();
-                SerialPortManager.Port.Write("!enroll" + id + "#");
+               // SerialPortManager.Port.Write("!enroll" + id + "#");
 
                 
             }
