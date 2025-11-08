@@ -154,10 +154,10 @@ namespace TCCControleDeAcesso.Views
 
             // Configurações iniciais dos campos
             txtSenha.PasswordChar = true;
-            txtLogin.Texts = "Digite seu Login";
-            txtLogin.ForeColor = Color.Gray;
-            txtSenha.Texts = "Digite sua Senha";
-            txtSenha.ForeColor = Color.Gray;
+            txtLogin.PlaceholderText = "Digite seu Email";
+            txtLogin.PlaceholderColor = Color.Gray;
+            txtSenha.PlaceholderText = "Digite sua Senha";
+            txtSenha.PlaceholderColor= Color.Gray;
 
             // Botões arredondados
             button5.FlatStyle = FlatStyle.Flat;
@@ -252,41 +252,7 @@ namespace TCCControleDeAcesso.Views
         }
 
 
-        private void txtLogin_Leave_1(object sender, EventArgs e)
-        {
-            if (txtLogin.Texts == "")
-            {
-                txtLogin.Texts = "Digite seu Login";
-                txtLogin.ForeColor = Color.Gray;
-            }
-        }
-
-        private void txtLogin_Enter_1(object sender, EventArgs e)
-        {
-            if (txtLogin.Texts == "Digite seu Login")
-            {
-                txtLogin.Texts = "";
-                txtLogin.ForeColor = Color.Gray;
-            }
-        }
-
-        private void txtSenha_Leave_1(object sender, EventArgs e)
-        {
-            if (txtSenha.Texts == "")
-            {
-                txtSenha.Texts = "Digite sua Senha";
-                txtSenha.ForeColor = Color.Gray;
-            }
-        }
-
-        private void txtSenha_Enter_1(object sender, EventArgs e)
-        {
-            if (txtSenha.Texts == "Digite sua Senha")
-            {
-                txtSenha.Texts = "";
-                txtSenha.ForeColor = Color.Gray;
-            }
-        }
+   
 
         private void MostrarSenha_CheckedChanged(object sender, EventArgs e)
         {
@@ -308,6 +274,11 @@ namespace TCCControleDeAcesso.Views
         }
 
         private void txtSenhaAntigo_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtLogin__TextChanged(object sender, EventArgs e)
         {
 
         }

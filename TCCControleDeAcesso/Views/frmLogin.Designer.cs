@@ -157,7 +157,7 @@
             this.chkMostrarSenha.TabIndex = 47;
             this.chkMostrarSenha.Text = "Mostrar senha";
             this.chkMostrarSenha.UseVisualStyleBackColor = false;
-this.chkMostrarSenha.CheckedChanged += new System.EventHandler(this.chkMostrarSenha_CheckedChanged);
+            this.chkMostrarSenha.CheckedChanged += new System.EventHandler(this.chkMostrarSenha_CheckedChanged);
             // 
             // pictureBox3
             // 
@@ -213,6 +213,7 @@ this.chkMostrarSenha.CheckedChanged += new System.EventHandler(this.chkMostrarSe
             this.txtLogin.TabIndex = 51;
             this.txtLogin.Texts = "";
             this.txtLogin.UnderlinedStyle = true;
+            this.txtLogin._TextChanged += new System.EventHandler(this.txtLogin__TextChanged);
             // 
             // picOlho
             // 

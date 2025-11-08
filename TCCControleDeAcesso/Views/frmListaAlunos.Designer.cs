@@ -113,7 +113,7 @@
             // txtArduino
             // 
             this.txtArduino.HideSelection = false;
-            this.txtArduino.Location = new System.Drawing.Point(942, 609);
+            this.txtArduino.Location = new System.Drawing.Point(600, 357);
             this.txtArduino.Name = "txtArduino";
             this.txtArduino.Size = new System.Drawing.Size(100, 20);
             this.txtArduino.TabIndex = 100;
