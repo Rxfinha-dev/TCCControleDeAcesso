@@ -135,6 +135,8 @@ namespace TCCControleDeAcesso.Views
         {
             btnAtivacao.Font = new Font("Segoe UI", 12F, FontStyle.Regular);
         }
+
+      
     }
     
 }

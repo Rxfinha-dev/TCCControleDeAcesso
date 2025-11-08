@@ -17,8 +17,7 @@ namespace TCCControleDeAcesso
         static void Main()
         {
 
-            string usuarioAtual = "admin";
-            int idEscola = 1;
+         
             Application.Run(new Views.frmLogin());
 
         }

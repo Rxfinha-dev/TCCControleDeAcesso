@@ -53,9 +53,9 @@ namespace TCCControleDeAcesso.Views
         public void CleanAll()
         {
             txtId.Clear();
-            txtName.Clear();
-            txtRm.Clear();
-            txtIdade.Clear();
+            txtName.Texts =
+            txtRm.Texts =
+            txtIdade.Texts= "";
             cboCurso.SelectedIndex = -1;
             comboBox2.SelectedIndex = -1;
             txtIdOficial.Clear();
@@ -79,7 +79,7 @@ namespace TCCControleDeAcesso.Views
                         cboCurso.Items.Add(Banco.Reader["nome"].ToString());
                     }
                 }
-                catch (Exception ex)
+                catch (Exception ex) 
                 {
                     MessageBox.Show("Erro ao carregar cursos: " + ex.Message);
                 }
@@ -196,9 +196,9 @@ namespace TCCControleDeAcesso.Views
                 object serie = row.Cells["serie"].Value;
 
                 txtId.Text = idText;
-                txtName.Text = nome;
-                txtRm.Text = rm;
-                txtIdade.Text = idade;
+                txtName.Texts = nome;
+                txtRm.Texts = rm;
+                txtIdade.Texts = idade;
                 cboCurso.SelectedItem = curso;
                 comboBox2.SelectedItem = serie;
 
@@ -315,7 +315,7 @@ namespace TCCControleDeAcesso.Views
             if (UpdateOrCreate == 0)
             {
                 
-                if (txtName.Text == string.Empty || txtRm.Text == string.Empty || txtIdade.Text == string.Empty || comboBox2.SelectedIndex == -1 || caminho == null || cboCurso.SelectedIndex == -1)
+                if (txtName.Texts == string.Empty || txtRm.Texts == string.Empty || txtIdade.Texts == string.Empty || comboBox2.SelectedIndex == -1 || caminho == null || cboCurso.SelectedIndex == -1)
                 {
 
                     MessageBox.Show("Preencha todos os campos.", "Erro de Preenchimento.", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -326,10 +326,10 @@ namespace TCCControleDeAcesso.Views
 
                 cadastroAlunos = new CadastroAlunos()
                 {
-                    Name = txtName.Text,
-                    rm = txtRm.Text,
+                    Name = txtName.Texts,
+                    rm = txtRm.Texts,
                     NomeCurso = cboCurso.SelectedItem.ToString(),
-                    idade = txtIdade.Text,
+                    idade = txtIdade.Texts,
                     serie = comboBox2.SelectedItem.ToString(),
                     foto = File.ReadAllBytes(caminho),
                     idEscola = id_escola
@@ -340,15 +340,17 @@ namespace TCCControleDeAcesso.Views
 
                 
                 int id = 0; // variável para armazenar o resultado
-
+                
 
 
                 Banco.OpenConnection();
                 string query = "SELECT id FROM alunos where nome=@nome";
+              
                 Banco.Command = new MySqlCommand(query, Banco.Connection);
-                      
+                Banco.Command.Parameters.AddWithValue("@nome", txtName.Texts);
 
-                    object result = Banco.Command.ExecuteScalar(); // pega a primeira coluna da primeira linha
+
+                object result = Banco.Command.ExecuteScalar(); // pega a primeira coluna da primeira linha
                     if (result != null)
                     {
                         id = Convert.ToInt32(result);
@@ -371,7 +373,7 @@ namespace TCCControleDeAcesso.Views
                 OpenFileDialog ofd = new OpenFileDialog();
                 ofd.Filter = "Imagens|*.jpg;*.jpeg;*.png;*.bmp";
 
-                CarregarImagemDoAluno(txtName.Text);
+                CarregarImagemDoAluno(txtName.Texts);
                 if (!string.IsNullOrEmpty(caminho))
                 {
                     cadastroAlunos = new CadastroAlunos()
@@ -384,10 +386,10 @@ namespace TCCControleDeAcesso.Views
                 cadastroAlunos = new CadastroAlunos()
                 {
                     Id = int.Parse(idText),
-                    Name = txtName.Text,
-                    rm = txtRm.Text,
+                    Name = txtName.Texts,
+                    rm = txtRm.Texts,
                     NomeCurso = cboCurso.SelectedItem.ToString(),
-                    idade = txtIdade.Text,
+                    idade = txtIdade.Texts,
                     serie = comboBox2.SelectedItem.ToString(),
                     
                     idEscola = id_escola
@@ -414,5 +416,7 @@ namespace TCCControleDeAcesso.Views
 
 
         }
+
+      
     }
 }

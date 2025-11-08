@@ -46,10 +46,10 @@ namespace TCCControleDeAcesso.Views
 
         private void CleanAll()
         {
-            txtConfirmarSenha.Clear();
-            txtEmail.Clear();
-            txtNome.Clear();
-            txtSenha.Clear();
+            txtConfirmarSenha.Texts =
+            txtEmail.Texts =
+            txtNome.Texts =
+            txtSenha.Texts = "";
             txtNome.Focus();
         }
 
@@ -58,9 +58,9 @@ namespace TCCControleDeAcesso.Views
             // acredito que seja esse comando o responsavel pelo envio dos campos para o banco de dados
             _cadastroEmpresas = new CadastroEmpresas()
             {
-                Email = txtEmail.Text,
-                Name = txtNome.Text,
-                Senha = txtSenha.Text,
+                Email = txtEmail.Texts,
+                Name = txtNome.Texts,
+                Senha = txtSenha.Texts,
             };
 
             int count = 0;
@@ -68,7 +68,7 @@ namespace TCCControleDeAcesso.Views
             {
                 Banco.OpenConnection();
                 Banco.Command = new MySqlCommand("SELECT COUNT(*) FROM escolas WHERE email=@email", Banco.Connection);
-                Banco.Command.Parameters.AddWithValue("@email", txtEmail.Text);
+                Banco.Command.Parameters.AddWithValue("@email", txtEmail.Texts);
 
                 count = Convert.ToInt32(Banco.Command.ExecuteScalar());
                 Banco.CloseConnection();
@@ -88,21 +88,21 @@ namespace TCCControleDeAcesso.Views
                 Banco.CloseConnection();
             }
 
-            if (string.IsNullOrWhiteSpace(txtNome.Text) ||
-                string.IsNullOrWhiteSpace(txtEmail.Text) ||
-                string.IsNullOrWhiteSpace(txtSenha.Text) ||
-                string.IsNullOrWhiteSpace(txtConfirmarSenha.Text))
+            if (string.IsNullOrWhiteSpace(txtNome.Texts) ||
+                string.IsNullOrWhiteSpace(txtEmail.Texts) ||
+                string.IsNullOrWhiteSpace(txtSenha.Texts) ||
+                string.IsNullOrWhiteSpace(txtConfirmarSenha.Texts))
             {
                 MessageBox.Show("Todos os campos devem ser preenchidos corretamente!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            int ContSenha = txtSenha.Text.Length;
-                if (txtSenha.Text == txtConfirmarSenha.Text && ContSenha > 8)
+            int ContSenha = txtSenha.Texts.Length;
+                if (txtSenha.Texts == txtConfirmarSenha.Texts && ContSenha > 8)
                 {
                 
 
                     ////------------------Vamos tentar implementar A hash (que está com a salt key incluido ja)------------------//
-                    string senha = txtSenha.Text.Trim();
+                    string senha = txtSenha.Texts.Trim();
 
 
                     // gera hash com salt automático (interno do bcrypt)
@@ -134,7 +134,7 @@ namespace TCCControleDeAcesso.Views
 
 
                     messageBody = "Estamos felizes de termos você conosco! Seu código de ativação de conta é: " + randomCode;
-                    EmailDest = txtEmail.Text;
+                    EmailDest = txtEmail.Texts;
 
                     
                 try
@@ -156,7 +156,7 @@ namespace TCCControleDeAcesso.Views
                         smtp.Credentials = new NetworkCredential(from, pass);
 
                         // Criando a tela de ativação
-                        var frmAC = new frmAtivacaoConta(txtNome.Text, txtEmail.Text, txtEnvioHash.Text);
+                        var frmAC = new frmAtivacaoConta(txtNome.Texts, txtEmail.Texts, txtEnvioHash.Text);
 
                         frmAC.propriedade = textBox1.Text;
 
@@ -175,16 +175,16 @@ namespace TCCControleDeAcesso.Views
                         {
                             MessageBox.Show(ex.Message);
                             btnCadastrar.Enabled = true;
-                            txtSenha.Clear();
-                            txtConfirmarSenha.Clear();
+                        txtSenha.Texts =
+                        txtConfirmarSenha.Texts = "";
                         }
                     }
                     catch (Exception)
                     {
                         MessageBox.Show("Endereço de email inválido!");
                         btnCadastrar.Enabled = true;
-                        txtSenha.Clear();
-                        txtConfirmarSenha.Clear();
+                        txtSenha.Texts =
+                        txtConfirmarSenha.Texts = "";
                     }
                 }
                 else
@@ -212,8 +212,8 @@ namespace TCCControleDeAcesso.Views
             btnVoltar.ForeColor = Color.White;
             btnVoltar.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
 
-            txtSenha.PasswordChar = '*';
-            txtConfirmarSenha.PasswordChar = '*';
+            txtSenha.PasswordChar = true;
+            txtConfirmarSenha.PasswordChar = true;
             CleanAll();
         }
 

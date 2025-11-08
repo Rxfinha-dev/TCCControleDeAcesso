@@ -41,14 +41,14 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.txtName = new System.Windows.Forms.TextBox();
-            this.txtIdade = new System.Windows.Forms.TextBox();
-            this.txtRm = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.btnSave = new System.Windows.Forms.Button();
             this.BtnDelete = new System.Windows.Forms.Button();
-            this.cboCurso = new System.Windows.Forms.ComboBox();
-            this.comboBox2 = new System.Windows.Forms.ComboBox();
+            this.txtName = new RJCodeAdvance.RJControls.RJTextBox();
+            this.txtRm = new RJCodeAdvance.RJControls.RJTextBox();
+            this.txtIdade = new RJCodeAdvance.RJControls.RJTextBox();
+            this.cboCurso = new RJCodeAdvance.RJControls.RJComboBox();
+            this.comboBox2 = new RJCodeAdvance.RJControls.RJComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAlunos)).BeginInit();
             this.SuspendLayout();
@@ -113,7 +113,7 @@
             // txtArduino
             // 
             this.txtArduino.HideSelection = false;
-            this.txtArduino.Location = new System.Drawing.Point(600, 357);
+            this.txtArduino.Location = new System.Drawing.Point(600, 340);
             this.txtArduino.Name = "txtArduino";
             this.txtArduino.Size = new System.Drawing.Size(100, 20);
             this.txtArduino.TabIndex = 100;
@@ -122,7 +122,7 @@
             // txtIdOficial
             // 
             this.txtIdOficial.HideSelection = false;
-            this.txtIdOficial.Location = new System.Drawing.Point(600, 383);
+            this.txtIdOficial.Location = new System.Drawing.Point(600, 366);
             this.txtIdOficial.Name = "txtIdOficial";
             this.txtIdOficial.Size = new System.Drawing.Size(100, 20);
             this.txtIdOficial.TabIndex = 98;
@@ -179,30 +179,6 @@
             this.label4.TabIndex = 88;
             this.label4.Text = "Série:";
             // 
-            // txtName
-            // 
-            this.txtName.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtName.Location = new System.Drawing.Point(600, 409);
-            this.txtName.Name = "txtName";
-            this.txtName.Size = new System.Drawing.Size(493, 25);
-            this.txtName.TabIndex = 89;
-            // 
-            // txtIdade
-            // 
-            this.txtIdade.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtIdade.Location = new System.Drawing.Point(601, 471);
-            this.txtIdade.Name = "txtIdade";
-            this.txtIdade.Size = new System.Drawing.Size(493, 25);
-            this.txtIdade.TabIndex = 96;
-            // 
-            // txtRm
-            // 
-            this.txtRm.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtRm.Location = new System.Drawing.Point(600, 440);
-            this.txtRm.Name = "txtRm";
-            this.txtRm.Size = new System.Drawing.Size(493, 25);
-            this.txtRm.TabIndex = 90;
-            // 
             // label6
             // 
             this.label6.AutoSize = true;
@@ -243,34 +219,113 @@
             this.BtnDelete.UseVisualStyleBackColor = false;
             this.BtnDelete.Click += new System.EventHandler(this.BtnDelete_Click_1);
             // 
+            // txtName
+            // 
+            this.txtName.BackColor = System.Drawing.SystemColors.Window;
+            this.txtName.BorderColor = System.Drawing.Color.DodgerBlue;
+            this.txtName.BorderFocusColor = System.Drawing.Color.DeepSkyBlue;
+            this.txtName.BorderRadius = 0;
+            this.txtName.BorderSize = 2;
+            this.txtName.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtName.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.txtName.Location = new System.Drawing.Point(600, 402);
+            this.txtName.Margin = new System.Windows.Forms.Padding(4);
+            this.txtName.Multiline = false;
+            this.txtName.Name = "txtName";
+            this.txtName.Padding = new System.Windows.Forms.Padding(10, 7, 10, 7);
+            this.txtName.PasswordChar = false;
+            this.txtName.PlaceholderColor = System.Drawing.Color.DarkGray;
+            this.txtName.PlaceholderText = "";
+            this.txtName.Size = new System.Drawing.Size(493, 31);
+            this.txtName.TabIndex = 101;
+            this.txtName.Texts = "";
+            this.txtName.UnderlinedStyle = true;
+            // 
+            // txtRm
+            // 
+            this.txtRm.BackColor = System.Drawing.SystemColors.Window;
+            this.txtRm.BorderColor = System.Drawing.Color.DodgerBlue;
+            this.txtRm.BorderFocusColor = System.Drawing.Color.DeepSkyBlue;
+            this.txtRm.BorderRadius = 0;
+            this.txtRm.BorderSize = 2;
+            this.txtRm.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtRm.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.txtRm.Location = new System.Drawing.Point(600, 433);
+            this.txtRm.Margin = new System.Windows.Forms.Padding(4);
+            this.txtRm.Multiline = false;
+            this.txtRm.Name = "txtRm";
+            this.txtRm.Padding = new System.Windows.Forms.Padding(10, 7, 10, 7);
+            this.txtRm.PasswordChar = false;
+            this.txtRm.PlaceholderColor = System.Drawing.Color.DarkGray;
+            this.txtRm.PlaceholderText = "";
+            this.txtRm.Size = new System.Drawing.Size(493, 31);
+            this.txtRm.TabIndex = 102;
+            this.txtRm.Texts = "";
+            this.txtRm.UnderlinedStyle = true;
+            // 
+            // txtIdade
+            // 
+            this.txtIdade.BackColor = System.Drawing.SystemColors.Window;
+            this.txtIdade.BorderColor = System.Drawing.Color.DodgerBlue;
+            this.txtIdade.BorderFocusColor = System.Drawing.Color.DeepSkyBlue;
+            this.txtIdade.BorderRadius = 0;
+            this.txtIdade.BorderSize = 2;
+            this.txtIdade.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtIdade.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.txtIdade.Location = new System.Drawing.Point(600, 464);
+            this.txtIdade.Margin = new System.Windows.Forms.Padding(4);
+            this.txtIdade.Multiline = false;
+            this.txtIdade.Name = "txtIdade";
+            this.txtIdade.Padding = new System.Windows.Forms.Padding(10, 7, 10, 7);
+            this.txtIdade.PasswordChar = false;
+            this.txtIdade.PlaceholderColor = System.Drawing.Color.DarkGray;
+            this.txtIdade.PlaceholderText = "";
+            this.txtIdade.Size = new System.Drawing.Size(493, 31);
+            this.txtIdade.TabIndex = 103;
+            this.txtIdade.Texts = "";
+            this.txtIdade.UnderlinedStyle = true;
+            // 
             // cboCurso
             // 
-            this.cboCurso.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cboCurso.FormattingEnabled = true;
-            this.cboCurso.Items.AddRange(new object[] {
-            "Administração\t",
-            "Desenvolvimento de Sistemas",
-            "Edificações",
-            "Informática",
-            "Mecânica",
-            "Mecatronica"});
-            this.cboCurso.Location = new System.Drawing.Point(600, 502);
+            this.cboCurso.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.cboCurso.BorderColor = System.Drawing.Color.DodgerBlue;
+            this.cboCurso.BorderSize = 2;
+            this.cboCurso.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboCurso.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.cboCurso.ForeColor = System.Drawing.Color.DimGray;
+            this.cboCurso.IconColor = System.Drawing.Color.DodgerBlue;
+            this.cboCurso.ListBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(228)))), ((int)(((byte)(245)))));
+            this.cboCurso.ListTextColor = System.Drawing.Color.DimGray;
+            this.cboCurso.Location = new System.Drawing.Point(601, 501);
+            this.cboCurso.MinimumSize = new System.Drawing.Size(200, 30);
             this.cboCurso.Name = "cboCurso";
-            this.cboCurso.Size = new System.Drawing.Size(203, 25);
-            this.cboCurso.TabIndex = 92;
+            this.cboCurso.Padding = new System.Windows.Forms.Padding(2);
+            this.cboCurso.Size = new System.Drawing.Size(200, 30);
+            this.cboCurso.TabIndex = 104;
+            this.cboCurso.Texts = "";
             // 
             // comboBox2
             // 
-            this.comboBox2.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.comboBox2.FormattingEnabled = true;
+            this.comboBox2.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.comboBox2.BorderColor = System.Drawing.Color.DodgerBlue;
+            this.comboBox2.BorderSize = 2;
+            this.comboBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.comboBox2.ForeColor = System.Drawing.Color.DimGray;
+            this.comboBox2.IconColor = System.Drawing.Color.DodgerBlue;
             this.comboBox2.Items.AddRange(new object[] {
-            "1° Ano",
-            "2° Ano",
-            "3° Ano"});
-            this.comboBox2.Location = new System.Drawing.Point(890, 502);
+            "1º Ano",
+            "2º Ano",
+            "3º Ano"});
+            this.comboBox2.ListBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(228)))), ((int)(((byte)(245)))));
+            this.comboBox2.ListTextColor = System.Drawing.Color.DimGray;
+            this.comboBox2.Location = new System.Drawing.Point(893, 501);
+            this.comboBox2.MinimumSize = new System.Drawing.Size(200, 30);
             this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(203, 25);
-            this.comboBox2.TabIndex = 93;
+            this.comboBox2.Padding = new System.Windows.Forms.Padding(2);
+            this.comboBox2.Size = new System.Drawing.Size(200, 30);
+            this.comboBox2.TabIndex = 105;
+            this.comboBox2.Texts = "";
             // 
             // frmListaAlunos
             // 
@@ -279,6 +334,11 @@
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.BackgroundImage = global::TCCControleDeAcesso.Properties.Resources.Design_sem_nome__7_;
             this.ClientSize = new System.Drawing.Size(1607, 1061);
+            this.Controls.Add(this.comboBox2);
+            this.Controls.Add(this.cboCurso);
+            this.Controls.Add(this.txtIdade);
+            this.Controls.Add(this.txtRm);
+            this.Controls.Add(this.txtName);
             this.Controls.Add(this.dgvAlunos);
             this.Controls.Add(this.txtArduino);
             this.Controls.Add(this.txtIdOficial);
@@ -287,14 +347,9 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label4);
-            this.Controls.Add(this.txtName);
-            this.Controls.Add(this.txtIdade);
-            this.Controls.Add(this.txtRm);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.BtnDelete);
-            this.Controls.Add(this.cboCurso);
-            this.Controls.Add(this.comboBox2);
             this.Controls.Add(this.btnVoltar);
             this.Controls.Add(this.txtId);
             this.Controls.Add(this.linkSelectPhoto);
@@ -324,13 +379,13 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox txtName;
-        private System.Windows.Forms.TextBox txtIdade;
-        private System.Windows.Forms.TextBox txtRm;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Button BtnDelete;
-        private System.Windows.Forms.ComboBox cboCurso;
-        private System.Windows.Forms.ComboBox comboBox2;
+        private RJCodeAdvance.RJControls.RJTextBox txtName;
+        private RJCodeAdvance.RJControls.RJTextBox txtRm;
+        private RJCodeAdvance.RJControls.RJTextBox txtIdade;
+        private RJCodeAdvance.RJControls.RJComboBox cboCurso;
+        private RJCodeAdvance.RJControls.RJComboBox comboBox2;
     }
 }

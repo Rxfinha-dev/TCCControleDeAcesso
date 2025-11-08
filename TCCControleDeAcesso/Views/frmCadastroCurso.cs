@@ -31,7 +31,7 @@ namespace TCCControleDeAcesso.Views
         public void LimparCampos()
         {
             txtId.Clear();
-            txtNome.Clear();
+            txtNome.Texts = "";
         }
         public void CarregarGrid()
         {
@@ -39,14 +39,14 @@ namespace TCCControleDeAcesso.Views
         }
         private void btnCadastrar_Click(object sender, EventArgs e)
         {
-            if(txtNome.Text == "")
+            if(txtNome.Texts == "")
             {
                 MessageBox.Show("Preencha o Campo", "Aviso!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             _curso = new Curso()
             {
-                Name = txtNome.Text
+                Name = txtNome.Texts
             };
             _curso.Insert(id_escola);
             CarregarGrid();
@@ -77,7 +77,7 @@ namespace TCCControleDeAcesso.Views
               
 
                
-                txtNome.Text = nome;
+                txtNome.Texts = nome;
                 txtId.Text = idText;
 
             }
@@ -118,6 +118,11 @@ namespace TCCControleDeAcesso.Views
             check.Show();
             Close();
             CarregarGrid();
+        }
+
+        private void txtNome_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

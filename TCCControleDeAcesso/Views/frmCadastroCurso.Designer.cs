@@ -29,11 +29,11 @@
         private void InitializeComponent()
         {
             this.txtId = new System.Windows.Forms.TextBox();
-            this.txtNome = new System.Windows.Forms.TextBox();
             this.btnCadastrar = new System.Windows.Forms.Button();
             this.dgvCursos = new System.Windows.Forms.DataGridView();
             this.btnVoltar = new System.Windows.Forms.Button();
             this.btnDelete = new System.Windows.Forms.Button();
+            this.txtNome = new RJCodeAdvance.RJControls.RJTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCursos)).BeginInit();
             this.SuspendLayout();
             // 
@@ -44,13 +44,6 @@
             this.txtId.Size = new System.Drawing.Size(171, 20);
             this.txtId.TabIndex = 0;
             this.txtId.Visible = false;
-            // 
-            // txtNome
-            // 
-            this.txtNome.Location = new System.Drawing.Point(886, 403);
-            this.txtNome.Name = "txtNome";
-            this.txtNome.Size = new System.Drawing.Size(171, 20);
-            this.txtNome.TabIndex = 1;
             // 
             // btnCadastrar
             // 
@@ -98,6 +91,28 @@
             this.btnDelete.UseVisualStyleBackColor = false;
             this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
             // 
+            // txtNome
+            // 
+            this.txtNome.BackColor = System.Drawing.SystemColors.Window;
+            this.txtNome.BorderColor = System.Drawing.Color.DodgerBlue;
+            this.txtNome.BorderFocusColor = System.Drawing.Color.DeepSkyBlue;
+            this.txtNome.BorderRadius = 0;
+            this.txtNome.BorderSize = 2;
+            this.txtNome.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtNome.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.txtNome.Location = new System.Drawing.Point(845, 421);
+            this.txtNome.Margin = new System.Windows.Forms.Padding(4);
+            this.txtNome.Multiline = false;
+            this.txtNome.Name = "txtNome";
+            this.txtNome.Padding = new System.Windows.Forms.Padding(10, 7, 10, 7);
+            this.txtNome.PasswordChar = false;
+            this.txtNome.PlaceholderColor = System.Drawing.Color.DarkGray;
+            this.txtNome.PlaceholderText = "";
+            this.txtNome.Size = new System.Drawing.Size(250, 31);
+            this.txtNome.TabIndex = 49;
+            this.txtNome.Texts = "";
+            this.txtNome.UnderlinedStyle = true;
+            // 
             // frmCadastroCurso
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 14F);
@@ -105,11 +120,11 @@
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.BackgroundImage = global::TCCControleDeAcesso.Properties.Resources.Design_sem_nome__7_;
             this.ClientSize = new System.Drawing.Size(1565, 850);
+            this.Controls.Add(this.txtNome);
             this.Controls.Add(this.btnVoltar);
             this.Controls.Add(this.btnDelete);
             this.Controls.Add(this.dgvCursos);
             this.Controls.Add(this.btnCadastrar);
-            this.Controls.Add(this.txtNome);
             this.Controls.Add(this.txtId);
             this.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "frmCadastroCurso";
@@ -123,12 +138,11 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.TextBox txtId;
-        private System.Windows.Forms.TextBox txtNome;
         private System.Windows.Forms.Button btnCadastrar;
         private System.Windows.Forms.DataGridView dgvCursos;
         private System.Windows.Forms.Button btnVoltar;
         private System.Windows.Forms.Button btnDelete;
+        private RJCodeAdvance.RJControls.RJTextBox txtNome;
+        private System.Windows.Forms.TextBox txtId;
     }
 }

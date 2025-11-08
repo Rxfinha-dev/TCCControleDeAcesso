@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.txtAtivacao = new System.Windows.Forms.TextBox();
             this.lblConfirmacao = new System.Windows.Forms.Label();
             this.btnAtivacao = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
@@ -36,16 +35,9 @@
             this.btnEntrar = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.txtAtivacao = new RJCodeAdvance.RJControls.RJTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
-            // 
-            // txtAtivacao
-            // 
-            this.txtAtivacao.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtAtivacao.Location = new System.Drawing.Point(900, 496);
-            this.txtAtivacao.Name = "txtAtivacao";
-            this.txtAtivacao.Size = new System.Drawing.Size(209, 20);
-            this.txtAtivacao.TabIndex = 9;
             // 
             // lblConfirmacao
             // 
@@ -63,7 +55,7 @@
             this.btnAtivacao.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.btnAtivacao.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnAtivacao.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnAtivacao.Location = new System.Drawing.Point(936, 524);
+            this.btnAtivacao.Location = new System.Drawing.Point(936, 537);
             this.btnAtivacao.Name = "btnAtivacao";
             this.btnAtivacao.Size = new System.Drawing.Size(137, 43);
             this.btnAtivacao.TabIndex = 12;
@@ -123,18 +115,40 @@
             this.pictureBox1.TabIndex = 42;
             this.pictureBox1.TabStop = false;
             // 
+            // txtAtivacao
+            // 
+            this.txtAtivacao.BackColor = System.Drawing.SystemColors.Window;
+            this.txtAtivacao.BorderColor = System.Drawing.Color.DodgerBlue;
+            this.txtAtivacao.BorderFocusColor = System.Drawing.Color.DeepSkyBlue;
+            this.txtAtivacao.BorderRadius = 0;
+            this.txtAtivacao.BorderSize = 2;
+            this.txtAtivacao.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtAtivacao.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.txtAtivacao.Location = new System.Drawing.Point(881, 497);
+            this.txtAtivacao.Margin = new System.Windows.Forms.Padding(4);
+            this.txtAtivacao.Multiline = false;
+            this.txtAtivacao.Name = "txtAtivacao";
+            this.txtAtivacao.Padding = new System.Windows.Forms.Padding(10, 7, 10, 7);
+            this.txtAtivacao.PasswordChar = false;
+            this.txtAtivacao.PlaceholderColor = System.Drawing.Color.DarkGray;
+            this.txtAtivacao.PlaceholderText = "";
+            this.txtAtivacao.Size = new System.Drawing.Size(250, 31);
+            this.txtAtivacao.TabIndex = 52;
+            this.txtAtivacao.Texts = "";
+            this.txtAtivacao.UnderlinedStyle = true;
+            // 
             // frmAtivacaoConta
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.ClientSize = new System.Drawing.Size(1456, 847);
+            this.Controls.Add(this.txtAtivacao);
             this.Controls.Add(this.btnEntrar);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.btnAtivacao);
-            this.Controls.Add(this.txtAtivacao);
             this.Controls.Add(this.lblConfirmacao);
             this.Controls.Add(this.pictureBox1);
             this.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -150,7 +164,6 @@
         }
 
         #endregion
-        private System.Windows.Forms.TextBox txtAtivacao;
         private System.Windows.Forms.Label lblConfirmacao;
         private System.Windows.Forms.Button btnAtivacao;
         private System.Windows.Forms.TextBox textBox1;
@@ -158,5 +171,6 @@
         private System.Windows.Forms.Button btnEntrar;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label label2;
+        private RJCodeAdvance.RJControls.RJTextBox txtAtivacao;
     }
 }
