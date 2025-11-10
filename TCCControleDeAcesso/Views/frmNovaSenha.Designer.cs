@@ -31,20 +31,20 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.btnVerify = new System.Windows.Forms.Button();
-            this.txtEmailDestinatario = new System.Windows.Forms.TextBox();
-            this.txtCodeVerify = new System.Windows.Forms.TextBox();
             this.btnEnviarEmail = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
+            this.txtEmailDestinatario = new RJCodeAdvance.RJControls.RJTextBox();
+            this.txtCodeVerify = new RJCodeAdvance.RJControls.RJTextBox();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
             // 
             this.panel1.BackgroundImage = global::TCCControleDeAcesso.Properties.Resources.Design_sem_nome__13_1;
+            this.panel1.Controls.Add(this.txtCodeVerify);
+            this.panel1.Controls.Add(this.txtEmailDestinatario);
             this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.btnVerify);
-            this.panel1.Controls.Add(this.txtEmailDestinatario);
-            this.panel1.Controls.Add(this.txtCodeVerify);
             this.panel1.Controls.Add(this.btnEnviarEmail);
             this.panel1.Controls.Add(this.label2);
             this.panel1.Location = new System.Drawing.Point(785, 230);
@@ -75,20 +75,6 @@
             this.btnVerify.UseVisualStyleBackColor = true;
             this.btnVerify.Click += new System.EventHandler(this.btnVerify_Click);
             // 
-            // txtEmailDestinatario
-            // 
-            this.txtEmailDestinatario.Location = new System.Drawing.Point(68, 282);
-            this.txtEmailDestinatario.Name = "txtEmailDestinatario";
-            this.txtEmailDestinatario.Size = new System.Drawing.Size(325, 20);
-            this.txtEmailDestinatario.TabIndex = 3;
-            // 
-            // txtCodeVerify
-            // 
-            this.txtCodeVerify.Location = new System.Drawing.Point(68, 335);
-            this.txtCodeVerify.Name = "txtCodeVerify";
-            this.txtCodeVerify.Size = new System.Drawing.Size(325, 20);
-            this.txtCodeVerify.TabIndex = 10;
-            // 
             // btnEnviarEmail
             // 
             this.btnEnviarEmail.BackColor = System.Drawing.SystemColors.ControlLightLight;
@@ -111,6 +97,50 @@
             this.label2.Size = new System.Drawing.Size(194, 18);
             this.label2.TabIndex = 9;
             this.label2.Text = "Digite o Código de verificação:";
+            // 
+            // txtEmailDestinatario
+            // 
+            this.txtEmailDestinatario.BackColor = System.Drawing.SystemColors.Window;
+            this.txtEmailDestinatario.BorderColor = System.Drawing.Color.DodgerBlue;
+            this.txtEmailDestinatario.BorderFocusColor = System.Drawing.Color.DeepSkyBlue;
+            this.txtEmailDestinatario.BorderRadius = 0;
+            this.txtEmailDestinatario.BorderSize = 2;
+            this.txtEmailDestinatario.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtEmailDestinatario.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.txtEmailDestinatario.Location = new System.Drawing.Point(68, 279);
+            this.txtEmailDestinatario.Margin = new System.Windows.Forms.Padding(4);
+            this.txtEmailDestinatario.Multiline = false;
+            this.txtEmailDestinatario.Name = "txtEmailDestinatario";
+            this.txtEmailDestinatario.Padding = new System.Windows.Forms.Padding(10, 7, 10, 7);
+            this.txtEmailDestinatario.PasswordChar = false;
+            this.txtEmailDestinatario.PlaceholderColor = System.Drawing.Color.DarkGray;
+            this.txtEmailDestinatario.PlaceholderText = "";
+            this.txtEmailDestinatario.Size = new System.Drawing.Size(325, 31);
+            this.txtEmailDestinatario.TabIndex = 49;
+            this.txtEmailDestinatario.Texts = "";
+            this.txtEmailDestinatario.UnderlinedStyle = true;
+            // 
+            // txtCodeVerify
+            // 
+            this.txtCodeVerify.BackColor = System.Drawing.SystemColors.Window;
+            this.txtCodeVerify.BorderColor = System.Drawing.Color.DodgerBlue;
+            this.txtCodeVerify.BorderFocusColor = System.Drawing.Color.DeepSkyBlue;
+            this.txtCodeVerify.BorderRadius = 0;
+            this.txtCodeVerify.BorderSize = 2;
+            this.txtCodeVerify.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtCodeVerify.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.txtCodeVerify.Location = new System.Drawing.Point(68, 336);
+            this.txtCodeVerify.Margin = new System.Windows.Forms.Padding(4);
+            this.txtCodeVerify.Multiline = false;
+            this.txtCodeVerify.Name = "txtCodeVerify";
+            this.txtCodeVerify.Padding = new System.Windows.Forms.Padding(10, 7, 10, 7);
+            this.txtCodeVerify.PasswordChar = false;
+            this.txtCodeVerify.PlaceholderColor = System.Drawing.Color.DarkGray;
+            this.txtCodeVerify.PlaceholderText = "";
+            this.txtCodeVerify.Size = new System.Drawing.Size(325, 31);
+            this.txtCodeVerify.TabIndex = 50;
+            this.txtCodeVerify.Texts = "";
+            this.txtCodeVerify.UnderlinedStyle = true;
             // 
             // frmNovaSenha
             // 
@@ -135,11 +165,11 @@
         #endregion
 
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox txtEmailDestinatario;
         private System.Windows.Forms.Button btnEnviarEmail;
         private System.Windows.Forms.Button btnVerify;
-        private System.Windows.Forms.TextBox txtCodeVerify;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Panel panel1;
+        private RJCodeAdvance.RJControls.RJTextBox txtEmailDestinatario;
+        private RJCodeAdvance.RJControls.RJTextBox txtCodeVerify;
     }
 }

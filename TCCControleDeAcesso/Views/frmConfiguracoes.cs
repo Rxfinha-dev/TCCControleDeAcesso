@@ -11,6 +11,7 @@ using System.IO.Ports;
 using System.Web.UI;
 using TCCControleDeAcesso.Models;
 using System.Management;
+using RJCodeAdvance.RJControls;
 
 namespace TCCControleDeAcesso.Views
 {
@@ -24,7 +25,7 @@ namespace TCCControleDeAcesso.Views
             listCom(comboBoxPortas);
         }
 
-        private void listCom(ComboBox combo)
+        private void listCom(RJComboBox combo)
         {
             var portList = new Dictionary<string, string>();
             try
@@ -53,7 +54,7 @@ namespace TCCControleDeAcesso.Views
                 combo.DisplayMember = "Value";
                 combo.ValueMember = "Key";
                 var comUsb = portList.FirstOrDefault(par => par.Value.StartsWith("USB", StringComparison.OrdinalIgnoreCase));
-                combo.SelectedValue = comUsb.Key;
+                combo.SelectedItem = comUsb.Key;
             }
             else
             {
@@ -64,7 +65,7 @@ namespace TCCControleDeAcesso.Views
         private void bntConectar_Click(object sender, EventArgs e)
         {
             comboBoxPortas.Enabled = false;
-            if (comboBoxPortas.SelectedValue != null)
+            if (comboBoxPortas.SelectedItem != null)
             {
                 if (!connected)
                 {
@@ -79,9 +80,9 @@ namespace TCCControleDeAcesso.Views
 
         void connect()
         {
-            string selectedPort = comboBoxPortas.SelectedValue.ToString();
+            string selectedPort = comboBoxPortas.SelectedItem.ToString();
             comboBoxPortas.Enabled = false;
-            selectedPort = comboBoxPortas.SelectedValue.ToString();
+            selectedPort = comboBoxPortas.SelectedItem.ToString();
             SerialPortManager.Port.PortName = selectedPort;
             SerialPortManager.Port.Open();
             connected = true;
@@ -97,5 +98,7 @@ namespace TCCControleDeAcesso.Views
             bntConectar.Text = "Conectar";
             comboBoxPortas.Enabled = true;
         }
+
+       
     }
 }

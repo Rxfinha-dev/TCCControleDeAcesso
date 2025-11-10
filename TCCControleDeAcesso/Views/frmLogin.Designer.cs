@@ -42,13 +42,11 @@
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.txtSenha = new RJCodeAdvance.RJControls.RJTextBox();
             this.txtLogin = new RJCodeAdvance.RJControls.RJTextBox();
-            this.picOlho = new System.Windows.Forms.PictureBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picOlho)).BeginInit();
             this.flowLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -144,6 +142,7 @@
             this.pictureBox1.Size = new System.Drawing.Size(1202, 1412);
             this.pictureBox1.TabIndex = 44;
             this.pictureBox1.TabStop = false;
+            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
             // chkMostrarSenha
             // 
@@ -215,16 +214,6 @@
             this.txtLogin.UnderlinedStyle = true;
             this.txtLogin._TextChanged += new System.EventHandler(this.txtLogin__TextChanged);
             // 
-            // picOlho
-            // 
-            this.picOlho.Image = global::TCCControleDeAcesso.Properties.Resources.olho_aberto;
-            this.picOlho.Location = new System.Drawing.Point(1301, 676);
-            this.picOlho.Name = "picOlho";
-            this.picOlho.Size = new System.Drawing.Size(23, 20);
-            this.picOlho.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.picOlho.TabIndex = 52;
-            this.picOlho.TabStop = false;
-            // 
             // flowLayoutPanel1
             // 
             this.flowLayoutPanel1.Controls.Add(this.button5);
@@ -242,7 +231,6 @@
             this.BackgroundImage = global::TCCControleDeAcesso.Properties.Resources.Design_sem_nome7;
             this.ClientSize = new System.Drawing.Size(1828, 841);
             this.Controls.Add(this.flowLayoutPanel1);
-            this.Controls.Add(this.picOlho);
             this.Controls.Add(this.txtLogin);
             this.Controls.Add(this.txtSenha);
             this.Controls.Add(this.pictureBox3);
@@ -262,7 +250,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picOlho)).EndInit();
             this.flowLayoutPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -283,7 +270,6 @@
         private System.Windows.Forms.PictureBox pictureBox3;
         private RJCodeAdvance.RJControls.RJTextBox txtLogin;
         private RJCodeAdvance.RJControls.RJTextBox txtSenha;
-        private System.Windows.Forms.PictureBox picOlho;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
     }
 }

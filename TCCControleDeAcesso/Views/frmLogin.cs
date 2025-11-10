@@ -37,9 +37,9 @@ namespace TCCControleDeAcesso.Views
         Image senha_invisivel = Properties.Resources.olho_fechado_24;
 
         // VARIÁVEIS DE ANIMAÇÃO
-        private Timer animacaoOlho;
-        private float escalaOlho = 1f;
-        private bool animandoAbertura = false;
+        
+      
+      
 
         // DECLARAÇÃO ÚNICA DA VARIÁVEL senhaVisivel
         private bool senhaVisivel = false;
@@ -174,50 +174,7 @@ namespace TCCControleDeAcesso.Views
             button5.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, button5.Width, button5.Height, 20, 20));
             btnEntrar.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, btnEntrar.Width, btnEntrar.Height, 20, 20));
 
-            // ---------- Ícone do Olho ----------
-            picOlho.SizeMode = PictureBoxSizeMode.Zoom;
-            picOlho.Image = senha_invisivel;
-            picOlho.Cursor = Cursors.Hand;
-            picOlho.BackColor = Color.Transparent;
-
-            // Posiciona o olho à direita do campo de senha
-            picOlho.Left = txtSenha.Right - 25;
-            picOlho.Top = txtSenha.Top + 5;
-            picOlho.BringToFront();
-
-            // Sincroniza o estado da checkbox e do ícone
-            chkMostrarSenha.Checked = false;
-            senhaVisivel = false;
-
-            // ---------- ANIMAÇÃO DO OLHO ----------
-            animacaoOlho = new Timer();
-            animacaoOlho.Interval = 15; // velocidade da animação
-            animacaoOlho.Tick += (s, ev) =>
-            {
-                if (animandoAbertura)
-                {
-                    escalaOlho += 0.05f;
-                    if (escalaOlho >= 1.1f)
-                    {
-                        escalaOlho = 1f;
-                        animacaoOlho.Stop();
-                    }
-                }
-                else
-                {
-                    escalaOlho -= 0.05f;
-                    if (escalaOlho <= 0.9f)
-                    {
-                        escalaOlho = 1f;
-                        animacaoOlho.Stop();
-                    }
-                }
-
-                // Redesenha com zoom leve (efeito "piscar")
-                picOlho.Width = (int)(24 * escalaOlho);
-                picOlho.Height = (int)(24 * escalaOlho);
-            };
-
+           
         }
 
         private void picOlho_Click(object sender, EventArgs e)
@@ -225,12 +182,11 @@ namespace TCCControleDeAcesso.Views
             senhaVisivel = !senhaVisivel;
 
             txtSenha.PasswordChar = !senhaVisivel;
-            picOlho.Image = senhaVisivel ? senha_visivel : senha_invisivel;
+           
             chkMostrarSenha.Checked = senhaVisivel;
 
-            // dispara a animação
-            animandoAbertura = senhaVisivel;
-            animacaoOlho.Start();
+            
+        
         }
 
 
@@ -239,7 +195,7 @@ namespace TCCControleDeAcesso.Views
             senhaVisivel = chkMostrarSenha.Checked;
 
             txtSenha.PasswordChar = !senhaVisivel;
-            picOlho.Image = senhaVisivel ? senha_visivel : senha_invisivel;
+           
         }
 
 
@@ -279,6 +235,11 @@ namespace TCCControleDeAcesso.Views
         }
 
         private void txtLogin__TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
         {
 
         }

@@ -44,7 +44,7 @@ namespace TCCControleDeAcesso.Views
                 Banco.Command = new MySqlCommand("SELECT COUNT(*) FROM escolas WHERE email=@email", Banco.Connection);
 
 
-                Banco.Command.Parameters.AddWithValue("@email", txtEmailDestinatario.Text);
+                Banco.Command.Parameters.AddWithValue("@email", txtEmailDestinatario.Texts);
                 
 
 
@@ -64,7 +64,7 @@ namespace TCCControleDeAcesso.Views
                     from = "suportehelpus75@gmail.com"; // Email do remetente
                     pass = "raot mngl bxqx hceb";     // Senha de App
                     messageBody = "Seu código de verificação é: " + randomCode;
-                    to = txtEmailDestinatario.Text; // Obtendo o e-mail do destinatário
+                    to = txtEmailDestinatario.Texts; // Obtendo o e-mail do destinatário
                     message.To.Add(to);                                                                 //deu erro == Escrever a linha de cima e essa novamente
                     message.From = new MailAddress(from);
                     message.Body = messageBody;
@@ -110,10 +110,10 @@ namespace TCCControleDeAcesso.Views
 
         private void btnVerify_Click(object sender, EventArgs e)
         {
-            if (randomCode == (txtCodeVerify.Text).ToString())
+            if (randomCode == (txtCodeVerify.Texts).ToString())
             {
-                to = txtEmailDestinatario.Text;
-                frmTrocandoSenha rp = new frmTrocandoSenha(txtEmailDestinatario.Text);
+                to = txtEmailDestinatario.Texts;
+                frmTrocandoSenha rp = new frmTrocandoSenha(txtEmailDestinatario.Texts);
                 this.Hide();
                 rp.Show();
 
@@ -121,7 +121,7 @@ namespace TCCControleDeAcesso.Views
            else
             {
                 MessageBox.Show("Código de verificação inválido, tente novamente.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                txtCodeVerify.Text = "";
+                txtCodeVerify.Texts = "";
             }
         }
 
@@ -153,6 +153,8 @@ namespace TCCControleDeAcesso.Views
             btnVerify.ForeColor = Color.White; // texto branco
 
         }
+
+        
     }
 }
 

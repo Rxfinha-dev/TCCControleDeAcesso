@@ -49,20 +49,20 @@ namespace TCCControleDeAcesso.Views
         {
             if (chkBoxMostrarSenha.Checked)
             {
-                txtNovaSenha.PasswordChar = '\u0000';
-                txtNovaSenha2.PasswordChar = '\u0000';
+                txtNovaSenha.PasswordChar = false;
+                txtNovaSenha2.PasswordChar = false;
             }
             else
             {
-                txtNovaSenha.PasswordChar = '*';
-                txtNovaSenha2.PasswordChar = '*';
+                txtNovaSenha.PasswordChar = true;
+                txtNovaSenha2.PasswordChar = true;
             }
         }
 
         private void frmTrocandoSenha_Load(object sender, EventArgs e)
         {
-            txtNovaSenha.PasswordChar = '*';
-            txtNovaSenha2.PasswordChar = '*';
+            txtNovaSenha.PasswordChar = true;
+            txtNovaSenha2.PasswordChar = true;
 
             btnAlterarSenha.Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, btnAlterarSenha.Width, btnAlterarSenha.Height, 20, 20));
             btnAlterarSenha.FlatStyle = FlatStyle.Flat;
@@ -76,16 +76,16 @@ namespace TCCControleDeAcesso.Views
         {
             //////////////////////////
             ///
-            int ContSenha = txtNovaSenha.Text.Length;
+            int ContSenha = txtNovaSenha.Texts.Length;
 
-            if (txtNovaSenha.Text == txtNovaSenha2.Text && ContSenha > 8 )
+            if (txtNovaSenha.Texts == txtNovaSenha2.Texts && ContSenha > 8 )
             {
 
                 ////------------------Vamos tentar implementar A hash (que está com a salt key incluido ja)------------------//
 
 
 
-                string senha = txtNovaSenha.Text.Trim();
+                string senha = txtNovaSenha.Texts.Trim();
 
 
 
@@ -116,8 +116,8 @@ namespace TCCControleDeAcesso.Views
                 MessageBox.Show("As senhas inseridas são diferentes ou a senha não tem a quantidade miníma de 8 caracteres", "ERRO", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
             }
-            txtNovaSenha.Text = "";
-            txtNovaSenha2.Text = "";
+            txtNovaSenha.Texts = "";
+            txtNovaSenha2.Texts = "";
 
 
 

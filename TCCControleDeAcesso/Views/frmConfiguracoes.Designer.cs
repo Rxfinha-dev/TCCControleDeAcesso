@@ -30,8 +30,8 @@
         {
             this.bntConectar = new System.Windows.Forms.Button();
             this.progressBarConectado = new System.Windows.Forms.ProgressBar();
-            this.comboBoxPortas = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.comboBoxPortas = new RJCodeAdvance.RJControls.RJComboBox();
             this.SuspendLayout();
             // 
             // bntConectar
@@ -58,17 +58,6 @@
             this.progressBarConectado.Step = 100;
             this.progressBarConectado.TabIndex = 1;
             // 
-            // comboBoxPortas
-            // 
-            this.comboBoxPortas.DropDownWidth = 456;
-            this.comboBoxPortas.Font = new System.Drawing.Font("Arial", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.comboBoxPortas.FormattingEnabled = true;
-            this.comboBoxPortas.Location = new System.Drawing.Point(80, 128);
-            this.comboBoxPortas.Margin = new System.Windows.Forms.Padding(4);
-            this.comboBoxPortas.Name = "comboBoxPortas";
-            this.comboBoxPortas.Size = new System.Drawing.Size(228, 32);
-            this.comboBoxPortas.TabIndex = 2;
-            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -81,14 +70,33 @@
             this.label1.Text = "Conexão com o Arduino";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // comboBoxPortas
+            // 
+            this.comboBoxPortas.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.comboBoxPortas.BorderColor = System.Drawing.Color.DodgerBlue;
+            this.comboBoxPortas.BorderSize = 2;
+            this.comboBoxPortas.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxPortas.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.comboBoxPortas.ForeColor = System.Drawing.Color.DimGray;
+            this.comboBoxPortas.IconColor = System.Drawing.Color.DodgerBlue;
+            this.comboBoxPortas.ListBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(228)))), ((int)(((byte)(245)))));
+            this.comboBoxPortas.ListTextColor = System.Drawing.Color.DimGray;
+            this.comboBoxPortas.Location = new System.Drawing.Point(80, 127);
+            this.comboBoxPortas.MinimumSize = new System.Drawing.Size(200, 30);
+            this.comboBoxPortas.Name = "comboBoxPortas";
+            this.comboBoxPortas.Padding = new System.Windows.Forms.Padding(2);
+            this.comboBoxPortas.Size = new System.Drawing.Size(228, 34);
+            this.comboBoxPortas.TabIndex = 106;
+            this.comboBoxPortas.Texts = "";
+            // 
             // frmConfiguracoes
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.ClientSize = new System.Drawing.Size(384, 261);
-            this.Controls.Add(this.label1);
             this.Controls.Add(this.comboBoxPortas);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.bntConectar);
             this.Controls.Add(this.progressBarConectado);
             this.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -104,7 +112,7 @@
 
         private System.Windows.Forms.Button bntConectar;
         private System.Windows.Forms.ProgressBar progressBarConectado;
-        private System.Windows.Forms.ComboBox comboBoxPortas;
         private System.Windows.Forms.Label label1;
+        private RJCodeAdvance.RJControls.RJComboBox comboBoxPortas;
     }
 }
