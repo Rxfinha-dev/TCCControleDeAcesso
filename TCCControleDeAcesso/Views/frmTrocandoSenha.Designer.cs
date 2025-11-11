@@ -31,11 +31,14 @@
             this.btnAlterarSenha = new System.Windows.Forms.Button();
             this.chkBoxMostrarSenha = new System.Windows.Forms.CheckBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.button1 = new System.Windows.Forms.Button();
+            this.txtNovaSenha2 = new RJCodeAdvance.RJControls.RJTextBox();
+            this.txtNovaSenha = new RJCodeAdvance.RJControls.RJTextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.txtNovaSenha = new RJCodeAdvance.RJControls.RJTextBox();
-            this.txtNovaSenha2 = new RJCodeAdvance.RJControls.RJTextBox();
             this.panel1.SuspendLayout();
+            this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnAlterarSenha
@@ -66,6 +69,7 @@
             // panel1
             // 
             this.panel1.BackgroundImage = global::TCCControleDeAcesso.Properties.Resources.Design_sem_nome__13_1;
+            this.panel1.Controls.Add(this.panel2);
             this.panel1.Controls.Add(this.txtNovaSenha2);
             this.panel1.Controls.Add(this.txtNovaSenha);
             this.panel1.Controls.Add(this.label1);
@@ -77,47 +81,26 @@
             this.panel1.Size = new System.Drawing.Size(476, 558);
             this.panel1.TabIndex = 13;
             // 
-            // label1
+            // panel2
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(66, 277);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(84, 18);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Nova senha:";
+            this.panel2.Controls.Add(this.button1);
+            this.panel2.Location = new System.Drawing.Point(10, 489);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(40, 59);
+            this.panel2.TabIndex = 59;
             // 
-            // label4
+            // button1
             // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(66, 334);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(141, 18);
-            this.label4.TabIndex = 9;
-            this.label4.Text = "Repetir a nova senha:";
-            // 
-            // txtNovaSenha
-            // 
-            this.txtNovaSenha.BackColor = System.Drawing.SystemColors.Window;
-            this.txtNovaSenha.BorderColor = System.Drawing.Color.DodgerBlue;
-            this.txtNovaSenha.BorderFocusColor = System.Drawing.Color.DeepSkyBlue;
-            this.txtNovaSenha.BorderRadius = 0;
-            this.txtNovaSenha.BorderSize = 2;
-            this.txtNovaSenha.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtNovaSenha.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.txtNovaSenha.Location = new System.Drawing.Point(69, 299);
-            this.txtNovaSenha.Margin = new System.Windows.Forms.Padding(4);
-            this.txtNovaSenha.Multiline = false;
-            this.txtNovaSenha.Name = "txtNovaSenha";
-            this.txtNovaSenha.Padding = new System.Windows.Forms.Padding(10, 7, 10, 7);
-            this.txtNovaSenha.PasswordChar = false;
-            this.txtNovaSenha.PlaceholderColor = System.Drawing.Color.DarkGray;
-            this.txtNovaSenha.PlaceholderText = "";
-            this.txtNovaSenha.Size = new System.Drawing.Size(344, 31);
-            this.txtNovaSenha.TabIndex = 48;
-            this.txtNovaSenha.Texts = "";
-            this.txtNovaSenha.UnderlinedStyle = true;
+            this.button1.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.button1.BackgroundImage = global::TCCControleDeAcesso.Properties.Resources.sair;
+            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button1.Location = new System.Drawing.Point(-18, -3);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(62, 70);
+            this.button1.TabIndex = 57;
+            this.button1.UseVisualStyleBackColor = false;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // txtNovaSenha2
             // 
@@ -141,6 +124,48 @@
             this.txtNovaSenha2.Texts = "";
             this.txtNovaSenha2.UnderlinedStyle = true;
             // 
+            // txtNovaSenha
+            // 
+            this.txtNovaSenha.BackColor = System.Drawing.SystemColors.Window;
+            this.txtNovaSenha.BorderColor = System.Drawing.Color.DodgerBlue;
+            this.txtNovaSenha.BorderFocusColor = System.Drawing.Color.DeepSkyBlue;
+            this.txtNovaSenha.BorderRadius = 0;
+            this.txtNovaSenha.BorderSize = 2;
+            this.txtNovaSenha.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtNovaSenha.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.txtNovaSenha.Location = new System.Drawing.Point(69, 299);
+            this.txtNovaSenha.Margin = new System.Windows.Forms.Padding(4);
+            this.txtNovaSenha.Multiline = false;
+            this.txtNovaSenha.Name = "txtNovaSenha";
+            this.txtNovaSenha.Padding = new System.Windows.Forms.Padding(10, 7, 10, 7);
+            this.txtNovaSenha.PasswordChar = false;
+            this.txtNovaSenha.PlaceholderColor = System.Drawing.Color.DarkGray;
+            this.txtNovaSenha.PlaceholderText = "";
+            this.txtNovaSenha.Size = new System.Drawing.Size(344, 31);
+            this.txtNovaSenha.TabIndex = 48;
+            this.txtNovaSenha.Texts = "";
+            this.txtNovaSenha.UnderlinedStyle = true;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(66, 277);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(84, 18);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Nova senha:";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(66, 334);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(141, 18);
+            this.label4.TabIndex = 9;
+            this.label4.Text = "Repetir a nova senha:";
+            // 
             // frmTrocandoSenha
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 14F);
@@ -156,6 +181,7 @@
             this.Load += new System.EventHandler(this.frmTrocandoSenha_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            this.panel2.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -169,5 +195,7 @@
         private System.Windows.Forms.Label label4;
         private RJCodeAdvance.RJControls.RJTextBox txtNovaSenha2;
         private RJCodeAdvance.RJControls.RJTextBox txtNovaSenha;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Button button1;
     }
 }

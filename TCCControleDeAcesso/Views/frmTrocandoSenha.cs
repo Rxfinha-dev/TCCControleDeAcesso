@@ -70,6 +70,8 @@ namespace TCCControleDeAcesso.Views
             btnAlterarSenha.BackColor = Color.FromArgb(52, 188, 251); // #34BCFB
             btnAlterarSenha.ForeColor = Color.White; // texto branco
 
+            button1.Cursor = Cursors.Hand;
+
         }
 
         private void btnAlterarSenha_Click(object sender, EventArgs e)
@@ -124,9 +126,11 @@ namespace TCCControleDeAcesso.Views
             ////------------------fim da implementação------------------//
         }
 
-
-
-
-
+        private void button1_Click(object sender, EventArgs e)
+        {
+            this.Close();
+            frmLogin frmLogin = new frmLogin();
+            frmLogin.ShowDialog();
+        }
     }
 }

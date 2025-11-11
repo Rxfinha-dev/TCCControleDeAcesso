@@ -198,7 +198,7 @@ namespace TCCControleDeAcesso.Views
         private void frmCadastroEmpresa_Load(object sender, EventArgs e)
         {
             btnCadastrar.Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, btnCadastrar.Width, btnCadastrar.Height, 20, 20));
-            btnVoltar.Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, btnVoltar.Width, btnVoltar.Height, 20, 20));
+            btnIconeVoltar.Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, btnIconeVoltar.Width, btnIconeVoltar.Height, 20, 20));
 
             btnCadastrar.FlatStyle = FlatStyle.Flat;
             btnCadastrar.FlatAppearance.BorderSize = 1;  // sem borda
@@ -206,23 +206,25 @@ namespace TCCControleDeAcesso.Views
             btnCadastrar.ForeColor = Color.White;
             btnCadastrar.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
 
-            btnVoltar.FlatStyle = FlatStyle.Flat;
-            btnVoltar.FlatAppearance.BorderSize = 1;
-            btnVoltar.BackColor = Color.FromArgb(52, 188, 251); // #34BCFB
-            btnVoltar.ForeColor = Color.White;
-            btnVoltar.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            btnIconeVoltar.FlatStyle = FlatStyle.Flat;
+            btnIconeVoltar.FlatAppearance.BorderSize = 1;
+            btnIconeVoltar.BackColor = Color.FromArgb(52, 188, 251); // #34BCFB
+            btnIconeVoltar.ForeColor = Color.White;
+            btnIconeVoltar.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
 
             txtSenha.PasswordChar = true;
             txtConfirmarSenha.PasswordChar = true;
             CleanAll();
+
+            btnIconeVoltar.Cursor = Cursors.Hand;
+
         }
 
-        private void btnVoltar_Click(object sender, EventArgs e)
+        private void btnIconeVoltar_Click(object sender, EventArgs e)
         {
             this.Close();
             frmLogin frmLogin = new frmLogin();
             frmLogin.ShowDialog();
- 
         }
     }
 }

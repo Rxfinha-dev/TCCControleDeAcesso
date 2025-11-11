@@ -35,13 +35,15 @@
             this.btnCadastrar = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.txtEnvioHash = new System.Windows.Forms.TextBox();
-            this.btnVoltar = new System.Windows.Forms.Button();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.txtNome = new RJCodeAdvance.RJControls.RJTextBox();
             this.txtEmail = new RJCodeAdvance.RJControls.RJTextBox();
             this.txtSenha = new RJCodeAdvance.RJControls.RJTextBox();
             this.txtConfirmarSenha = new RJCodeAdvance.RJControls.RJTextBox();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.btnIconeVoltar = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
+            this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // label6
@@ -89,7 +91,7 @@
             this.btnCadastrar.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.btnCadastrar.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnCadastrar.Font = new System.Drawing.Font("Arial", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCadastrar.Location = new System.Drawing.Point(896, 722);
+            this.btnCadastrar.Location = new System.Drawing.Point(980, 739);
             this.btnCadastrar.Name = "btnCadastrar";
             this.btnCadastrar.Size = new System.Drawing.Size(167, 56);
             this.btnCadastrar.TabIndex = 37;
@@ -100,7 +102,7 @@
             // textBox1
             // 
             this.textBox1.Enabled = false;
-            this.textBox1.Location = new System.Drawing.Point(1014, 782);
+            this.textBox1.Location = new System.Drawing.Point(1167, 754);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(100, 20);
             this.textBox1.TabIndex = 48;
@@ -109,24 +111,11 @@
             // txtEnvioHash
             // 
             this.txtEnvioHash.Enabled = false;
-            this.txtEnvioHash.Location = new System.Drawing.Point(1014, 793);
+            this.txtEnvioHash.Location = new System.Drawing.Point(1167, 765);
             this.txtEnvioHash.Name = "txtEnvioHash";
             this.txtEnvioHash.Size = new System.Drawing.Size(100, 20);
             this.txtEnvioHash.TabIndex = 49;
             this.txtEnvioHash.Visible = false;
-            // 
-            // btnVoltar
-            // 
-            this.btnVoltar.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.btnVoltar.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnVoltar.Font = new System.Drawing.Font("Arial", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnVoltar.Location = new System.Drawing.Point(1069, 722);
-            this.btnVoltar.Name = "btnVoltar";
-            this.btnVoltar.Size = new System.Drawing.Size(168, 56);
-            this.btnVoltar.TabIndex = 50;
-            this.btnVoltar.Text = "Voltar";
-            this.btnVoltar.UseVisualStyleBackColor = false;
-            this.btnVoltar.Click += new System.EventHandler(this.btnVoltar_Click);
             // 
             // pictureBox3
             // 
@@ -225,17 +214,38 @@
             this.txtConfirmarSenha.Texts = "";
             this.txtConfirmarSenha.UnderlinedStyle = true;
             // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.btnIconeVoltar);
+            this.panel2.Location = new System.Drawing.Point(832, 759);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(40, 59);
+            this.panel2.TabIndex = 59;
+            // 
+            // btnIconeVoltar
+            // 
+            this.btnIconeVoltar.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.btnIconeVoltar.BackgroundImage = global::TCCControleDeAcesso.Properties.Resources.sair;
+            this.btnIconeVoltar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnIconeVoltar.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnIconeVoltar.Location = new System.Drawing.Point(-18, -3);
+            this.btnIconeVoltar.Name = "btnIconeVoltar";
+            this.btnIconeVoltar.Size = new System.Drawing.Size(62, 70);
+            this.btnIconeVoltar.TabIndex = 57;
+            this.btnIconeVoltar.UseVisualStyleBackColor = false;
+            this.btnIconeVoltar.Click += new System.EventHandler(this.btnIconeVoltar_Click);
+            // 
             // frmCadastroEmpresa
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.ClientSize = new System.Drawing.Size(1793, 1003);
+            this.Controls.Add(this.panel2);
             this.Controls.Add(this.txtConfirmarSenha);
             this.Controls.Add(this.txtSenha);
             this.Controls.Add(this.txtEmail);
             this.Controls.Add(this.txtNome);
-            this.Controls.Add(this.btnVoltar);
             this.Controls.Add(this.txtEnvioHash);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label6);
@@ -251,6 +261,7 @@
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.frmCadastroEmpresa_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
+            this.panel2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -265,11 +276,12 @@
         private System.Windows.Forms.Button btnCadastrar;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.TextBox txtEnvioHash;
-        private System.Windows.Forms.Button btnVoltar;
         private System.Windows.Forms.PictureBox pictureBox3;
         private RJCodeAdvance.RJControls.RJTextBox txtNome;
         private RJCodeAdvance.RJControls.RJTextBox txtEmail;
         private RJCodeAdvance.RJControls.RJTextBox txtSenha;
         private RJCodeAdvance.RJControls.RJTextBox txtConfirmarSenha;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Button btnIconeVoltar;
     }
 }

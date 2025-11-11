@@ -32,7 +32,6 @@
             this.linkSelectPhoto = new System.Windows.Forms.LinkLabel();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.btnVoltar = new System.Windows.Forms.Button();
             this.dgvAlunos = new System.Windows.Forms.DataGridView();
             this.txtArduino = new System.Windows.Forms.TextBox();
             this.txtIdOficial = new System.Windows.Forms.TextBox();
@@ -49,8 +48,11 @@
             this.txtIdade = new RJCodeAdvance.RJControls.RJTextBox();
             this.cboCurso = new RJCodeAdvance.RJControls.RJComboBox();
             this.comboBox2 = new RJCodeAdvance.RJControls.RJComboBox();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.btnVoltar = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAlunos)).BeginInit();
+            this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // txtId
@@ -87,19 +89,6 @@
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 71;
             this.pictureBox1.TabStop = false;
-            // 
-            // btnVoltar
-            // 
-            this.btnVoltar.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.btnVoltar.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnVoltar.Font = new System.Drawing.Font("Dubai", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnVoltar.Location = new System.Drawing.Point(855, 990);
-            this.btnVoltar.Name = "btnVoltar";
-            this.btnVoltar.Size = new System.Drawing.Size(150, 50);
-            this.btnVoltar.TabIndex = 83;
-            this.btnVoltar.Text = "VOLTAR";
-            this.btnVoltar.UseVisualStyleBackColor = false;
-            this.btnVoltar.Click += new System.EventHandler(this.btnVoltar_Click);
             // 
             // dgvAlunos
             // 
@@ -327,13 +316,35 @@
             this.comboBox2.TabIndex = 105;
             this.comboBox2.Texts = "";
             // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.btnVoltar);
+            this.panel2.Location = new System.Drawing.Point(12, -3);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(40, 59);
+            this.panel2.TabIndex = 107;
+            // 
+            // btnVoltar
+            // 
+            this.btnVoltar.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.btnVoltar.BackgroundImage = global::TCCControleDeAcesso.Properties.Resources.sair;
+            this.btnVoltar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnVoltar.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnVoltar.Location = new System.Drawing.Point(-18, -3);
+            this.btnVoltar.Name = "btnVoltar";
+            this.btnVoltar.Size = new System.Drawing.Size(62, 70);
+            this.btnVoltar.TabIndex = 57;
+            this.btnVoltar.UseVisualStyleBackColor = false;
+            this.btnVoltar.Click += new System.EventHandler(this.btnVoltar_Click_1);
+            // 
             // frmListaAlunos
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.BackgroundImage = global::TCCControleDeAcesso.Properties.Resources.Design_sem_nome__7_;
-            this.ClientSize = new System.Drawing.Size(1607, 1061);
+            this.BackgroundImage = global::TCCControleDeAcesso.Properties.Resources.Design_sem_nome__1_2;
+            this.ClientSize = new System.Drawing.Size(1904, 1061);
+            this.Controls.Add(this.panel2);
             this.Controls.Add(this.comboBox2);
             this.Controls.Add(this.cboCurso);
             this.Controls.Add(this.txtIdade);
@@ -350,7 +361,6 @@
             this.Controls.Add(this.label6);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.BtnDelete);
-            this.Controls.Add(this.btnVoltar);
             this.Controls.Add(this.txtId);
             this.Controls.Add(this.linkSelectPhoto);
             this.Controls.Add(this.pictureBox1);
@@ -360,6 +370,7 @@
             this.Load += new System.EventHandler(this.frmListaAlunos_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAlunos)).EndInit();
+            this.panel2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -370,7 +381,6 @@
         private System.Windows.Forms.LinkLabel linkSelectPhoto;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
-        private System.Windows.Forms.Button btnVoltar;
         private System.Windows.Forms.DataGridView dgvAlunos;
         private System.Windows.Forms.TextBox txtArduino;
         private System.Windows.Forms.TextBox txtIdOficial;
@@ -387,5 +397,7 @@
         private RJCodeAdvance.RJControls.RJTextBox txtIdade;
         private RJCodeAdvance.RJControls.RJComboBox cboCurso;
         private RJCodeAdvance.RJControls.RJComboBox comboBox2;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Button btnVoltar;
     }
 }

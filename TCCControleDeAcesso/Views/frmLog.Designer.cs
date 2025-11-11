@@ -29,8 +29,10 @@
         private void InitializeComponent()
         {
             this.dgvLog = new System.Windows.Forms.DataGridView();
-            this.backBtn = new System.Windows.Forms.Button();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.button1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvLog)).BeginInit();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // dgvLog
@@ -43,17 +45,25 @@
             this.dgvLog.TabIndex = 0;
             this.dgvLog.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvLog_CellContentClick);
             // 
-            // backBtn
+            // panel1
             // 
-            this.backBtn.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.backBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.backBtn.Image = global::TCCControleDeAcesso.Properties.Resources.sair__1_;
-            this.backBtn.Location = new System.Drawing.Point(41, 907);
-            this.backBtn.Name = "backBtn";
-            this.backBtn.Size = new System.Drawing.Size(77, 68);
-            this.backBtn.TabIndex = 1;
-            this.backBtn.UseVisualStyleBackColor = false;
-            this.backBtn.Click += new System.EventHandler(this.backBtn_Click);
+            this.panel1.Controls.Add(this.button1);
+            this.panel1.Location = new System.Drawing.Point(13, -2);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(40, 59);
+            this.panel1.TabIndex = 59;
+            // 
+            // button1
+            // 
+            this.button1.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.button1.BackgroundImage = global::TCCControleDeAcesso.Properties.Resources.sair;
+            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button1.Location = new System.Drawing.Point(-18, -3);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(62, 70);
+            this.button1.TabIndex = 57;
+            this.button1.UseVisualStyleBackColor = false;
             // 
             // frmLog
             // 
@@ -62,13 +72,14 @@
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.BackgroundImage = global::TCCControleDeAcesso.Properties.Resources.Design_sem_nome__7_;
             this.ClientSize = new System.Drawing.Size(1721, 973);
-            this.Controls.Add(this.backBtn);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.dgvLog);
             this.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "frmLog";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.frmLog_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvLog)).EndInit();
+            this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -76,6 +87,7 @@
         #endregion
 
         private System.Windows.Forms.DataGridView dgvLog;
-        private System.Windows.Forms.Button backBtn;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Button button1;
     }
 }

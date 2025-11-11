@@ -149,17 +149,13 @@ namespace TCCControleDeAcesso.Views
             BtnDelete.BackColor = Color.FromArgb(52, 188, 251); // #34BCFB
             BtnDelete.ForeColor = Color.White; // texto branco
 
-            btnVoltar.Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, btnVoltar.Width, btnVoltar.Height, 20, 20));
-            btnVoltar.FlatStyle = FlatStyle.Flat;
-            btnVoltar.FlatAppearance.BorderSize = 1;  // sem borda
-            btnVoltar.BackColor = Color.FromArgb(52, 188, 251); // #34BCFB
-            btnVoltar.ForeColor = Color.White; // texto branco
-
             btnSave.Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, btnSave.Width, btnSave.Height, 20, 20));
             btnSave.FlatStyle = FlatStyle.Flat;
             btnSave.FlatAppearance.BorderSize = 1;  // sem borda
             btnSave.BackColor = Color.FromArgb(52, 188, 251); // #34BCFB
             btnSave.ForeColor = Color.White; // texto branco
+
+            btnVoltar.Cursor = Cursors.Hand;
 
         }
 
@@ -417,6 +413,11 @@ namespace TCCControleDeAcesso.Views
 
         }
 
-      
+        private void btnVoltar_Click_1(object sender, EventArgs e)
+        {
+            this.Close();
+            frmLogin frmLogin = new frmLogin();
+            frmLogin.ShowDialog();
+        }
     }
 }

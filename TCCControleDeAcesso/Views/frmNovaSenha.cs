@@ -152,9 +152,16 @@ namespace TCCControleDeAcesso.Views
             btnVerify.BackColor = Color.FromArgb(52, 188, 251); // #34BCFB
             btnVerify.ForeColor = Color.White; // texto branco
 
+            btnVoltar.Cursor = Cursors.Hand;
+
         }
 
-        
+        private void btnVoltar_Click(object sender, EventArgs e)
+        {
+            this.Close();
+            frmLogin frmLogin = new frmLogin();
+            frmLogin.ShowDialog();
+        }
     }
 }
 
