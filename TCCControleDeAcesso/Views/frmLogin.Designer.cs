@@ -79,7 +79,7 @@
             this.btnEntrar.Location = new System.Drawing.Point(146, 3);
             this.btnEntrar.Name = "btnEntrar";
             this.btnEntrar.Size = new System.Drawing.Size(137, 55);
-            this.btnEntrar.TabIndex = 40;
+            this.btnEntrar.TabIndex = 53;
             this.btnEntrar.Text = "Entrar";
             this.btnEntrar.UseVisualStyleBackColor = false;
             this.btnEntrar.Click += new System.EventHandler(this.btnEntrar_Click);
@@ -91,7 +91,7 @@
             this.button5.Location = new System.Drawing.Point(3, 3);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(137, 55);
-            this.button5.TabIndex = 41;
+            this.button5.TabIndex = 52;
             this.button5.Text = "Esqueci minha senha";
             this.button5.UseVisualStyleBackColor = false;
             this.button5.Click += new System.EventHandler(this.button5_Click);
@@ -115,7 +115,7 @@
             this.linkLabel2.Location = new System.Drawing.Point(1425, 794);
             this.linkLabel2.Name = "linkLabel2";
             this.linkLabel2.Size = new System.Drawing.Size(81, 16);
-            this.linkLabel2.TabIndex = 43;
+            this.linkLabel2.TabIndex = 54;
             this.linkLabel2.TabStop = true;
             this.linkLabel2.Text = "Cadastre-se";
             this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked);
@@ -153,7 +153,7 @@
             this.chkMostrarSenha.Location = new System.Drawing.Point(1330, 675);
             this.chkMostrarSenha.Name = "chkMostrarSenha";
             this.chkMostrarSenha.Size = new System.Drawing.Size(112, 21);
-            this.chkMostrarSenha.TabIndex = 47;
+            this.chkMostrarSenha.TabIndex = 51;
             this.chkMostrarSenha.Text = "Mostrar senha";
             this.chkMostrarSenha.UseVisualStyleBackColor = false;
             this.chkMostrarSenha.CheckedChanged += new System.EventHandler(this.chkMostrarSenha_CheckedChanged);
@@ -187,7 +187,7 @@
             this.txtSenha.PlaceholderColor = System.Drawing.Color.DarkGray;
             this.txtSenha.PlaceholderText = "";
             this.txtSenha.Size = new System.Drawing.Size(250, 31);
-            this.txtSenha.TabIndex = 50;
+            this.txtSenha.TabIndex = 55;
             this.txtSenha.Texts = "";
             this.txtSenha.UnderlinedStyle = true;
             // 
@@ -209,7 +209,7 @@
             this.txtLogin.PlaceholderColor = System.Drawing.Color.DarkGray;
             this.txtLogin.PlaceholderText = "";
             this.txtLogin.Size = new System.Drawing.Size(250, 31);
-            this.txtLogin.TabIndex = 51;
+            this.txtLogin.TabIndex = 50;
             this.txtLogin.Texts = "";
             this.txtLogin.UnderlinedStyle = true;
             this.txtLogin._TextChanged += new System.EventHandler(this.txtLogin__TextChanged);

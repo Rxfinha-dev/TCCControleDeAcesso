@@ -18,7 +18,7 @@ namespace TCCControleDeAcesso
         {
 
          
-            Application.Run(new Views.frmListaAlunos("", 0));
+            Application.Run(new Views.frmLogin());
 
         }
     }
