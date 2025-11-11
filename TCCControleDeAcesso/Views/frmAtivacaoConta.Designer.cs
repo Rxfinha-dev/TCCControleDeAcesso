@@ -125,7 +125,7 @@
             this.txtAtivacaoo.BorderSize = 2;
             this.txtAtivacaoo.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtAtivacaoo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.txtAtivacaoo.Location = new System.Drawing.Point(589, 379);
+            this.txtAtivacaoo.Location = new System.Drawing.Point(911, 502);
             this.txtAtivacaoo.Margin = new System.Windows.Forms.Padding(4);
             this.txtAtivacaoo.Multiline = false;
             this.txtAtivacaoo.Name = "txtAtivacaoo";
@@ -133,16 +133,17 @@
             this.txtAtivacaoo.PasswordChar = false;
             this.txtAtivacaoo.PlaceholderColor = System.Drawing.Color.DarkGray;
             this.txtAtivacaoo.PlaceholderText = "";
-            this.txtAtivacaoo.Size = new System.Drawing.Size(250, 31);
+            this.txtAtivacaoo.Size = new System.Drawing.Size(192, 31);
             this.txtAtivacaoo.TabIndex = 52;
             this.txtAtivacaoo.Texts = "";
             this.txtAtivacaoo.UnderlinedStyle = true;
             // 
             // txtAtivacao
             // 
-            this.txtAtivacao.Location = new System.Drawing.Point(910, 511);
+            this.txtAtivacao.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtAtivacao.Location = new System.Drawing.Point(910, 516);
             this.txtAtivacao.Name = "txtAtivacao";
-            this.txtAtivacao.Size = new System.Drawing.Size(192, 20);
+            this.txtAtivacao.Size = new System.Drawing.Size(192, 13);
             this.txtAtivacao.TabIndex = 20;
             // 
             // frmAtivacaoConta
