@@ -136,6 +136,7 @@
             this.txtAtivacao.TabIndex = 52;
             this.txtAtivacao.Texts = "";
             this.txtAtivacao.UnderlinedStyle = true;
+            this.txtAtivacao._TextChanged += new System.EventHandler(this.txtAtivacao__TextChanged);
             // 
             // frmAtivacaoConta
             // 
