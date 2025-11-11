@@ -35,7 +35,8 @@
             this.btnEntrar = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.txtAtivacao = new RJCodeAdvance.RJControls.RJTextBox();
+            this.txtAtivacaoo = new RJCodeAdvance.RJControls.RJTextBox();
+            this.txtAtivacao = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -115,27 +116,34 @@
             this.pictureBox1.TabIndex = 42;
             this.pictureBox1.TabStop = false;
             // 
+            // txtAtivacaoo
+            // 
+            this.txtAtivacaoo.BackColor = System.Drawing.SystemColors.Window;
+            this.txtAtivacaoo.BorderColor = System.Drawing.Color.DodgerBlue;
+            this.txtAtivacaoo.BorderFocusColor = System.Drawing.Color.DeepSkyBlue;
+            this.txtAtivacaoo.BorderRadius = 0;
+            this.txtAtivacaoo.BorderSize = 2;
+            this.txtAtivacaoo.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtAtivacaoo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.txtAtivacaoo.Location = new System.Drawing.Point(589, 379);
+            this.txtAtivacaoo.Margin = new System.Windows.Forms.Padding(4);
+            this.txtAtivacaoo.Multiline = false;
+            this.txtAtivacaoo.Name = "txtAtivacaoo";
+            this.txtAtivacaoo.Padding = new System.Windows.Forms.Padding(10, 7, 10, 7);
+            this.txtAtivacaoo.PasswordChar = false;
+            this.txtAtivacaoo.PlaceholderColor = System.Drawing.Color.DarkGray;
+            this.txtAtivacaoo.PlaceholderText = "";
+            this.txtAtivacaoo.Size = new System.Drawing.Size(250, 31);
+            this.txtAtivacaoo.TabIndex = 52;
+            this.txtAtivacaoo.Texts = "";
+            this.txtAtivacaoo.UnderlinedStyle = true;
+            // 
             // txtAtivacao
             // 
-            this.txtAtivacao.BackColor = System.Drawing.SystemColors.Window;
-            this.txtAtivacao.BorderColor = System.Drawing.Color.DodgerBlue;
-            this.txtAtivacao.BorderFocusColor = System.Drawing.Color.DeepSkyBlue;
-            this.txtAtivacao.BorderRadius = 0;
-            this.txtAtivacao.BorderSize = 2;
-            this.txtAtivacao.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtAtivacao.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.txtAtivacao.Location = new System.Drawing.Point(881, 497);
-            this.txtAtivacao.Margin = new System.Windows.Forms.Padding(4);
-            this.txtAtivacao.Multiline = false;
+            this.txtAtivacao.Location = new System.Drawing.Point(910, 511);
             this.txtAtivacao.Name = "txtAtivacao";
-            this.txtAtivacao.Padding = new System.Windows.Forms.Padding(10, 7, 10, 7);
-            this.txtAtivacao.PasswordChar = false;
-            this.txtAtivacao.PlaceholderColor = System.Drawing.Color.DarkGray;
-            this.txtAtivacao.PlaceholderText = "";
-            this.txtAtivacao.Size = new System.Drawing.Size(250, 31);
-            this.txtAtivacao.TabIndex = 52;
-            this.txtAtivacao.Texts = "";
-            this.txtAtivacao.UnderlinedStyle = true;
+            this.txtAtivacao.Size = new System.Drawing.Size(192, 20);
+            this.txtAtivacao.TabIndex = 20;
             // 
             // frmAtivacaoConta
             // 
@@ -144,6 +152,7 @@
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.ClientSize = new System.Drawing.Size(1456, 847);
             this.Controls.Add(this.txtAtivacao);
+            this.Controls.Add(this.txtAtivacaoo);
             this.Controls.Add(this.btnEntrar);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -171,6 +180,7 @@
         private System.Windows.Forms.Button btnEntrar;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label label2;
-        private RJCodeAdvance.RJControls.RJTextBox txtAtivacao;
+        private RJCodeAdvance.RJControls.RJTextBox txtAtivacaoo;
+        private System.Windows.Forms.TextBox txtAtivacao;
     }
 }
