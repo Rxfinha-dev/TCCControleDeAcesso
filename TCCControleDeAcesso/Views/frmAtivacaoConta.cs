@@ -84,7 +84,7 @@ namespace TCCControleDeAcesso.Views
         {
 
 
-            if (txtAtivacao.Text == (textBox1.Text.Trim().ToString()))
+            if (txtAtivacao.Texts == (textBox1.Text.Trim().ToString()))
             {
                 MessageBox.Show("Sua conta foi ativada!", "Ativação da conta", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
@@ -137,6 +137,11 @@ namespace TCCControleDeAcesso.Views
         }
 
         private void txtAtivacao__TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtAtivacao__TextChanged_1(object sender, EventArgs e)
         {
 
         }

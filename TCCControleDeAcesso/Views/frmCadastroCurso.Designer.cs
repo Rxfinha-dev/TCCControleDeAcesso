@@ -34,7 +34,7 @@
             this.btnDelete = new System.Windows.Forms.Button();
             this.txtNome = new RJCodeAdvance.RJControls.RJTextBox();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btnVoltar = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCursos)).BeginInit();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -105,24 +105,24 @@
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.button1);
+            this.panel1.Controls.Add(this.btnVoltar);
             this.panel1.Location = new System.Drawing.Point(10, -6);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(40, 59);
             this.panel1.TabIndex = 59;
             // 
-            // button1
+            // btnVoltar
             // 
-            this.button1.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.button1.BackgroundImage = global::TCCControleDeAcesso.Properties.Resources.sair;
-            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(-18, -3);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(62, 70);
-            this.button1.TabIndex = 57;
-            this.button1.UseVisualStyleBackColor = false;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.btnVoltar.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.btnVoltar.BackgroundImage = global::TCCControleDeAcesso.Properties.Resources.sair;
+            this.btnVoltar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnVoltar.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnVoltar.Location = new System.Drawing.Point(-18, -3);
+            this.btnVoltar.Name = "btnVoltar";
+            this.btnVoltar.Size = new System.Drawing.Size(62, 70);
+            this.btnVoltar.TabIndex = 57;
+            this.btnVoltar.UseVisualStyleBackColor = false;
+            this.btnVoltar.Click += new System.EventHandler(this.button1_Click);
             // 
             // frmCadastroCurso
             // 
@@ -156,6 +156,6 @@
         private RJCodeAdvance.RJControls.RJTextBox txtNome;
         private System.Windows.Forms.TextBox txtId;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnVoltar;
     }
 }

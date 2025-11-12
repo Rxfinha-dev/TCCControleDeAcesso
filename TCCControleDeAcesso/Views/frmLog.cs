@@ -49,5 +49,13 @@ namespace TCCControleDeAcesso.Views
             Close();
             
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            frmMainMenu check = new frmMainMenu(_currentUsername, id_escola);
+            check.Show();
+            Close();
+            carregarGrid();
+        }
     }
 }

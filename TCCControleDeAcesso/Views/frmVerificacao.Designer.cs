@@ -209,15 +209,16 @@
             // btnVoltar
             // 
             this.btnVoltar.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.btnVoltar.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnVoltar.Font = new System.Drawing.Font("Dubai", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnVoltar.Location = new System.Drawing.Point(496, 754);
+            this.btnVoltar.BackgroundImage = global::TCCControleDeAcesso.Properties.Resources.sair;
+            this.btnVoltar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnVoltar.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnVoltar.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.btnVoltar.Location = new System.Drawing.Point(-8, -9);
             this.btnVoltar.Name = "btnVoltar";
-            this.btnVoltar.Size = new System.Drawing.Size(150, 50);
-            this.btnVoltar.TabIndex = 12;
-            this.btnVoltar.Text = "VOLTAR";
+            this.btnVoltar.Size = new System.Drawing.Size(62, 70);
+            this.btnVoltar.TabIndex = 58;
             this.btnVoltar.UseVisualStyleBackColor = false;
-            this.btnVoltar.Click += new System.EventHandler(this.btnVoltar_Click);
+            this.btnVoltar.Click += new System.EventHandler(this.btnVoltar_Click_1);
             // 
             // frmVerificacao
             // 
@@ -226,11 +227,11 @@
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.BackgroundImage = global::TCCControleDeAcesso.Properties.Resources.Design_sem_nome__14_1;
             this.ClientSize = new System.Drawing.Size(1856, 933);
+            this.Controls.Add(this.btnVoltar);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.btnVoltar);
             this.Controls.Add(this.lblRM);
             this.Controls.Add(this.lblSerie);
             this.Controls.Add(this.lblAno);

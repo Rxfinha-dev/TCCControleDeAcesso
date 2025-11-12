@@ -125,6 +125,15 @@ namespace TCCControleDeAcesso.Views
             
         }
 
+        private void carregarGrid()
+        {
+            cadastroAlunos = new CadastroAlunos()
+            {
+                idEscola = id_escola
+            };
+            dgvAlunos.DataSource = cadastroAlunos.ListStudents();
+        }
+
         private void btnSave_Click(object sender, EventArgs e)
         {
            
@@ -133,11 +142,7 @@ namespace TCCControleDeAcesso.Views
 
         private void frmListaAlunos_Load(object sender, EventArgs e)
         {
-            cadastroAlunos = new CadastroAlunos()
-            {
-                idEscola = id_escola
-            };
-            dgvAlunos.DataSource = cadastroAlunos.ListStudents();
+            carregarGrid();
             //dgvAlunos.Columns["id"].Visible = false;
 
             CleanAll();
@@ -293,11 +298,7 @@ namespace TCCControleDeAcesso.Views
                 };
                 cadastroAlunos.Delete();
 
-                cadastroAlunos = new CadastroAlunos()
-                {
-                    idEscola = id_escola
-                };
-                dgvAlunos.DataSource = cadastroAlunos.ListStudents();
+                carregarGrid();
                 dgvAlunos.Columns["id"].Visible = false;
                 CleanAll();
             }
@@ -402,11 +403,7 @@ namespace TCCControleDeAcesso.Views
 
 
 
-            cadastroAlunos = new CadastroAlunos()
-            {
-                idEscola = id_escola
-            };
-            dgvAlunos.DataSource = cadastroAlunos.ListStudents();
+            carregarGrid();
             // dgvAlunos.Columns["id"].Visible = false;
             CleanAll();
 
@@ -415,9 +412,12 @@ namespace TCCControleDeAcesso.Views
 
         private void btnVoltar_Click_1(object sender, EventArgs e)
         {
-            this.Close();
-            frmLogin frmLogin = new frmLogin();
-            frmLogin.ShowDialog();
+            
+            frmMainMenu check = new frmMainMenu(_CurrentUsername, id_escola);
+            check.Show();
+            Close();
+            carregarGrid();
+
         }
     }
 }

@@ -60,7 +60,7 @@ namespace TCCControleDeAcesso.Views
             dgvCursos.Columns["id"].Visible = false;
             CarregarGrid();
 
-            button1.Cursor = Cursors.Hand;
+            btnVoltar.Cursor = Cursors.Hand;
         }
 
         private void dgvCursos_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -128,9 +128,11 @@ namespace TCCControleDeAcesso.Views
 
         private void button1_Click(object sender, EventArgs e)
         {
+            
+            frmMainMenu mainMenu = new frmMainMenu(_CurrentUsername, id_escola);
+            mainMenu.Show();
             this.Close();
-            frmLogin frmLogin = new frmLogin();
-            frmLogin.ShowDialog();
+            CarregarGrid();
         }
     }
 }

@@ -161,7 +161,33 @@ namespace TCCControleDeAcesso.Views
 
         }
 
-        private void btnVoltar_Click(object sender, EventArgs e)
+      
+
+        private void frmVerificacao_Load(object sender, EventArgs e)
+        {
+
+            btnVerificar.Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, btnVerificar.Width, btnVerificar.Height, 20, 20));
+            btnVerificar.FlatStyle = FlatStyle.Flat;
+            btnVerificar.FlatAppearance.BorderSize = 1;  // sem borda
+            btnVerificar.BackColor = Color.FromArgb(52, 188, 251); // #34BCFB
+            btnVerificar.ForeColor = Color.White; // texto branco
+
+            btnVoltar.Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, btnVoltar.Width, btnVoltar.Height, 20, 20));
+            btnVoltar.FlatStyle = FlatStyle.Flat;
+            btnVoltar.FlatAppearance.BorderSize = 1;  // sem borda
+            btnVoltar.BackColor = Color.FromArgb(52, 188, 251); // #34BCFB
+            btnVoltar.ForeColor = Color.White; // texto branco
+
+        }
+
+    
+
+        private void label1_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnVoltar_Click_1(object sender, EventArgs e)
         {
             if (SerialPortManager.Port != null && SerialPortManager.Port.IsOpen)
             {
@@ -191,32 +217,10 @@ namespace TCCControleDeAcesso.Views
             // Continua a execução normalmente
             frmMainMenu check = new frmMainMenu(_CurrentUsername, id_escola);
             check.Show();
+            Close();
+            
 
-            Hide();
-        }
-
-        private void frmVerificacao_Load(object sender, EventArgs e)
-        {
-
-            btnVerificar.Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, btnVerificar.Width, btnVerificar.Height, 20, 20));
-            btnVerificar.FlatStyle = FlatStyle.Flat;
-            btnVerificar.FlatAppearance.BorderSize = 1;  // sem borda
-            btnVerificar.BackColor = Color.FromArgb(52, 188, 251); // #34BCFB
-            btnVerificar.ForeColor = Color.White; // texto branco
-
-            btnVoltar.Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, btnVoltar.Width, btnVoltar.Height, 20, 20));
-            btnVoltar.FlatStyle = FlatStyle.Flat;
-            btnVoltar.FlatAppearance.BorderSize = 1;  // sem borda
-            btnVoltar.BackColor = Color.FromArgb(52, 188, 251); // #34BCFB
-            btnVoltar.ForeColor = Color.White; // texto branco
-
-        }
-
-    
-
-        private void label1_Click_1(object sender, EventArgs e)
-        {
-
+            
         }
     }
 }
