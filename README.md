@@ -101,15 +101,6 @@ TCCControleDeAcesso/
 ├── .gitattributes
 └── README.md
 
-🖼️ Capturas de Tela
-
-(Adicione imagens reais do sistema aqui — telas de login, cadastro, relatórios etc.)
-
-Exemplo:
-
-![Tela de Login](Images/tela-login.png)
-![Tela de Cadastro](Images/tela-cadastro.png)
-
 🤝 Contribuição
 
 Contribuições são bem-vindas!
