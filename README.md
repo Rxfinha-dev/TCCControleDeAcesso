@@ -36,10 +36,6 @@ Facilitar o controle de entrada e saída de alunos, professores e visitantes.
 
 Prover um sistema seguro de autenticação e autorização.
 
-Registrar logs de acesso com data e hora.
-
-Fornecer relatórios administrativos.
-
 Criar uma base sólida para expansão futura (como uso de RFID ou QR Code).
 
 🛠️ Tecnologias Utilizadas
