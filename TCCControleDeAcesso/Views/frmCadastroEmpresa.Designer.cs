@@ -119,7 +119,7 @@
             // 
             // pictureBox3
             // 
-            this.pictureBox3.Image = global::TCCControleDeAcesso.Properties.Resources.Design_sem_nome__17_2;
+            this.pictureBox3.Image = global::TCCControleDeAcesso.Properties.Resources.Design_sem_nome__18_;
             this.pictureBox3.Location = new System.Drawing.Point(822, 268);
             this.pictureBox3.Name = "pictureBox3";
             this.pictureBox3.Size = new System.Drawing.Size(476, 559);

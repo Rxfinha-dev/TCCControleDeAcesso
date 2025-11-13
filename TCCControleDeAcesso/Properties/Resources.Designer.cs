@@ -423,6 +423,16 @@ namespace TCCControleDeAcesso.Properties {
         /// <summary>
         ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Design_sem_nome__19_ {
+            get {
+                object obj = ResourceManager.GetObject("Design sem nome (19)", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Design_sem_nome__2_ {
             get {
                 object obj = ResourceManager.GetObject("Design sem nome (2)", resourceCulture);

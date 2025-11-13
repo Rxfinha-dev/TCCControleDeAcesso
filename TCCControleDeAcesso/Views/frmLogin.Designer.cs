@@ -228,7 +228,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.BackgroundImage = global::TCCControleDeAcesso.Properties.Resources.Design_sem_nome7;
+            this.BackgroundImage = global::TCCControleDeAcesso.Properties.Resources.Design_sem_nome__19_;
             this.ClientSize = new System.Drawing.Size(1828, 841);
             this.Controls.Add(this.flowLayoutPanel1);
             this.Controls.Add(this.txtLogin);
