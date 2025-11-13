@@ -18,14 +18,14 @@ namespace TCCControleDeAcesso.Views
 
         [DllImport("Gdi32.dll", EntryPoint = "CreateRoundRectRgn")]
         private static extern IntPtr CreateRoundRectRgn
-            (
-                int nLeft,
-                int nTop,
-                int nRight,
-                int nBottom,
-                int nWidthEllipse,
-                int nHeightEllipse
-            );
+        (
+            int nLeft,
+            int nTop,
+            int nRight,
+            int nBottom,
+            int nWidthEllipse,
+            int nHeightEllipse
+        );
 
         // Variáveis de controle
         int baseY;
@@ -36,20 +36,20 @@ namespace TCCControleDeAcesso.Views
         Image senha_visivel = Properties.Resources.olho_aberto;
         Image senha_invisivel = Properties.Resources.olho_fechado_24;
 
-        // VARIÁVEIS DE ANIMAÇÃO
-        
-      
-      
-
-        // DECLARAÇÃO ÚNICA DA VARIÁVEL senhaVisivel
         private bool senhaVisivel = false;
 
+        // Timer como campo da classe (System.Windows.Forms.Timer)
+        private System.Windows.Forms.Timer flutuarTimer;
 
         public frmLogin()
         {
             InitializeComponent();
-        }
 
+            // Inicializa o timer aqui (ou poderia ser no Load)
+            flutuarTimer = new System.Windows.Forms.Timer();
+            flutuarTimer.Interval = 18;
+            flutuarTimer.Tick += FlutuarTimer_Tick;
+        }
 
         private void CleanAll()
         {
@@ -58,70 +58,59 @@ namespace TCCControleDeAcesso.Views
             txtLogin.Focus();
         }
 
-
         private void btnEntrar_Click(object sender, EventArgs e)
         {
             _login = new Login()
             {
                 email = txtLogin.Texts,
                 senha = txtSenha.Texts,
-
             };
 
+            try
+            {
+                _login.PullSenha();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao consultar senha: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
-
-            //estou a fazer isso aqui :
-
-
-            // --------- login ---------
-            //aqui vamos ter a parte de login com hash e salt key sempre tentando seguir a lógica do bcrypt.net
-            //essa lógica seria gerar uma hash que ja vai estar junto da saltkey e em seguida o próprio Bycript tbm ja faz a leitura e validação,
-            //sendo assim, desnecessário realizar o save da salt key de forma separada no banco de dados para validação posterior
-
-            //vamos chamar a função do banco de dados(login.Cs) que vai puxar a senha do banco
-
-            _login.PullSenha();
-
-            //pega a senha digitada e guarda na variável 
             string senhadigitada = txtSenha.Texts;
-
 
             if (_login.count == 1)
             {
-                ////  verifica automaticamente se a senha digitada gera o mesmo hash
-                bool valido = BCrypt.Net.BCrypt.Verify(senhadigitada, _login.HashBanco);
+                bool valido = false;
+                try
+                {
+                    valido = BCrypt.Net.BCrypt.Verify(senhadigitada, _login.HashBanco);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Erro ao verificar senha: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
 
-                if (valido == true)
+                if (valido)
                 {
                     _login.LoginPermissions();
                     MessageBox.Show("Login realizado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     frmMainMenu check = new frmMainMenu(_login.nome, _login.idEscola);
                     check.Show();
-                    Hide();
+                    this.Hide();
                     CleanAll();
                 }
                 else
                 {
                     MessageBox.Show("Senha incorreta!", "Erro de Login");
                 }
-
             }
             else
             {
                 MessageBox.Show("Email inexistente", "Email Não encontrado");
                 CleanAll();
             }
-
-
-
-
-
-            /////////// ---------- end login --------- //
-            CleanAll();
-
-
         }
-
 
         private void CentralizarControles()
         {
@@ -133,9 +122,8 @@ namespace TCCControleDeAcesso.Views
         {
             frmCadastroEmpresa check = new frmCadastroEmpresa();
             check.Show();
-            Hide();
+            this.Hide();
         }
-
 
         private void frmLogin_Load(object sender, EventArgs e)
         {
@@ -143,21 +131,23 @@ namespace TCCControleDeAcesso.Views
 
             // Animação do ícone
             baseY = pictureBox3.Top;
-            Timer flutuarTimer = new Timer();
-            flutuarTimer.Interval = 18;
-            flutuarTimer.Tick += (s, ev) =>
+
+            // garante que o timer foi inicializado no construtor (ou inicializa aqui)
+            if (flutuarTimer == null)
             {
-                angle += speed;
-                pictureBox3.Top = baseY + (int)(Math.Sin(angle) * amplitude);
-            };
+                flutuarTimer = new System.Windows.Forms.Timer();
+                flutuarTimer.Interval = 18;
+                flutuarTimer.Tick += FlutuarTimer_Tick;
+            }
+
             flutuarTimer.Start();
 
             // Configurações iniciais dos campos
-            txtSenha.PasswordChar = true;
+            txtSenha    .PasswordChar = true;
             txtLogin.PlaceholderText = "Digite seu Email";
             txtLogin.PlaceholderColor = Color.Gray;
             txtSenha.PlaceholderText = "Digite sua Senha";
-            txtSenha.PlaceholderColor= Color.Gray;
+            txtSenha.PlaceholderColor = Color.Gray;
 
             // Botões arredondados
             button5.FlatStyle = FlatStyle.Flat;
@@ -171,77 +161,109 @@ namespace TCCControleDeAcesso.Views
             btnEntrar.BackColor = Color.FromArgb(52, 188, 251);
             btnEntrar.ForeColor = Color.White;
 
-            button5.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, button5.Width, button5.Height, 20, 20));
-            btnEntrar.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, btnEntrar.Width, btnEntrar.Height, 20, 20));
+            // Proteção: só tenta criar a região se o tamanho já estiver definido
+            if (button5.Width > 0 && button5.Height > 0)
+                button5.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, button5.Width, button5.Height, 20, 20));
 
-           
+            if (btnEntrar.Width > 0 && btnEntrar.Height > 0)
+                btnEntrar.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, btnEntrar.Width, btnEntrar.Height, 20, 20));
+        }
+
+        // Método nomeado para o Tick (mais fácil de controlar / desinscrever)
+        private void FlutuarTimer_Tick(object sender, EventArgs e)
+        {
+            try
+            {
+                // Se o pictureBox3 foi descartado, não tenta acessar
+                if (pictureBox3 == null || pictureBox3.IsDisposed)
+                    return;
+
+                // Como usamos System.Windows.Forms.Timer, já estamos na thread de UI,
+                // mas por segurança checamos InvokeRequired.
+                if (pictureBox3.InvokeRequired)
+                {
+                    pictureBox3.Invoke(new Action(() =>
+                    {
+                        angle += speed;
+                        pictureBox3.Top = baseY + (int)(Math.Sin(angle) * amplitude);
+                    }));
+                }
+                else
+                {
+                    angle += speed;
+                    pictureBox3.Top = baseY + (int)(Math.Sin(angle) * amplitude);
+                }
+            }
+            catch
+            {
+                // se algo falhar aqui, apenas interrompe o timer para evitar exceção repetida
+                try
+                {
+                    if (flutuarTimer != null)
+                    {
+                        flutuarTimer.Stop();
+                        flutuarTimer.Tick -= FlutuarTimer_Tick;
+                    }
+                }
+                catch { }
+            }
         }
 
         private void picOlho_Click(object sender, EventArgs e)
         {
             senhaVisivel = !senhaVisivel;
-
             txtSenha.PasswordChar = !senhaVisivel;
-           
             chkMostrarSenha.Checked = senhaVisivel;
-
-            
-        
         }
-
 
         private void chkMostrarSenha_CheckedChanged(object sender, EventArgs e)
         {
             senhaVisivel = chkMostrarSenha.Checked;
-
             txtSenha.PasswordChar = !senhaVisivel;
-           
         }
-
-
 
         private void button5_Click(object sender, EventArgs e)
         {
-            frmNovaSenha form = new frmNovaSenha();//IMPORTANTE---------------depois altere isso de volta para o "frmNovaSenha"
+            frmNovaSenha form = new frmNovaSenha();
             form.Show();
-            Hide();
+            this.Hide();
         }
-
-
-   
 
         private void MostrarSenha_CheckedChanged(object sender, EventArgs e)
         {
-            if (chkMostrarSenha.Checked)
+            txtSenha.PasswordChar = !chkMostrarSenha.Checked;
+        }
+
+        // Ao fechar, pare e descarte o timer para evitar callbacks depois do form descartado
+        private void frmLogin_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            try
             {
-                // Mostra o texto
-                txtSenha.PasswordChar = false;
+                if (flutuarTimer != null)
+                {
+                    flutuarTimer.Stop();
+                    flutuarTimer.Tick -= FlutuarTimer_Tick;
+                    flutuarTimer.Dispose();
+                    flutuarTimer = null;
+                }
             }
-            else
+            catch { /* ignore */ }
+        }
+
+        // Também garantimos liberação final no FormClosed
+        private void frmLogin_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            try
             {
-                // Oculta o texto
-                txtSenha.PasswordChar = true;
+                if (flutuarTimer != null)
+                {
+                    flutuarTimer.Stop();
+                    flutuarTimer.Tick -= FlutuarTimer_Tick;
+                    flutuarTimer.Dispose();
+                    flutuarTimer = null;
+                }
             }
-        }
-
-        private void txtLoginAntigo_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txtSenhaAntigo_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txtLogin__TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void pictureBox1_Click(object sender, EventArgs e)
-        {
-
+            catch { }
         }
     }
 }

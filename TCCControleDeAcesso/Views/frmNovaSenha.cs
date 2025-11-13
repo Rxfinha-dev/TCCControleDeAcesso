@@ -34,6 +34,9 @@ namespace TCCControleDeAcesso.Views
 
         private void btnEnviarEmail_Click(object sender, EventArgs e)
         {
+            
+            btnEnviarEmail.Enabled = false;
+
             int count;
             try
             {
@@ -55,8 +58,6 @@ namespace TCCControleDeAcesso.Views
                 if (count > 0)
                 {
 
-                    //Evitando o click mais de uma vez
-                    btnEnviarEmail.Enabled = false;
                     String from, pass, messageBody;
                     Random rand = new Random();
                     randomCode = (rand.Next(999999)).ToString();
@@ -77,10 +78,13 @@ namespace TCCControleDeAcesso.Views
 
                     try
                     {
+
+                        //Evitando o click mais de uma vez
+                        btnEnviarEmail.Enabled = false;
                         smtp.Send(message);
                         MessageBox.Show("Código de verificação enviado com sucesso!");
                         //reativando o btnEnviarEmail
-                        btnEnviarEmail.Enabled = true;
+
 
                     }
 
@@ -96,6 +100,7 @@ namespace TCCControleDeAcesso.Views
                 else
                 {
                     MessageBox.Show("Email não Cadastrado.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    btnEnviarEmail.Enabled = true;
                 }
             }
             catch (Exception ex)
@@ -110,6 +115,7 @@ namespace TCCControleDeAcesso.Views
 
         private void btnVerify_Click(object sender, EventArgs e)
         {
+            btnEnviarEmail.Enabled = true;
             if (randomCode == (txtCodeVerify.Texts).ToString())
             {
                 to = txtEmailDestinatario.Texts;

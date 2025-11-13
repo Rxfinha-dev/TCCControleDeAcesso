@@ -40,9 +40,9 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.chkMostrarSenha = new System.Windows.Forms.CheckBox();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
-            this.txtSenha = new RJCodeAdvance.RJControls.RJTextBox();
             this.txtLogin = new RJCodeAdvance.RJControls.RJTextBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.txtSenha = new RJCodeAdvance.RJControls.RJTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -142,7 +142,6 @@
             this.pictureBox1.Size = new System.Drawing.Size(1202, 1412);
             this.pictureBox1.TabIndex = 44;
             this.pictureBox1.TabStop = false;
-            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
             // chkMostrarSenha
             // 
@@ -161,6 +160,7 @@
             // pictureBox3
             // 
             this.pictureBox3.BackColor = System.Drawing.Color.Transparent;
+            this.pictureBox3.Enabled = false;
             this.pictureBox3.Image = global::TCCControleDeAcesso.Properties.Resources.Design_sem_nome__4_2;
             this.pictureBox3.Location = new System.Drawing.Point(1339, 270);
             this.pictureBox3.Name = "pictureBox3";
@@ -168,28 +168,6 @@
             this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox3.TabIndex = 49;
             this.pictureBox3.TabStop = false;
-            // 
-            // txtSenha
-            // 
-            this.txtSenha.BackColor = System.Drawing.SystemColors.Window;
-            this.txtSenha.BorderColor = System.Drawing.Color.DodgerBlue;
-            this.txtSenha.BorderFocusColor = System.Drawing.Color.DeepSkyBlue;
-            this.txtSenha.BorderRadius = 0;
-            this.txtSenha.BorderSize = 2;
-            this.txtSenha.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtSenha.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.txtSenha.Location = new System.Drawing.Point(1330, 639);
-            this.txtSenha.Margin = new System.Windows.Forms.Padding(4);
-            this.txtSenha.Multiline = false;
-            this.txtSenha.Name = "txtSenha";
-            this.txtSenha.Padding = new System.Windows.Forms.Padding(10, 7, 10, 7);
-            this.txtSenha.PasswordChar = false;
-            this.txtSenha.PlaceholderColor = System.Drawing.Color.DarkGray;
-            this.txtSenha.PlaceholderText = "";
-            this.txtSenha.Size = new System.Drawing.Size(250, 31);
-            this.txtSenha.TabIndex = 55;
-            this.txtSenha.Texts = "";
-            this.txtSenha.UnderlinedStyle = true;
             // 
             // txtLogin
             // 
@@ -212,7 +190,6 @@
             this.txtLogin.TabIndex = 50;
             this.txtLogin.Texts = "";
             this.txtLogin.UnderlinedStyle = true;
-            this.txtLogin._TextChanged += new System.EventHandler(this.txtLogin__TextChanged);
             // 
             // flowLayoutPanel1
             // 
@@ -222,6 +199,28 @@
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(296, 63);
             this.flowLayoutPanel1.TabIndex = 53;
+            // 
+            // txtSenha
+            // 
+            this.txtSenha.BackColor = System.Drawing.SystemColors.Window;
+            this.txtSenha.BorderColor = System.Drawing.Color.DodgerBlue;
+            this.txtSenha.BorderFocusColor = System.Drawing.Color.DeepSkyBlue;
+            this.txtSenha.BorderRadius = 0;
+            this.txtSenha.BorderSize = 2;
+            this.txtSenha.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtSenha.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.txtSenha.Location = new System.Drawing.Point(1330, 639);
+            this.txtSenha.Margin = new System.Windows.Forms.Padding(4);
+            this.txtSenha.Multiline = false;
+            this.txtSenha.Name = "txtSenha";
+            this.txtSenha.Padding = new System.Windows.Forms.Padding(10, 7, 10, 7);
+            this.txtSenha.PasswordChar = false;
+            this.txtSenha.PlaceholderColor = System.Drawing.Color.DarkGray;
+            this.txtSenha.PlaceholderText = "";
+            this.txtSenha.Size = new System.Drawing.Size(250, 31);
+            this.txtSenha.TabIndex = 55;
+            this.txtSenha.Texts = "";
+            this.txtSenha.UnderlinedStyle = true;
             // 
             // frmLogin
             // 
@@ -269,7 +268,7 @@
         private System.Windows.Forms.CheckBox chkMostrarSenha;
         private System.Windows.Forms.PictureBox pictureBox3;
         private RJCodeAdvance.RJControls.RJTextBox txtLogin;
-        private RJCodeAdvance.RJControls.RJTextBox txtSenha;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+        private RJCodeAdvance.RJControls.RJTextBox txtSenha;
     }
 }

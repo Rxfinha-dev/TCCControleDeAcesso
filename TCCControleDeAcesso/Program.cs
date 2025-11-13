@@ -16,10 +16,37 @@ namespace TCCControleDeAcesso
         [STAThread]
         static void Main()
         {
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
 
-         
+            // Captura erros não tratados da UI
+            Application.ThreadException += Application_ThreadException;
+
+            // Captura erros não tratados fora da UI (threads não principais)
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+
             Application.Run(new Views.frmLogin());
 
+
+
+
+        }
+        private static void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
+        {
+            MessageBox.Show("Ocorreu um erro inesperado: " + e.Exception.Message,
+                "Erro de aplicação", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            // Exemplo de ação: registrar log e continuar
+        }
+
+        private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            Exception ex = (Exception)e.ExceptionObject;
+            MessageBox.Show("Erro crítico: " + ex.Message,
+                "Erro fatal", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            // Exemplo de ação: salvar log e encerrar com segurança
+            Application.Exit();
         }
     }
 }

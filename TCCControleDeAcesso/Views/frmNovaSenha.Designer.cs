@@ -51,7 +51,7 @@
             this.panel1.Controls.Add(this.btnVerify);
             this.panel1.Controls.Add(this.btnEnviarEmail);
             this.panel1.Controls.Add(this.label2);
-            this.panel1.Location = new System.Drawing.Point(785, 230);
+            this.panel1.Location = new System.Drawing.Point(755, 255);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(475, 558);
             this.panel1.TabIndex = 12;
