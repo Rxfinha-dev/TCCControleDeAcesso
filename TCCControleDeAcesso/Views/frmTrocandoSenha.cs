@@ -115,7 +115,7 @@ namespace TCCControleDeAcesso.Views
             else
             {
 
-                MessageBox.Show("As senhas inseridas são diferentes ou a senha não tem a quantidade miníma de 8 caracteres", "ERRO", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("As senhas inseridas são diferentes ou a senha não tem a quantidade miníma de 9 caracteres", "ERRO", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
             }
             txtNovaSenha.Texts = "";
