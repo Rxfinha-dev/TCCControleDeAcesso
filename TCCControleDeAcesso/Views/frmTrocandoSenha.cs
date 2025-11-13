@@ -106,7 +106,7 @@ namespace TCCControleDeAcesso.Views
                 };
                 ns.ChangePasswod();
 
-                MessageBox.Show("Senha alterada com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.None);
+                MessageBox.Show("Senha alterada com sucesso!");
                 this.Close();
                 frmLogin loginForm = new frmLogin();
                 loginForm.Show();
