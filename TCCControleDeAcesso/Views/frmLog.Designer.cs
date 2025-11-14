@@ -78,6 +78,7 @@
             this.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "frmLog";
             this.Text = "Form1";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.frmLog_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvLog)).EndInit();
             this.panel1.ResumeLayout(false);
