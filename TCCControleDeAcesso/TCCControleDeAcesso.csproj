@@ -517,5 +517,59 @@
   <ItemGroup>
     <None Include="Resources\Design sem nome %2819%29.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Segurança que conecta.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Segurança que conecta %281%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SEGURANÇA QUE CONECTA %283%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Design sem nome %282%291.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Design sem nome %284%293.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\lista-de-controle.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\verificacao-de-identidade.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-verificação-32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-livro-32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-estudante-32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-lista-32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-configurações-32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-voltar-32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-desligar-32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-sair-32 %281%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Design sem nome %285%292.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Design sem nome %286%293.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Design sem nome %287%291.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
