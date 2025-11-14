@@ -7,6 +7,7 @@ using MySql.Data.MySqlClient;
 using System.Windows.Forms;
 using TCCControleDeAcesso.Models;
 using TCCControleDeAcesso.Views;
+using System.Data.SqlClient;
 
 namespace TCCControleDeAcesso.Controllers
 {
@@ -28,7 +29,10 @@ namespace TCCControleDeAcesso.Controllers
         {
             try
             {
+
+
                 Banco.OpenConnection();
+
 
                 Banco.Command = new MySqlCommand("select id from escolas where email=@email", Banco.Connection);
                 Banco.Command.Parameters.AddWithValue("@email", email);
@@ -40,6 +44,9 @@ namespace TCCControleDeAcesso.Controllers
                         idEscola = reader.GetInt32("id"); // aqui era um GetInt32 antes
                     }
                 }
+
+              
+                
 
             }
             catch (Exception ex)
@@ -87,6 +94,8 @@ namespace TCCControleDeAcesso.Controllers
                 Banco.CloseConnection();
             }
         }
+
+        
     }
 }
 

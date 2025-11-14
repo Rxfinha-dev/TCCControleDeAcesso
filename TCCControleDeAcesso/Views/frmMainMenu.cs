@@ -65,7 +65,8 @@ int nHeightEllipse
 
         private void frmMainMenu_Load(object sender, EventArgs e)
         {
-
+            label2.Text = _CurrentUsername;
+            label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
         }
 
         private void button5_Click(object sender, EventArgs e)

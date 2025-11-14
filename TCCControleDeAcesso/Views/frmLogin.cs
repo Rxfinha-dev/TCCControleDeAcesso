@@ -6,6 +6,7 @@ using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using MySql.Data.MySqlClient;
 using TCCControleDeAcesso.Controllers;
 using TCCControleDeAcesso.Models;
 
@@ -41,6 +42,7 @@ namespace TCCControleDeAcesso.Views
         // Timer como campo da classe (System.Windows.Forms.Timer)
         private System.Windows.Forms.Timer flutuarTimer;
 
+        string currentUsername;
         public frmLogin()
         {
             InitializeComponent();
@@ -56,16 +58,47 @@ namespace TCCControleDeAcesso.Views
             txtLogin.Texts = "";
             txtSenha.Texts = "";
             txtLogin.Focus();
+        
+        
+        }
+
+        private void GetUserByEmail()
+        {
+            try
+            {
+                Banco.OpenConnection();
+                Banco.Command = new MySqlCommand("SELECT nome FROM escolas WHERE email = @email", Banco.Connection);
+                Banco.Command.Parameters.AddWithValue("@email", txtLogin.Texts);
+                using (MySqlDataReader reader = Banco.Command.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        currentUsername = reader["nome"].ToString();
+                       
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro: " + ex.Message);
+            }
+            finally
+            {
+                Banco.CloseConnection();
+            }
+
         }
 
         private void btnEntrar_Click(object sender, EventArgs e)
         {
+            GetUserByEmail();
             _login = new Login()
             {
                 email = txtLogin.Texts,
                 senha = txtSenha.Texts,
             };
-
+            
+            
             try
             {
                 _login.PullSenha();
@@ -95,7 +128,7 @@ namespace TCCControleDeAcesso.Views
                 {
                     _login.LoginPermissions();
                     MessageBox.Show("Login realizado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    frmMainMenu check = new frmMainMenu(_login.nome, _login.idEscola);
+                    frmMainMenu check = new frmMainMenu(currentUsername, _login.idEscola);
                     check.Show();
                     this.Hide();
                     CleanAll();
