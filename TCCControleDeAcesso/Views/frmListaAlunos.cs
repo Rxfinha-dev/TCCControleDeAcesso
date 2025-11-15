@@ -230,9 +230,7 @@ namespace TCCControleDeAcesso.Views
                     acao.Invoke(new Action(() => {
                         if (received.StartsWith("!enrolling"))
                         {
-                            received = received.Replace("!enrolling", "");
-                            received = received.Replace("#", "");
-                            acao.Text = "Cadastrando o ID " + received;
+                            acao.Text = "Coloque o dedo no sensor";
                         }
                         else if (received.StartsWith("!placeFinger#"))
                         {
@@ -360,7 +358,7 @@ namespace TCCControleDeAcesso.Views
                 Console.WriteLine("ID encontrado: " + id);
 
                 txtArduino.Text = id.ToString();
-               // SerialPortManager.Port.Write("!enroll" + id + "#");
+                SerialPortManager.Port.Write("!enroll" + id + "#");
 
                 
             }

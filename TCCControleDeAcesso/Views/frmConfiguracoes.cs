@@ -27,38 +27,11 @@ namespace TCCControleDeAcesso.Views
 
         private void listCom(RJComboBox combo)
         {
-            var portList = new Dictionary<string, string>();
-            try
-            {
-                using (var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_PnPEntity WHERE Caption like '%(COM%'"))
-                {
-                    var portNames = SerialPort.GetPortNames();
-                    foreach (var port in searcher.Get().Cast<ManagementBaseObject>())
-                    {
-                        var caption = port["Caption"]?.ToString() ?? "Unknown";
-                        var realPort = portNames.FirstOrDefault(p => caption.Contains($"({p})"));
-                        if (realPort != null && !portList.ContainsKey(realPort))
-                        {
-                            portList.Add(realPort, caption);
-                        }
-                    }
-                }
-            }
-            catch (ManagementException)
-            {
-            }
+            string[] ports = SerialPort.GetPortNames();
 
-            if (portList.Count > 0)
+            foreach (string port in ports)
             {
-                combo.DataSource = new BindingSource(portList, null);
-                combo.DisplayMember = "Value";
-                combo.ValueMember = "Key";
-                var comUsb = portList.FirstOrDefault(par => par.Value.StartsWith("USB", StringComparison.OrdinalIgnoreCase));
-                combo.SelectedItem = comUsb.Key;
-            }
-            else
-            {
-                combo.SelectedIndex = -1;
+                combo.Items.Add(port);
             }
         }
 
@@ -81,13 +54,12 @@ namespace TCCControleDeAcesso.Views
         void connect()
         {
             string selectedPort = comboBoxPortas.SelectedItem.ToString();
-            comboBoxPortas.Enabled = false;
-            selectedPort = comboBoxPortas.SelectedItem.ToString();
             SerialPortManager.Port.PortName = selectedPort;
             SerialPortManager.Port.Open();
             connected = true;
             progressBarConectado.Value = 100;
             bntConectar.Text = "Desconectar";
+            comboBoxPortas.Enabled = false;
         }
 
         void disconnect()

@@ -104,18 +104,21 @@ namespace TCCControleDeAcesso.Views
         {
             try
             {
-                string received = SerialPortManager.Port.ReadLine();
-
                 aluno.Invoke(new Action(() => {
+                    string received = SerialPortManager.Port.ReadLine();
                     if (received.StartsWith("!found"))
                     {
                         received = received.Replace("!found", "");
                         received = received.Replace("#", "");
                         aluno.Text = received;
 
+                        if (int.TryParse(received.Trim(), out idAluno))
+                        {
+                        }
+
                         verificacao = new Verificacao()
                         {
-                            Id = int.Parse(received)
+                            Id = idAluno
                         };
                         var dt = verificacao.select();
                         if (dt.Rows.Count > 0)
@@ -126,18 +129,47 @@ namespace TCCControleDeAcesso.Views
                             lblCurso.Text = dt.Rows[0]["curso"].ToString();
                         }
 
-                        idAluno = int.Parse(received);
                         CarregarImagemDoAluno(idAluno);
 
                         dataAtual = DateTime.Now;
-                        
+
 
                         log = new Log();
                         log.insert(idAluno, dataAtual, id_escola);
-
-
+                    }
+                    else
+                    {
+                        aluno.Text = received;
                     }
                 }));
+                //aluno.Invoke(new Action(() => {
+                //if (received.StartsWith("!found"))
+                //{
+                //    received = received.Replace("!found", "");
+                //    received = received.Replace("#", "");
+                //    aluno.Text = received;
+                //
+                //    var dt = verificacao.select();
+                //    if (dt.Rows.Count > 0)
+                //    {
+                //        lblRM.Text = dt.Rows[0]["rm"].ToString();
+                //        lblNome.Text = dt.Rows[0]["nome"].ToString();
+                //        lblSerie.Text = dt.Rows[0]["serie"].ToString();
+                //        lblCurso.Text = dt.Rows[0]["curso"].ToString();
+                //    }
+                //
+                //    idAluno = int.Parse(received);
+                //    CarregarImagemDoAluno(idAluno);
+
+                //    dataAtual = DateTime.Now;
+
+
+                //    log = new Log();
+                //    log.insert(idAluno, dataAtual, id_escola);
+
+
+                //}
+                //}));
             }
             catch (IOException)
             {
