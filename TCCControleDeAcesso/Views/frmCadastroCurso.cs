@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -21,6 +22,18 @@ namespace TCCControleDeAcesso.Views
         string idText;
         Login _login;
         string _CurrentUsername;
+
+        [DllImport("Gdi32.dll", EntryPoint = "CreateRoundRectRgn")]
+        private static extern IntPtr CreateRoundRectRgn
+        (
+        int nLeft,
+        int nTop,
+        int nRight,
+        int nBottom,
+        int nWidthEllipse,
+        int nHeightEllipse
+        );
+
         public frmCadastroCurso(string currentUsername, int id)
         {
             InitializeComponent();
@@ -28,6 +41,7 @@ namespace TCCControleDeAcesso.Views
             _CurrentUsername = currentUsername;
             CarregarGrid();
         }
+
         public void LimparCampos()
         {
             txtId.Clear();
@@ -61,6 +75,18 @@ namespace TCCControleDeAcesso.Views
             CarregarGrid();
 
             btnVoltar.Cursor = Cursors.Hand;
+
+            btnCadastrar.FlatStyle = FlatStyle.Flat;
+            btnCadastrar.FlatAppearance.BorderSize = 1;
+            btnCadastrar.FlatAppearance.BorderColor = Color.FromArgb(52, 188, 251);
+            btnCadastrar.BackColor = Color.FromArgb(52, 188, 251);
+            btnCadastrar.ForeColor = Color.White;
+
+            btnDelete.FlatStyle = FlatStyle.Flat;
+            btnDelete.FlatAppearance.BorderColor = Color.FromArgb(52, 188, 251);
+            btnDelete.FlatAppearance.BorderSize = 1;
+            btnDelete.BackColor = Color.FromArgb(52, 188, 251);
+            btnDelete.ForeColor = Color.White;
         }
 
         private void dgvCursos_CellContentClick(object sender, DataGridViewCellEventArgs e)

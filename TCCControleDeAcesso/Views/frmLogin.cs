@@ -191,6 +191,7 @@ namespace TCCControleDeAcesso.Views
 
             btnEntrar.FlatStyle = FlatStyle.Flat;
             btnEntrar.FlatAppearance.BorderSize = 1;
+            btnEntrar.FlatAppearance.BorderColor = Color.FromArgb(52, 188, 251);
             btnEntrar.BackColor = Color.FromArgb(52, 188, 251);
             btnEntrar.ForeColor = Color.White;
 
@@ -297,6 +298,11 @@ namespace TCCControleDeAcesso.Views
                 }
             }
             catch { }
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
