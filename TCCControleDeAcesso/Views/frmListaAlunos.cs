@@ -358,7 +358,14 @@ namespace TCCControleDeAcesso.Views
                 Console.WriteLine("ID encontrado: " + id);
 
                 txtArduino.Text = id.ToString();
-                SerialPortManager.Port.Write("!enroll" + id + "#");
+                try
+                {
+                    SerialPortManager.Port.Write("!enroll" + id + "#");
+                }
+                catch(Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Digital Não Cadastrada!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
 
                 
             }

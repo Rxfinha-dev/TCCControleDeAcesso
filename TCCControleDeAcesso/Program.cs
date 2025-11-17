@@ -25,7 +25,7 @@ namespace TCCControleDeAcesso
             // Captura erros não tratados fora da UI (threads não principais)
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
-            Application.Run(new Views.frmMainMenu("", 0));
+            Application.Run(new Views.frmLogin());
 
 
 

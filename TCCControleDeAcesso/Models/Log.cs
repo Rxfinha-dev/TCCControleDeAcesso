@@ -11,12 +11,12 @@ namespace TCCControleDeAcesso.Models
 {
     public class Log
     {
-        public void insert(int idAluno, DateTime dataEntrada, int idEscola)
+        public void insert(string nome, DateTime dataEntrada, int idEscola)
         {
             try {
                 Banco.OpenConnection();
-                Banco.Command = new MySqlCommand("insert into entradas(idAluno, dataEntrada, idEscola) values (@idAluno, @dataEntrada, @idEscola)", Banco.Connection);
-                Banco.Command.Parameters.AddWithValue("@idAluno", idAluno);
+                Banco.Command = new MySqlCommand("insert into entradas(nome, dataEntrada, idEscola) values (@nome, @dataEntrada, @idEscola)", Banco.Connection);
+                Banco.Command.Parameters.AddWithValue("@nome", nome);
                 Banco.Command.Parameters.AddWithValue("@dataEntrada", dataEntrada);
                 Banco.Command.Parameters.AddWithValue("@idEscola", idEscola);
                 Banco.Command.ExecuteNonQuery();
@@ -31,7 +31,7 @@ namespace TCCControleDeAcesso.Models
             try
             {
 				Banco.OpenConnection();
-				Banco.Command = new MySqlCommand("select idAluno, DataEntrada from entradas where idEscola=@idEscola", Banco.Connection);
+				Banco.Command = new MySqlCommand("select nome, DataEntrada from entradas where idEscola=@idEscola", Banco.Connection);
 				Banco.Command.Parameters.AddWithValue("@idEscola", idEscola);
 				Banco.DataAdapter = new MySqlDataAdapter(Banco.Command);
 				Banco.datTable = new DataTable();

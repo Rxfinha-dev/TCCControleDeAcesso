@@ -45,19 +45,26 @@ namespace TCCControleDeAcesso.Views
 
         private void btnVerificar_Click(object sender, EventArgs e)
         {
-            if (!verificando)
+            try
             {
-                SerialPortManager.Port.Write("!verify#");
-                btnVerificar.Text = "Parar";
-                progressBarVerificar.Value = 100;
-                verificando = true;
+                if (!verificando)
+                {
+                    SerialPortManager.Port.Write("!verify#");
+                    btnVerificar.Text = "Parar";
+                    progressBarVerificar.Value = 100;
+                    verificando = true;
+                }
+                else if (verificando)
+                {
+                    SerialPortManager.Port.Write("!a#");
+                    btnVerificar.Text = "Verificar";
+                    progressBarVerificar.Value = 0;
+                    verificando = false;
+                }
             }
-            else if (verificando)
+            catch(Exception ex)
             {
-                SerialPortManager.Port.Write("!a#");
-                btnVerificar.Text = "Verificar";
-                progressBarVerificar.Value = 0;
-                verificando = false;
+                MessageBox.Show(ex.Message, "Erro");
             }
         }
 
@@ -134,8 +141,14 @@ namespace TCCControleDeAcesso.Views
                         dataAtual = DateTime.Now;
 
 
-                        log = new Log();
-                        log.insert(idAluno, dataAtual, id_escola);
+                        try
+                        {
+                            log = new Log();
+                            log.insert(lblNome.Text, dataAtual, id_escola);
+                        }catch(Exception ex)
+                        {
+                            MessageBox.Show(ex.Message, "Erro ao Registrar Entrada", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
                     }
                     else
                     {
