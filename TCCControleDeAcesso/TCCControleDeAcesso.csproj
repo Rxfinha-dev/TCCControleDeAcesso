@@ -571,5 +571,14 @@
   <ItemGroup>
     <None Include="Resources\Design sem nome %287%291.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\1000319959.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Design sem nome %2820%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Segurança que conecta %281%291.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

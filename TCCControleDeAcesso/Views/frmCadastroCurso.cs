@@ -76,6 +76,9 @@ namespace TCCControleDeAcesso.Views
 
             btnVoltar.Cursor = Cursors.Hand;
 
+            btnDelete.Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, btnDelete.Width, btnDelete.Height, 20, 20)); 
+            btnCadastrar.Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, btnCadastrar.Width, btnCadastrar.Height, 20, 20));
+
             btnCadastrar.FlatStyle = FlatStyle.Flat;
             btnCadastrar.FlatAppearance.BorderSize = 1;
             btnCadastrar.FlatAppearance.BorderColor = Color.FromArgb(52, 188, 251);
@@ -154,7 +157,6 @@ namespace TCCControleDeAcesso.Views
 
         private void button1_Click(object sender, EventArgs e)
         {
-            
             frmMainMenu mainMenu = new frmMainMenu(_CurrentUsername, id_escola);
             mainMenu.Show();
             this.Close();
