@@ -54,7 +54,7 @@ namespace TCCControleDeAcesso.Views
         {
             frmMainMenu check = new frmMainMenu(_currentUsername, id_escola);
             check.Show();
-            Close();
+            this.Close();
             carregarGrid();
         }
     }

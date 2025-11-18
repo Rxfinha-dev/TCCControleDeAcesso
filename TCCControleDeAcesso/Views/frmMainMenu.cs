@@ -65,7 +65,10 @@ int nHeightEllipse
 
         private void frmMainMenu_Load(object sender, EventArgs e)
         {
-            label2.Text = _CurrentUsername;
+            string texto = _CurrentUsername;
+            string primeiroNome = texto.Split(' ')[0];
+
+            label2.Text = primeiroNome;
             label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
         }
 
@@ -148,6 +151,7 @@ int nHeightEllipse
          
             frmLog check = new frmLog(id_escola, _CurrentUsername);
             check.Show();
+            this.Close();
         }
 
         private void btnLog_Click(object sender, EventArgs e)
