@@ -86,7 +86,7 @@
             this.pictureBox1.Location = new System.Drawing.Point(1186, 324);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(200, 264);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.pictureBox1.TabIndex = 71;
             this.pictureBox1.TabStop = false;
             // 
@@ -132,7 +132,7 @@
             // 
             this.acao.AutoSize = true;
             this.acao.Font = new System.Drawing.Font("Arial", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.acao.Location = new System.Drawing.Point(680, 547);
+            this.acao.Location = new System.Drawing.Point(578, 561);
             this.acao.Name = "acao";
             this.acao.Size = new System.Drawing.Size(43, 24);
             this.acao.TabIndex = 99;

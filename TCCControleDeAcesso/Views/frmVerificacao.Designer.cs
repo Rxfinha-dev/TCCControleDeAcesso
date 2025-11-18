@@ -45,6 +45,7 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.btnVoltar = new System.Windows.Forms.Button();
+            this.label7 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -86,6 +87,7 @@
             this.pictureBox1.Location = new System.Drawing.Point(1250, 527);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(196, 270);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.pictureBox1.TabIndex = 3;
             this.pictureBox1.TabStop = false;
             // 
@@ -103,12 +105,10 @@
             // 
             this.lblCurso.AutoSize = true;
             this.lblCurso.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblCurso.Location = new System.Drawing.Point(783, 619);
+            this.lblCurso.Location = new System.Drawing.Point(786, 648);
             this.lblCurso.Name = "lblCurso";
-            this.lblCurso.Size = new System.Drawing.Size(66, 25);
+            this.lblCurso.Size = new System.Drawing.Size(0, 25);
             this.lblCurso.TabIndex = 5;
-            this.lblCurso.Text = "Curso:";
-            this.lblCurso.Click += new System.EventHandler(this.label1_Click);
             // 
             // label2
             // 
@@ -220,6 +220,16 @@
             this.btnVoltar.UseVisualStyleBackColor = false;
             this.btnVoltar.Click += new System.EventHandler(this.btnVoltar_Click_1);
             // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.Location = new System.Drawing.Point(782, 619);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(66, 25);
+            this.label7.TabIndex = 59;
+            this.label7.Text = "Curso:";
+            // 
             // frmVerificacao
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 14F);
@@ -227,6 +237,7 @@
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.BackgroundImage = global::TCCControleDeAcesso.Properties.Resources.Design_sem_nome__14_1;
             this.ClientSize = new System.Drawing.Size(1856, 933);
+            this.Controls.Add(this.label7);
             this.Controls.Add(this.btnVoltar);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
@@ -274,5 +285,6 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Button btnVoltar;
+        private System.Windows.Forms.Label label7;
     }
 }
