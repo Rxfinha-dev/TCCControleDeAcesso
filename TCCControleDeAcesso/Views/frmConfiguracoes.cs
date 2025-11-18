@@ -61,6 +61,7 @@ namespace TCCControleDeAcesso.Views
                     disconnect();
                     connected = false;
                 }
+                this.Close();
             }
         }
 

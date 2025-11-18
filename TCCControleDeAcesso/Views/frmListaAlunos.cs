@@ -250,6 +250,11 @@ namespace TCCControleDeAcesso.Views
                             received = received.Replace("#", "");
                             acao.Text = "ID" + received + " cadastrado";
                         }
+                        else if (received.StartsWith("Fingerprints did not match"))
+                        {
+                            string id = txtArduino.Text;
+                            SerialPortManager.Port.Write("!enroll" + id + "#");
+                        }
                     }));
                 }
                 catch (IOException)

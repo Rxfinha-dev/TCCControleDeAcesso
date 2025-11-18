@@ -117,7 +117,6 @@ namespace TCCControleDeAcesso.Views
                     {
                         received = received.Replace("!found", "");
                         received = received.Replace("#", "");
-                        aluno.Text = received;
 
                         if (int.TryParse(received.Trim(), out idAluno))
                         {
