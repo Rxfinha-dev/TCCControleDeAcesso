@@ -63,7 +63,7 @@
             // 
             this.btnVerificar.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.btnVerificar.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnVerificar.Font = new System.Drawing.Font("Dubai", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnVerificar.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnVerificar.Location = new System.Drawing.Point(496, 495);
             this.btnVerificar.Name = "btnVerificar";
             this.btnVerificar.Size = new System.Drawing.Size(150, 50);
@@ -87,7 +87,7 @@
             this.pictureBox1.Location = new System.Drawing.Point(1250, 527);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(196, 270);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 3;
             this.pictureBox1.TabStop = false;
             // 

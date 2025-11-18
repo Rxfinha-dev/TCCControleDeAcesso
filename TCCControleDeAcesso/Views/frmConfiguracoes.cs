@@ -23,6 +23,14 @@ namespace TCCControleDeAcesso.Views
         {
             InitializeComponent();
             listCom(comboBoxPortas);
+
+            if (SerialPortManager.Port.IsOpen)
+            {
+                connect();
+                string selectedPort = SerialPortManager.Port.PortName.ToString();
+                comboBoxPortas.SelectedItem = selectedPort;
+                connected = true;
+            }
         }
 
         private void listCom(RJComboBox combo)
@@ -37,26 +45,27 @@ namespace TCCControleDeAcesso.Views
 
         private void bntConectar_Click(object sender, EventArgs e)
         {
-            comboBoxPortas.Enabled = false;
             if (comboBoxPortas.SelectedItem != null)
             {
                 if (!connected)
                 {
+                    string selectedPort = comboBoxPortas.SelectedItem.ToString();
+                    SerialPortManager.Port.PortName = selectedPort;
+                    SerialPortManager.Port.Open();
                     connect();
+                    connected = true;
                 }
                 else if (connected)
                 {
+                    SerialPortManager.Port.Close();
                     disconnect();
+                    connected = false;
                 }
             }
         }
 
         void connect()
         {
-            string selectedPort = comboBoxPortas.SelectedItem.ToString();
-            SerialPortManager.Port.PortName = selectedPort;
-            SerialPortManager.Port.Open();
-            connected = true;
             progressBarConectado.Value = 100;
             bntConectar.Text = "Desconectar";
             comboBoxPortas.Enabled = false;
@@ -64,8 +73,6 @@ namespace TCCControleDeAcesso.Views
 
         void disconnect()
         {
-            SerialPortManager.Port.Close();
-            connected = false;
             progressBarConectado.Value = 0;
             bntConectar.Text = "Conectar";
             comboBoxPortas.Enabled = true;
