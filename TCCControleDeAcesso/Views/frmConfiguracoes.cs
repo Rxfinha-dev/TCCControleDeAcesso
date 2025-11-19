@@ -61,7 +61,6 @@ namespace TCCControleDeAcesso.Views
                     disconnect();
                     connected = false;
                 }
-                SerialPortManager.Port.Write("!empty#");
                 this.Close();
             }
         }
