@@ -45,7 +45,7 @@
             // 
             this.btnAlterarSenha.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.btnAlterarSenha.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnAlterarSenha.Font = new System.Drawing.Font("Dubai", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnAlterarSenha.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnAlterarSenha.Location = new System.Drawing.Point(159, 406);
             this.btnAlterarSenha.Name = "btnAlterarSenha";
             this.btnAlterarSenha.Size = new System.Drawing.Size(152, 61);
@@ -57,10 +57,10 @@
             // chkBoxMostrarSenha
             // 
             this.chkBoxMostrarSenha.AutoSize = true;
-            this.chkBoxMostrarSenha.Font = new System.Drawing.Font("Arial Narrow", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chkBoxMostrarSenha.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.chkBoxMostrarSenha.Location = new System.Drawing.Point(182, 473);
             this.chkBoxMostrarSenha.Name = "chkBoxMostrarSenha";
-            this.chkBoxMostrarSenha.Size = new System.Drawing.Size(107, 24);
+            this.chkBoxMostrarSenha.Size = new System.Drawing.Size(123, 22);
             this.chkBoxMostrarSenha.TabIndex = 7;
             this.chkBoxMostrarSenha.Text = "Mostrar senha";
             this.chkBoxMostrarSenha.UseVisualStyleBackColor = true;
@@ -176,7 +176,6 @@
             this.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "frmTrocandoSenha";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "frmTrocandoSenha";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.frmTrocandoSenha_Load);
             this.panel1.ResumeLayout(false);

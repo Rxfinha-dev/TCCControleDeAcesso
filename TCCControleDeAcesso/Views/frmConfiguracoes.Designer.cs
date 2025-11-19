@@ -103,7 +103,6 @@
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "frmConfiguracoes";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "frmConfiguracoes";
             this.ResumeLayout(false);
             this.PerformLayout();
 

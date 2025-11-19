@@ -135,7 +135,7 @@
             // btnVerify
             // 
             this.btnVerify.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnVerify.Font = new System.Drawing.Font("Dubai", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnVerify.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnVerify.Location = new System.Drawing.Point(86, 450);
             this.btnVerify.Name = "btnVerify";
             this.btnVerify.Size = new System.Drawing.Size(293, 43);
@@ -148,7 +148,7 @@
             // 
             this.btnEnviarEmail.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.btnEnviarEmail.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnEnviarEmail.Font = new System.Drawing.Font("Dubai", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnEnviarEmail.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnEnviarEmail.Location = new System.Drawing.Point(86, 401);
             this.btnEnviarEmail.Name = "btnEnviarEmail";
             this.btnEnviarEmail.Size = new System.Drawing.Size(293, 43);
@@ -177,7 +177,6 @@
             this.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "frmNovaSenha";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "NovaSenha";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.frmNovaSenha_Load);
             this.panel1.ResumeLayout(false);

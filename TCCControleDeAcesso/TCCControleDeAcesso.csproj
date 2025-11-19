@@ -135,12 +135,6 @@
     <Compile Include="Models\Verificacao.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Views\frmExcluir.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\frmExcluir.Designer.cs">
-      <DependentUpon>frmExcluir.cs</DependentUpon>
-    </Compile>
     <Compile Include="Views\frmLog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -201,12 +195,6 @@
     <Compile Include="Views\frmVerificacao.Designer.cs">
       <DependentUpon>frmVerificacao.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\MenuPrincipal.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\MenuPrincipal.Designer.cs">
-      <DependentUpon>MenuPrincipal.cs</DependentUpon>
-    </Compile>
     <Compile Include="Views\NetworCredential.cs" />
     <Compile Include="Views\frmNovaSenha.cs">
       <SubType>Form</SubType>
@@ -242,9 +230,6 @@
     <EmbeddedResource Include="Views\frmConfiguracoes.resx">
       <DependentUpon>frmConfiguracoes.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\frmExcluir.resx">
-      <DependentUpon>frmExcluir.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Views\frmListaAlunos.resx">
       <DependentUpon>frmListaAlunos.cs</DependentUpon>
     </EmbeddedResource>
@@ -265,9 +250,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\frmVerificacao.resx">
       <DependentUpon>frmVerificacao.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\MenuPrincipal.resx">
-      <DependentUpon>MenuPrincipal.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\RJTextBox.resx">
       <DependentUpon>RJTextBox.cs</DependentUpon>

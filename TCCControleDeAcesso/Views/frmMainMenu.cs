@@ -96,9 +96,9 @@ int nHeightEllipse
 
         private void button8_Click(object sender, EventArgs e)
         {
-            var arquivoDestino = @"X:\Backup\meuBanco.sql";
-            var result = Backup(arquivoDestino);
-            MessageBox.Show(result);
+            //var arquivoDestino = @"X:\Backup\meuBanco.sql";
+            //var result = Backup(arquivoDestino);
+            //MessageBox.Show(result);
             Application.Exit();
         }
 
