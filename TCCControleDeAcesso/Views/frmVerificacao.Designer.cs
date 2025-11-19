@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.aluno = new System.Windows.Forms.Label();
             this.btnVerificar = new System.Windows.Forms.Button();
             this.progressBarVerificar = new System.Windows.Forms.ProgressBar();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
@@ -48,16 +47,6 @@
             this.label7 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
-            // 
-            // aluno
-            // 
-            this.aluno.AutoSize = true;
-            this.aluno.Font = new System.Drawing.Font("Arial", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.aluno.Location = new System.Drawing.Point(553, 592);
-            this.aluno.Name = "aluno";
-            this.aluno.Size = new System.Drawing.Size(43, 24);
-            this.aluno.TabIndex = 0;
-            this.aluno.Text = "N/A";
             // 
             // btnVerificar
             // 
@@ -86,7 +75,7 @@
             this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBox1.Location = new System.Drawing.Point(1250, 527);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(196, 270);
+            this.pictureBox1.Size = new System.Drawing.Size(195, 270);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 3;
             this.pictureBox1.TabStop = false;
@@ -254,7 +243,6 @@
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.progressBarVerificar);
             this.Controls.Add(this.btnVerificar);
-            this.Controls.Add(this.aluno);
             this.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "frmVerificacao";
             this.Text = "frmVerificacao";
@@ -267,8 +255,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.Label aluno;
         private System.Windows.Forms.Button btnVerificar;
         private System.Windows.Forms.ProgressBar progressBarVerificar;
         private System.Windows.Forms.PictureBox pictureBox1;

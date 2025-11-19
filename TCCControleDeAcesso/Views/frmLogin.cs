@@ -46,6 +46,7 @@ namespace TCCControleDeAcesso.Views
         public frmLogin()
         {
             InitializeComponent();
+            txtSenha.TabStop = true;
 
             // Inicializa o timer aqui (ou poderia ser no Load)
             flutuarTimer = new System.Windows.Forms.Timer();

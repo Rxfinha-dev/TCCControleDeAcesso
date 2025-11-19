@@ -107,88 +107,64 @@ namespace TCCControleDeAcesso.Views
 
         }
 
+        private void processReceived(string received)
+        {
+            if (received.StartsWith("!found"))
+            {
+                received = received.Replace("!found", "");
+                received = received.Replace("#", "");
+
+                if (int.TryParse(received.Trim(), out idAluno))
+                {
+                }
+
+                verificacao = new Verificacao()
+                {
+                    Id = idAluno
+                };
+                var dt = verificacao.select();
+                if (dt.Rows.Count > 0)
+                {
+                    lblRM.Text = dt.Rows[0]["rm"].ToString();
+                    lblNome.Text = dt.Rows[0]["nome"].ToString();
+                    lblSerie.Text = dt.Rows[0]["serie"].ToString();
+                    lblCurso.Text = dt.Rows[0]["curso"].ToString();
+                }
+
+                CarregarImagemDoAluno(idAluno);
+
+                dataAtual = DateTime.Now;
+
+
+                try
+                {
+                    log = new Log();
+                    log.insert(lblNome.Text, dataAtual, id_escola);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Erro ao Registrar Entrada", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
         private void serialPort_DataReceived(object sender, EventArgs e)
         {
+            string received;
+
             try
             {
-                aluno.Invoke(new Action(() => {
-                    string received = SerialPortManager.Port.ReadLine();
-                    if (received.StartsWith("!found"))
-                    {
-                        received = received.Replace("!found", "");
-                        received = received.Replace("#", "");
-
-                        if (int.TryParse(received.Trim(), out idAluno))
-                        {
-                        }
-
-                        verificacao = new Verificacao()
-                        {
-                            Id = idAluno
-                        };
-                        var dt = verificacao.select();
-                        if (dt.Rows.Count > 0)
-                        {
-                            lblRM.Text = dt.Rows[0]["rm"].ToString();
-                            lblNome.Text = dt.Rows[0]["nome"].ToString();
-                            lblSerie.Text = dt.Rows[0]["serie"].ToString();
-                            lblCurso.Text = dt.Rows[0]["curso"].ToString();
-                        }
-
-                        CarregarImagemDoAluno(idAluno);
-
-                        dataAtual = DateTime.Now;
-
-
-                        try
-                        {
-                            log = new Log();
-                            log.insert(lblNome.Text, dataAtual, id_escola);
-                        }catch(Exception ex)
-                        {
-                            MessageBox.Show(ex.Message, "Erro ao Registrar Entrada", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
-                    }
-                    else
-                    {
-                        aluno.Text = received;
-                    }
-                }));
-                //aluno.Invoke(new Action(() => {
-                //if (received.StartsWith("!found"))
-                //{
-                //    received = received.Replace("!found", "");
-                //    received = received.Replace("#", "");
-                //    aluno.Text = received;
-                //
-                //    var dt = verificacao.select();
-                //    if (dt.Rows.Count > 0)
-                //    {
-                //        lblRM.Text = dt.Rows[0]["rm"].ToString();
-                //        lblNome.Text = dt.Rows[0]["nome"].ToString();
-                //        lblSerie.Text = dt.Rows[0]["serie"].ToString();
-                //        lblCurso.Text = dt.Rows[0]["curso"].ToString();
-                //    }
-                //
-                //    idAluno = int.Parse(received);
-                //    CarregarImagemDoAluno(idAluno);
-
-                //    dataAtual = DateTime.Now;
-
-
-                //    log = new Log();
-                //    log.insert(idAluno, dataAtual, id_escola);
-
-
-                //}
-                //}));
+                received = SerialPortManager.Port.ReadLine();
             }
-            catch (IOException)
+            catch
             {
+                return;
             }
-            catch (InvalidOperationException)
+
+            this.BeginInvoke(new Action(() =>
             {
-            }
+                processReceived(received);
+            }));
         }
 
         private void FrmListaAlunos_FormClosing(object sender, FormClosingEventArgs e)

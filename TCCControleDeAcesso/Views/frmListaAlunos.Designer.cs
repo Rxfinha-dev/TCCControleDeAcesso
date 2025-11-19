@@ -68,7 +68,7 @@
             this.linkSelectPhoto.AutoSize = true;
             this.linkSelectPhoto.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.linkSelectPhoto.LinkColor = System.Drawing.Color.Black;
-            this.linkSelectPhoto.Location = new System.Drawing.Point(1239, 591);
+            this.linkSelectPhoto.Location = new System.Drawing.Point(1238, 591);
             this.linkSelectPhoto.Name = "linkSelectPhoto";
             this.linkSelectPhoto.Size = new System.Drawing.Size(91, 17);
             this.linkSelectPhoto.TabIndex = 78;
@@ -83,9 +83,9 @@
             // pictureBox1
             // 
             this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox1.Location = new System.Drawing.Point(1186, 324);
+            this.pictureBox1.Location = new System.Drawing.Point(1186, 321);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(200, 264);
+            this.pictureBox1.Size = new System.Drawing.Size(195, 270);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 71;
             this.pictureBox1.TabStop = false;
