@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/backend/" />
+  <Folder Name="/backend/src/">
+    <Project Path="backend/src/AccessControl.API/AccessControl.API.csproj" />
+  </Folder>
+  <Folder Name="/backend/tests/">
+    <Project Path="backend/tests/AccessControl.Tests/AccessControl.Tests.csproj" />
+  </Folder>
+</Solution>

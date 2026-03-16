@@ -1,0 +1,27 @@
+# .NET
+[Dd]ebug/
+[Rr]elease/
+[Bb]in/
+[Oo]bj/
+*.user
+*.suo
+.vs/
+*.nupkg
+*.snupkg
+
+# Node / Frontend
+node_modules/
+dist/
+.cache/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Docker
+*.override.yml
+
+# OS
+.DS_Store
+Thumbs.db
