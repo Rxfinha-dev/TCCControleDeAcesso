@@ -17,10 +17,12 @@ namespace TCCControleDeAcesso.Views
 {
     public partial class frmCadastroCurso : Form
     {
-        Curso _curso = new Curso();
+        AlunoController alunoContr = new AlunoController();
+        CursoController cursoContr = new CursoController();
+        Curso  cursoClass = new Curso();
         int id_escola;
         string idText;
-        Login _login;
+        LoginController _login;
         string _CurrentUsername;
 
         [DllImport("Gdi32.dll", EntryPoint = "CreateRoundRectRgn")]
@@ -49,7 +51,7 @@ namespace TCCControleDeAcesso.Views
         }
         public void CarregarGrid()
         {
-            dgvCursos.DataSource = _curso.ListCourses(id_escola);
+            dgvCursos.DataSource = cursoContr.ListCourses(id_escola);
         }
         private void btnCadastrar_Click(object sender, EventArgs e)
         {
@@ -58,11 +60,11 @@ namespace TCCControleDeAcesso.Views
                 MessageBox.Show("Preencha o Campo", "Aviso!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            _curso = new Curso()
+            cursoClass = new Curso()
             {
                 Name = txtNome.Texts
             };
-            _curso.Insert(id_escola);
+            cursoContr.InsertCurso(id_escola);
             CarregarGrid();
             LimparCampos();
         }
@@ -123,17 +125,17 @@ namespace TCCControleDeAcesso.Views
             else
             {
 
-                _curso = new Curso()
+                cursoClass = new Curso()
                 {
                     Id = int.Parse(idText)
                 };
-                _curso.Delete();
+                alunoContr.Delete();
 
-                _curso = new Curso()
+                cursoClass = new Curso()
                 {
                     idEscola = id_escola
                 };
-                dgvCursos.DataSource = _curso.ListCourses(id_escola);
+                dgvCursos.DataSource = cursoContr.ListCourses(id_escola);
                 dgvCursos.Columns["id"].Visible = false;
                 LimparCampos();
                 CarregarGrid();

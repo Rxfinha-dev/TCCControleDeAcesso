@@ -8,12 +8,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TCCControleDeAcesso.Models;
+using TCCControleDeAcesso.Controllers;
 
 namespace TCCControleDeAcesso.Views
 {
     public partial class frmLog : Form
     {
-        Log _log;
+        AcessoController _log;
         int id_escola;
         string _currentUsername;
 
@@ -26,7 +27,7 @@ namespace TCCControleDeAcesso.Views
 
         void carregarGrid()
         {
-            _log = new Log();          
+            _log = new AcessoController();          
             dgvLog.DataSource = _log.ShowLog(id_escola);
             //dgvLog.Columns["id"].Visible = false;
 

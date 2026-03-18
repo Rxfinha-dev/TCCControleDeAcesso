@@ -8,7 +8,6 @@ namespace TCCControleDeAcesso.Models
 {
     public class Banco
     {
-
         public static MySqlConnection Connection { get; set; }
         public static MySqlCommand Command { get; set; }
       
@@ -17,66 +16,52 @@ namespace TCCControleDeAcesso.Models
         public static MySqlDataReader Reader { get; set; }
         public static DataTable datTable { get; set; }
 
-        
-
-
-        public static void OpenConnection()
-        {
-            try
-            {
-                Connection = new MySqlConnection(DatabaseServices.Connection);
-                //Na escola:
-                //pwd=etecjau
-                //port=3307
-                //uid=root
-
-
-
-
-
-
-                Connection.Open();
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message, "Erro Ao Conectar com o Banco", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Console.WriteLine(e.ToString());
-            }
-        }
+        //public static void OpenConnection()
+        //{
+        //    try
+        //    {
+        //        //Connection = new MySqlConnection(DatabaseServices.Connection);
+        //        //Na escola:
+        //        //pwd=etecjau
+        //        //port=3307
+        //        //uid=root
+        //        //Connection.Open();
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        MessageBox.Show(e.Message, "Erro Ao Conectar com o Banco", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //        Console.WriteLine(e.ToString());
+        //    }
+        //}
 
         public static void reader() {
             Reader = Command.ExecuteReader();
         }
 
-        public static void CloseConnection()
-        {
-            try
-            {
-                Connection.Close();
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message, "Erro Ao Fechar a Conexão com o Banco", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
+        //public static void CloseConnection()
+        //{
+        //    try
+        //    {
+        //        Connection.Close();
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        MessageBox.Show(e.Message, "Erro Ao Fechar a Conexão com o Banco", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //    }
+        //}
      
         public static void CreateDatabase()
         {
             try
             {
                 //abre a conexão com o banco de dados
-                OpenConnection();
-
-
+                //OpenConnection();
 
                 Command = new MySqlCommand("CREATE DATABASE IF NOT EXISTS AccessControl", Connection);
 
                 Command.ExecuteNonQuery();
 
                 Command = new MySqlCommand("use accesscontrol", Connection);
-
-
 
                 // Criação da tabela 'escolas'
                 Command = new MySqlCommand("create table if not exists escolas" +
@@ -94,7 +79,6 @@ namespace TCCControleDeAcesso.Models
                     "foreign key (idEscola) references escolas (id))", Connection);
                 Command.ExecuteNonQuery();
 
-
                 // Criação da tabela 'alunos'
                 Command = new MySqlCommand("create table if not exists alunos " +
                     "(id integer auto_increment primary key," +
@@ -108,10 +92,6 @@ namespace TCCControleDeAcesso.Models
                     "digital blob," +
                     "foreign key (idEscola) references escolas (id))", Connection);
                 Command.ExecuteNonQuery();
-
-
-
-
 
                 // Criação da tabela 'entradas'
                 Command = new MySqlCommand("create table if not exists entradas " +

@@ -12,6 +12,7 @@ using System.Web.UI.WebControls;
 using System.Windows.Forms;
 using TCCControleDeAcesso.Controllers;
 using TCCControleDeAcesso.Models;
+using ZstdSharp.Unsafe;
 
 namespace TCCControleDeAcesso.Views
 {
@@ -33,16 +34,13 @@ namespace TCCControleDeAcesso.Views
         String randomCode;
         public static String to;
 
-        NovaSenha ns = new NovaSenha();
+        NovaSenhaController ns = new NovaSenhaController();
 
        public string EmailCadastrado;
         public frmTrocandoSenha(string email)
         {
             InitializeComponent();
             EmailCadastrado = email;
-
-            
-            
         }
 
         private void chkBoxMostrarSenha_CheckedChanged(object sender, EventArgs e)
@@ -58,7 +56,6 @@ namespace TCCControleDeAcesso.Views
                 txtNovaSenha2.PasswordChar = true;
             }
         }
-
         private void frmTrocandoSenha_Load(object sender, EventArgs e)
         {
             txtNovaSenha.PasswordChar = true;
@@ -71,24 +68,15 @@ namespace TCCControleDeAcesso.Views
             btnAlterarSenha.ForeColor = Color.White; // texto branco
 
             button1.Cursor = Cursors.Hand;
-
         }
 
         private void btnAlterarSenha_Click(object sender, EventArgs e)
         {
-            //////////////////////////
-            ///
             int ContSenha = txtNovaSenha.Texts.Length;
 
             if (txtNovaSenha.Texts == txtNovaSenha2.Texts && ContSenha > 8 )
             {
-
-                ////------------------Vamos tentar implementar A hash (que está com a salt key incluido ja)------------------//
-
-
-
                 string senha = txtNovaSenha.Texts.Trim();
-
 
 
                 //gera hash com salt automático (interno do bcrypt)
@@ -96,34 +84,31 @@ namespace TCCControleDeAcesso.Views
                 string hash = BCrypt.Net.BCrypt.HashPassword(senha);
 
 
+
                 //hash que vai ser armazenado no banco:
                 //tenhamos em mente que estamos pegando o valor da hash que foi gerada juntamente com o SaltKey e estamos atribuindo +
                 //ela novamente ao campo txtSenha para poder enviarmos ela ao banco de dados sem problemas
-                ns = new NovaSenha()
-                {
-                    senha = hash,
-                    email = EmailCadastrado
-                };
-                ns.ChangePasswod();
+
+                // Para esse bloco de código funcionar primeiro é necessário a refatoração do NovaSenha ficar pronta
+                //ns = new Empresa()
+                //{
+                //    senha = hash,
+                //    Email = EmailCadastrado
+                //};
+
+                //ns.ChangePasswod();
 
                 MessageBox.Show("Senha alterada com sucesso!");
                 this.Close();
                 frmLogin loginForm = new frmLogin();
                 loginForm.Show();
-
             }
             else
             {
-
                 MessageBox.Show("As senhas inseridas são diferentes ou a senha não tem a quantidade miníma de 9 caracteres", "ERRO", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
             }
             txtNovaSenha.Texts = "";
             txtNovaSenha2.Texts = "";
-
-
-
-            ////------------------fim da implementação------------------//
         }
 
         private void button1_Click(object sender, EventArgs e)

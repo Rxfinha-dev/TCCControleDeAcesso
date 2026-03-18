@@ -11,43 +11,24 @@ using System.Data.SqlClient;
 
 namespace TCCControleDeAcesso.Controllers
 {
-    public class Login
+    public class LoginController
     {
-        public int id { get; set; }
-        public string nome { get; set; }
-        public string senha { get; set; }
-        public string email { get; set; }
-        public int idEscola { get; set; }
-
-        public string HashBanco { get; set; }
-
-        public int count;
-
-
-
+        Login loginClass = new Login();                          
         public void LoginPermissions()
         {
             try
             {
-
-
-                Banco.OpenConnection();
-
-
+                //Banco.OpenConnection();
                 Banco.Command = new MySqlCommand("select id from escolas where email=@email", Banco.Connection);
-                Banco.Command.Parameters.AddWithValue("@email", email);
+                Banco.Command.Parameters.AddWithValue("@email", loginClass.email);
 
                 using (MySqlDataReader reader = Banco.Command.ExecuteReader())
                 {
                     if (reader.Read())
                     {
-                        idEscola = reader.GetInt32("id"); // aqui era um GetInt32 antes
+                        loginClass.idEscola = reader.GetInt32("id"); // aqui era um GetInt32 antes
                     }
                 }
-
-              
-                
-
             }
             catch (Exception ex)
             {
@@ -55,7 +36,7 @@ namespace TCCControleDeAcesso.Controllers
             }
             finally
             {
-                Banco.CloseConnection(); 
+                //Banco.CloseConnection(); 
             }
         }
 
@@ -63,24 +44,24 @@ namespace TCCControleDeAcesso.Controllers
         {
             try
             {
-                Banco.OpenConnection();
+                //Banco.OpenConnection();
 
                 Banco.Command = new MySqlCommand("SELECT COUNT(*) FROM escolas WHERE email=@email", Banco.Connection);
-                Banco.Command.Parameters.AddWithValue("@email", email);
-                count = Convert.ToInt32(Banco.Command.ExecuteScalar());
+                Banco.Command.Parameters.AddWithValue("@email", loginClass.email);
+                loginClass.count = Convert.ToInt32(Banco.Command.ExecuteScalar());
 
-                if (count > 0)
+                if (loginClass.count > 0)
                 {
                     // Busca apenas a senha (hash) direto
                     using (var cmd = new MySqlCommand("SELECT senha FROM escolas WHERE email=@email LIMIT 1", Banco.Connection))
                     {
-                        cmd.Parameters.AddWithValue("@email", email);
+                        cmd.Parameters.AddWithValue("@email", loginClass.email);
 
                         var result = cmd.ExecuteScalar();
 
                         if (result != null)
                         {
-                            HashBanco = result.ToString();
+                            loginClass.HashBanco = result.ToString();
                         }
                     }
                 }
@@ -91,11 +72,9 @@ namespace TCCControleDeAcesso.Controllers
             }
             finally
             {
-                Banco.CloseConnection();
+                //Banco.CloseConnection();
             }
         }
-
-        
     }
 }
 
