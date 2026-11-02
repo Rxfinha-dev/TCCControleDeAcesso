@@ -7,6 +7,7 @@ import { corsOrigins, env } from './config/env';
 import { logger } from './lib/logger';
 import { createRequireAuth } from './middlewares/auth';
 import { errorHandler, notFoundHandler } from './middlewares/error-handler';
+import { apiRateLimit } from './middlewares/rate-limit';
 import { accessLogsRoutes } from './modules/access-logs/access-logs.routes';
 import { AccessLogsService } from './modules/access-logs/access-logs.service';
 import { authRoutes } from './modules/auth/auth.routes';
@@ -35,7 +36,8 @@ export function createApp({ prisma, mailer, storage }: AppDependencies) {
   app.use(helmet());
   app.use(
     cors({
-      origin: corsOrigins.includes('*') ? true : corsOrigins,
+      // Apenas as origens listadas em CORS_ORIGIN (sem curinga).
+      origin: corsOrigins,
       exposedHeaders: ['Content-Disposition'],
     }),
   );
@@ -62,10 +64,10 @@ export function createApp({ prisma, mailer, storage }: AppDependencies) {
   const requireAuth = createRequireAuth(prisma);
 
   app.use('/api/auth', authRoutes(new AuthService(prisma, mailer), requireAuth));
-  app.use('/api/courses', requireAuth, coursesRoutes(new CoursesService(prisma)));
-  app.use('/api/students', requireAuth, studentsRoutes(new StudentsService(prisma, storage)));
-  app.use('/api/access-logs', requireAuth, accessLogsRoutes(new AccessLogsService(prisma)));
-  app.use('/api/stats', requireAuth, statsRoutes(prisma));
+  app.use('/api/courses', apiRateLimit, requireAuth, coursesRoutes(new CoursesService(prisma)));
+  app.use('/api/students', apiRateLimit, requireAuth, studentsRoutes(new StudentsService(prisma, storage)));
+  app.use('/api/access-logs', apiRateLimit, requireAuth, accessLogsRoutes(new AccessLogsService(prisma)));
+  app.use('/api/stats', apiRateLimit, requireAuth, statsRoutes(prisma));
 
   app.use(notFoundHandler);
   app.use(errorHandler);

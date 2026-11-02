@@ -38,7 +38,9 @@ export function StudentPhoto({ studentId, hasPhoto, previewUrl, version, alt, cl
     };
   }, [studentId, hasPhoto, previewUrl, version]);
 
-  const src = previewUrl ?? url;
+  // Só aceita URLs locais criadas por URL.createObjectURL (blob:), nunca texto arbitrário.
+  const candidate = previewUrl ?? url;
+  const src = candidate?.startsWith('blob:') ? candidate : null;
   return (
     <div className={`student-photo ${className ?? ''}`}>
       {src ? <img src={src} alt={alt} /> : <UserIcon width={56} height={56} />}

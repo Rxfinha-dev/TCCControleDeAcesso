@@ -1,6 +1,6 @@
 import { Router, type RequestHandler } from 'express';
 import { currentSchool } from '../../middlewares/auth';
-import { authRateLimit } from '../../middlewares/rate-limit';
+import { apiRateLimit, authRateLimit } from '../../middlewares/rate-limit';
 import {
   emailOnlySchema,
   loginSchema,
@@ -47,7 +47,7 @@ export function authRoutes(service: AuthService, requireAuth: RequestHandler) {
     res.json({ message: 'Senha alterada com sucesso!' });
   });
 
-  router.get('/me', requireAuth, async (_req, res) => {
+  router.get('/me', apiRateLimit, requireAuth, async (_req, res) => {
     res.json(await service.me(currentSchool(res).sub));
   });
 

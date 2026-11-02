@@ -46,7 +46,8 @@ async function main() {
     });
   }
 
-  console.log(`Seed concluído. Login: ${email} / ${password}`);
+  // A senha não é exibida: é a de SEED_PASSWORD (ou a padrão documentada no README).
+  console.log(`Seed concluído. Login: ${email}`);
 }
 
 main()
