@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import { ArrowLeftIcon } from './Icons';
 import { Logo } from './Logo';
 import { NetworkMotif } from './NetworkMotif';
+import { ThemeToggle } from './ThemeToggle';
 
 interface AuthLayoutProps {
   title: string;
@@ -27,6 +28,7 @@ export function AuthLayout({ title, subtitle, backTo, children }: AuthLayoutProp
         </div>
       </aside>
       <main className="auth-content">
+        <ThemeToggle className="auth-theme" />
         <section className="auth-card">
           {backTo && (
             <Link to={backTo} className="icon-button auth-back" aria-label="Voltar">

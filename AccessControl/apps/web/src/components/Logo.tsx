@@ -1,12 +1,15 @@
 interface LogoProps {
-  /** "dark" = ícone e texto pretos (sobre o azul); "light" = texto branco (sobre a sidebar escura). */
-  variant?: 'dark' | 'light';
+  /**
+   * "dark" = ícone e texto pretos (sobre o azul); "light" = texto branco (sobre a sidebar escura);
+   * "auto" = cor do texto atual (acompanha o tema claro/escuro).
+   */
+  variant?: 'dark' | 'light' | 'auto';
   className?: string;
 }
 
 /** Marca HelpUs: ícone de "compartilhar" + "Help" sólido e "Us" vazado, como na arte original. */
 export function Logo({ variant = 'dark', className }: LogoProps) {
-  const color = variant === 'dark' ? '#111111' : '#FFFFFF';
+  const color = variant === 'dark' ? '#111111' : variant === 'light' ? '#FFFFFF' : 'currentColor';
   return (
     <svg className={className} viewBox="0 0 330 110" role="img" aria-label="HelpUs">
       <g fill={color} stroke={color}>

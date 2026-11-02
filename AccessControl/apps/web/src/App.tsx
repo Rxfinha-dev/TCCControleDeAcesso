@@ -21,7 +21,7 @@ function RequireAuth() {
   if (loading) {
     return (
       <div className="splash">
-        <Logo className="floating" />
+        <Logo variant="auto" className="floating" />
       </div>
     );
   }
@@ -32,7 +32,7 @@ function RequireAuth() {
 function NotFoundPage() {
   return (
     <div className="splash">
-      <Logo />
+      <Logo variant="auto" />
       <h1>Página não encontrada</h1>
       <Link to="/" className="btn btn-primary">
         Voltar ao início

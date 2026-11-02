@@ -3,7 +3,8 @@
    azul #34BCFB, menu lateral #2C2C2C, logo "Help" sólido + "Us"
    vazado, bolha azul no login e cartões com borda azul.
    Sobre o azul, o texto é escuro (como a logo preta original),
-   o que mantém o contraste legível.
+   o que mantém o contraste legível nos dois temas.
+   O tema escuro usa a família do grafite do menu lateral.
    ========================================================== */
 
 :root {
@@ -14,6 +15,8 @@
   --sky-line: #bde6fb;
   --graphite: #2c2c2c;
   --graphite-raised: #383838;
+  /* Texto sobre o azul: escuro nos dois temas. */
+  --on-sky: #13202b;
   --ink: #13202b;
   --text: #3d4b57;
   --muted: #6b7883;
@@ -26,6 +29,16 @@
   --warning-soft: #fff1dc;
   --danger: #c93a3a;
   --danger-soft: #fdecec;
+  --neutral-soft: #eef1f4;
+  --neutral-text: #56636e;
+  --input-hover: #cdd7df;
+  --placeholder: #98a3ad;
+  --dashed: #d4dee6;
+  --success-line: #9fdcc0;
+  --danger-line: #f2c9c9;
+  --hover-tint: rgba(19, 32, 43, 0.07);
+  --backdrop: rgba(19, 32, 43, 0.45);
+  --sky-glow: rgba(6, 112, 159, 0.55);
   --radius-sm: 12px;
   --radius: 18px;
   --radius-lg: 28px;
@@ -33,6 +46,38 @@
   --font-display: 'Sora', 'Segoe UI', system-ui, sans-serif;
   --font: 'Instrument Sans', 'Segoe UI', 'Segoe UI Variable', system-ui, -apple-system, Roboto, Arial, sans-serif;
   color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  --sky-ink: #6fd0fd;
+  --sky-soft: #173444;
+  --sky-line: #22526a;
+  --graphite: #151617;
+  --graphite-raised: #2a2c2e;
+  --ink: #f1f4f6;
+  --text: #c5ccd2;
+  --muted: #8e979f;
+  --line: #33373c;
+  --paper: #1b1d20;
+  --surface: #24272b;
+  --success: #5fd8a2;
+  --success-soft: #16332a;
+  --warning: #f2b75a;
+  --warning-soft: #3a2c14;
+  --danger: #ff8a8a;
+  --danger-soft: #3d2023;
+  --neutral-soft: #30343a;
+  --neutral-text: #b3bcc4;
+  --input-hover: #474c53;
+  --placeholder: #747d86;
+  --dashed: #3c4147;
+  --success-line: #2c6b4f;
+  --danger-line: #6b3236;
+  --hover-tint: rgba(255, 255, 255, 0.08);
+  --backdrop: rgba(0, 0, 0, 0.6);
+  --sky-glow: rgba(52, 188, 251, 0.35);
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 32px -18px rgba(0, 0, 0, 0.6);
+  color-scheme: dark;
 }
 
 *,
@@ -130,7 +175,7 @@ a:hover {
 .btn-primary {
   background: var(--sky);
   border-color: var(--sky);
-  color: var(--ink);
+  color: var(--on-sky);
 }
 
 .btn-primary:hover:not(:disabled) {
@@ -139,7 +184,7 @@ a:hover {
 }
 
 .btn-ink {
-  background: var(--ink);
+  background: var(--on-sky);
   color: #fff;
 }
 
@@ -161,7 +206,7 @@ a:hover {
 .btn-danger {
   background: var(--surface);
   color: var(--danger);
-  border-color: #f2c9c9;
+  border-color: var(--danger-line);
 }
 
 .btn-danger:hover:not(:disabled) {
@@ -208,7 +253,7 @@ a:hover {
 }
 
 .icon-button:hover {
-  background: rgba(19, 32, 43, 0.07);
+  background: var(--hover-tint);
 }
 
 /* ---------- Formulários ---------- */
@@ -252,11 +297,11 @@ select {
 
 input:hover:not(:disabled),
 select:hover:not(:disabled) {
-  border-color: #cdd7df;
+  border-color: var(--input-hover);
 }
 
 input::placeholder {
-  color: #98a3ad;
+  color: var(--placeholder);
 }
 
 input:focus,
@@ -368,7 +413,7 @@ select:disabled {
   display: flex;
   align-items: center;
   padding: 48px 14% 48px 7%;
-  color: var(--ink);
+  color: var(--on-sky);
 }
 
 .auth-motif {
@@ -421,10 +466,22 @@ select:disabled {
 }
 
 .auth-content {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 40px 24px;
+}
+
+.auth-theme {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  color: var(--muted);
+}
+
+.auth-theme:hover {
+  color: var(--ink);
 }
 
 .auth-card {
@@ -435,7 +492,7 @@ select:disabled {
   border: 2px solid var(--sky);
   border-radius: var(--radius-lg);
   background: var(--surface);
-  box-shadow: 0 28px 60px -36px rgba(6, 112, 159, 0.55);
+  box-shadow: 0 28px 60px -36px var(--sky-glow);
   display: flex;
   flex-direction: column;
   gap: 22px;
@@ -490,10 +547,17 @@ select:disabled {
   flex-direction: column;
   padding: 26px 16px 16px;
   gap: 8px;
+  border-right: 1px solid transparent;
+  /* Em janelas baixas o menu rola, para o rodapé (leitor e sair) não ficar escondido. */
+  overflow-y: auto;
 }
 
 .sidebar-brand {
-  padding: 0 10px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0 0 22px 10px;
 }
 
 .sidebar-logo {
@@ -528,7 +592,7 @@ select:disabled {
 
 .nav-item.active {
   background: var(--sky);
-  color: var(--ink);
+  color: var(--on-sky);
   font-weight: 600;
 }
 
@@ -580,7 +644,7 @@ select:disabled {
 .sidebar-user {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   padding: 14px 4px 0 6px;
   margin-top: 8px;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
@@ -591,8 +655,14 @@ select:disabled {
   min-width: 0;
 }
 
+.sidebar-user .icon-button {
+  width: 36px;
+  height: 36px;
+}
+
 .sidebar-user small {
   display: block;
+  white-space: nowrap;
   color: #9da3a8;
   font-size: 0.75rem;
 }
@@ -603,6 +673,16 @@ select:disabled {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.sidebar-brand .theme-toggle {
+  color: #c9cdd1;
+}
+
+.sidebar-brand .theme-toggle:hover,
+.mobile-topbar .theme-toggle:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
 }
 
 .sidebar-user .logout {
@@ -620,7 +700,7 @@ select:disabled {
   height: 38px;
   border-radius: 50%;
   background: var(--sky);
-  color: var(--ink);
+  color: var(--on-sky);
   font-family: var(--font-display);
   font-size: 0.8rem;
   font-weight: 600;
@@ -706,7 +786,7 @@ select:disabled {
 
 .split-layout {
   display: grid;
-  grid-template-columns: minmax(300px, 380px) 1fr;
+  grid-template-columns: minmax(290px, 340px) 1fr;
   gap: 22px;
   align-items: start;
 }
@@ -745,7 +825,7 @@ select:disabled {
   padding: 32px 36px;
   border-radius: var(--radius-lg);
   background: var(--sky);
-  color: var(--ink);
+  color: var(--on-sky);
 }
 
 .today-motif {
@@ -799,7 +879,7 @@ select:disabled {
   align-items: baseline;
   gap: 14px;
   padding: 14px 0;
-  color: var(--ink);
+  color: var(--on-sky);
   font-weight: 500;
 }
 
@@ -924,7 +1004,7 @@ select:disabled {
   font-size: 0.8rem;
   font-weight: 600;
   color: var(--muted);
-  padding: 10px 14px;
+  padding: 10px 12px;
   background: var(--paper);
   white-space: nowrap;
 }
@@ -938,7 +1018,7 @@ select:disabled {
 }
 
 .table td {
-  padding: 12px 14px;
+  padding: 12px;
   border-bottom: 1px solid var(--line);
   vertical-align: middle;
 }
@@ -974,7 +1054,7 @@ select:disabled {
   gap: 10px;
   color: var(--ink);
   font-weight: 500;
-  white-space: nowrap;
+  min-width: 170px;
 }
 
 .table .nowrap {
@@ -1024,8 +1104,8 @@ select:disabled {
 }
 
 .badge-muted {
-  background: #eef1f4;
-  color: #56636e;
+  background: var(--neutral-soft);
+  color: var(--neutral-text);
 }
 
 .filters {
@@ -1109,7 +1189,7 @@ select:disabled {
   padding: 14px 16px;
   border-radius: 14px;
   background: var(--paper);
-  border: 1.5px dashed #cfd9e1;
+  border: 1.5px dashed var(--dashed);
 }
 
 .enroll-panel strong {
@@ -1131,13 +1211,13 @@ select:disabled {
 
 .enroll-panel.status-done {
   border-style: solid;
-  border-color: #9fdcc0;
+  border-color: var(--success-line);
   background: var(--success-soft);
 }
 
 .enroll-panel.status-error {
   border-style: solid;
-  border-color: #f2c0c0;
+  border-color: var(--danger-line);
   background: var(--danger-soft);
 }
 
@@ -1190,7 +1270,7 @@ select:disabled {
 
 .scanner.active {
   background: var(--sky);
-  color: var(--ink);
+  color: var(--on-sky);
 }
 
 .scanner.active::before,
@@ -1204,8 +1284,8 @@ select:disabled {
 }
 
 .scanner.offline {
-  background: #eef1f4;
-  color: #9aa5ae;
+  background: var(--neutral-soft);
+  color: var(--muted);
 }
 
 .scanner.offline::before,
@@ -1249,14 +1329,14 @@ select:disabled {
   display: grid;
   min-height: 440px;
   border-radius: var(--radius-lg);
-  border: 2px dashed #d4dee6;
+  border: 2px dashed var(--dashed);
   background: var(--surface);
   overflow: hidden;
 }
 
 .result-panel.granted {
   border: 2px solid var(--sky);
-  box-shadow: 0 28px 60px -36px rgba(6, 112, 159, 0.55);
+  box-shadow: 0 28px 60px -36px var(--sky-glow);
 }
 
 .result-empty {
@@ -1296,7 +1376,7 @@ select:disabled {
   gap: 14px;
   padding: 18px 28px;
   background: var(--sky);
-  color: var(--ink);
+  color: var(--on-sky);
 }
 
 .result-band strong,
@@ -1318,7 +1398,7 @@ select:disabled {
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: var(--ink);
+  background: var(--on-sky);
   color: #fff;
   animation: check-pop 0.5s 0.15s cubic-bezier(0.3, 1.6, 0.5, 1) both;
 }
@@ -1415,6 +1495,7 @@ select:disabled {
   width: calc(100% - 32px);
   box-shadow: 0 30px 80px -20px rgba(19, 32, 43, 0.4);
   color: var(--text);
+  background: var(--surface);
 }
 
 .dialog h2 {
@@ -1423,7 +1504,7 @@ select:disabled {
 }
 
 .dialog::backdrop {
-  background: rgba(19, 32, 43, 0.45);
+  background: var(--backdrop);
 }
 
 .dialog-actions {
@@ -1508,6 +1589,7 @@ select:disabled {
   padding: 24px;
   background: var(--surface);
   text-align: center;
+  color: var(--ink);
 }
 
 .splash svg {
@@ -1599,7 +1681,7 @@ select:disabled {
     background: rgba(255, 255, 255, 0.08);
   }
 
-  .mobile-topbar .status-dot {
+  .mobile-topbar .theme-toggle {
     margin-left: auto;
   }
 
@@ -1625,7 +1707,7 @@ select:disabled {
     position: fixed;
     inset: 0;
     z-index: 30;
-    background: rgba(19, 32, 43, 0.45);
+    background: var(--backdrop);
   }
 
   .app-content {
@@ -1693,4 +1775,17 @@ select:disabled {
     animation: none !important;
     transition: none !important;
   }
+}
+
+/* ---------- Tema escuro: ajustes pontuais ---------- */
+:root[data-theme='dark'] .sidebar {
+  border-right-color: rgba(255, 255, 255, 0.06);
+}
+
+:root[data-theme='dark'] .toast {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+:root[data-theme='dark'] .result-motif {
+  color: var(--neutral-soft);
 }

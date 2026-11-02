@@ -14,6 +14,7 @@ import {
   StudentIcon,
 } from './Icons';
 import { Logo } from './Logo';
+import { ThemeToggle } from './ThemeToggle';
 
 const NAV_ITEMS = [
   { to: '/', label: 'Início', icon: HomeIcon, end: true },
@@ -43,12 +44,14 @@ export function AppLayout() {
           <MenuIcon />
         </button>
         <Logo variant="light" className="mobile-logo" />
+        <ThemeToggle />
         <span className={`status-dot ${connected ? 'on' : 'off'}`} title={connected ? 'Leitor conectado' : 'Leitor desconectado'} />
       </header>
 
       <aside className="sidebar">
         <div className="sidebar-brand">
           <Logo variant="light" className="sidebar-logo" />
+          <ThemeToggle />
         </div>
         <nav className="sidebar-nav" onClick={() => setMenuOpen(false)}>
           {NAV_ITEMS.map(({ to, label, icon: Icon, end }) => (

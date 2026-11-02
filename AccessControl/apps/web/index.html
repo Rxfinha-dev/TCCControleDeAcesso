@@ -5,6 +5,14 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#34BCFB" />
+    <script>
+      // Aplica o tema salvo (ou o do sistema) antes da primeira pintura, sem piscar.
+      try {
+        var saved = localStorage.getItem('helpus.theme');
+        var dark = saved ? saved === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+      } catch (e) {}
+    </script>
     <meta name="description" content="HelpUs - Segurança que conecta. Controle de acesso de alunos com biometria." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
