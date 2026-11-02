@@ -40,7 +40,7 @@ export class DatabasePhotoStorage implements PhotoStorage {
 
 /** Salva as fotos em um bucket privado do Supabase Storage. */
 export class SupabasePhotoStorage implements PhotoStorage {
-  private client = createClient(env.SUPABASE_URL!, env.SUPABASE_SERVICE_ROLE_KEY!, {
+  private client = createClient(env.SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY!, {
     auth: { persistSession: false },
   });
   private bucket = env.SUPABASE_STORAGE_BUCKET;

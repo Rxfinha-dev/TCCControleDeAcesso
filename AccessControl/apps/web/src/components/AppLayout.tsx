@@ -32,7 +32,7 @@ export function AppLayout() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const handleLogout = () => {
-    logout();
+    void logout();
     navigate('/login', { replace: true });
   };
 

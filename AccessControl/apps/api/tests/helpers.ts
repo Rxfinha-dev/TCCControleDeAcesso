@@ -1,18 +1,25 @@
 import type { PrismaClient, School, Student } from '@prisma/client';
 import { mockDeep, type DeepMockProxy } from 'jest-mock-extended';
 import { createApp } from '../src/app';
-import type { Mailer, MailMessage } from '../src/services/mailer';
+import type { AuthUser, IdentityProvider } from '../src/services/identity';
 import type { PhotoStorage, StoredPhoto } from '../src/services/storage';
-import { signToken } from '../src/services/tokens';
 
-export class FakeMailer implements Mailer {
-  sent: MailMessage[] = [];
-  async send(message: MailMessage) {
-    this.sent.push(message);
+export const VALID_TOKEN = 'valid-token';
+export const AUTH_USER_ID = '6f1c2b8e-3a4d-4e5f-9a0b-1c2d3e4f5a6b';
+
+/** Simula o Supabase Auth: só o token VALID_TOKEN é aceito. */
+export class FakeIdentity implements IdentityProvider {
+  user: AuthUser = {
+    userId: AUTH_USER_ID,
+    email: 'etec@escola.com',
+    name: 'ETEC Joaquim Ferreira do Amaral',
+    emailConfirmed: true,
+  };
+  async verifyToken(token: string) {
+    return token === VALID_TOKEN ? { userId: this.user.userId, email: this.user.email } : null;
   }
-  /** Extrai o código de 6 dígitos do último e-mail enviado. */
-  lastCode() {
-    return this.sent.at(-1)?.text.match(/\d{6}/)?.[0];
+  async getUser(token: string) {
+    return token === VALID_TOKEN ? this.user : null;
   }
 }
 
@@ -36,27 +43,24 @@ export function buildTestApp() {
   // Executa as operações recebidas em $transaction([...]) como Promise.all.
   prisma.$transaction.mockImplementation(((operations: unknown) =>
     Array.isArray(operations) ? Promise.all(operations) : Promise.resolve(operations)) as never);
-  // O middleware de autenticação confere a instituição no banco a cada requisição.
+  // O middleware de autenticação busca a instituição do usuário logado a cada requisição.
   prisma.school.findUnique.mockResolvedValue(school);
-  const mailer = new FakeMailer();
+  const identity = new FakeIdentity();
   const storage = new MemoryStorage();
-  const app = createApp({ prisma, mailer, storage });
-  return { app, prisma, mailer, storage };
+  const app = createApp({ prisma, identity, storage });
+  return { app, prisma, identity, storage };
 }
 
 export const school: School = {
   id: 1,
   name: 'ETEC Joaquim Ferreira do Amaral',
   email: 'etec@escola.com',
-  passwordHash: '',
-  emailVerifiedAt: new Date('2026-01-01T00:00:00Z'),
-  sessionVersion: 0,
+  authUserId: AUTH_USER_ID,
   createdAt: new Date('2026-01-01T00:00:00Z'),
   updatedAt: new Date('2026-01-01T00:00:00Z'),
 };
 
-export const authHeader = (schoolId = school.id, ver = school.sessionVersion) =>
-  `Bearer ${signToken({ sub: schoolId, name: school.name, email: school.email, ver })}`;
+export const authHeader = () => `Bearer ${VALID_TOKEN}`;
 
 export function makeStudent(overrides: Partial<Student> = {}): Student & { course: { id: number; name: string } } {
   return {

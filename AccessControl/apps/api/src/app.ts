@@ -17,16 +17,16 @@ import { CoursesService } from './modules/courses/courses.service';
 import { statsRoutes } from './modules/stats/stats.routes';
 import { studentsRoutes } from './modules/students/students.routes';
 import { StudentsService } from './modules/students/students.service';
-import type { Mailer } from './services/mailer';
+import type { IdentityProvider } from './services/identity';
 import type { PhotoStorage } from './services/storage';
 
 export interface AppDependencies {
   prisma: PrismaClient;
-  mailer: Mailer;
+  identity: IdentityProvider;
   storage: PhotoStorage;
 }
 
-export function createApp({ prisma, mailer, storage }: AppDependencies) {
+export function createApp({ prisma, identity, storage }: AppDependencies) {
   const app = express();
 
   // Necessário atrás do proxy do Render/Fly para o rate limit identificar o IP real.
@@ -61,9 +61,10 @@ export function createApp({ prisma, mailer, storage }: AppDependencies) {
     });
   });
 
-  const requireAuth = createRequireAuth(prisma);
+  const authService = new AuthService(prisma, identity);
+  const requireAuth = createRequireAuth(authService);
 
-  app.use('/api/auth', authRoutes(new AuthService(prisma, mailer), requireAuth));
+  app.use('/api/auth', authRoutes(authService, requireAuth));
   app.use('/api/courses', apiRateLimit, requireAuth, coursesRoutes(new CoursesService(prisma)));
   app.use('/api/students', apiRateLimit, requireAuth, studentsRoutes(new StudentsService(prisma, storage)));
   app.use('/api/access-logs', apiRateLimit, requireAuth, accessLogsRoutes(new AccessLogsService(prisma)));

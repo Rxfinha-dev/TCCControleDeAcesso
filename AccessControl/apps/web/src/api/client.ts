@@ -1,6 +1,5 @@
 import { API_URL } from '../app-config';
-
-const TOKEN_KEY = 'helpus.token';
+import { supabase } from '../lib/supabase';
 
 export class ApiError extends Error {
   constructor(
@@ -13,11 +12,11 @@ export class ApiError extends Error {
   }
 }
 
-export const tokenStorage = {
-  get: () => localStorage.getItem(TOKEN_KEY),
-  set: (token: string) => localStorage.setItem(TOKEN_KEY, token),
-  clear: () => localStorage.removeItem(TOKEN_KEY),
-};
+/** Token de acesso da sessão do Supabase (renovado automaticamente quando expira). */
+async function accessToken() {
+  const { data } = await supabase.auth.getSession();
+  return data.session?.access_token ?? null;
+}
 
 let onUnauthorized: (() => void) | null = null;
 
@@ -30,7 +29,7 @@ type Body = Record<string, unknown> | FormData | undefined;
 
 export async function request(path: string, options: { method?: string; body?: Body } = {}): Promise<Response> {
   const headers = new Headers();
-  const token = tokenStorage.get();
+  const token = await accessToken();
   if (token) headers.set('Authorization', `Bearer ${token}`);
 
   let body: BodyInit | undefined;

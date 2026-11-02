@@ -27,7 +27,7 @@ Gerencia o cadastro de instituições, cursos e alunos e registra as entradas co
 ## ⚙️ Funcionalidades
 
 - ✅ Cadastro da instituição com ativação da conta por código enviado por e-mail
-- ✅ Login seguro (bcrypt + JWT) e recuperação de senha por e-mail
+- ✅ Login com Supabase Auth: cadastro e recuperação de senha por código enviado por e-mail
 - ✅ Cadastro, edição e exclusão de cursos e alunos (com foto)
 - ✅ Cadastro da digital do aluno no sensor biométrico
 - ✅ Verificação por digital com registro de entrada (data/hora) e entrada manual por RM

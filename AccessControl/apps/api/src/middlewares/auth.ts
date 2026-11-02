@@ -1,42 +1,29 @@
 import type { NextFunction, Request, RequestHandler, Response } from 'express';
-import type { PrismaClient } from '@prisma/client';
 import { unauthorized } from '../lib/errors';
-import { verifyToken, type AuthTokenPayload } from '../services/tokens';
+import type { AuthService } from '../modules/auth/auth.service';
 
-const SESSION_EXPIRED = 'Sessão expirada ou inválida. Faça login novamente.';
+/** Instituição autenticada na requisição. */
+export interface AuthContext {
+  sub: number;
+  name: string;
+  email: string;
+}
 
-/**
- * Valida o token JWT e confere no banco se a instituição ainda existe e se a
- * senha não foi trocada depois do login (sessionVersion).
- */
-export function createRequireAuth(prisma: PrismaClient): RequestHandler {
+/** Valida o token do Supabase Auth e identifica a instituição do usuário. */
+export function createRequireAuth(auth: AuthService): RequestHandler {
   return async (req: Request, res: Response, next: NextFunction) => {
     const [scheme, token] = req.headers.authorization?.split(' ') ?? [];
     if (scheme !== 'Bearer' || !token) {
       throw unauthorized('Token de acesso não informado');
     }
 
-    let payload: AuthTokenPayload;
-    try {
-      payload = verifyToken(token);
-    } catch {
-      throw unauthorized(SESSION_EXPIRED, 'INVALID_TOKEN');
-    }
-
-    const school = await prisma.school.findUnique({
-      where: { id: payload.sub },
-      select: { sessionVersion: true },
-    });
-    if (!school || school.sessionVersion !== payload.ver) {
-      throw unauthorized(SESSION_EXPIRED, 'INVALID_TOKEN');
-    }
-
-    res.locals.auth = payload;
+    const school = await auth.authenticate(token);
+    res.locals.auth = { sub: school.id, name: school.name, email: school.email } satisfies AuthContext;
     next();
   };
 }
 
 /** Retorna a instituição autenticada na requisição atual. */
-export function currentSchool(res: Response): AuthTokenPayload {
-  return res.locals.auth as AuthTokenPayload;
+export function currentSchool(res: Response): AuthContext {
+  return res.locals.auth as AuthContext;
 }

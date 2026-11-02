@@ -1,5 +1,4 @@
 import request from 'supertest';
-import { compareCode, generateCode, hashCode } from '../src/services/codes';
 import { authHeader, buildTestApp } from './helpers';
 
 describe('App', () => {
@@ -41,19 +40,5 @@ describe('App', () => {
 
     expect(res.status).toBe(200);
     expect(res.body).toEqual({ students: 12, courses: 4, entriesToday: 7, pendingFingerprints: 3, recentEntries: [] });
-  });
-});
-
-describe('Códigos de verificação', () => {
-  it('gera códigos de 6 dígitos', () => {
-    for (let i = 0; i < 50; i += 1) {
-      expect(generateCode()).toMatch(/^\d{6}$/);
-    }
-  });
-
-  it('compara códigos pelo hash', () => {
-    const hash = hashCode('123456');
-    expect(compareCode('123456', hash)).toBe(true);
-    expect(compareCode('654321', hash)).toBe(false);
   });
 });

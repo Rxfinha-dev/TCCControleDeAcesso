@@ -7,10 +7,11 @@ Arquitetura de produção:
         │
         ▼
  helpus-web  ── Render (site estático, gratuito) ── React/Vite
-        │  HTTPS (VITE_API_URL)
+        │  login, cadastro e códigos ──────────────▶ Supabase Auth
+        │  HTTPS (VITE_API_URL) + token do Supabase
         ▼
  helpus-api  ── Render (Docker, gratuito) ── Node.js + Express + Prisma
-        │
+        │  valida o token (JWKS do Supabase Auth)
         ▼
  Supabase ── PostgreSQL (dados) + Storage (fotos dos alunos)
 ```
@@ -23,6 +24,7 @@ Ele **não** hospeda servidores Node.js/Express nem sites estáticos React. Por 
 | Parte | Onde roda | Custo |
 | --- | --- | --- |
 | Banco de dados PostgreSQL | **Supabase** | Free tier |
+| Login, cadastro e códigos por e-mail | **Supabase Auth** | Free tier |
 | Fotos dos alunos | **Supabase Storage** (bucket privado, criado automaticamente) | Free tier |
 | API Node.js | **Render** (container Docker) | Free tier |
 | Frontend React | **Render** (static site) | Free tier |
@@ -31,7 +33,7 @@ Ele **não** hospeda servidores Node.js/Express nem sites estáticos React. Por 
 
 ---
 
-## 1. Supabase (banco e storage)
+## 1. Supabase (banco, auth e storage)
 
 1. Crie uma conta em <https://supabase.com> e um projeto novo.
    - **Region:** `East US (North Virginia)` — a mesma região da API no Render, para baixa latência.
@@ -47,21 +49,45 @@ Ele **não** hospeda servidores Node.js/Express nem sites estáticos React. Por 
 
    > Use o *session pooler* e não a "Direct connection" (`db.<ref>.supabase.co`): a conexão direta é apenas IPv6 e os runners do GitHub Actions não têm IPv6.
 3. Em **Project Settings → API Keys** copie:
-   - **Project URL** → `SUPABASE_URL`
-   - **service_role / secret key** → `SUPABASE_SERVICE_ROLE_KEY` (nunca exponha essa chave no frontend).
+   - **Project URL** → `SUPABASE_URL` (API) e `VITE_SUPABASE_URL` (frontend)
+   - **Publishable key** (`sb_publishable_...`, ou a `anon` legada) → `SUPABASE_PUBLISHABLE_KEY` (API) e `VITE_SUPABASE_PUBLISHABLE_KEY` (frontend)
+   - **Secret key / service_role** → `SUPABASE_SERVICE_ROLE_KEY` (só na API, para o Storage; nunca exponha essa chave no frontend).
+4. Em **Project Settings → JWT Keys**, confirme que o projeto usa uma chave de assinatura assimétrica (padrão nos projetos novos). Assim a API valida os tokens localmente, sem consultar o Supabase a cada requisição.
 
 As migrations habilitam **Row Level Security** em todas as tabelas, sem políticas. Assim, a API REST automática do Supabase (chave `anon`) não consegue ler nada; todo acesso passa pela nossa API.
 
-## 2. E-mail (códigos de ativação e recuperação de senha)
+## 2. Supabase Auth (login e códigos por e-mail)
 
-Qualquer SMTP funciona. Opções gratuitas:
+O cadastro, a ativação da conta e a recuperação de senha são feitos pelo **Supabase Auth**. A API não guarda senhas: no primeiro login ela cria a instituição (com o nome informado no cadastro) ou vincula pelo e-mail uma instituição que já existia no banco.
 
-- **Gmail**: ative a verificação em duas etapas e gere uma *Senha de app*. `SMTP_HOST=smtp.gmail.com`, `SMTP_PORT=587`.
-- **Resend** / **Brevo**: crie uma conta e use as credenciais SMTP fornecidas.
+Em **Authentication** no dashboard:
 
-> ⚠️ O sistema legado tinha uma senha de app do Gmail escrita no código (`frmCadastroEmpresa.cs` e `frmNovaSenha.cs`), que continua no histórico do Git. **Revogue essa senha** na conta Google e gere uma nova apenas como variável de ambiente.
+1. **Sign In / Providers → Email**
+   - **Confirm email**: ligado. ⚠️ Sem confirmação, qualquer pessoa poderia se cadastrar com o e-mail de uma instituição existente e assumir os dados dela.
+   - **Minimum password length**: `9` (mesma regra do sistema legado).
+   - **Email OTP expiration**: `900` segundos (15 minutos, como no legado).
+   - **Email OTP length**: `6` (as telas pedem um código de 6 dígitos).
+2. **Emails → Templates**: o HelpUs usa o **código** de 6 dígitos (`{{ .Token }}`) no lugar do link. Edite:
+   - **Confirm signup**:
+     ```html
+     <h2>Ativação da conta HelpUs</h2>
+     <p>Seu código de ativação é: <strong>{{ .Token }}</strong></p>
+     <p>O código expira em 15 minutos.</p>
+     ```
+   - **Reset Password**:
+     ```html
+     <h2>Recuperação de senha HelpUs</h2>
+     <p>Seu código de verificação é: <strong>{{ .Token }}</strong></p>
+     <p>Se você não pediu a troca de senha, ignore este e-mail.</p>
+     ```
+3. **Emails → SMTP Settings**: configure um SMTP próprio. O SMTP padrão do Supabase só envia para os membros da organização, tem limite baixo de envios e, em projetos gratuitos novos, não permite editar os templates acima. Opções gratuitas: **Resend**, **Brevo** ou Gmail com *Senha de app*.
+4. **URL Configuration → Site URL**: a URL do frontend (ex.: `https://helpus-web.onrender.com`).
 
-Sem `SMTP_HOST` a API não envia e-mails: os códigos aparecem apenas no log (útil em desenvolvimento).
+> ⚠️ O sistema legado tinha uma senha de app do Gmail escrita no código (`frmCadastroEmpresa.cs` e `frmNovaSenha.cs`), que continua no histórico do Git. **Revogue essa senha** na conta Google e, se usar Gmail, gere uma nova apenas para o SMTP do Supabase.
+
+### Contas do sistema anterior
+
+As senhas antigas não são migradas (o Supabase Auth não importa os hashes do HelpUs). Quem já tinha conta deve se cadastrar de novo com o **mesmo e-mail**: depois de confirmar o código, a API vincula automaticamente a instituição existente, com todos os cursos, alunos e entradas.
 
 ## 3. Render (API + frontend)
 
@@ -78,16 +104,16 @@ Sem `SMTP_HOST` a API não envia e-mails: os códigos aparecem apenas no log (ú
    | `DATABASE_URL` | Transaction pooler do Supabase (com `?pgbouncer=true&connection_limit=1`) |
    | `CORS_ORIGIN` | URL do frontend, ex.: `https://helpus-web.onrender.com` |
    | `SUPABASE_URL` | Project URL |
-   | `SUPABASE_SERVICE_ROLE_KEY` | service_role / secret key |
-   | `SMTP_HOST`, `SMTP_USER`, `SMTP_PASS`, `MAIL_FROM` | Dados do seu SMTP |
-
-   `JWT_SECRET` é gerado automaticamente pelo Render.
+   | `SUPABASE_PUBLISHABLE_KEY` | Publishable key |
+   | `SUPABASE_SERVICE_ROLE_KEY` | Secret key / service_role |
 
    **helpus-web**
 
    | Variável | Valor |
    | --- | --- |
    | `VITE_API_URL` | URL da API + `/api`, ex.: `https://helpus-api.onrender.com/api` |
+   | `VITE_SUPABASE_URL` | Project URL |
+   | `VITE_SUPABASE_PUBLISHABLE_KEY` | Publishable key |
 
 4. Em cada serviço, abra **Settings → Deploy Hook** e copie a URL (será usada no GitHub).
 
@@ -140,8 +166,12 @@ feature/*  ──PR──▶  develop  ──PR──▶  main  ──(deploy.ym
 
    ```bash
    cd AccessControl/apps/api
-   DATABASE_URL="<session pooler>" DIRECT_URL="<session pooler>" SEED_PASSWORD="umaSenhaForte123" npm run prisma:seed
+   DATABASE_URL="<session pooler>" DIRECT_URL="<session pooler>" \
+   SUPABASE_URL="<project url>" SUPABASE_SERVICE_ROLE_KEY="<secret key>" \
+   SEED_PASSWORD="umaSenhaForte123" npm run prisma:seed
    ```
+
+   Com a secret key, o seed também cria o usuário `demo@helpus.app` (já confirmado) no Supabase Auth.
 
 ## 6. Leitor biométrico
 

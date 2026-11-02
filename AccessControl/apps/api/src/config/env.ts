@@ -1,11 +1,6 @@
 import 'dotenv/config';
 import { z } from 'zod';
 
-const booleanString = z
-  .enum(['true', 'false'])
-  .default('false')
-  .transform((value) => value === 'true');
-
 const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   PORT: z.coerce.number().int().positive().default(3333),
@@ -14,18 +9,12 @@ const envSchema = z.object({
 
   DATABASE_URL: z.string().min(1, 'DATABASE_URL é obrigatória'),
 
-  JWT_SECRET: z.string().min(16, 'JWT_SECRET deve ter pelo menos 16 caracteres'),
-  JWT_EXPIRES_IN: z.string().default('8h'),
-
-  SMTP_HOST: z.string().optional(),
-  SMTP_PORT: z.coerce.number().int().positive().default(587),
-  SMTP_SECURE: booleanString,
-  SMTP_USER: z.string().optional(),
-  SMTP_PASS: z.string().optional(),
-  MAIL_FROM: z.string().default('HelpUs <no-reply@helpus.app>'),
+  // Supabase Auth: o login acontece no Supabase e a API valida os tokens emitidos por ele.
+  SUPABASE_URL: z.url('SUPABASE_URL deve ser a URL do projeto (https://<ref>.supabase.co)'),
+  // Chave publicável (sb_publishable_...) ou a chave "anon" legada. Nunca a secret/service_role.
+  SUPABASE_PUBLISHABLE_KEY: z.string().min(1, 'SUPABASE_PUBLISHABLE_KEY é obrigatória'),
 
   STORAGE_DRIVER: z.enum(['database', 'supabase']).default('database'),
-  SUPABASE_URL: z.string().optional(),
   SUPABASE_SERVICE_ROLE_KEY: z.string().optional(),
   SUPABASE_STORAGE_BUCKET: z.string().default('student-photos'),
 });
@@ -37,8 +26,8 @@ if (!parsed.success) {
   throw new Error(`Variáveis de ambiente inválidas:\n${issues.join('\n')}`);
 }
 
-if (parsed.data.STORAGE_DRIVER === 'supabase' && (!parsed.data.SUPABASE_URL || !parsed.data.SUPABASE_SERVICE_ROLE_KEY)) {
-  throw new Error('STORAGE_DRIVER=supabase exige SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY');
+if (parsed.data.STORAGE_DRIVER === 'supabase' && !parsed.data.SUPABASE_SERVICE_ROLE_KEY) {
+  throw new Error('STORAGE_DRIVER=supabase exige SUPABASE_SERVICE_ROLE_KEY');
 }
 
 export const env = parsed.data;

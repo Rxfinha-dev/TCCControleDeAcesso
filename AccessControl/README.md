@@ -21,9 +21,9 @@ Tudo o que existia no sistema legado, atualizado:
 
 | Legado (WinForms) | Novo |
 | --- | --- |
-| `frmLogin` | Login com e-mail e senha (bcrypt + JWT), mostrar/ocultar senha |
-| `frmCadastroEmpresa` + `frmAtivacaoConta` | Cadastro da instituição com código de ativação de 6 dígitos por e-mail (expira em 15 min, máx. 5 tentativas, reenvio) |
-| `frmNovaSenha` + `frmTrocandoSenha` | Recuperação de senha por código enviado por e-mail |
+| `frmLogin` | Login com e-mail e senha pelo Supabase Auth, mostrar/ocultar senha |
+| `frmCadastroEmpresa` + `frmAtivacaoConta` | Cadastro da instituição com código de ativação de 6 dígitos enviado pelo Supabase Auth (com reenvio) |
+| `frmNovaSenha` + `frmTrocandoSenha` | Recuperação de senha por código enviado por e-mail; a troca encerra as outras sessões |
 | `frmMainMenu` | Menu lateral escuro + painel inicial com indicadores |
 | `frmListaAlunos` | CRUD de alunos com foto, busca, curso e série; cadastro da digital no sensor |
 | `frmCadastroCurso` | CRUD de cursos (impede excluir curso com alunos) |
@@ -31,7 +31,7 @@ Tudo o que existia no sistema legado, atualizado:
 | `frmLog` | Relatório de entradas com filtros por período/nome, paginação e exportação CSV |
 | `frmConfiguracoes` | Conexão com o Arduino pelo navegador (Web Serial) |
 
-Melhorias de segurança em relação ao legado: credenciais apenas em variáveis de ambiente, códigos gerados com `crypto.randomInt` e guardados como hash, rate limit nas rotas de autenticação, isolamento dos dados por instituição em todas as consultas, RLS habilitado no Supabase e validação de entrada com Zod.
+Melhorias de segurança em relação ao legado: credenciais apenas em variáveis de ambiente, senhas e códigos por e-mail gerenciados pelo Supabase Auth (a API não guarda senhas e valida os tokens pela JWKS do projeto), rate limit nas rotas da API, isolamento dos dados por instituição em todas as consultas, RLS habilitado no Supabase e validação de entrada com Zod.
 
 ## Estrutura
 
@@ -42,13 +42,13 @@ AccessControl/
 │   │   ├── prisma/           # schema, migrations e seed
 │   │   ├── src/
 │   │   │   ├── config/       # variáveis de ambiente validadas
-│   │   │   ├── middlewares/  # auth JWT, erros, upload, rate limit
+│   │   │   ├── middlewares/  # auth (token do Supabase), erros, upload, rate limit
 │   │   │   ├── modules/      # auth, courses, students, access-logs, stats
-│   │   │   └── services/     # e-mail, storage de fotos, tokens, códigos
+│   │   │   └── services/     # validação do login (Supabase Auth), storage de fotos
 │   │   └── tests/            # Jest + Supertest
 │   └── web/                  # Frontend React
 │       ├── src/
-│       │   ├── api/          # cliente HTTP tipado
+│       │   ├── api/          # cliente HTTP tipado e login (Supabase Auth)
 │       │   ├── components/   # layout, logo, componentes de UI
 │       │   ├── contexts/     # autenticação, Arduino (serial), notificações
 │       │   ├── pages/        # telas
@@ -60,7 +60,7 @@ AccessControl/
 
 ## Rodando localmente
 
-Pré-requisitos: **Node.js 20.19+** (com npm 10+) e **Docker** (para o PostgreSQL) — ou um projeto Supabase.
+Pré-requisitos: **Node.js 22+** (com npm 10+), **Docker** (para o PostgreSQL) e um **projeto Supabase** para o login (o plano gratuito serve; veja a seção 2 do [DEPLOY.md](DEPLOY.md)).
 
 ```bash
 cd AccessControl
@@ -71,19 +71,19 @@ npm install
 # 2. Banco de dados local
 docker compose up -d db
 
-# 3. Variáveis de ambiente
+# 3. Variáveis de ambiente (preencha as chaves do Supabase nos dois arquivos)
 cp apps/api/.env.example apps/api/.env
 cp apps/web/.env.example apps/web/.env
 
 # 4. Tabelas + dados de demonstração
 npm run db:migrate
-npm run db:seed          # login: demo@helpus.app / helpus-demo-123
+npm run db:seed          # login: demo@helpus.app / helpus-demo-123 (exige SUPABASE_SERVICE_ROLE_KEY)
 
 # 5. API (http://localhost:3333) + frontend (http://localhost:5173)
 npm run dev
 ```
 
-Sem SMTP configurado, os códigos de ativação/recuperação aparecem no terminal da API.
+Os códigos de ativação e recuperação de senha são enviados pelo Supabase Auth. Sem SMTP próprio, o Supabase só envia e-mails para os membros da organização do projeto; para testar com outros e-mails, configure um SMTP (veja o DEPLOY.md).
 
 ## Scripts
 
@@ -98,18 +98,13 @@ Sem SMTP configurado, os códigos de ativação/recuperação aparecem no termin
 
 ## API
 
-Prefixo `/api`. Todas as rotas, exceto `/auth/*` e `/health`, exigem `Authorization: Bearer <token>`.
+Prefixo `/api`. Todas as rotas, exceto `/health`, exigem `Authorization: Bearer <access token do Supabase Auth>`.
+Cadastro, login, ativação e recuperação de senha são feitos pelo frontend direto no Supabase Auth.
 
 | Método | Rota | Descrição |
 | --- | --- | --- |
 | GET | `/health` | Status da API e do banco |
-| POST | `/auth/register` | Cadastra instituição e envia código de ativação |
-| POST | `/auth/verify-email` | Ativa a conta com o código (retorna sessão) |
-| POST | `/auth/resend-verification` | Reenvia o código de ativação |
-| POST | `/auth/login` | Login (retorna JWT) |
-| POST | `/auth/forgot-password` | Envia código de recuperação |
-| POST | `/auth/reset-password` | Define nova senha com o código |
-| GET | `/auth/me` | Instituição autenticada |
+| GET | `/auth/me` | Instituição do usuário logado (criada ou vinculada pelo e-mail no primeiro acesso) |
 | GET/POST | `/courses` | Lista / cria cursos |
 | PUT/DELETE | `/courses/:id` | Edita / exclui curso |
 | GET/POST | `/students` | Lista (`?search=`) / cria aluno (multipart com `photo`) |

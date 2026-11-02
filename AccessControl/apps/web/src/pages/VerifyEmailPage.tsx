@@ -11,7 +11,7 @@ export function VerifyEmailPage() {
   const [params] = useSearchParams();
   const navigate = useNavigate();
   const toast = useToast();
-  const { startSession } = useAuth();
+  const { loadSchool } = useAuth();
   const [email, setEmail] = useState(params.get('email') ?? '');
   const [code, setCode] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -23,8 +23,8 @@ export function VerifyEmailPage() {
     setError(null);
     setSubmitting(true);
     try {
-      const { message, ...session } = await authApi.verifyEmail(email, code);
-      startSession(session);
+      const { message } = await authApi.verifyEmail(email, code);
+      await loadSchool();
       toast.success(message);
       navigate('/', { replace: true });
     } catch (err) {

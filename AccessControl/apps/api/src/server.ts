@@ -2,10 +2,14 @@ import { createApp } from './app';
 import { env } from './config/env';
 import { logger } from './lib/logger';
 import { prisma } from './lib/prisma';
-import { createMailer } from './services/mailer';
+import { SupabaseIdentityProvider } from './services/identity';
 import { createPhotoStorage } from './services/storage';
 
-const app = createApp({ prisma, mailer: createMailer(), storage: createPhotoStorage(prisma) });
+const app = createApp({
+  prisma,
+  identity: new SupabaseIdentityProvider(),
+  storage: createPhotoStorage(prisma),
+});
 
 const server = app.listen(env.PORT, () => {
   logger.info(`HelpUs API rodando na porta ${env.PORT} (${env.NODE_ENV})`);

@@ -7,11 +7,6 @@ export interface School {
   email: string;
 }
 
-export interface Session {
-  token: string;
-  school: School;
-}
-
 export interface Course {
   id: number;
   name: string;

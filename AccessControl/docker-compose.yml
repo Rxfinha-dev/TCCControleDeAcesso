@@ -28,7 +28,9 @@ services:
       PORT: 3333
       DATABASE_URL: postgresql://helpus:helpus@db:5432/helpus?schema=public
       DIRECT_URL: postgresql://helpus:helpus@db:5432/helpus?schema=public
-      JWT_SECRET: dev-only-secret-change-me-please
+      # Login pelo Supabase Auth: defina estas variáveis no arquivo AccessControl/.env.
+      SUPABASE_URL: ${SUPABASE_URL:?defina SUPABASE_URL}
+      SUPABASE_PUBLISHABLE_KEY: ${SUPABASE_PUBLISHABLE_KEY:?defina SUPABASE_PUBLISHABLE_KEY}
       CORS_ORIGIN: http://localhost:5173
       STORAGE_DRIVER: database
     # Aplica as migrations antes de subir a API.

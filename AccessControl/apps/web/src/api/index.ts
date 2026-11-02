@@ -5,14 +5,10 @@ import type {
   Course,
   EntryResult,
   Paginated,
-  School,
-  Session,
   Stats,
   Student,
   StudentInput,
 } from './types';
-
-type Message = { message: string };
 
 const query = (params: Record<string, string | number | undefined>) => {
   const search = new URLSearchParams();
@@ -34,20 +30,7 @@ const studentForm = (input: StudentInput) => {
   return form;
 };
 
-export const authApi = {
-  login: (email: string, password: string) =>
-    requestJson<Session>('/auth/login', { method: 'POST', body: { email, password } }),
-  register: (name: string, email: string, password: string) =>
-    requestJson<Message & { school: School }>('/auth/register', { method: 'POST', body: { name, email, password } }),
-  verifyEmail: (email: string, code: string) =>
-    requestJson<Message & Session>('/auth/verify-email', { method: 'POST', body: { email, code } }),
-  resendVerification: (email: string) =>
-    requestJson<Message>('/auth/resend-verification', { method: 'POST', body: { email } }),
-  forgotPassword: (email: string) => requestJson<Message>('/auth/forgot-password', { method: 'POST', body: { email } }),
-  resetPassword: (email: string, code: string, password: string) =>
-    requestJson<Message>('/auth/reset-password', { method: 'POST', body: { email, code, password } }),
-  me: () => requestJson<School>('/auth/me'),
-};
+export { authApi } from './auth';
 
 export const coursesApi = {
   list: () => requestJson<Course[]>('/courses'),

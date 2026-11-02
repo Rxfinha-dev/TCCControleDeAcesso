@@ -4,12 +4,14 @@ import { authApi } from '../api';
 import { errorMessage } from '../api/client';
 import { AuthLayout } from '../components/AuthLayout';
 import { PasswordInput } from '../components/PasswordInput';
+import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
 import { validatePasswordPair } from '../utils/validation';
 
 export function RegisterPage() {
   const navigate = useNavigate();
   const toast = useToast();
+  const { loadSchool } = useAuth();
   const [form, setForm] = useState({ name: '', email: '', password: '', confirm: '' });
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -32,9 +34,15 @@ export function RegisterPage() {
     setError(null);
     setSubmitting(true);
     try {
-      const { message } = await authApi.register(form.name.trim(), form.email.trim(), form.password);
-      toast.info(message);
-      navigate(`/ativar-conta?email=${encodeURIComponent(form.email.trim())}`);
+      const { message, needsVerification } = await authApi.register(form.name.trim(), form.email.trim(), form.password);
+      if (needsVerification) {
+        toast.info(message);
+        navigate(`/ativar-conta?email=${encodeURIComponent(form.email.trim())}`);
+      } else {
+        // Projeto sem confirmação de e-mail: o Supabase já abre a sessão.
+        await loadSchool();
+        navigate('/', { replace: true });
+      }
     } catch (err) {
       setError(errorMessage(err));
       setForm((current) => ({ ...current, password: '', confirm: '' }));

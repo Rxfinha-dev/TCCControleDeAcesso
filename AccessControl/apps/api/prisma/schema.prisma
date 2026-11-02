@@ -14,11 +14,6 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-enum CodePurpose {
-  EMAIL_VERIFICATION
-  PASSWORD_RESET
-}
-
 enum SchoolYear {
   FIRST
   SECOND
@@ -30,41 +25,22 @@ enum AccessMethod {
   MANUAL
 }
 
-/// Instituição (antiga tabela "escolas"). É a conta que faz login no sistema.
+/// Instituição (antiga tabela "escolas"). O login é feito pelo Supabase Auth.
 model School {
-  id              Int       @id @default(autoincrement())
-  name            String    @db.VarChar(100)
-  email           String    @unique @db.VarChar(120)
-  passwordHash    String    @map("password_hash") @db.VarChar(255)
-  emailVerifiedAt DateTime? @map("email_verified_at")
-  /// Incrementado ao trocar a senha: invalida todos os tokens JWT emitidos antes.
-  sessionVersion  Int       @default(0) @map("session_version")
-  createdAt       DateTime  @default(now()) @map("created_at")
-  updatedAt       DateTime  @updatedAt @map("updated_at")
+  id         Int      @id @default(autoincrement())
+  name       String   @db.VarChar(100)
+  email      String   @unique @db.VarChar(120)
+  /// ID do usuário no Supabase Auth (auth.users.id). Fica vazio até o primeiro login,
+  /// quando a API vincula a instituição pelo e-mail confirmado.
+  authUserId String?  @unique @map("auth_user_id") @db.Uuid
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
 
-  courses           Course[]
-  students          Student[]
-  accessLogs        AccessLog[]
-  verificationCodes VerificationCode[]
+  courses    Course[]
+  students   Student[]
+  accessLogs AccessLog[]
 
   @@map("schools")
-}
-
-/// Códigos de 6 dígitos enviados por e-mail (ativação de conta e recuperação de senha).
-model VerificationCode {
-  id         Int         @id @default(autoincrement())
-  schoolId   Int         @map("school_id")
-  purpose    CodePurpose
-  codeHash   String      @map("code_hash") @db.VarChar(255)
-  attempts   Int         @default(0)
-  expiresAt  DateTime    @map("expires_at")
-  consumedAt DateTime?   @map("consumed_at")
-  createdAt  DateTime    @default(now()) @map("created_at")
-
-  school School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
-
-  @@index([schoolId, purpose])
-  @@map("verification_codes")
 }
 
 model Course {
