@@ -46,7 +46,8 @@ export class AccessLogsService {
       orderBy: { createdAt: 'desc' },
       take: EXPORT_LIMIT,
     });
-    const escape = (value: string) => `"${value.replace(/"/g, '""')}"`;
+    // Prefixa com ' valores que o Excel interpretaria como fórmula (=, +, -, @, tab, CR).
+    const escape = (value: string) => `"${value.replace(/^[=+\-@\t\r]/, "'$&").replace(/"/g, '""')}"`;
     const lines = logs.map((log) =>
       [escape(log.studentName), log.createdAt.toISOString(), log.method === AccessMethod.FINGERPRINT ? 'Digital' : 'Manual'].join(';'),
     );

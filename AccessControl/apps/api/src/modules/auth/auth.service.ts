@@ -87,7 +87,8 @@ export class AuthService {
     await this.consumeCode(school.id, CodePurpose.PASSWORD_RESET, input.code);
     await this.prisma.school.update({
       where: { id: school.id },
-      data: { passwordHash: await bcrypt.hash(input.password, BCRYPT_ROUNDS) },
+      // Incrementar a versão encerra todas as sessões abertas com a senha antiga.
+      data: { passwordHash: await bcrypt.hash(input.password, BCRYPT_ROUNDS), sessionVersion: { increment: 1 } },
     });
   }
 
@@ -99,7 +100,7 @@ export class AuthService {
 
   private createSession(school: School): Session {
     return {
-      token: signToken({ sub: school.id, name: school.name, email: school.email }),
+      token: signToken({ sub: school.id, name: school.name, email: school.email, ver: school.sessionVersion }),
       school: toPublic(school),
     };
   }

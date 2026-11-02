@@ -26,10 +26,14 @@ class SmtpMailer implements Mailer {
   }
 }
 
-/** Usado em desenvolvimento quando não há SMTP configurado: apenas registra o e-mail no log. */
+/**
+ * Usado quando não há SMTP configurado. Em desenvolvimento mostra o e-mail (com o código) no log;
+ * em produção não registra o conteúdo, para que códigos de ativação/recuperação não vazem pelos logs.
+ */
 class LogMailer implements Mailer {
   async send(message: MailMessage) {
-    logger.warn({ to: message.to, subject: message.subject, text: message.text }, 'SMTP não configurado - e-mail não enviado');
+    const content = env.NODE_ENV === 'production' ? {} : { text: message.text };
+    logger.warn({ to: message.to, subject: message.subject, ...content }, 'SMTP não configurado - e-mail não enviado');
   }
 }
 

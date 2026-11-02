@@ -76,4 +76,13 @@ describe('Entradas', () => {
     expect(res.text).toContain('Nome;Data/Hora (UTC);Método');
     expect(res.text).toContain('"João ""JJ""";2026-03-10T11:00:00.000Z;Manual');
   });
+
+  it('neutraliza fórmulas no CSV exportado', async () => {
+    const { app, prisma } = buildTestApp();
+    prisma.accessLog.findMany.mockResolvedValue([{ ...log, studentName: '=HYPERLINK("http://x")' }]);
+
+    const res = await request(app).get('/api/access-logs/export').set('Authorization', authHeader());
+
+    expect(res.text).toContain(`"'=HYPERLINK(""http://x"")"`);
+  });
 });

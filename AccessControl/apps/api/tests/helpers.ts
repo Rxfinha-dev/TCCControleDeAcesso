@@ -36,6 +36,8 @@ export function buildTestApp() {
   // Executa as operações recebidas em $transaction([...]) como Promise.all.
   prisma.$transaction.mockImplementation(((operations: unknown) =>
     Array.isArray(operations) ? Promise.all(operations) : Promise.resolve(operations)) as never);
+  // O middleware de autenticação confere a instituição no banco a cada requisição.
+  prisma.school.findUnique.mockResolvedValue(school);
   const mailer = new FakeMailer();
   const storage = new MemoryStorage();
   const app = createApp({ prisma, mailer, storage });
@@ -48,12 +50,13 @@ export const school: School = {
   email: 'etec@escola.com',
   passwordHash: '',
   emailVerifiedAt: new Date('2026-01-01T00:00:00Z'),
+  sessionVersion: 0,
   createdAt: new Date('2026-01-01T00:00:00Z'),
   updatedAt: new Date('2026-01-01T00:00:00Z'),
 };
 
-export const authHeader = (schoolId = school.id) =>
-  `Bearer ${signToken({ sub: schoolId, name: school.name, email: school.email })}`;
+export const authHeader = (schoolId = school.id, ver = school.sessionVersion) =>
+  `Bearer ${signToken({ sub: schoolId, name: school.name, email: school.email, ver })}`;
 
 export function makeStudent(overrides: Partial<Student> = {}): Student & { course: { id: number; name: string } } {
   return {

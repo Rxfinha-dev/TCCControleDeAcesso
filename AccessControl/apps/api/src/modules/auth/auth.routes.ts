@@ -1,5 +1,5 @@
-import { Router } from 'express';
-import { currentSchool, requireAuth } from '../../middlewares/auth';
+import { Router, type RequestHandler } from 'express';
+import { currentSchool } from '../../middlewares/auth';
 import { authRateLimit } from '../../middlewares/rate-limit';
 import {
   emailOnlySchema,
@@ -12,7 +12,7 @@ import type { AuthService } from './auth.service';
 
 const GENERIC_CODE_MESSAGE = 'Se o e-mail estiver cadastrado, você receberá um código em instantes. Verifique também a caixa de spam.';
 
-export function authRoutes(service: AuthService) {
+export function authRoutes(service: AuthService, requireAuth: RequestHandler) {
   const router = Router();
 
   router.post('/register', authRateLimit, async (req, res) => {

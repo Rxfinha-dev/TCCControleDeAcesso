@@ -37,6 +37,8 @@ model School {
   email           String    @unique @db.VarChar(120)
   passwordHash    String    @map("password_hash") @db.VarChar(255)
   emailVerifiedAt DateTime? @map("email_verified_at")
+  /// Incrementado ao trocar a senha: invalida todos os tokens JWT emitidos antes.
+  sessionVersion  Int       @default(0) @map("session_version")
   createdAt       DateTime  @default(now()) @map("created_at")
   updatedAt       DateTime  @updatedAt @map("updated_at")
 

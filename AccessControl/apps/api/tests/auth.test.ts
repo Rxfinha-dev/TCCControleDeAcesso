@@ -179,8 +179,31 @@ describe('Auth', () => {
 
       expect(res.status).toBe(200);
       expect(res.body.message).toBe('Senha alterada com sucesso!');
-      const { passwordHash } = prisma.school.update.mock.calls[0][0].data as { passwordHash: string };
-      expect(await bcrypt.compare('novasenha123', passwordHash)).toBe(true);
+      const data = prisma.school.update.mock.calls[0][0].data as { passwordHash: string; sessionVersion: unknown };
+      expect(await bcrypt.compare('novasenha123', data.passwordHash)).toBe(true);
+      // Trocar a senha encerra as sessões abertas.
+      expect(data.sessionVersion).toEqual({ increment: 1 });
+    });
+  });
+
+  describe('Sessões', () => {
+    it('recusa token emitido antes da troca de senha', async () => {
+      const { app, prisma } = buildTestApp();
+      prisma.school.findUnique.mockResolvedValue({ ...school, sessionVersion: 1 });
+
+      const res = await request(app).get('/api/courses').set('Authorization', authHeader(school.id, 0));
+
+      expect(res.status).toBe(401);
+      expect(res.body.code).toBe('INVALID_TOKEN');
+    });
+
+    it('recusa token de instituição que não existe mais', async () => {
+      const { app, prisma } = buildTestApp();
+      prisma.school.findUnique.mockResolvedValue(null);
+
+      const res = await request(app).get('/api/courses').set('Authorization', authHeader());
+
+      expect(res.status).toBe(401);
     });
   });
 

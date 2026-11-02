@@ -5,7 +5,7 @@ import { pinoHttp } from 'pino-http';
 import type { PrismaClient } from '@prisma/client';
 import { corsOrigins, env } from './config/env';
 import { logger } from './lib/logger';
-import { requireAuth } from './middlewares/auth';
+import { createRequireAuth } from './middlewares/auth';
 import { errorHandler, notFoundHandler } from './middlewares/error-handler';
 import { accessLogsRoutes } from './modules/access-logs/access-logs.routes';
 import { AccessLogsService } from './modules/access-logs/access-logs.service';
@@ -59,7 +59,9 @@ export function createApp({ prisma, mailer, storage }: AppDependencies) {
     });
   });
 
-  app.use('/api/auth', authRoutes(new AuthService(prisma, mailer)));
+  const requireAuth = createRequireAuth(prisma);
+
+  app.use('/api/auth', authRoutes(new AuthService(prisma, mailer), requireAuth));
   app.use('/api/courses', requireAuth, coursesRoutes(new CoursesService(prisma)));
   app.use('/api/students', requireAuth, studentsRoutes(new StudentsService(prisma, storage)));
   app.use('/api/access-logs', requireAuth, accessLogsRoutes(new AccessLogsService(prisma)));
