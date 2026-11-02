@@ -1,10 +1,16 @@
-import { dayBoundary, firstName, yearLabel } from '../src/utils/format';
+import { dayBoundary, firstName, initials, yearLabel } from '../src/utils/format';
 import { onlyDigits, validatePasswordPair } from '../src/utils/validation';
 
 describe('Utilitários', () => {
   it('mostra apenas o primeiro nome (menu principal)', () => {
     expect(firstName('  ETEC Joaquim Ferreira ')).toBe('ETEC');
     expect(firstName('')).toBe('');
+  });
+
+  it('gera as iniciais dos avatares', () => {
+    expect(initials('Ana Beatriz Souza')).toBe('AS');
+    expect(initials('etec')).toBe('E');
+    expect(initials('  ')).toBe('');
   });
 
   it('converte a série para o rótulo exibido', () => {

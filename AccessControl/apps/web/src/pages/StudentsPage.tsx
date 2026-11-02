@@ -3,13 +3,13 @@ import { coursesApi, studentsApi } from '../api';
 import { errorMessage } from '../api/client';
 import type { Course, Student, StudentInput } from '../api/types';
 import { ConfirmDialog } from '../components/ConfirmDialog';
-import { FingerprintIcon } from '../components/Icons';
+import { FingerprintIcon, SearchIcon } from '../components/Icons';
 import { PageHeader } from '../components/PageHeader';
 import { StudentPhoto } from '../components/StudentPhoto';
 import { useSerial } from '../contexts/SerialContext';
 import { useToast } from '../contexts/ToastContext';
 import { useFingerprintEnrollment } from '../hooks/useFingerprintEnrollment';
-import { YEAR_OPTIONS, yearLabel } from '../utils/format';
+import { YEAR_OPTIONS, initials, yearLabel } from '../utils/format';
 
 const EMPTY_FORM: StudentInput = { name: '', rm: '', age: '', year: '', courseId: '', photo: null };
 
@@ -145,6 +145,7 @@ export function StudentsPage() {
 
       <div className="split-layout">
         <form className="card form" onSubmit={handleSubmit} noValidate>
+          <h2 className="card-title">{selected ? 'Editar aluno' : 'Novo aluno'}</h2>
           <div className="photo-picker">
             <StudentPhoto
               studentId={selected?.id}
@@ -155,7 +156,7 @@ export function StudentsPage() {
               className="large"
             />
             <label className="link-button">
-              Escolher foto
+              {preview || selected?.hasPhoto ? 'Trocar foto' : 'Escolher foto'}
               <input type="file" accept="image/png,image/jpeg,image/webp,image/bmp" onChange={handlePhoto} hidden />
             </label>
           </div>
@@ -240,14 +241,17 @@ export function StudentsPage() {
 
         <section className="card">
           <div className="table-toolbar">
-            <input
-              type="search"
-              placeholder="Buscar por nome ou RM"
-              value={search}
-              onChange={(event) => setSearch(event.target.value)}
-              aria-label="Buscar alunos"
-            />
-            <span className="muted">{students.length} aluno(s)</span>
+            <div className="search-field">
+              <SearchIcon />
+              <input
+                type="search"
+                placeholder="Buscar por nome ou RM"
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+                aria-label="Buscar alunos"
+              />
+            </div>
+            <span className="muted">{students.length === 1 ? '1 aluno' : `${students.length} alunos`}</span>
           </div>
           <div className="table-wrapper">
             <table className="table selectable">
@@ -270,13 +274,20 @@ export function StudentsPage() {
                     tabIndex={0}
                     onKeyDown={(event) => event.key === 'Enter' && selectStudent(student)}
                   >
-                    <td>{student.name}</td>
-                    <td>{student.rm}</td>
-                    <td>{student.age}</td>
-                    <td>{yearLabel(student.year)}</td>
+                    <td>
+                      <span className="cell-person">
+                        <span className="avatar avatar-soft" aria-hidden>
+                          {initials(student.name)}
+                        </span>
+                        {student.name}
+                      </span>
+                    </td>
+                    <td className="nowrap">{student.rm}</td>
+                    <td className="nowrap">{student.age}</td>
+                    <td className="nowrap">{yearLabel(student.year)}</td>
                     <td>{student.course.name}</td>
                     <td>
-                      <span className={`badge ${student.fingerprintEnrolled ? 'badge-success' : 'badge-muted'}`}>
+                      <span className={`badge ${student.fingerprintEnrolled ? 'badge-success' : 'badge-warning'}`}>
                         {student.fingerprintEnrolled ? 'Cadastrada' : 'Pendente'}
                       </span>
                     </td>

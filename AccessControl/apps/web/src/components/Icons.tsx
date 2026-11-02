@@ -93,3 +93,22 @@ export const UserIcon = (p: SVGProps<SVGSVGElement>) => (
     <path d="M4 21a8 8 0 0 1 16 0" />
   </svg>
 );
+
+export const CheckIcon = (p: SVGProps<SVGSVGElement>) => (
+  <svg {...base(p)}>
+    <path d="M5 12.5l4.5 4.5L19 7.5" />
+  </svg>
+);
+
+export const DownloadIcon = (p: SVGProps<SVGSVGElement>) => (
+  <svg {...base(p)}>
+    <path d="M12 4v11M7 10.5l5 5 5-5M5 20h14" />
+  </svg>
+);
+
+export const SearchIcon = (p: SVGProps<SVGSVGElement>) => (
+  <svg {...base(p)}>
+    <circle cx="11" cy="11" r="6.5" />
+    <path d="M20 20l-4.2-4.2" />
+  </svg>
+);

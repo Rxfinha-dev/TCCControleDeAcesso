@@ -11,6 +11,15 @@ export const yearLabel = (year: SchoolYear) => YEAR_OPTIONS.find((option) => opt
 /** Primeiro nome exibido no menu (como no frmMainMenu legado). */
 export const firstName = (fullName: string) => fullName.trim().split(/\s+/)[0] ?? '';
 
+/** Iniciais do primeiro e do último nome, para os avatares sem foto. */
+export function initials(fullName: string) {
+  const parts = fullName.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return '';
+  const first = parts[0][0];
+  const last = parts.length > 1 ? parts[parts.length - 1][0] : '';
+  return (first + last).toUpperCase();
+}
+
 const dateTimeFormatter = new Intl.DateTimeFormat('pt-BR', { dateStyle: 'short', timeStyle: 'medium' });
 const timeFormatter = new Intl.DateTimeFormat('pt-BR', { timeStyle: 'short' });
 

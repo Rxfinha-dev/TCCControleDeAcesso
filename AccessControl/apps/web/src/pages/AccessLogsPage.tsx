@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { accessLogsApi } from '../api';
 import { errorMessage } from '../api/client';
 import type { AccessLog, AccessLogFilters } from '../api/types';
+import { DownloadIcon } from '../components/Icons';
 import { PageHeader } from '../components/PageHeader';
 import { useToast } from '../contexts/ToastContext';
 import { dayBoundary, downloadBlob, formatDateTime } from '../utils/format';
@@ -61,6 +62,7 @@ export function AccessLogsPage() {
         description="Histórico de acessos registrados."
         actions={
           <button type="button" className="btn btn-outline" onClick={handleExport} disabled={total === 0}>
+            <DownloadIcon />
             Exportar CSV
           </button>
         }
@@ -115,13 +117,13 @@ export function AccessLogsPage() {
         </div>
 
         <div className="pagination">
-          <span className="muted">{total} registro(s)</span>
+          <span className="muted">{total === 1 ? '1 registro' : `${total} registros`}</span>
           <div>
             <button type="button" className="btn btn-outline btn-small" disabled={page <= 1} onClick={() => setPage(page - 1)}>
               Anterior
             </button>
-            <span>
-              {page} / {pages}
+            <span className="muted">
+              Página {page} de {pages}
             </span>
             <button type="button" className="btn btn-outline btn-small" disabled={page >= pages} onClick={() => setPage(page + 1)}>
               Próxima

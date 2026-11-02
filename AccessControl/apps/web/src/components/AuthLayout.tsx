@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { Link } from 'react-router';
 import { ArrowLeftIcon } from './Icons';
 import { Logo } from './Logo';
+import { NetworkMotif } from './NetworkMotif';
 
 interface AuthLayoutProps {
   title: string;
@@ -18,8 +19,12 @@ export function AuthLayout({ title, subtitle, backTo, children }: AuthLayoutProp
   return (
     <div className="auth-page">
       <aside className="auth-hero">
-        <Logo className="auth-logo floating" />
-        <p className="auth-tagline">Segurança que conecta</p>
+        <NetworkMotif className="auth-motif" />
+        <div className="auth-brand">
+          <Logo className="auth-logo floating" />
+          <p className="auth-tagline">Segurança que conecta</p>
+          <p className="auth-pitch">Entrada dos alunos registrada pela digital, com foto e horário, em tempo real.</p>
+        </div>
       </aside>
       <main className="auth-content">
         <section className="auth-card">
@@ -28,8 +33,10 @@ export function AuthLayout({ title, subtitle, backTo, children }: AuthLayoutProp
               <ArrowLeftIcon />
             </Link>
           )}
-          <h1>{title}</h1>
-          {subtitle && <p className="muted">{subtitle}</p>}
+          <header className="auth-card-header">
+            <h1>{title}</h1>
+            {subtitle && <p className="muted">{subtitle}</p>}
+          </header>
           {children}
         </section>
       </main>

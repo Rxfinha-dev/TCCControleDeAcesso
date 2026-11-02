@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { NavLink, Outlet, useNavigate } from 'react-router';
+import { Link, NavLink, Outlet, useNavigate } from 'react-router';
 import { useAuth } from '../contexts/AuthContext';
 import { useSerial } from '../contexts/SerialContext';
-import { firstName } from '../utils/format';
+import { firstName, initials } from '../utils/format';
 import {
   BookIcon,
   FingerprintIcon,
@@ -12,7 +12,6 @@ import {
   MenuIcon,
   SettingsIcon,
   StudentIcon,
-  UserIcon,
 } from './Icons';
 import { Logo } from './Logo';
 
@@ -44,36 +43,42 @@ export function AppLayout() {
           <MenuIcon />
         </button>
         <Logo variant="light" className="mobile-logo" />
+        <span className={`status-dot ${connected ? 'on' : 'off'}`} title={connected ? 'Leitor conectado' : 'Leitor desconectado'} />
       </header>
 
       <aside className="sidebar">
         <div className="sidebar-brand">
           <Logo variant="light" className="sidebar-logo" />
         </div>
-        <div className="sidebar-user">
-          <span className="avatar">
-            <UserIcon />
-          </span>
-          <div>
-            <small>Bem-vindo(a)</small>
-            <strong title={school?.name}>{firstName(school?.name ?? '')}</strong>
-          </div>
-        </div>
         <nav className="sidebar-nav" onClick={() => setMenuOpen(false)}>
           {NAV_ITEMS.map(({ to, label, icon: Icon, end }) => (
             <NavLink key={to} to={to} end={end} className="nav-item">
               <Icon />
               <span>{label}</span>
-              {to === '/configuracoes' && (
-                <span className={`status-dot ${connected ? 'on' : 'off'}`} title={connected ? 'Arduino conectado' : 'Arduino desconectado'} />
-              )}
             </NavLink>
           ))}
         </nav>
-        <button type="button" className="nav-item logout" onClick={handleLogout}>
-          <LogoutIcon />
-          <span>Sair</span>
-        </button>
+
+        <Link to="/configuracoes" className={`reader-status ${connected ? 'on' : 'off'}`} onClick={() => setMenuOpen(false)}>
+          <span className={`status-dot ${connected ? 'on' : 'off'}`} />
+          <span>
+            <strong>{connected ? 'Leitor conectado' : 'Leitor desconectado'}</strong>
+            <small>{connected ? 'Pronto para ler digitais' : 'Conecte o Arduino'}</small>
+          </span>
+        </Link>
+
+        <div className="sidebar-user">
+          <span className="avatar" aria-hidden>
+            {initials(school?.name ?? '')}
+          </span>
+          <div>
+            <small>Bem-vindo(a)</small>
+            <strong title={school?.name}>{firstName(school?.name ?? '')}</strong>
+          </div>
+          <button type="button" className="icon-button logout" aria-label="Sair" title="Sair" onClick={handleLogout}>
+            <LogoutIcon />
+          </button>
+        </div>
       </aside>
 
       <div className="sidebar-backdrop" onClick={() => setMenuOpen(false)} />

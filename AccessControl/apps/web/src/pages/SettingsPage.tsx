@@ -60,12 +60,19 @@ export function SettingsPage() {
                   ))}
                 </select>
               </label>
-              <div className="progress" aria-label={serial.connected ? 'Conectado' : 'Desconectado'}>
-                <div className="progress-bar" style={{ width: serial.connected ? '100%' : '0%' }} />
+              <div className={`connection-state ${serial.connected ? 'on' : 'off'}`}>
+                <span className={`status-dot ${serial.connected ? 'on' : 'off'}`} />
+                <div>
+                  <strong>{serial.connected ? 'Conectado' : 'Desconectado'}</strong>
+                  <small>
+                    {serial.connected
+                      ? serial.portLabel
+                        ? `Porta ${serial.portLabel}`
+                        : 'Leitor pronto para uso'
+                      : 'Nenhum dispositivo conectado.'}
+                  </small>
+                </div>
               </div>
-              <p className="muted">
-                {serial.connected ? `Conectado${serial.portLabel ? ` · ${serial.portLabel}` : ''}` : 'Nenhum dispositivo conectado.'}
-              </p>
               <button type="button" className="btn btn-primary" onClick={toggleConnection} disabled={busy}>
                 {serial.connected ? 'Desconectar' : 'Conectar'}
               </button>
