@@ -2,8 +2,10 @@ import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
 import { pinoHttp } from 'pino-http';
+import swaggerUi from 'swagger-ui-express';
 import type { PrismaClient } from '@prisma/client';
 import { corsOrigins, env } from './config/env';
+import { openApiSpec } from './docs/openapi';
 import { logger } from './lib/logger';
 import { createRequireAuth } from './middlewares/auth';
 import { errorHandler, notFoundHandler } from './middlewares/error-handler';
@@ -60,6 +62,19 @@ export function createApp({ prisma, identity, storage }: AppDependencies) {
       timestamp: new Date().toISOString(),
     });
   });
+
+  // Documentação da API: Swagger UI em /docs e a especificação OpenAPI em /docs.json.
+  app.get('/docs.json', (_req, res) => {
+    res.json(openApiSpec);
+  });
+  app.use(
+    '/docs',
+    swaggerUi.serve,
+    swaggerUi.setup(openApiSpec, {
+      customSiteTitle: 'HelpUs API - Documentação',
+      swaggerOptions: { persistAuthorization: true },
+    }),
+  );
 
   const authService = new AuthService(prisma, identity);
   const requireAuth = createRequireAuth(authService);

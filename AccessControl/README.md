@@ -99,6 +99,8 @@ Os códigos de ativação e recuperação de senha são enviados pelo Supabase A
 ## API
 
 Prefixo `/api`. Todas as rotas, exceto `/health`, exigem `Authorization: Bearer <access token do Supabase Auth>`.
+
+A documentação completa (Swagger UI) fica em **`/docs`** — por exemplo, http://localhost:3333/docs em desenvolvimento — e a especificação OpenAPI em `/docs.json`. Pelo botão **Authorize** dá para informar o token e testar as rotas direto no navegador.
 Cadastro, login, ativação e recuperação de senha são feitos pelo frontend direto no Supabase Auth.
 
 | Método | Rota | Descrição |
