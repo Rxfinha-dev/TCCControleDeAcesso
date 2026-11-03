@@ -125,3 +125,15 @@ export const MoonIcon = (p: SVGProps<SVGSVGElement>) => (
     <path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z" />
   </svg>
 );
+
+export const PlusIcon = (p: SVGProps<SVGSVGElement>) => (
+  <svg {...base(p)}>
+    <path d="M12 5v14M5 12h14" />
+  </svg>
+);
+
+export const CloseIcon = (p: SVGProps<SVGSVGElement>) => (
+  <svg {...base(p)}>
+    <path d="M6 6l12 12M18 6L6 18" />
+  </svg>
+);

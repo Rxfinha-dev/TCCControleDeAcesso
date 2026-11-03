@@ -3,7 +3,8 @@ import { coursesApi, studentsApi } from '../api';
 import { errorMessage } from '../api/client';
 import type { Course, Student, StudentInput } from '../api/types';
 import { ConfirmDialog } from '../components/ConfirmDialog';
-import { FingerprintIcon, SearchIcon } from '../components/Icons';
+import { Drawer } from '../components/Drawer';
+import { FingerprintIcon, PlusIcon, SearchIcon } from '../components/Icons';
 import { PageHeader } from '../components/PageHeader';
 import { StudentPhoto } from '../components/StudentPhoto';
 import { useSerial } from '../contexts/SerialContext';
@@ -25,6 +26,7 @@ export function StudentsPage() {
   const [preview, setPreview] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [formOpen, setFormOpen] = useState(false);
 
   const upsertStudent = useCallback((student: Student) => {
     setStudents((current) => {
@@ -70,6 +72,16 @@ export function StudentsPage() {
     setSelected(null);
     setPreview(null);
     enrollment.reset();
+  };
+
+  const openNew = () => {
+    clearForm();
+    setFormOpen(true);
+  };
+
+  const openStudent = (student: Student) => {
+    selectStudent(student);
+    setFormOpen(true);
   };
 
   const selectStudent = (student: Student) => {
@@ -131,6 +143,7 @@ export function StudentsPage() {
       await studentsApi.remove(selected.id);
       setStudents((current) => current.filter((item) => item.id !== selected.id));
       clearForm();
+      setFormOpen(false);
       toast.success('Aluno excluído.');
     } catch (err) {
       toast.error(errorMessage(err));
@@ -141,11 +154,18 @@ export function StudentsPage() {
 
   return (
     <>
-      <PageHeader title="Alunos" description="Cadastre os alunos, suas fotos e digitais." />
+      <PageHeader
+        title="Alunos"
+        description="Cadastre os alunos, suas fotos e digitais."
+        actions={
+          <button type="button" className="btn btn-primary" onClick={openNew}>
+            <PlusIcon /> Novo aluno
+          </button>
+        }
+      />
 
-      <div className="split-layout">
-        <form className="card form" onSubmit={handleSubmit} noValidate>
-          <h2 className="card-title">{selected ? 'Editar aluno' : 'Novo aluno'}</h2>
+      <Drawer open={formOpen} title={selected ? 'Editar aluno' : 'Novo aluno'} onClose={() => setFormOpen(false)}>
+        <form className="form" onSubmit={handleSubmit} noValidate>
           <div className="photo-picker">
             <StudentPhoto
               studentId={selected?.id}
@@ -165,7 +185,18 @@ export function StudentsPage() {
             <span>Nome</span>
             <input value={form.name} onChange={update('name')} maxLength={100} />
           </label>
-          <div className="field-row">
+          <label className="field">
+            <span>Curso</span>
+            <select value={form.courseId} onChange={update('courseId')}>
+              <option value="">Selecione</option>
+              {courses.map((course) => (
+                <option key={course.id} value={course.id}>
+                  {course.name}
+                </option>
+              ))}
+            </select>
+          </label>
+          <div className="field-row three">
             <label className="field">
               <span>RM</span>
               <input value={form.rm} onChange={update('rm')} maxLength={8} />
@@ -173,19 +204,6 @@ export function StudentsPage() {
             <label className="field">
               <span>Idade</span>
               <input type="number" min={1} max={120} value={form.age} onChange={update('age')} />
-            </label>
-          </div>
-          <div className="field-row">
-            <label className="field">
-              <span>Curso</span>
-              <select value={form.courseId} onChange={update('courseId')}>
-                <option value="">Selecione</option>
-                {courses.map((course) => (
-                  <option key={course.id} value={course.id}>
-                    {course.name}
-                  </option>
-                ))}
-              </select>
             </label>
             <label className="field">
               <span>Série</span>
@@ -205,12 +223,11 @@ export function StudentsPage() {
             <button type="submit" className="btn btn-primary" disabled={saving}>
               {saving ? 'Salvando...' : 'Salvar'}
             </button>
-            <button type="button" className="btn btn-danger" disabled={!selected} onClick={() => setConfirmDelete(true)}>
-              Excluir
-            </button>
-            <button type="button" className="btn btn-outline" onClick={clearForm}>
-              Novo
-            </button>
+            {selected && (
+              <button type="button" className="btn btn-danger" onClick={() => setConfirmDelete(true)}>
+                Excluir
+              </button>
+            )}
           </div>
 
           {selected && (
@@ -238,73 +255,72 @@ export function StudentsPage() {
             </div>
           )}
         </form>
+      </Drawer>
 
-        <section className="card">
-          <div className="table-toolbar">
-            <div className="search-field">
-              <SearchIcon />
-              <input
-                type="search"
-                placeholder="Buscar por nome ou RM"
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-                aria-label="Buscar alunos"
-              />
-            </div>
-            <span className="muted">{students.length === 1 ? '1 aluno' : `${students.length} alunos`}</span>
+      <section className="card">
+        <div className="table-toolbar">
+          <div className="search-field">
+            <SearchIcon />
+            <input
+              type="search"
+              placeholder="Buscar por nome ou RM"
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              aria-label="Buscar alunos"
+            />
           </div>
-          <div className="table-wrapper">
-            <table className="table selectable">
-              <thead>
-                <tr>
-                  <th>Nome</th>
-                  <th>RM</th>
-                  <th>Idade</th>
-                  <th>Série</th>
-                  <th>Curso</th>
-                  <th>Digital</th>
-                </tr>
-              </thead>
-              <tbody>
-                {students.map((student) => (
-                  <tr
-                    key={student.id}
-                    className={selected?.id === student.id ? 'active' : ''}
-                    onClick={() => selectStudent(student)}
-                    tabIndex={0}
-                    onKeyDown={(event) => event.key === 'Enter' && selectStudent(student)}
-                  >
-                    <td>
-                      <span className="cell-person">
-                        <span className="avatar avatar-soft" aria-hidden>
-                          {initials(student.name)}
-                        </span>
+          <span className="muted">{students.length === 1 ? '1 aluno' : `${students.length} alunos`}</span>
+        </div>
+        <div className="table-wrapper">
+          <table className="table selectable">
+            <thead>
+              <tr>
+                <th>Aluno</th>
+                <th>Série</th>
+                <th>Curso</th>
+                <th>Digital</th>
+              </tr>
+            </thead>
+            <tbody>
+              {students.map((student) => (
+                <tr
+                  key={student.id}
+                  className={formOpen && selected?.id === student.id ? 'active' : ''}
+                  onClick={() => openStudent(student)}
+                  tabIndex={0}
+                  onKeyDown={(event) => event.key === 'Enter' && openStudent(student)}
+                >
+                  <td>
+                    <span className="cell-person">
+                      <span className="avatar avatar-soft" aria-hidden>
+                        {initials(student.name)}
+                      </span>
+                      <span>
                         {student.name}
+                        <small>RM {student.rm}</small>
                       </span>
-                    </td>
-                    <td className="nowrap">{student.rm}</td>
-                    <td className="nowrap">{student.age}</td>
-                    <td className="nowrap">{yearLabel(student.year)}</td>
-                    <td>{student.course.name}</td>
-                    <td>
-                      <span className={`badge ${student.fingerprintEnrolled ? 'badge-success' : 'badge-warning'}`}>
-                        {student.fingerprintEnrolled ? 'Cadastrada' : 'Pendente'}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-                {!loading && students.length === 0 && (
-                  <tr>
-                    <td colSpan={6} className="empty">
-                      Nenhum aluno encontrado.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </section>
-      </div>
+                    </span>
+                  </td>
+                  <td className="nowrap">{yearLabel(student.year)}</td>
+                  <td>{student.course.name}</td>
+                  <td>
+                    <span className={`badge ${student.fingerprintEnrolled ? 'badge-success' : 'badge-warning'}`}>
+                      {student.fingerprintEnrolled ? 'Cadastrada' : 'Pendente'}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+              {!loading && students.length === 0 && (
+                <tr>
+                  <td colSpan={4} className="empty">
+                    {search ? 'Nenhum aluno encontrado.' : 'Nenhum aluno cadastrado ainda. Use “Novo aluno” para começar.'}
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </section>
 
       <ConfirmDialog
         open={confirmDelete}
