@@ -25,6 +25,10 @@ export class AuthService {
   async authenticate(token: string): Promise<School> {
     const identity = await this.identity.verifyToken(token);
     if (!identity) throw unauthorized(SESSION_EXPIRED, 'INVALID_TOKEN');
+    // Sem esta checagem, o token seguiria aceito depois do logout ou da troca de senha até expirar.
+    if (!(await this.identity.isSessionActive(token, identity.sessionId))) {
+      throw unauthorized(SESSION_EXPIRED, 'INVALID_TOKEN');
+    }
 
     const school = await this.prisma.school.findUnique({ where: { authUserId: identity.userId } });
     return school ?? this.provision(token);

@@ -17,9 +17,10 @@ const idParam = {
 
 /** Respostas de erro comuns a todas as rotas protegidas. */
 const authErrors = {
-  401: errorResponse('Token ausente, inválido ou expirado (`UNAUTHORIZED`, `INVALID_TOKEN`)'),
+  401: errorResponse('Token ausente, inválido, expirado ou de sessão encerrada (`UNAUTHORIZED`, `INVALID_TOKEN`)'),
   403: errorResponse('E-mail da conta ainda não confirmado (`EMAIL_NOT_VERIFIED`)'),
   429: errorResponse('Limite de requisições atingido (300 por minuto)'),
+  503: errorResponse('Supabase Auth indisponível para validar o login (`AUTH_UNAVAILABLE`)'),
 };
 
 const validationError = {

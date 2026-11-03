@@ -1,6 +1,6 @@
 import request from 'supertest';
 import { Prisma } from '@prisma/client';
-import { AUTH_USER_ID, authHeader, buildTestApp, school } from './helpers';
+import { AUTH_USER_ID, SESSION_ID, authHeader, buildTestApp, school } from './helpers';
 
 describe('Auth (Supabase)', () => {
   describe('GET /api/auth/me', () => {
@@ -13,6 +13,16 @@ describe('Auth (Supabase)', () => {
     it('recusa token inválido', async () => {
       const { app } = buildTestApp();
       const res = await request(app).get('/api/auth/me').set('Authorization', 'Bearer abc.def.ghi');
+      expect(res.status).toBe(401);
+      expect(res.body.code).toBe('INVALID_TOKEN');
+    });
+
+    it('recusa token de sessão encerrada (logout ou troca de senha)', async () => {
+      const { app, identity } = buildTestApp();
+      identity.revokedSessions.add(SESSION_ID);
+
+      const res = await request(app).get('/api/auth/me').set('Authorization', authHeader());
+
       expect(res.status).toBe(401);
       expect(res.body.code).toBe('INVALID_TOKEN');
     });

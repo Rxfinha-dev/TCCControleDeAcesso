@@ -6,6 +6,7 @@ import type { PhotoStorage, StoredPhoto } from '../src/services/storage';
 
 export const VALID_TOKEN = 'valid-token';
 export const AUTH_USER_ID = '6f1c2b8e-3a4d-4e5f-9a0b-1c2d3e4f5a6b';
+export const SESSION_ID = '0b9c8d7e-6f5a-4b3c-8d2e-1f0a9b8c7d6e';
 
 /** Simula o Supabase Auth: só o token VALID_TOKEN é aceito. */
 export class FakeIdentity implements IdentityProvider {
@@ -15,8 +16,13 @@ export class FakeIdentity implements IdentityProvider {
     name: 'ETEC Joaquim Ferreira do Amaral',
     emailConfirmed: true,
   };
+  /** Sessões encerradas (logout ou troca de senha). */
+  revokedSessions = new Set<string>();
   async verifyToken(token: string) {
-    return token === VALID_TOKEN ? { userId: this.user.userId, email: this.user.email } : null;
+    return token === VALID_TOKEN ? { userId: this.user.userId, email: this.user.email, sessionId: SESSION_ID } : null;
+  }
+  async isSessionActive(_token: string, sessionId: string) {
+    return !this.revokedSessions.has(sessionId);
   }
   async getUser(token: string) {
     return token === VALID_TOKEN ? this.user : null;

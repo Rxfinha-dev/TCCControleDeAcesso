@@ -31,7 +31,7 @@ Tudo o que existia no sistema legado, atualizado:
 | `frmLog` | Relatório de entradas com filtros por período/nome, paginação e exportação CSV |
 | `frmConfiguracoes` | Conexão com o Arduino pelo navegador (Web Serial) |
 
-Melhorias de segurança em relação ao legado: credenciais apenas em variáveis de ambiente, senhas e códigos por e-mail gerenciados pelo Supabase Auth (a API não guarda senhas e valida os tokens pela JWKS do projeto), rate limit nas rotas da API, isolamento dos dados por instituição em todas as consultas, RLS habilitado no Supabase e validação de entrada com Zod.
+Melhorias de segurança em relação ao legado: credenciais apenas em variáveis de ambiente, senhas e códigos por e-mail gerenciados pelo Supabase Auth (a API não guarda senhas, valida os tokens pela JWKS do projeto e recusa tokens de sessões encerradas no logout ou na troca de senha), rate limit nas rotas da API, isolamento dos dados por instituição em todas as consultas, RLS habilitado e acesso da Data API (anon/authenticated) revogado no Supabase e validação de entrada com Zod.
 
 ## Estrutura
 
