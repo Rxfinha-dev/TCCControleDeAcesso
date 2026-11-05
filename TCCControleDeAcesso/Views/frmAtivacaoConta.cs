@@ -11,13 +11,14 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using TCCControleDeAcesso.Models;
 using System.Runtime.InteropServices;
+using TCCControleDeAcesso.Controllers;
 
 namespace TCCControleDeAcesso.Views
 {
 
     public partial class frmAtivacaoConta : Form
     {
-        CadastroEmpresas _cadastroEmpresas;
+        AlunoController _cadastroEmpresas;
 
         [DllImport("Gdi32.dll", EntryPoint = "CreateRoundRectRgn")]
 
@@ -88,14 +89,11 @@ namespace TCCControleDeAcesso.Views
             {
                 MessageBox.Show("Sua conta foi ativada!", "Ativação da conta", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
-                
-
-
                 string txtEmail = this.email;
                 string txtNome = this.nome;
                 string txtSenha = this.senha;
-
-                _cadastroEmpresas = new CadastroEmpresas()
+                 
+                var empresaClass = new Empresa()
                 {
 
                     Email = txtEmail,
@@ -108,19 +106,12 @@ namespace TCCControleDeAcesso.Views
                 frmLogin rp = new frmLogin();
                 rp.Show();
                 this.Close();
-
                 this.Hide();
-
-                
-
             }
             else
             {
                 MessageBox.Show("Senha de ativação inválida!", "Tente novamente.", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            
-
-        
         }
 
         private void btnEntrar_Click(object sender, EventArgs e)
@@ -130,17 +121,14 @@ namespace TCCControleDeAcesso.Views
             this.Close();
             CE.Show();
         }
-
         private void lblConfirmacao_Click(object sender, EventArgs e)
         {
             btnAtivacao.Font = new Font("Segoe UI", 12F, FontStyle.Regular);
         }
-
         private void txtAtivacao__TextChanged(object sender, EventArgs e)
         {
 
         }
-
         private void txtAtivacao__TextChanged_1(object sender, EventArgs e)
         {
 

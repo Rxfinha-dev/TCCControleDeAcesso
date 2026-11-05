@@ -1,0 +1,92 @@
+name: Deploy (produção)
+
+# Fluxo: migrations no Supabase -> deploy da API e do frontend no Render -> smoke test.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: AccessControl
+
+jobs:
+  migrate:
+    name: Migrations no Supabase
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      DATABASE_URL: ${{ secrets.SUPABASE_DATABASE_URL }}
+      DIRECT_URL: ${{ secrets.SUPABASE_DIRECT_URL }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: AccessControl/package-lock.json
+
+      - name: Verificar secrets
+        run: |
+          if [ -z "$DATABASE_URL" ] || [ -z "$DIRECT_URL" ]; then
+            echo "::error::Configure os secrets SUPABASE_DATABASE_URL e SUPABASE_DIRECT_URL no environment 'production'."
+            exit 1
+          fi
+
+      - run: npm ci --workspace apps/api
+
+      - name: prisma migrate deploy
+        run: npx prisma migrate deploy
+        working-directory: AccessControl/apps/api
+
+  deploy:
+    name: Deploy no Render
+    runs-on: ubuntu-latest
+    needs: migrate
+    environment:
+      name: production
+      url: ${{ vars.WEB_URL }}
+    steps:
+      - name: Disparar deploy da API
+        working-directory: .
+        run: curl -fsS -X POST "${{ secrets.RENDER_API_DEPLOY_HOOK }}"
+
+      - name: Disparar deploy do frontend
+        working-directory: .
+        run: curl -fsS -X POST "${{ secrets.RENDER_WEB_DEPLOY_HOOK }}"
+
+  smoke-test:
+    name: Smoke test
+    runs-on: ubuntu-latest
+    needs: deploy
+    environment: production
+    steps:
+      - name: Aguardar a API responder /api/health
+        working-directory: .
+        env:
+          API_URL: ${{ vars.API_URL }}
+        run: |
+          if [ -z "$API_URL" ]; then
+            echo "::warning::Variável API_URL não configurada; smoke test ignorado."
+            exit 0
+          fi
+          # O plano gratuito do Render pode levar alguns minutos para buildar e acordar.
+          for attempt in $(seq 1 30); do
+            status=$(curl -s -o /tmp/health.json -w '%{http_code}' "$API_URL/api/health" || true)
+            if [ "$status" = "200" ]; then
+              cat /tmp/health.json
+              exit 0
+            fi
+            echo "Tentativa $attempt: HTTP $status - aguardando 20s..."
+            sleep 20
+          done
+          echo "::error::A API não ficou saudável a tempo."
+          exit 1

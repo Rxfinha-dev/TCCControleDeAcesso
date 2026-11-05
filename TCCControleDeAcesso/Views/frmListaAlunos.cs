@@ -17,22 +17,23 @@ using TCCControleDeAcesso.Controllers;
 
 
 namespace TCCControleDeAcesso.Views
+{
+    public partial class frmListaAlunos : Form
     {
-        public partial class frmListaAlunos : Form  
-    {
-            CadastroAlunos cadastroAlunos;
-            CarregarImagem carregarImagem;
-            int id_escola;
-            public string caminho;
-            string idText;
-            string _CurrentUsername;
-            int UpdateOrCreate = 0;
-        public int id_arduino {  get; set; }
+        Aluno cadastroAlunos;
+        AlunoController alunoContr;
+        CarregarImagem carregarImagem;
+        int id_escola;
+        public string caminho;
+        string idText;
+        string _CurrentUsername;
+        int UpdateOrCreate = 0;
+        public int id_arduino { get; set; }
 
 
         [DllImport("Gdi32.dll", EntryPoint = "CreateRoundRectRgn")]
 
-                    private static extern IntPtr CreateRoundRectRgn
+        private static extern IntPtr CreateRoundRectRgn
             (
             int nLeft,
             int nTop,
@@ -42,20 +43,20 @@ namespace TCCControleDeAcesso.Views
             int nHeightEllipse
             );
 
-        public frmListaAlunos(string currentUsername ,int idEsc)
-            {
-                InitializeComponent();
-                SerialPortManager.Port.DataReceived += serialPort_DataReceived;
-                id_escola = idEsc;
+        public frmListaAlunos(string currentUsername, int idEsc)
+        {
+            InitializeComponent();
+            SerialPortManager.Port.DataReceived += serialPort_DataReceived;
+            id_escola = idEsc;
             _CurrentUsername = currentUsername;
-            }
+        }
 
         public void CleanAll()
         {
             txtId.Clear();
             txtName.Texts =
             txtRm.Texts =
-            txtIdade.Texts= "";
+            txtIdade.Texts = "";
             cboCurso.SelectedIndex = -1;
             comboBox2.SelectedIndex = -1;
             txtIdOficial.Clear();
@@ -63,81 +64,81 @@ namespace TCCControleDeAcesso.Views
         }
         private void CarregarCursos()
         {
-            
+
             string query = "SELECT nome FROM cursos where idEscola=@idEscola";
 
-           
-                try
-                {
-                    Banco.OpenConnection();
-                    Banco.Command = new MySqlCommand(query, Banco.Connection);
-                    Banco.Command.Parameters.AddWithValue("@idEscola", id_escola);
-                    Banco.reader();
 
-                    while (Banco.Reader.Read())
-                    {
-                        cboCurso.Items.Add(Banco.Reader["nome"].ToString());
-                    }
-                }
-                catch (Exception ex) 
+            try
+            {
+                //Banco.OpenConnection();
+                Banco.Command = new MySqlCommand(query, Banco.Connection);
+                Banco.Command.Parameters.AddWithValue("@idEscola", id_escola);
+                Banco.reader();
+
+                while (Banco.Reader.Read())
                 {
-                    MessageBox.Show("Erro ao carregar cursos: " + ex.Message);
+                    cboCurso.Items.Add(Banco.Reader["nome"].ToString());
                 }
-            
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao carregar cursos: " + ex.Message);
+            }
+
         }
 
         private void CarregarImagemDoAluno(string nome)
-        {    
-           
-            
-                try
-                {                   
-                    carregarImagem = new CarregarImagem();
-                    carregarImagem.LoadImage(nome);
+        {
+
+
+            try
+            {
+                carregarImagem = new CarregarImagem();
+                carregarImagem.LoadImage(nome);
 
                 Banco.reader();
-                
-                  if (Banco.Reader.Read() && !Banco.Reader.IsDBNull(0))
-                  {
+
+                if (Banco.Reader.Read() && !Banco.Reader.IsDBNull(0))
+                {
                     byte[] imagemBytes = (byte[])Banco.Reader["foto"];
 
                     using (MemoryStream ms = new MemoryStream(imagemBytes))
                     {
                         pictureBox1.Image = Image.FromStream(ms);
                     }
-                  }
-                  else
-                  {
+                }
+                else
+                {
                     pictureBox1.Image = null; // ou imagem padrão
-                  }
-                        
-                    
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Erro ao carregar imagem: " + ex.Message);
-                }
-                finally
-                {
-                    Banco.CloseConnection();
-                }
-             
-            
+
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao carregar imagem: " + ex.Message);
+            }
+            finally
+            {
+                //Banco.CloseConnection();
+            }
+
+
         }
 
         private void carregarGrid()
         {
-            cadastroAlunos = new CadastroAlunos()
+            cadastroAlunos = new Aluno()
             {
                 idEscola = id_escola
             };
-            dgvAlunos.DataSource = cadastroAlunos.ListStudents();
+            dgvAlunos.DataSource = alunoContr.ListStudents();
         }
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-           
-         
+
+
         }
 
         private void frmListaAlunos_Load(object sender, EventArgs e)
@@ -216,7 +217,7 @@ namespace TCCControleDeAcesso.Views
 
         private void BtnDelete_Click(object sender, EventArgs e)
         {
-           
+
         }
 
         private void serialPort_DataReceived(object sender, EventArgs e)
@@ -227,7 +228,8 @@ namespace TCCControleDeAcesso.Views
                 {
                     string received = SerialPortManager.Port.ReadLine();
 
-                    acao.Invoke(new Action(() => {
+                    acao.Invoke(new Action(() =>
+                    {
                         if (received.StartsWith("!enrolling"))
                         {
                             acao.Text = "Coloque o dedo no sensor";
@@ -295,11 +297,11 @@ namespace TCCControleDeAcesso.Views
             else
             {
 
-                cadastroAlunos = new CadastroAlunos()
+                cadastroAlunos = new Aluno()
                 {
                     Id = int.Parse(idText)
                 };
-                cadastroAlunos.Delete();
+                alunoContr.Delete();
 
                 carregarGrid();
                 dgvAlunos.Columns["id"].Visible = false;
@@ -309,12 +311,12 @@ namespace TCCControleDeAcesso.Views
 
         private void btnSave_Click_1(object sender, EventArgs e)
         {
-                   
+
 
 
             if (UpdateOrCreate == 0)
             {
-                
+
                 if (txtName.Texts == string.Empty || txtRm.Texts == string.Empty || txtIdade.Texts == string.Empty || comboBox2.SelectedIndex == -1 || caminho == null || cboCurso.SelectedIndex == -1)
                 {
 
@@ -324,7 +326,7 @@ namespace TCCControleDeAcesso.Views
 
 
 
-                cadastroAlunos = new CadastroAlunos()
+                cadastroAlunos = new Aluno()
                 {
                     Name = txtName.Texts,
                     rm = txtRm.Texts,
@@ -334,31 +336,31 @@ namespace TCCControleDeAcesso.Views
                     foto = File.ReadAllBytes(caminho),
                     idEscola = id_escola
                 };
-                cadastroAlunos.Insert();
+                alunoContr.Insert();
 
 
 
-                
+
                 int id = 0; // variável para armazenar o resultado
-                
 
 
-                Banco.OpenConnection();
+
+                ////Banco.OpenConnection();
                 string query = "SELECT id FROM alunos where nome=@nome";
-              
+
                 Banco.Command = new MySqlCommand(query, Banco.Connection);
                 Banco.Command.Parameters.AddWithValue("@nome", txtName.Texts);
 
 
                 object result = Banco.Command.ExecuteScalar(); // pega a primeira coluna da primeira linha
-                    if (result != null)
-                    {
-                        id = Convert.ToInt32(result);
-                    }
-                Banco.CloseConnection();
-                
-                   
-                
+                if (result != null)
+                {
+                    id = Convert.ToInt32(result);
+                }
+                //Banco.CloseConnection();
+
+
+
 
                 Console.WriteLine("ID encontrado: " + id);
 
@@ -367,12 +369,12 @@ namespace TCCControleDeAcesso.Views
                 {
                     SerialPortManager.Port.Write("!enroll" + id + "#");
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     MessageBox.Show(ex.Message, "Digital Não Cadastrada!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
-                
+
             }
             else
             {
@@ -383,14 +385,14 @@ namespace TCCControleDeAcesso.Views
                 CarregarImagemDoAluno(txtName.Texts);
                 if (!string.IsNullOrEmpty(caminho))
                 {
-                    cadastroAlunos = new CadastroAlunos()
+                    cadastroAlunos = new Aluno()
                     {
                         Id = int.Parse(idText),
                         foto = File.ReadAllBytes(caminho),
                     };
-                    cadastroAlunos.UpdateFoto();
+                    alunoContr.UpdateFoto();
                 }
-                cadastroAlunos = new CadastroAlunos()
+                cadastroAlunos = new Aluno()
                 {
                     Id = int.Parse(idText),
                     Name = txtName.Texts,
@@ -398,36 +400,25 @@ namespace TCCControleDeAcesso.Views
                     NomeCurso = cboCurso.SelectedItem.ToString(),
                     idade = txtIdade.Texts,
                     serie = comboBox2.SelectedItem.ToString(),
-                    
+
                     idEscola = id_escola
                 };
-                cadastroAlunos.Update();
+                alunoContr.Update();
 
                 UpdateOrCreate = 0;
             }
 
-
-
-
-
-
-
-
             carregarGrid();
             // dgvAlunos.Columns["id"].Visible = false;
             CleanAll();
-
-
         }
 
         private void btnVoltar_Click_1(object sender, EventArgs e)
         {
-            
             frmMainMenu check = new frmMainMenu(_CurrentUsername, id_escola);
             check.Show();
             Close();
             carregarGrid();
-
         }
     }
 }

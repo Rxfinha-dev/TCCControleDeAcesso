@@ -41,7 +41,7 @@ namespace TCCControleDeAcesso.Views
             try
             {
 
-                Banco.OpenConnection();
+                ////Banco.OpenConnection();
 
 
                 Banco.Command = new MySqlCommand("SELECT COUNT(*) FROM escolas WHERE email=@email", Banco.Connection);
@@ -53,7 +53,7 @@ namespace TCCControleDeAcesso.Views
 
                 count = Convert.ToInt32(Banco.Command.ExecuteScalar());
 
-                Banco.CloseConnection();
+                ////Banco.CloseConnection();
 
                 if (count > 0)
                 {
@@ -109,7 +109,7 @@ namespace TCCControleDeAcesso.Views
             }
             finally
             {
-                Banco.CloseConnection();
+                ////Banco.CloseConnection();
             }
         }
 

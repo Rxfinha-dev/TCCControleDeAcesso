@@ -26,12 +26,12 @@ namespace TCCControleDeAcesso.Views
         );
 
         bool verificando;
-        Log log;
+        AcessoController log;
         int idAluno;
         DateTime dataAtual;
         int id_escola;
 
-        Verificacao verificacao;
+        Verificacao verifClass;
 
         string _CurrentUsername;
 
@@ -74,7 +74,7 @@ namespace TCCControleDeAcesso.Views
             string query = "SELECT foto FROM alunos WHERE id = @id";
             try
             {
-                Banco.OpenConnection();
+                //Banco.OpenConnection();
                 Banco.Command = new MySqlCommand(query,Banco.Connection);
                 Banco.Command.Parameters.AddWithValue("@id", id);
 
@@ -94,7 +94,6 @@ namespace TCCControleDeAcesso.Views
                     pictureBox1.Image = null; // ou imagem padrão
                 }
 
-
             }
             catch (Exception ex)
             {
@@ -102,9 +101,8 @@ namespace TCCControleDeAcesso.Views
             }
             finally
             {
-                Banco.CloseConnection();
+                //Banco.CloseConnection();
             }
-
         }
 
         private void processReceived(string received)
@@ -118,11 +116,12 @@ namespace TCCControleDeAcesso.Views
                 {
                 }
 
-                verificacao = new Verificacao()
+                verifClass = new Verificacao()
                 {
                     Id = idAluno
                 };
-                var dt = verificacao.select();
+                var verifContr = new VerificacaoController();
+                var dt = verifContr.select();
                 if (dt.Rows.Count > 0)
                 {
                     lblRM.Text = dt.Rows[0]["rm"].ToString();
@@ -138,8 +137,8 @@ namespace TCCControleDeAcesso.Views
 
                 try
                 {
-                    log = new Log();
-                    log.insert(lblNome.Text, dataAtual, id_escola);
+                    log = new AcessoController();
+                    log.insertLog(lblNome.Text, dataAtual, id_escola);
                 }
                 catch (Exception ex)
                 {
@@ -176,10 +175,6 @@ namespace TCCControleDeAcesso.Views
             }
         }
 
-
-
-      
-
         private void frmVerificacao_Load(object sender, EventArgs e)
         {
 
@@ -196,8 +191,6 @@ namespace TCCControleDeAcesso.Views
             btnVoltar.ForeColor = Color.White; // texto branco
 
         }
-
-    
 
         private void label1_Click_1(object sender, EventArgs e)
         {

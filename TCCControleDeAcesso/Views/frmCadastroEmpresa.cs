@@ -21,7 +21,7 @@ namespace TCCControleDeAcesso.Views
     public partial class frmCadastroEmpresa : Form
     {
 
-        CadastroEmpresas _cadastroEmpresas;
+
 
         [DllImport("Gdi32.dll", EntryPoint = "CreateRoundRectRgn")]
 
@@ -37,7 +37,7 @@ namespace TCCControleDeAcesso.Views
 
         String randomCode;
         public static String EmailDest;
-        CadastroEmpresas _CadastroEmpresas;
+        Empresa empresaClass;
 
         public frmCadastroEmpresa()
         {
@@ -56,7 +56,7 @@ namespace TCCControleDeAcesso.Views
         private void btnCadastrar_Click(object sender, EventArgs e)
         {
             // acredito que seja esse comando o responsavel pelo envio dos campos para o banco de dados
-            _cadastroEmpresas = new CadastroEmpresas()
+            empresaClass = new Empresa()
             {
                 Email = txtEmail.Texts,
                 Name = txtNome.Texts,
@@ -66,12 +66,12 @@ namespace TCCControleDeAcesso.Views
             int count = 0;
             try
             {
-                Banco.OpenConnection();
+                //Banco.OpenConnection();
                 Banco.Command = new MySqlCommand("SELECT COUNT(*) FROM escolas WHERE email=@email", Banco.Connection);
                 Banco.Command.Parameters.AddWithValue("@email", txtEmail.Texts);
 
                 count = Convert.ToInt32(Banco.Command.ExecuteScalar());
-                Banco.CloseConnection();
+                //Banco.CloseConnection();
 
                 if (count > 0)
                 {
@@ -85,7 +85,7 @@ namespace TCCControleDeAcesso.Views
             }
             finally
             {
-                Banco.CloseConnection();
+                //Banco.CloseConnection();
             }
 
             if (string.IsNullOrWhiteSpace(txtNome.Texts) ||

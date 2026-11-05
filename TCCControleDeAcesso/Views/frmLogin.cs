@@ -14,8 +14,8 @@ namespace TCCControleDeAcesso.Views
 {
     public partial class frmLogin : Form
     {
-        Login _login;
-        CadastroEmpresas _empresas;
+        LoginController loginContr = new LoginController();
+        Login loginClass;
 
         [DllImport("Gdi32.dll", EntryPoint = "CreateRoundRectRgn")]
         private static extern IntPtr CreateRoundRectRgn
@@ -67,7 +67,7 @@ namespace TCCControleDeAcesso.Views
         {
             try
             {
-                Banco.OpenConnection();
+                //Banco.OpenConnection();
                 Banco.Command = new MySqlCommand("SELECT nome FROM escolas WHERE email = @email", Banco.Connection);
                 Banco.Command.Parameters.AddWithValue("@email", txtLogin.Texts);
                 using (MySqlDataReader reader = Banco.Command.ExecuteReader())
@@ -85,7 +85,7 @@ namespace TCCControleDeAcesso.Views
             }
             finally
             {
-                Banco.CloseConnection();
+                //Banco.CloseConnection();
             }
 
         }
@@ -93,7 +93,7 @@ namespace TCCControleDeAcesso.Views
         private void btnEntrar_Click(object sender, EventArgs e)
         {
             GetUserByEmail();
-            _login = new Login()
+            loginClass = new Login()
             {
                 email = txtLogin.Texts,
                 senha = txtSenha.Texts,
@@ -102,7 +102,7 @@ namespace TCCControleDeAcesso.Views
             
             try
             {
-                _login.PullSenha();
+                loginContr.PullSenha();
             }
             catch (Exception ex)
             {
@@ -112,12 +112,12 @@ namespace TCCControleDeAcesso.Views
 
             string senhadigitada = txtSenha.Texts;
 
-            if (_login.count == 1)
+            if (loginClass.count == 1)
             {
                 bool valido = false;
                 try
                 {
-                    valido = BCrypt.Net.BCrypt.Verify(senhadigitada, _login.HashBanco);
+                    valido = BCrypt.Net.BCrypt.Verify(senhadigitada, loginClass.HashBanco);
                 }
                 catch (Exception ex)
                 {
@@ -127,9 +127,9 @@ namespace TCCControleDeAcesso.Views
 
                 if (valido)
                 {
-                    _login.LoginPermissions();
+                    loginContr.LoginPermissions();
                     MessageBox.Show("Login realizado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    frmMainMenu check = new frmMainMenu(currentUsername, _login.idEscola);
+                    frmMainMenu check = new frmMainMenu(currentUsername, loginClass.idEscola);
                     check.Show();
                     this.Hide();
                     CleanAll();

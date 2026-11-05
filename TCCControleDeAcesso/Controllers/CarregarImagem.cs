@@ -11,16 +11,16 @@ namespace TCCControleDeAcesso.Controllers
 {
     public class CarregarImagem
     {
+        //ver se passar um valor sem ter que ser dentro do parametro da função para manter o padrão
         public void LoadImage(string nomeAluno)
         {
             try
             {
-                Banco.OpenConnection();
+                //Banco.OpenConnection();
                 Banco.Command = new MySqlCommand("SELECT foto FROM alunos WHERE nome = @nome", Banco.Connection);
                 Banco.Command.Parameters.AddWithValue("@nome", nomeAluno);
-                
-
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 MessageBox.Show("Erro ao carregar imagem: " + ex.Message);
             }

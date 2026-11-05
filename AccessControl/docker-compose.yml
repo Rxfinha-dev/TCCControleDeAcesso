@@ -1,0 +1,42 @@
+# Ambiente local: PostgreSQL + API.
+# Uso: docker compose up -d db   (apenas o banco)  |  docker compose up --build   (banco + API)
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: helpus
+      POSTGRES_PASSWORD: helpus
+      POSTGRES_DB: helpus
+    ports:
+      - '5432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U helpus']
+      interval: 5s
+      retries: 10
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: 3333
+      DATABASE_URL: postgresql://helpus:helpus@db:5432/helpus?schema=public
+      DIRECT_URL: postgresql://helpus:helpus@db:5432/helpus?schema=public
+      # Login pelo Supabase Auth: defina estas variáveis no arquivo AccessControl/.env.
+      SUPABASE_URL: ${SUPABASE_URL:?defina SUPABASE_URL}
+      SUPABASE_PUBLISHABLE_KEY: ${SUPABASE_PUBLISHABLE_KEY:?defina SUPABASE_PUBLISHABLE_KEY}
+      CORS_ORIGIN: http://localhost:5173
+      STORAGE_DRIVER: database
+    # Aplica as migrations antes de subir a API.
+    command: sh -c "npx prisma migrate deploy && node dist/server.js"
+    ports:
+      - '3333:3333'
+
+volumes:
+  pgdata:
