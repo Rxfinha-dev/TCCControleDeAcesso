@@ -1,7 +1,7 @@
 # Build a partir da pasta AccessControl/ (contexto do monorepo):
 #   docker build -f apps/api/Dockerfile -t helpus-api .
 
-FROM node:22-slim AS base
+FROM node:25-slim AS base
 RUN apt-get update -y && apt-get install -y --no-install-recommends openssl ca-certificates && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 
