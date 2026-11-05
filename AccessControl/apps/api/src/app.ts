@@ -48,11 +48,29 @@ export function createApp({ prisma, identity, storage }: AppDependencies) {
     app.use(pinoHttp({ logger, autoLogging: { ignore: (req) => req.url === '/api/health' } }));
   }
 
+  // O health check é o gate de deploy do Render: se ele não responde 200, o deploy
+  // expira. Por isso a consulta tem timeout próprio (em vez de depender do
+  // connect_timeout do Prisma) e o erro é sempre logado — um catch silencioso aqui
+  // transforma qualquer falha de banco num deploy que expira sem diagnóstico.
+  const HEALTH_DB_TIMEOUT_MS = 3000;
+
   app.get('/api/health', async (_req, res) => {
     let database = 'up';
     try {
-      await prisma.$queryRaw`SELECT 1`;
-    } catch {
+      let timer: NodeJS.Timeout | undefined;
+      const timeout = new Promise<never>((_resolve, reject) => {
+        timer = setTimeout(
+          () => reject(new Error(`consulta excedeu ${HEALTH_DB_TIMEOUT_MS}ms`)),
+          HEALTH_DB_TIMEOUT_MS,
+        );
+      });
+      try {
+        await Promise.race([prisma.$queryRaw`SELECT 1`, timeout]);
+      } finally {
+        clearTimeout(timer);
+      }
+    } catch (err) {
+      logger.error({ err }, 'health check: o banco não respondeu');
       database = 'down';
     }
     res.status(database === 'up' ? 200 : 503).json({

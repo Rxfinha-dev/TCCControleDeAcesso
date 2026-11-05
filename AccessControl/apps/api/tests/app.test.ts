@@ -22,6 +22,23 @@ describe('App', () => {
     expect(res.body.database).toBe('down');
   });
 
+  // Regressão: uma consulta que pendura (em vez de falhar) deixava a resposta sem
+  // retorno, o health check nunca passava e o deploy no Render expirava em 15 min.
+  // Usa timers reais: o supertest precisa deles para o socket HTTP.
+  it(
+    'GET /api/health retorna 503 quando a consulta ao banco pendura',
+    async () => {
+      const { app, prisma } = buildTestApp();
+      prisma.$queryRaw.mockReturnValue(new Promise(() => {}) as never);
+
+      const res = await request(app).get('/api/health');
+
+      expect(res.status).toBe(503);
+      expect(res.body.database).toBe('down');
+    },
+    10_000,
+  );
+
   it('responde 404 em JSON para rotas inexistentes', async () => {
     const { app } = buildTestApp();
     const res = await request(app).get('/api/nao-existe');

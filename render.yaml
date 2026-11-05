@@ -18,7 +18,13 @@ services:
         value: production
       - key: LOG_LEVEL
         value: info
+      # Pooler em modo transaction (porta 6543, ?pgbouncer=true) para o runtime.
       - key: DATABASE_URL
+        sync: false
+      # Declarada no datasource do schema.prisma; sem ela o Prisma Client falha ao
+      # resolver o datasource na primeira query, e o health check passa a devolver 503.
+      # Pooler em modo session (porta 5432).
+      - key: DIRECT_URL
         sync: false
       - key: CORS_ORIGIN
         sync: false
