@@ -1,36 +1,42 @@
-version: '3.8'
-
+# Ambiente local: PostgreSQL + API.
+# Uso: docker compose up -d db   (apenas o banco)  |  docker compose up --build   (banco + API)
 services:
   db:
-    image: mcr.microsoft.com/mssql/server:2022-latest
+    image: postgres:17-alpine
     environment:
-      SA_PASSWORD: "Your_password123"
-      ACCEPT_EULA: "Y"
+      POSTGRES_USER: helpus
+      POSTGRES_PASSWORD: helpus
+      POSTGRES_DB: helpus
     ports:
-      - "1433:1433"
+      - '5432:5432'
     volumes:
-      - sqldata:/var/opt/mssql
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U helpus']
+      interval: 5s
+      retries: 10
 
   api:
     build:
-      context: ./backend
-      dockerfile: src/AccessControl.API/Dockerfile
+      context: .
+      dockerfile: apps/api/Dockerfile
+    depends_on:
+      db:
+        condition: service_healthy
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DefaultConnection=Server=db;Database=AccessControl;User Id=sa;Password=Your_password123;TrustServerCertificate=True
+      NODE_ENV: production
+      PORT: 3333
+      DATABASE_URL: postgresql://helpus:helpus@db:5432/helpus?schema=public
+      DIRECT_URL: postgresql://helpus:helpus@db:5432/helpus?schema=public
+      # Login pelo Supabase Auth: defina estas variáveis no arquivo AccessControl/.env.
+      SUPABASE_URL: ${SUPABASE_URL:?defina SUPABASE_URL}
+      SUPABASE_PUBLISHABLE_KEY: ${SUPABASE_PUBLISHABLE_KEY:?defina SUPABASE_PUBLISHABLE_KEY}
+      CORS_ORIGIN: http://localhost:5173
+      STORAGE_DRIVER: database
+    # Aplica as migrations antes de subir a API.
+    command: sh -c "npx prisma migrate deploy && node dist/server.js"
     ports:
-      - "5000:8080"
-    depends_on:
-      - db
-
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    ports:
-      - "5173:80"
-    depends_on:
-      - api
+      - '3333:3333'
 
 volumes:
-  sqldata:
+  pgdata:

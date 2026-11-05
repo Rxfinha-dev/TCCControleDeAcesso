@@ -1,0 +1,117 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [develop, main]
+  push:
+    branches: [develop]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: AccessControl
+
+env:
+  NODE_VERSION: 22
+
+jobs:
+  api:
+    name: API (lint, testes, migrations, build)
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: helpus
+          POSTGRES_PASSWORD: helpus
+          POSTGRES_DB: helpus
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U helpus"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql://helpus:helpus@localhost:5432/helpus?schema=public
+      DIRECT_URL: postgresql://helpus:helpus@localhost:5432/helpus?schema=public
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: AccessControl/package-lock.json
+
+      - run: npm ci
+
+      - name: Validar schema do Prisma
+        run: npx prisma validate
+        working-directory: AccessControl/apps/api
+
+      - name: Aplicar migrations em um PostgreSQL limpo
+        run: npx prisma migrate deploy
+        working-directory: AccessControl/apps/api
+
+      - name: Verificar se o schema e as migrations estão sincronizados
+        run: npx prisma migrate diff --from-url "$DATABASE_URL" --to-schema-datamodel prisma/schema.prisma --exit-code
+        working-directory: AccessControl/apps/api
+
+      - run: npm run lint --workspace apps/api
+      - run: npm run typecheck --workspace apps/api
+      - run: npm run test:coverage --workspace apps/api
+      - run: npm run build --workspace apps/api
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: api-coverage
+          path: AccessControl/apps/api/coverage
+          retention-days: 7
+
+  web:
+    name: Web (lint, testes, build)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: AccessControl/package-lock.json
+
+      - run: npm ci
+      - run: npm run lint --workspace apps/web
+      - run: npm run typecheck --workspace apps/web
+      - run: npm run test:coverage --workspace apps/web
+      - run: npm run build --workspace apps/web
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: web-dist
+          path: AccessControl/apps/web/dist
+          retention-days: 7
+
+  docker:
+    name: Imagem Docker da API
+    runs-on: ubuntu-latest
+    needs: api
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v6
+        with:
+          context: AccessControl
+          file: AccessControl/apps/api/Dockerfile
+          push: false
+          tags: helpus-api:ci
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

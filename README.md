@@ -1,134 +1,54 @@
-TCCControleDeAcesso
+# HelpUs — TCCControleDeAcesso
 
 Sistema de Controle de Acesso desenvolvido como Trabalho de Conclusão de Curso (TCC) na ETEC Joaquim Ferreira do Amaral.
-O objetivo do sistema é gerenciar cadastros de usuários, autorizações e registros de entrada/saída em um ambiente institucional.
+Gerencia o cadastro de instituições, cursos e alunos e registra as entradas com leitura biométrica (Arduino + sensor de digitais).
 
-📖 Sumário
+## 📁 Estrutura do repositório
 
-Descrição
+| Pasta | Conteúdo |
+| --- | --- |
+| [`AccessControl/`](AccessControl/README.md) | **Versão atual (web)** — React + Node.js/TypeScript + Prisma + PostgreSQL |
+| `TCCControleDeAcesso/` | Versão legada desktop (C# WinForms + MySQL), mantida como referência |
+| `.github/` | Workflows de CI/CD, Dependabot e template de PR |
+| `render.yaml` | Blueprint de hospedagem da API e do frontend no Render |
 
-Objetivos do Projeto
+## 🛠️ Tecnologias (versão atual)
 
-Tecnologias Utilizadas
+| Tipo | Tecnologia |
+| --- | --- |
+| Frontend | React 19, Vite, TypeScript |
+| Backend | Node.js, Express 5, TypeScript |
+| Banco de dados | PostgreSQL (Supabase) |
+| ORM | Prisma |
+| Testes | Jest |
+| Hardware | Arduino via Web Serial API |
+| CI/CD | GitHub Actions |
 
-Funcionalidades Principais
+## ⚙️ Funcionalidades
 
-Como Executar o Projeto
+- ✅ Cadastro da instituição com ativação da conta por código enviado por e-mail
+- ✅ Login com Supabase Auth: cadastro e recuperação de senha por código enviado por e-mail
+- ✅ Cadastro, edição e exclusão de cursos e alunos (com foto)
+- ✅ Cadastro da digital do aluno no sensor biométrico
+- ✅ Verificação por digital com registro de entrada (data/hora) e entrada manual por RM
+- ✅ Relatório de entradas com filtros e exportação CSV
 
-Estrutura do Projeto
+## 🚀 Como executar e publicar
 
-Capturas de Tela
+- Desenvolvimento local: [AccessControl/README.md](AccessControl/README.md)
+- Publicação (Supabase + Render + GitHub Actions): [AccessControl/DEPLOY.md](AccessControl/DEPLOY.md)
 
-Contribuição
+## 🤝 Contribuição
 
-Licença
+1. Crie uma branch a partir de `develop`: `git checkout -b feature/minha-feature`
+2. Faça commits e abra um Pull Request para `develop` — o CI roda lint, testes e build automaticamente.
+3. Releases vão de `develop` para `main`; o merge em `main` publica em produção.
 
-Autor
+## 👥 Autores
 
-🧩 Descrição
-
-O TCCControleDeAcesso é um sistema desktop desenvolvido em C# com Windows Forms que utiliza um banco de dados MySQL para controlar o acesso de pessoas em uma instituição.
-Ele permite o cadastro de usuários, autenticação, registro de entradas e saídas e administração de permissões de acesso, com interface intuitiva e relatórios.
-
-🎯 Objetivos do Projeto
-
-Facilitar o controle de entrada e saída de alunos, professores e visitantes.
-
-Prover um sistema seguro de autenticação e autorização.
-
-Criar uma base sólida para expansão futura (como uso de RFID ou QR Code).
-
-🛠️ Tecnologias Utilizadas
-Tipo	Tecnologia
-Linguagem	C# (.NET Framework)
-Interface	Windows Forms (WinForms)
-Banco de Dados	MySQL
-IDE	Visual Studio
-Controle de Versão	Git + GitHub
-
-⚙️ Funcionalidades Principais
-
-✅ Cadastro de usuários (alunos, professores, visitantes)
-✅ Login e autenticação segura
-✅ Registro de entradas e saídas com data/hora
-✅ Controle de níveis de acesso
-✅ Ativação e desativação de contas
-✅ Edição e exclusão de cadastros
-✅ Geração de relatórios administrativos
-
-🚀 Como Executar o Projeto
-
-Clone o repositório
-
-git clone https://github.com/Rxfinha-dev/TCCControleDeAcesso.git
-
-
-Abra o projeto
-
-No Visual Studio, abra o arquivo TCCControleDeAcesso.sln.
-
-Configure a conexão com o banco MySQL
-
-Localize o trecho de código com a connection string e edite conforme seu ambiente:
-
-server=localhost; database=controleacesso; uid=root; pwd=senha;
-
-
-Crie o banco de dados
-
-Execute o script SQL (se houver) para criar as tabelas necessárias.
-
-Compile e execute
-
-Pressione F5 ou clique em Iniciar Depuração no Visual Studio.
-
-🗂️ Estrutura do Projeto
-TCCControleDeAcesso/
-│
-├── TCCControleDeAcesso.sln           # Solução principal
-├── TCCControleDeAcesso/              # Código-fonte do sistema
-│   ├── Forms/                        # Telas e formulários
-│   ├── Classes/                      # Classes auxiliares
-│   ├── Program.cs                    # Ponto de entrada
-│   └── App.config                    # Configurações (banco de dados)
-│
-├── Images/                           # Prints e ilustrações
-├── .gitignore
-├── .gitattributes
-└── README.md
-
-🤝 Contribuição
-
-Contribuições são bem-vindas!
-Para contribuir:
-
-Faça um fork do projeto.
-
-Crie uma nova branch para sua modificação:
-
-git checkout -b feature/minha-feature
-
-
-Faça suas alterações e commits:
-
-git commit -m "Adiciona nova funcionalidade X"
-
-
-Envie para seu fork e abra um Pull Request.
-
-
-👥 Autores:
-
-Bruno Freitas
-📫 GitHub: @BrunoFreitas09
-
-Rafael Oliveira
-📫 GitHub: @Rxfinha-dev
-
-Leonidas Pelegrini
-📫 GitHub: @oleopelegrini
-
-Diego Natan
-📫 GitHub: @dnatanno
+- Bruno Freitas — GitHub: [BrunoFreitas09](https://github.com/BrunoFreitas09)
+- Rafael Oliveira — GitHub: [Rxfinha-dev](https://github.com/Rxfinha-dev)
+- Leonidas Pelegrini — GitHub: [oleopelegrini](https://github.com/oleopelegrini)
+- Diego Natan — GitHub: [dnatanno](https://github.com/dnatanno)
 
 💡 Projeto desenvolvido para o TCC do curso técnico da ETEC Joaquim Ferreira do Amaral.

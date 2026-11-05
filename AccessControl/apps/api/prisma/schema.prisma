@@ -1,0 +1,115 @@
+// Schema do banco de dados do HelpUs (PostgreSQL / Supabase).
+// Equivalente moderno das tabelas legadas: escolas, cursos, alunos e entradas.
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  // Supabase: use a URL do pooler (porta 6543, ?pgbouncer=true) em runtime...
+  url       = env("DATABASE_URL")
+  // ...e a conexão direta/session pooler (porta 5432) para migrations.
+  directUrl = env("DIRECT_URL")
+}
+
+enum SchoolYear {
+  FIRST
+  SECOND
+  THIRD
+}
+
+enum AccessMethod {
+  FINGERPRINT
+  MANUAL
+}
+
+/// Instituição (antiga tabela "escolas"). O login é feito pelo Supabase Auth.
+model School {
+  id         Int      @id @default(autoincrement())
+  name       String   @db.VarChar(100)
+  email      String   @unique @db.VarChar(120)
+  /// ID do usuário no Supabase Auth (auth.users.id). Fica vazio até o primeiro login,
+  /// quando a API vincula a instituição pelo e-mail confirmado.
+  authUserId String?  @unique @map("auth_user_id") @db.Uuid
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  courses    Course[]
+  students   Student[]
+  accessLogs AccessLog[]
+
+  @@map("schools")
+}
+
+model Course {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(60)
+  schoolId  Int      @map("school_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  school   School    @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  students Student[]
+
+  @@unique([schoolId, name])
+  @@map("courses")
+}
+
+model Student {
+  id            Int        @id @default(autoincrement())
+  name          String     @db.VarChar(100)
+  rm            String     @db.VarChar(8)
+  age           Int
+  year          SchoolYear
+  courseId      Int        @map("course_id")
+  schoolId      Int        @map("school_id")
+  /// Caminho da foto no storage (Supabase Storage ou tabela student_photos).
+  photoKey      String?    @map("photo_key") @db.VarChar(255)
+  /// Posição da digital no sensor biométrico do Arduino (1..127).
+  fingerprintId Int?       @map("fingerprint_id")
+  /// Preenchido quando o Arduino confirma o cadastro da digital ("!enrolled<id>#").
+  fingerprintEnrolledAt DateTime? @map("fingerprint_enrolled_at")
+  createdAt     DateTime   @default(now()) @map("created_at")
+  updatedAt     DateTime   @updatedAt @map("updated_at")
+
+  school     School        @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  course     Course        @relation(fields: [courseId], references: [id], onDelete: Restrict)
+  photo      StudentPhoto?
+  accessLogs AccessLog[]
+
+  @@unique([schoolId, rm])
+  @@unique([schoolId, fingerprintId])
+  @@index([schoolId, name])
+  @@map("students")
+}
+
+/// Armazenamento das fotos no próprio banco (driver STORAGE_DRIVER=database).
+model StudentPhoto {
+  studentId Int      @id @map("student_id")
+  mimeType  String   @map("mime_type") @db.VarChar(50)
+  data      Bytes
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@map("student_photos")
+}
+
+/// Registro de entradas (antiga tabela "entradas").
+model AccessLog {
+  id          Int          @id @default(autoincrement())
+  schoolId    Int          @map("school_id")
+  studentId   Int?         @map("student_id")
+  /// Nome guardado no momento da entrada, para manter o histórico mesmo se o aluno for excluído.
+  studentName String       @map("student_name") @db.VarChar(100)
+  method      AccessMethod @default(FINGERPRINT)
+  createdAt   DateTime     @default(now()) @map("created_at")
+
+  school  School   @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  student Student? @relation(fields: [studentId], references: [id], onDelete: SetNull)
+
+  @@index([schoolId, createdAt])
+  @@map("access_logs")
+}
