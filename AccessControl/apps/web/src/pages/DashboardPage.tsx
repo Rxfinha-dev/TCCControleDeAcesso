@@ -7,6 +7,7 @@ import { BookIcon, FingerprintIcon, ListIcon, StudentIcon } from '../components/
 import { NetworkMotif } from '../components/NetworkMotif';
 import { PageHeader } from '../components/PageHeader';
 import { displayName, useAuth } from '../contexts/AuthContext';
+import { useSchoolScope } from '../contexts/SchoolScopeContext';
 import { useSerial } from '../contexts/SerialContext';
 import { useToast } from '../contexts/ToastContext';
 import { firstName, formatTime, initials } from '../utils/format';
@@ -20,6 +21,7 @@ const SHORTCUTS = [
 ];
 
 export function DashboardPage() {
+  const allSchools = useSchoolScope().selected === 'all';
   const { user } = useAuth();
   const serial = useSerial();
   const toast = useToast();
@@ -85,6 +87,7 @@ export function DashboardPage() {
                   {initials(entry.studentName)}
                 </span>
                 <span className="entry-name">{entry.studentName}</span>
+                {allSchools && entry.school && <span className="entry-school">{entry.school.name}</span>}
                 {entry.method === 'MANUAL' && <span className="badge badge-muted">Manual</span>}
                 <time dateTime={entry.createdAt}>{formatTime(entry.createdAt)}</time>
               </li>

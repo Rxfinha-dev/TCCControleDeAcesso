@@ -84,8 +84,10 @@ export function SchoolScopeProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     let active = true;
     if (!isSuperAdmin) {
+      // Login de escola: sempre a própria escola, sem cabeçalho (a API usa a escola do usuário).
       setSchools([]);
-      apply(null);
+      setSchoolScope(null);
+      setSelected(homeSchoolId);
       setReady(true);
       return;
     }

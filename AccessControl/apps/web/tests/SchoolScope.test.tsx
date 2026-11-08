@@ -156,4 +156,62 @@ describe('Escola em uso', () => {
     await waitFor(() => expect(screen.queryByLabelText('Escola em uso')).not.toBeInTheDocument());
     expect(meCalls).toBe(2);
   });
+
+  describe('todas as escolas e leitor', () => {
+    const entry = {
+      id: 1,
+      studentId: 10,
+      studentName: 'Ana Souza',
+      method: 'FINGERPRINT',
+      createdAt: '2026-03-10T11:00:00Z',
+      school: { id: 2, name: 'ETEC Bauru' },
+    };
+
+    it('entradas em todas as escolas mostram a coluna Escola', async () => {
+      localStorage.setItem('helpus.schoolScope', 'all');
+      mockApi(SUPER_ADMIN, (url) =>
+        url.includes('/access-logs') ? jsonResponse(200, { items: [entry], total: 1, page: 1, pageSize: 20 }) : undefined,
+      );
+      renderAt('/entradas');
+
+      expect(await screen.findByRole('columnheader', { name: 'Escola' })).toBeInTheDocument();
+      expect(await screen.findByRole('cell', { name: 'ETEC Bauru' })).toBeInTheDocument();
+    });
+
+    it('entradas de uma escola não mostram a coluna Escola', async () => {
+      mockApi(SUPER_ADMIN, (url) =>
+        url.includes('/access-logs') ? jsonResponse(200, { items: [entry], total: 1, page: 1, pageSize: 20 }) : undefined,
+      );
+      renderAt('/entradas');
+
+      expect(await screen.findByRole('cell', { name: 'Ana Souza' })).toBeInTheDocument();
+      expect(screen.queryByRole('columnheader', { name: 'Escola' })).not.toBeInTheDocument();
+    });
+
+    it('resumo em todas as escolas mostra a escola das últimas entradas', async () => {
+      localStorage.setItem('helpus.schoolScope', 'all');
+      mockApi(SUPER_ADMIN, (url) =>
+        url.includes('/stats') ? jsonResponse(200, { ...EMPTY_STATS, recentEntries: [entry] }) : undefined,
+      );
+      renderAt('/');
+
+      expect(await screen.findByText('Ana Souza')).toBeInTheDocument();
+      expect(screen.getByText('ETEC Bauru', { selector: '.entry-school' })).toBeInTheDocument();
+    });
+
+    it('verificação mostra para qual escola o leitor registra', async () => {
+      mockApi(SUPER_ADMIN);
+      renderAt('/verificacao');
+
+      expect(await screen.findByText('Registrando para Escola Teste')).toBeInTheDocument();
+    });
+
+    it('login de escola não vê o aviso do leitor', async () => {
+      mockApi(SCHOOL_USER);
+      renderAt('/verificacao');
+
+      expect(await screen.findByRole('heading', { name: 'Verificação' })).toBeInTheDocument();
+      expect(screen.queryByText(/Registrando para/)).not.toBeInTheDocument();
+    });
+  });
 });

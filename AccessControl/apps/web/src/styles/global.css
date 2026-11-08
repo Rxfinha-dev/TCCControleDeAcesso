@@ -999,6 +999,13 @@ select:disabled {
   border-bottom: none;
 }
 
+/* Nome da escola nas últimas entradas (modo "todas as escolas"). */
+.entry-school {
+  color: var(--muted);
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
 .entry-name {
   flex: 1;
   min-width: 0;

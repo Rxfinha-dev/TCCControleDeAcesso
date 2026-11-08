@@ -6,6 +6,7 @@ import type { EntryResult } from '../api/types';
 import { CheckIcon, FingerprintIcon } from '../components/Icons';
 import { NetworkMotif } from '../components/NetworkMotif';
 import { PageHeader } from '../components/PageHeader';
+import { ReaderSchoolBanner } from '../components/ReaderSchoolBanner';
 import { StudentPhoto } from '../components/StudentPhoto';
 import { useSerial } from '../contexts/SerialContext';
 import { useToast } from '../contexts/ToastContext';
@@ -83,6 +84,7 @@ export function VerificationPage() {
   return (
     <>
       <PageHeader title="Verificação" description="Leia a digital do aluno para registrar a entrada." />
+      <ReaderSchoolBanner />
 
       <div className="verify-layout">
         <section className="card verify-card">
