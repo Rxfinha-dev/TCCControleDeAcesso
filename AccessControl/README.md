@@ -30,6 +30,17 @@ Tudo o que existia no sistema legado, atualizado:
 | `frmVerificacao` | Verificação contínua pela digital, exibe foto e dados e registra a entrada; entrada manual por RM como contingência |
 | `frmLog` | Relatório de entradas com filtros por período/nome, paginação e exportação CSV |
 | `frmConfiguracoes` | Conexão com o Arduino pelo navegador (Web Serial) |
+| — | Perfis de acesso: **super admin** (todas as escolas, telas de Escolas e Usuários) e **escola** (login compartilhado da instituição) |
+
+### Perfis de acesso
+
+| Perfil | Quem | O que pode |
+| --- | --- | --- |
+| `SUPER_ADMIN` | Dono do projeto e quem ele promover | Tudo, em todas as escolas: escolhe a escola no seletor do topo (ou "Todas as escolas" em Entradas e no Início), gerencia escolas e promove usuários |
+| `SCHOOL` | A instituição (um login por escola, usado pela secretaria, guarda etc.) | Tudo dentro da própria escola |
+| `STUDENT`, `EMPLOYEE`, `TEACHER` | Futuro | Ainda sem acesso ao painel ("em breve") |
+
+O perfil fica só na tabela `users` do banco (nunca nos metadados do Supabase). O primeiro super admin é o e-mail de `SUPER_ADMIN_BOOTSTRAP_EMAIL`; os próximos são promovidos pela tela **Usuários**.
 
 Melhorias de segurança em relação ao legado: credenciais apenas em variáveis de ambiente, senhas e códigos por e-mail gerenciados pelo Supabase Auth (a API não guarda senhas, valida os tokens pela JWKS do projeto e recusa tokens de sessões encerradas no logout ou na troca de senha), rate limit nas rotas da API, isolamento dos dados por instituição em todas as consultas, RLS habilitado e acesso da Data API (anon/authenticated) revogado no Supabase e validação de entrada com Zod.
 
@@ -99,6 +110,7 @@ Os códigos de ativação e recuperação de senha são enviados pelo Supabase A
 ## API
 
 Prefixo `/api`. Todas as rotas, exceto `/health`, exigem `Authorization: Bearer <access token do Supabase Auth>`.
+Nas rotas por escola (cursos, alunos, entradas, stats), o super admin escolhe a escola pelo cabeçalho `X-School-Id` (id da escola, ou `all` nas leituras de entradas e stats); o login de escola sempre opera na própria escola.
 
 A documentação completa (Swagger UI) fica em **`/docs`** — por exemplo, http://localhost:3333/docs em desenvolvimento — e a especificação OpenAPI em `/docs.json`. Pelo botão **Authorize** dá para informar o token e testar as rotas direto no navegador.
 Cadastro, login, ativação e recuperação de senha são feitos pelo frontend direto no Supabase Auth.
@@ -106,7 +118,7 @@ Cadastro, login, ativação e recuperação de senha são feitos pelo frontend d
 | Método | Rota | Descrição |
 | --- | --- | --- |
 | GET | `/health` | Status da API e do banco |
-| GET | `/auth/me` | Instituição do usuário logado (criada ou vinculada pelo e-mail no primeiro acesso) |
+| GET | `/auth/me` | Usuário logado com perfil e escola (criados ou vinculados pelo e-mail no primeiro acesso) |
 | GET/POST | `/courses` | Lista / cria cursos |
 | PUT/DELETE | `/courses/:id` | Edita / exclui curso |
 | GET/POST | `/students` | Lista (`?search=`) / cria aluno (multipart com `photo`) |
@@ -120,6 +132,10 @@ Cadastro, login, ativação e recuperação de senha são feitos pelo frontend d
 | POST | `/access-logs/fingerprint` | Registra entrada pela digital (`fingerprintId`) |
 | POST | `/access-logs/manual` | Registra entrada pelo RM |
 | GET | `/stats` | Indicadores do painel |
+| GET/POST | `/schools` | Lista / cria escolas (super admin) |
+| PUT/DELETE | `/schools/:id` | Edita / exclui escola com todos os dados (super admin) |
+| GET | `/users` | Lista usuários (`?search=`, `?role=`) (super admin) |
+| PATCH | `/users/:id` | Altera o perfil entre `SCHOOL` e `SUPER_ADMIN` (super admin) |
 
 ## Arduino
 

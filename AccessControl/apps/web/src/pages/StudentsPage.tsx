@@ -6,6 +6,7 @@ import { ConfirmDialog } from '../components/ConfirmDialog';
 import { Drawer } from '../components/Drawer';
 import { FingerprintIcon, PlusIcon, SearchIcon } from '../components/Icons';
 import { PageHeader } from '../components/PageHeader';
+import { ReaderSchoolBanner } from '../components/ReaderSchoolBanner';
 import { StudentPhoto } from '../components/StudentPhoto';
 import { useSerial } from '../contexts/SerialContext';
 import { useToast } from '../contexts/ToastContext';
@@ -163,6 +164,7 @@ export function StudentsPage() {
           </button>
         }
       />
+      <ReaderSchoolBanner />
 
       <Drawer open={formOpen} title={selected ? 'Editar aluno' : 'Novo aluno'} onClose={() => setFormOpen(false)}>
         <form className="form" onSubmit={handleSubmit} noValidate>

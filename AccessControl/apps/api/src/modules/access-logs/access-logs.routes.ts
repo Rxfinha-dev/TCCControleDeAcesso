@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { currentSchool } from '../../middlewares/auth';
+import { currentSchool, currentSchoolOrAll } from '../../middlewares/school-scope';
 import {
   fingerprintEntrySchema,
   listAccessLogsQuerySchema,
@@ -11,11 +11,11 @@ export function accessLogsRoutes(service: AccessLogsService) {
   const router = Router();
 
   router.get('/', async (req, res) => {
-    res.json(await service.list(currentSchool(res).sub, listAccessLogsQuerySchema.parse(req.query)));
+    res.json(await service.list(currentSchoolOrAll(res).sub, listAccessLogsQuerySchema.parse(req.query)));
   });
 
   router.get('/export', async (req, res) => {
-    const csv = await service.exportCsv(currentSchool(res).sub, listAccessLogsQuerySchema.parse(req.query));
+    const csv = await service.exportCsv(currentSchoolOrAll(res).sub, listAccessLogsQuerySchema.parse(req.query));
     res.setHeader('Content-Type', 'text/csv; charset=utf-8');
     res.setHeader('Content-Disposition', 'attachment; filename="entradas.csv"');
     // BOM para o Excel reconhecer UTF-8 (acentos).

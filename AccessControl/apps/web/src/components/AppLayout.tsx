@@ -1,19 +1,23 @@
 import { useState } from 'react';
 import { Link, NavLink, Outlet, useNavigate } from 'react-router';
-import { useAuth } from '../contexts/AuthContext';
+import { displayName, useAuth } from '../contexts/AuthContext';
+import { SchoolScopeProvider, useSchoolScope } from '../contexts/SchoolScopeContext';
 import { useSerial } from '../contexts/SerialContext';
 import { firstName, initials } from '../utils/format';
 import {
   BookIcon,
+  BuildingIcon,
   FingerprintIcon,
   HomeIcon,
   ListIcon,
   LogoutIcon,
   MenuIcon,
   SettingsIcon,
+  ShieldIcon,
   StudentIcon,
 } from './Icons';
 import { Logo } from './Logo';
+import { SchoolSelector } from './SchoolSelector';
 import { ThemeToggle } from './ThemeToggle';
 
 const NAV_ITEMS = [
@@ -25,9 +29,25 @@ const NAV_ITEMS = [
   { to: '/configuracoes', label: 'Configurações', icon: SettingsIcon },
 ];
 
+/** Gestão global, só para o super admin. */
+const SUPER_ADMIN_NAV_ITEMS = [
+  { to: '/escolas', label: 'Escolas', icon: BuildingIcon, end: false },
+  { to: '/usuarios', label: 'Usuários', icon: ShieldIcon, end: false },
+];
+
 /** Menu lateral escuro (#2C2C2C) do frmMainMenu legado. */
 export function AppLayout() {
-  const { school, logout } = useAuth();
+  return (
+    <SchoolScopeProvider>
+      <AppShell />
+    </SchoolScopeProvider>
+  );
+}
+
+function AppShell() {
+  const { user, isSuperAdmin, logout } = useAuth();
+  const { selected } = useSchoolScope();
+  const name = displayName(user);
   const { connected } = useSerial();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -54,7 +74,7 @@ export function AppLayout() {
           <ThemeToggle />
         </div>
         <nav className="sidebar-nav" onClick={() => setMenuOpen(false)}>
-          {NAV_ITEMS.map(({ to, label, icon: Icon, end }) => (
+          {[...NAV_ITEMS, ...(isSuperAdmin ? SUPER_ADMIN_NAV_ITEMS : [])].map(({ to, label, icon: Icon, end }) => (
             <NavLink key={to} to={to} end={end} className="nav-item">
               <Icon />
               <span>{label}</span>
@@ -72,11 +92,11 @@ export function AppLayout() {
 
         <div className="sidebar-user">
           <span className="avatar" aria-hidden>
-            {initials(school?.name ?? '')}
+            {initials(name)}
           </span>
           <div>
             <small>Bem-vindo(a)</small>
-            <strong title={school?.name}>{firstName(school?.name ?? '')}</strong>
+            <strong title={name}>{firstName(name)}</strong>
           </div>
           <button type="button" className="icon-button logout" aria-label="Sair" title="Sair" onClick={handleLogout}>
             <LogoutIcon />
@@ -87,7 +107,9 @@ export function AppLayout() {
       <div className="sidebar-backdrop" onClick={() => setMenuOpen(false)} />
 
       <main className="app-content">
-        <Outlet />
+        {isSuperAdmin && <SchoolSelector />}
+        {/* Trocar de escola remonta a tela: respostas da escola anterior são descartadas. */}
+        <Outlet key={String(selected)} />
       </main>
     </div>
   );

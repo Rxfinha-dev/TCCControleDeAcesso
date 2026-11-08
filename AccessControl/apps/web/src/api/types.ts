@@ -7,6 +7,49 @@ export interface School {
   email: string;
 }
 
+/** Perfis de acesso. STUDENT, EMPLOYEE e TEACHER ainda não acessam o painel. */
+export type UserRole = 'SUPER_ADMIN' | 'SCHOOL' | 'STUDENT' | 'EMPLOYEE' | 'TEACHER';
+
+/** Escola resumida (id e nome). */
+export interface SchoolRef {
+  id: number;
+  name: string;
+}
+
+/** Usuário logado (GET /auth/me). */
+export interface AuthUser {
+  id: number;
+  name: string;
+  email: string;
+  role: UserRole;
+  school: SchoolRef | null;
+}
+
+/** Escola na gestão do super admin (GET /schools). */
+export interface SchoolSummary {
+  id: number;
+  name: string;
+  email: string;
+  createdAt: string;
+  counts: { students: number; courses: number; accessLogs: number };
+  hasLogin: boolean;
+}
+
+export interface SchoolInput {
+  name: string;
+  email: string;
+}
+
+/** Usuário na gestão do super admin (GET /users). */
+export interface UserSummary {
+  id: number;
+  name: string;
+  email: string;
+  role: UserRole;
+  school: SchoolRef | null;
+  createdAt: string;
+}
+
 export interface Course {
   id: number;
   name: string;
@@ -42,6 +85,8 @@ export interface AccessLog {
   studentName: string;
   method: AccessMethod;
   createdAt: string;
+  /** Escola da entrada (exibida no modo "todas as escolas"). */
+  school?: SchoolRef;
 }
 
 export interface Paginated<T> {

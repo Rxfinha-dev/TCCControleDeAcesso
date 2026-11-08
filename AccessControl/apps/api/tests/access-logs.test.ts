@@ -1,6 +1,6 @@
 import request from 'supertest';
 import type { AccessLog } from '@prisma/client';
-import { authHeader, buildTestApp, makeStudent, school } from './helpers';
+import { authHeader, buildTestApp, makeStudent, school, superAdmin } from './helpers';
 
 const log: AccessLog = {
   id: 1,
@@ -84,5 +84,50 @@ describe('Entradas', () => {
     const res = await request(app).get('/api/access-logs/export').set('Authorization', authHeader());
 
     expect(res.text).toContain(`"'=HYPERLINK(""http://x"")"`);
+  });
+
+  describe('todas as escolas (super admin)', () => {
+    const withSchool = { ...log, school: { id: school.id, name: school.name } };
+
+    it('super admin lista entradas de todas as escolas', async () => {
+      const { app, prisma } = buildTestApp({ user: superAdmin });
+      prisma.accessLog.findMany.mockResolvedValue([withSchool] as never);
+      prisma.accessLog.count.mockResolvedValue(1);
+
+      const res = await request(app).get('/api/access-logs').set('Authorization', authHeader()).set('X-School-Id', 'all');
+
+      expect(res.status).toBe(200);
+      const args = prisma.accessLog.findMany.mock.calls[0][0]!;
+      expect(args.where).not.toHaveProperty('schoolId');
+      expect(args.include).toEqual({ school: { select: { id: true, name: true } } });
+      expect(res.body.items[0].school).toEqual({ id: school.id, name: school.name });
+    });
+
+    it('exportação de todas as escolas inclui coluna Escola', async () => {
+      const { app, prisma } = buildTestApp({ user: superAdmin });
+      prisma.accessLog.findMany.mockResolvedValue([withSchool] as never);
+
+      const res = await request(app).get('/api/access-logs/export').set('Authorization', authHeader()).set('X-School-Id', 'all');
+
+      expect(res.status).toBe(200);
+      const lines = res.text.replace(/^\uFEFF/, '').split('\n');
+      expect(lines[0]).toBe('Escola;Nome;Data/Hora (UTC);Método');
+      expect(lines[1]).toBe(`"${school.name}";"Ana Souza";2026-03-10T11:00:00.000Z;Digital`);
+    });
+
+    it('stats de todas as escolas não filtram por escola', async () => {
+      const { app, prisma } = buildTestApp({ user: superAdmin });
+      prisma.student.count.mockResolvedValue(3);
+      prisma.course.count.mockResolvedValue(2);
+      prisma.accessLog.count.mockResolvedValue(1);
+      prisma.accessLog.findMany.mockResolvedValue([withSchool] as never);
+
+      const res = await request(app).get('/api/stats').set('Authorization', authHeader()).set('X-School-Id', 'all');
+
+      expect(res.status).toBe(200);
+      expect(prisma.student.count.mock.calls[0][0]?.where).toEqual({});
+      expect(prisma.accessLog.findMany.mock.calls[0][0]?.where).toEqual({});
+      expect(res.body.recentEntries[0].school.name).toBe(school.name);
+    });
   });
 });

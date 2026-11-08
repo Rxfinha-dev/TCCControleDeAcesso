@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { idParamSchema } from '../../lib/validation';
-import { currentSchool } from '../../middlewares/auth';
+import { currentSchool } from '../../middlewares/school-scope';
 import { courseSchema, type CoursesService } from './courses.service';
 
 export function coursesRoutes(service: CoursesService) {
