@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import type { PrismaClient } from '@prisma/client';
 import { z } from 'zod';
-import { currentSchool } from '../../middlewares/auth';
+import { currentSchool } from '../../middlewares/school-scope';
 
 const querySchema = z.object({ since: z.coerce.date().optional() });
 

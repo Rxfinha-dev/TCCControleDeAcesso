@@ -47,8 +47,3 @@ export function requireRole(...roles: UserRole[]): RequestHandler {
     next();
   };
 }
-
-/** Temporário até o escopo por X-School-Id: a escola do usuário logado. */
-export function currentSchool(res: Response): { sub: number } {
-  return { sub: currentUser(res).homeSchoolId as number };
-}

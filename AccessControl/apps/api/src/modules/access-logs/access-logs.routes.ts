@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { currentSchool } from '../../middlewares/auth';
+import { currentSchool } from '../../middlewares/school-scope';
 import {
   fingerprintEntrySchema,
   listAccessLogsQuerySchema,

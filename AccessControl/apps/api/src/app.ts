@@ -9,6 +9,7 @@ import { openApiSpec } from './docs/openapi';
 import { logger } from './lib/logger';
 import { createRequireAuth } from './middlewares/auth';
 import { errorHandler, notFoundHandler } from './middlewares/error-handler';
+import { requirePanelAccess, requireSchoolScope } from './middlewares/school-scope';
 import { apiRateLimit } from './middlewares/rate-limit';
 import { accessLogsRoutes } from './modules/access-logs/access-logs.routes';
 import { AccessLogsService } from './modules/access-logs/access-logs.service';
@@ -98,10 +99,16 @@ export function createApp({ prisma, identity, storage }: AppDependencies) {
   const requireAuth = createRequireAuth(authService);
 
   app.use('/api/auth', authRoutes(authService, requireAuth));
-  app.use('/api/courses', apiRateLimit, requireAuth, coursesRoutes(new CoursesService(prisma)));
-  app.use('/api/students', apiRateLimit, requireAuth, studentsRoutes(new StudentsService(prisma, storage)));
-  app.use('/api/access-logs', apiRateLimit, requireAuth, accessLogsRoutes(new AccessLogsService(prisma)));
-  app.use('/api/stats', apiRateLimit, requireAuth, statsRoutes(prisma));
+  // Painel: usuário autenticado, perfil com acesso ao painel e escola em uso (X-School-Id).
+  const panel = [apiRateLimit, requireAuth, requirePanelAccess];
+  const scoped = [...panel, requireSchoolScope(prisma)];
+  // Entradas e resumo aceitam "todas as escolas" (super admin); as rotas de escrita recusam via currentSchool.
+  const scopedOrAll = [...panel, requireSchoolScope(prisma, { allowAll: true })];
+
+  app.use('/api/courses', ...scoped, coursesRoutes(new CoursesService(prisma)));
+  app.use('/api/students', ...scoped, studentsRoutes(new StudentsService(prisma, storage)));
+  app.use('/api/access-logs', ...scopedOrAll, accessLogsRoutes(new AccessLogsService(prisma)));
+  app.use('/api/stats', ...scopedOrAll, statsRoutes(prisma));
 
   app.use(notFoundHandler);
   app.use(errorHandler);
