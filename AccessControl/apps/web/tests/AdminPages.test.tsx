@@ -79,7 +79,8 @@ describe('Telas do super admin', () => {
     mockApi(SCHOOL_USER);
     renderAt('/escolas');
 
-    expect(await screen.findByRole('heading', { name: 'Olá, ETEC!' })).toBeInTheDocument();
+    // Passa por vários redirecionamentos (/escolas -> /login -> /escolas -> /): o limite padrão de 1s estoura em máquina carregada.
+    expect(await screen.findByRole('heading', { name: 'Olá, ETEC!' }, { timeout: 5000 })).toBeInTheDocument();
     expect(screen.queryByRole('link', { name: 'Escolas' })).not.toBeInTheDocument();
     expect(screen.queryByRole('link', { name: 'Usuários' })).not.toBeInTheDocument();
   });
