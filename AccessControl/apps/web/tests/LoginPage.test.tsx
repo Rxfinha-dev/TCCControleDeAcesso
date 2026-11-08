@@ -10,6 +10,16 @@ import { authError, setMockSession, supabase } from './mocks/supabase';
 const jsonResponse = (status: number, body: unknown) =>
   ({ ok: status < 400, status, json: async () => body }) as Response;
 
+/** Resposta de /auth/me: login da escola por padrão. */
+const me = (overrides: Record<string, unknown> = {}) => ({
+  id: 1,
+  name: 'ETEC Jaú',
+  email: 'etec@jau.com',
+  role: 'SCHOOL',
+  school: { id: 1, name: 'ETEC Jaú' },
+  ...overrides,
+});
+
 function renderAt(path: string) {
   return render(
     <MemoryRouter initialEntries={[path]}>
@@ -45,7 +55,7 @@ describe('Tela de login', () => {
       return { data: {}, error: null };
     });
     fetchMock.mockImplementation(async (url: string) => {
-      if (url.endsWith('/auth/me')) return jsonResponse(200, { id: 1, name: 'ETEC Jaú', email: 'etec@jau.com' });
+      if (url.endsWith('/auth/me')) return jsonResponse(200, me({ email: 'etec@jau.com' }));
       if (url.includes('/stats')) {
         return jsonResponse(200, { students: 3, courses: 1, entriesToday: 2, pendingFingerprints: 1, recentEntries: [] });
       }
@@ -63,6 +73,25 @@ describe('Tela de login', () => {
     expect(url).toBe('http://api.test/api/auth/me');
     expect(init.headers.get('Authorization')).toBe('Bearer jwt-supabase');
     await waitFor(() => expect(screen.getByText('2')).toBeInTheDocument());
+  });
+
+  it('perfil de usuário futuro vê aviso de em breve', async () => {
+    supabase.auth.signInWithPassword.mockImplementationOnce(async () => {
+      setMockSession({ access_token: 'jwt-supabase' });
+      return { data: {}, error: null };
+    });
+    fetchMock.mockImplementation(async (url: string) =>
+      url.endsWith('/auth/me') ? jsonResponse(200, me({ name: 'Ana Aluna', role: 'STUDENT', school: null })) : jsonResponse(403, {}),
+    );
+
+    renderAt('/login');
+    await userEvent.type(screen.getByPlaceholderText('Digite seu e-mail'), 'ana@aluna.com');
+    await userEvent.type(screen.getByPlaceholderText('Digite sua senha'), 'senhaforte123');
+    await userEvent.click(screen.getByRole('button', { name: 'Entrar' }));
+
+    expect(await screen.findByText(/disponível em breve/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Sair' })).toBeInTheDocument();
+    expect(fetchMock.mock.calls.some(([url]) => String(url).includes('/stats'))).toBe(false);
   });
 
   it('traduz o erro de credenciais do Supabase', async () => {
@@ -151,7 +180,7 @@ describe('Ativação da conta', () => {
     });
     globalThis.fetch = jest.fn(async (url: string) =>
       url.endsWith('/auth/me')
-        ? jsonResponse(200, { id: 1, name: 'ETEC Jaú', email: 'a@b.com' })
+        ? jsonResponse(200, me({ email: 'a@b.com' }))
         : jsonResponse(200, { students: 0, courses: 0, entriesToday: 0, pendingFingerprints: 0, recentEntries: [] }),
     ) as never;
 

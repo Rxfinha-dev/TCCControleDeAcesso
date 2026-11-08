@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, NavLink, Outlet, useNavigate } from 'react-router';
-import { useAuth } from '../contexts/AuthContext';
+import { displayName, useAuth } from '../contexts/AuthContext';
 import { useSerial } from '../contexts/SerialContext';
 import { firstName, initials } from '../utils/format';
 import {
@@ -27,7 +27,8 @@ const NAV_ITEMS = [
 
 /** Menu lateral escuro (#2C2C2C) do frmMainMenu legado. */
 export function AppLayout() {
-  const { school, logout } = useAuth();
+  const { user, logout } = useAuth();
+  const name = displayName(user);
   const { connected } = useSerial();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -72,11 +73,11 @@ export function AppLayout() {
 
         <div className="sidebar-user">
           <span className="avatar" aria-hidden>
-            {initials(school?.name ?? '')}
+            {initials(name)}
           </span>
           <div>
             <small>Bem-vindo(a)</small>
-            <strong title={school?.name}>{firstName(school?.name ?? '')}</strong>
+            <strong title={name}>{firstName(name)}</strong>
           </div>
           <button type="button" className="icon-button logout" aria-label="Sair" title="Sair" onClick={handleLogout}>
             <LogoutIcon />

@@ -11,7 +11,7 @@ import { validatePasswordPair } from '../utils/validation';
 export function RegisterPage() {
   const navigate = useNavigate();
   const toast = useToast();
-  const { loadSchool } = useAuth();
+  const { loadUser } = useAuth();
   const [form, setForm] = useState({ name: '', email: '', password: '', confirm: '' });
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -40,7 +40,7 @@ export function RegisterPage() {
         navigate(`/ativar-conta?email=${encodeURIComponent(form.email.trim())}`);
       } else {
         // Projeto sem confirmação de e-mail: o Supabase já abre a sessão.
-        await loadSchool();
+        await loadUser();
         navigate('/', { replace: true });
       }
     } catch (err) {

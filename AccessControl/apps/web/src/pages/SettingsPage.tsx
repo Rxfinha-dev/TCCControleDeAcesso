@@ -12,7 +12,7 @@ const BAUD_KEY = 'helpus.baudRate';
 export function SettingsPage() {
   const serial = useSerial();
   const toast = useToast();
-  const { school } = useAuth();
+  const { user } = useAuth();
   const [baudRate, setBaudRate] = useState(() => Number(localStorage.getItem(BAUD_KEY)) || 9600);
   const [busy, setBusy] = useState(false);
 
@@ -88,11 +88,11 @@ export function SettingsPage() {
           <dl className="student-info">
             <div>
               <dt>Instituição</dt>
-              <dd>{school?.name}</dd>
+              <dd>{user?.school?.name ?? '—'}</dd>
             </div>
             <div>
               <dt>E-mail</dt>
-              <dd>{school?.email}</dd>
+              <dd>{user?.email}</dd>
             </div>
           </dl>
           <p className="hint">Para trocar a senha, saia e use a opção “Esqueci minha senha”.</p>

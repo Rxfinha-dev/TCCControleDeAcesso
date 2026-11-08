@@ -1,7 +1,7 @@
 import { BrowserRouter, Link, Navigate, Outlet, Route, Routes, useLocation } from 'react-router';
 import { AppLayout } from './components/AppLayout';
 import { Logo } from './components/Logo';
-import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { AuthProvider, PANEL_ROLES, useAuth } from './contexts/AuthContext';
 import { SerialProvider } from './contexts/SerialContext';
 import { ToastProvider } from './contexts/ToastContext';
 import { AccessLogsPage } from './pages/AccessLogsPage';
@@ -15,8 +15,23 @@ import { StudentsPage } from './pages/StudentsPage';
 import { VerificationPage } from './pages/VerificationPage';
 import { VerifyEmailPage } from './pages/VerifyEmailPage';
 
+/** Perfis futuros (aluno, funcionário, professor) ainda não têm painel. */
+function ComingSoonPage() {
+  const { logout } = useAuth();
+  return (
+    <div className="splash">
+      <Logo variant="auto" />
+      <h1>Em breve</h1>
+      <p>Seu acesso à plataforma estará disponível em breve.</p>
+      <button type="button" className="btn btn-primary" onClick={() => void logout()}>
+        Sair
+      </button>
+    </div>
+  );
+}
+
 function RequireAuth() {
-  const { school, loading } = useAuth();
+  const { user, loading } = useAuth();
   const location = useLocation();
   if (loading) {
     return (
@@ -25,7 +40,8 @@ function RequireAuth() {
       </div>
     );
   }
-  if (!school) return <Navigate to="/login" replace state={{ from: location.pathname }} />;
+  if (!user) return <Navigate to="/login" replace state={{ from: location.pathname }} />;
+  if (!PANEL_ROLES.includes(user.role)) return <ComingSoonPage />;
   return <Outlet />;
 }
 

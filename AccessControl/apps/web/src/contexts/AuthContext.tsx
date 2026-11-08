@@ -1,17 +1,25 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { authApi } from '../api';
 import { setUnauthorizedHandler } from '../api/client';
-import type { School } from '../api/types';
+import type { AuthUser, UserRole } from '../api/types';
 import { AUTH_STORAGE_KEY, supabase } from '../lib/supabase';
 
 interface AuthContextValue {
-  school: School | null;
+  user: AuthUser | null;
+  isSuperAdmin: boolean;
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
-  /** Carrega a instituição depois que o Supabase abriu a sessão (ex.: após ativar a conta). */
-  loadSchool: () => Promise<void>;
+  /** Carrega o usuário depois que o Supabase abriu a sessão (ex.: após ativar a conta). */
+  loadUser: () => Promise<void>;
   logout: () => Promise<void>;
 }
+
+/** Perfis que já usam o painel. Os demais veem o aviso de "em breve". */
+export const PANEL_ROLES: UserRole[] = ['SUPER_ADMIN', 'SCHOOL'];
+
+/** Nome exibido no painel: o do super admin, ou o da escola para o login da escola. */
+export const displayName = (user: AuthUser | null) =>
+  user ? (user.role === 'SUPER_ADMIN' ? user.name : (user.school?.name ?? user.name)) : '';
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
@@ -25,19 +33,19 @@ function hasStoredSession() {
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [school, setSchool] = useState<School | null>(null);
+  const [user, setUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(hasStoredSession);
 
   const logout = useCallback(async () => {
-    setSchool(null);
+    setUser(null);
     await authApi.logout().catch(() => undefined);
   }, []);
 
-  const loadSchool = useCallback(async () => {
+  const loadUser = useCallback(async () => {
     try {
-      setSchool(await authApi.me());
+      setUser(await authApi.me());
     } catch (err) {
-      // Sem instituição (ex.: e-mail não confirmado), a sessão do Supabase não serve para o painel.
+      // Sem usuário (ex.: e-mail não confirmado), a sessão do Supabase não serve para o painel.
       await logout();
       throw err;
     }
@@ -46,9 +54,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = useCallback(
     async (email: string, password: string) => {
       await authApi.login(email, password);
-      await loadSchool();
+      await loadUser();
     },
-    [loadSchool],
+    [loadUser],
   );
 
   // Restaura a sessão salva pelo Supabase ao recarregar a página.
@@ -58,13 +66,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     supabase.auth
       .getSession()
       .then(async ({ data }) => {
-        if (data.session) await loadSchool().catch(() => undefined);
+        if (data.session) await loadUser().catch(() => undefined);
       })
       .finally(() => active && setLoading(false));
 
     // Sessão encerrada em outra aba ou expirada sem renovação.
     const { data } = supabase.auth.onAuthStateChange((event) => {
-      if (event === 'SIGNED_OUT') setSchool(null);
+      if (event === 'SIGNED_OUT') setUser(null);
     });
 
     return () => {
@@ -72,9 +80,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUnauthorizedHandler(null);
       data.subscription.unsubscribe();
     };
-  }, [loadSchool, logout]);
+  }, [loadUser, logout]);
 
-  const value = useMemo(() => ({ school, loading, login, loadSchool, logout }), [school, loading, login, loadSchool, logout]);
+  const value = useMemo(
+    () => ({ user, isSuperAdmin: user?.role === 'SUPER_ADMIN', loading, login, loadUser, logout }),
+    [user, loading, login, loadUser, logout],
+  );
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 

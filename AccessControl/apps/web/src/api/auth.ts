@@ -1,7 +1,7 @@
 import type { AuthError } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
 import { ApiError, requestJson } from './client';
-import type { School } from './types';
+import type { AuthUser } from './types';
 
 /** Mesmo teste do isAuthError do supabase-js, sem carregar a biblioteca inteira. */
 const isAuthError = (error: unknown): error is AuthError =>
@@ -100,6 +100,6 @@ export const authApi = {
     await supabase.auth.signOut({ scope: 'local' });
   },
 
-  /** Instituição do usuário logado (a API cria ou vincula no primeiro acesso). */
-  me: () => requestJson<School>('/auth/me'),
+  /** Usuário logado com perfil e escola (a API cria ou vincula no primeiro acesso). */
+  me: () => requestJson<AuthUser>('/auth/me'),
 };
