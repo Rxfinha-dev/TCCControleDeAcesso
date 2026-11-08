@@ -1,7 +1,7 @@
 import type { AuthError } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
 import { ApiError, requestJson } from './client';
-import type { School } from './types';
+import type { AuthUser } from './types';
 
 /** Mesmo teste do isAuthError do supabase-js, sem carregar a biblioteca inteira. */
 const isAuthError = (error: unknown): error is AuthError =>
@@ -53,10 +53,13 @@ export const authApi = {
     await run(supabase.auth.signInWithPassword({ email: email.trim(), password }));
   },
 
-  /** Cria o usuário; o nome da instituição vai junto e é usado pela API no primeiro acesso. */
+  /**
+   * Cria o usuário; o nome da instituição vai junto e é usado pela API no primeiro acesso.
+   * account_type é só informativo: o perfil é definido pela API, nunca pelos metadados.
+   */
   register: async (name: string, email: string, password: string) => {
     const { data } = await run(
-      supabase.auth.signUp({ email: email.trim(), password, options: { data: { name: name.trim() } } }),
+      supabase.auth.signUp({ email: email.trim(), password, options: { data: { name: name.trim(), account_type: 'school' } } }),
     );
     // Com a confirmação de e-mail ligada, o Supabase devolve um usuário sem identidades quando o e-mail já existe.
     if (data.user && data.user.identities?.length === 0) {
@@ -100,6 +103,6 @@ export const authApi = {
     await supabase.auth.signOut({ scope: 'local' });
   },
 
-  /** Instituição do usuário logado (a API cria ou vincula no primeiro acesso). */
-  me: () => requestJson<School>('/auth/me'),
+  /** Usuário logado com perfil e escola (a API cria ou vincula no primeiro acesso). */
+  me: () => requestJson<AuthUser>('/auth/me'),
 };

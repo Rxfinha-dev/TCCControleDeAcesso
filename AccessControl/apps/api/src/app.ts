@@ -7,17 +7,22 @@ import type { PrismaClient } from '@prisma/client';
 import { corsOrigins, env } from './config/env';
 import { openApiSpec } from './docs/openapi';
 import { logger } from './lib/logger';
-import { createRequireAuth } from './middlewares/auth';
+import { createRequireAuth, requireRole } from './middlewares/auth';
 import { errorHandler, notFoundHandler } from './middlewares/error-handler';
+import { requirePanelAccess, requireSchoolScope } from './middlewares/school-scope';
 import { apiRateLimit } from './middlewares/rate-limit';
 import { accessLogsRoutes } from './modules/access-logs/access-logs.routes';
 import { AccessLogsService } from './modules/access-logs/access-logs.service';
 import { authRoutes } from './modules/auth/auth.routes';
 import { AuthService } from './modules/auth/auth.service';
 import { coursesRoutes } from './modules/courses/courses.routes';
+import { schoolsRoutes } from './modules/schools/schools.routes';
+import { SchoolsService } from './modules/schools/schools.service';
 import { CoursesService } from './modules/courses/courses.service';
 import { statsRoutes } from './modules/stats/stats.routes';
 import { studentsRoutes } from './modules/students/students.routes';
+import { usersRoutes } from './modules/users/users.routes';
+import { UsersService } from './modules/users/users.service';
 import { StudentsService } from './modules/students/students.service';
 import type { IdentityProvider } from './services/identity';
 import type { PhotoStorage } from './services/storage';
@@ -98,10 +103,21 @@ export function createApp({ prisma, identity, storage }: AppDependencies) {
   const requireAuth = createRequireAuth(authService);
 
   app.use('/api/auth', authRoutes(authService, requireAuth));
-  app.use('/api/courses', apiRateLimit, requireAuth, coursesRoutes(new CoursesService(prisma)));
-  app.use('/api/students', apiRateLimit, requireAuth, studentsRoutes(new StudentsService(prisma, storage)));
-  app.use('/api/access-logs', apiRateLimit, requireAuth, accessLogsRoutes(new AccessLogsService(prisma)));
-  app.use('/api/stats', apiRateLimit, requireAuth, statsRoutes(prisma));
+  // Painel: usuário autenticado, perfil com acesso ao painel e escola em uso (X-School-Id).
+  const panel = [apiRateLimit, requireAuth, requirePanelAccess];
+  const scoped = [...panel, requireSchoolScope(prisma)];
+  // Entradas e resumo aceitam "todas as escolas" (super admin); as rotas de escrita recusam via currentSchool.
+  const scopedOrAll = [...panel, requireSchoolScope(prisma, { allowAll: true })];
+
+  app.use('/api/courses', ...scoped, coursesRoutes(new CoursesService(prisma)));
+  app.use('/api/students', ...scoped, studentsRoutes(new StudentsService(prisma, storage)));
+  app.use('/api/access-logs', ...scopedOrAll, accessLogsRoutes(new AccessLogsService(prisma)));
+  app.use('/api/stats', ...scopedOrAll, statsRoutes(prisma));
+
+  // Gestão global: só super admin, sem escola em uso.
+  const superAdminOnly = [apiRateLimit, requireAuth, requireRole('SUPER_ADMIN')];
+  app.use('/api/schools', ...superAdminOnly, schoolsRoutes(new SchoolsService(prisma, storage)));
+  app.use('/api/users', ...superAdminOnly, usersRoutes(new UsersService(prisma)));
 
   app.use(notFoundHandler);
   app.use(errorHandler);

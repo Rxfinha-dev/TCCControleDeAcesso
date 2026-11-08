@@ -5,9 +5,13 @@ import type {
   Course,
   EntryResult,
   Paginated,
+  SchoolInput,
+  SchoolSummary,
   Stats,
   Student,
   StudentInput,
+  UserRole,
+  UserSummary,
 } from './types';
 
 const query = (params: Record<string, string | number | undefined>) => {
@@ -59,6 +63,22 @@ export const accessLogsApi = {
   registerFingerprint: (fingerprintId: number) =>
     requestJson<EntryResult>('/access-logs/fingerprint', { method: 'POST', body: { fingerprintId } }),
   registerManual: (rm: string) => requestJson<EntryResult>('/access-logs/manual', { method: 'POST', body: { rm } }),
+};
+
+/** Gestão de escolas (só super admin). */
+export const schoolsApi = {
+  list: () => requestJson<SchoolSummary[]>('/schools'),
+  create: (input: SchoolInput) => requestJson<SchoolSummary>('/schools', { method: 'POST', body: { ...input } }),
+  update: (id: number, input: SchoolInput) =>
+    requestJson<SchoolSummary>(`/schools/${id}`, { method: 'PUT', body: { ...input } }),
+  remove: (id: number) => requestJson<void>(`/schools/${id}`, { method: 'DELETE' }),
+};
+
+/** Gestão de usuários e perfis (só super admin). */
+export const usersApi = {
+  list: (params: { search?: string; role?: UserRole } = {}) => requestJson<UserSummary[]>(`/users${query(params)}`),
+  changeRole: (id: number, role: Extract<UserRole, 'SCHOOL' | 'SUPER_ADMIN'>) =>
+    requestJson<UserSummary>(`/users/${id}`, { method: 'PATCH', body: { role } }),
 };
 
 export const statsApi = {

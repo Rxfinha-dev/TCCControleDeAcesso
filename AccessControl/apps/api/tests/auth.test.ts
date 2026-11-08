@@ -1,6 +1,6 @@
 import request from 'supertest';
-import { Prisma } from '@prisma/client';
-import { AUTH_USER_ID, SESSION_ID, authHeader, buildTestApp, school } from './helpers';
+import { Prisma, type User } from '@prisma/client';
+import { AUTH_USER_ID, SESSION_ID, authHeader, buildTestApp, school, schoolUser, superAdmin } from './helpers';
 
 describe('Auth (Supabase)', () => {
   describe('GET /api/auth/me', () => {
@@ -27,86 +27,137 @@ describe('Auth (Supabase)', () => {
       expect(res.body.code).toBe('INVALID_TOKEN');
     });
 
-    it('retorna a instituição vinculada ao usuário do Supabase', async () => {
+    it('retorna o usuário com perfil e escola', async () => {
       const { app, prisma } = buildTestApp();
 
       const res = await request(app).get('/api/auth/me').set('Authorization', authHeader());
 
       expect(res.status).toBe(200);
-      expect(res.body).toEqual({ id: school.id, name: school.name, email: school.email });
-      expect(prisma.school.findUnique.mock.calls[0][0]).toEqual({ where: { authUserId: AUTH_USER_ID } });
+      expect(res.body).toEqual({
+        id: schoolUser.id,
+        name: schoolUser.name,
+        email: schoolUser.email,
+        role: 'SCHOOL',
+        school: { id: school.id, name: school.name },
+      });
+      expect(prisma.user.findUnique.mock.calls[0][0]).toEqual({ where: { authUserId: AUTH_USER_ID }, include: { school: true } });
     });
   });
 
   describe('Primeiro acesso', () => {
-    it('cria a instituição com o nome informado no cadastro', async () => {
+    const newUser = (overrides: Partial<User> = {}) => ({ ...schoolUser, id: 5, ...overrides });
+
+    it('primeiro acesso cria escola e usuário SCHOOL', async () => {
       const { app, prisma, identity } = buildTestApp();
       identity.user = { ...identity.user, email: 'nova@escola.com', name: 'Escola Nova' };
-      prisma.school.findUnique.mockResolvedValueOnce(null).mockResolvedValueOnce(null);
-      const created = { ...school, id: 2, name: 'Escola Nova', email: 'nova@escola.com' };
-      prisma.school.create.mockResolvedValue(created);
-      prisma.school.findUnique.mockResolvedValueOnce(created);
+      const created = newUser({ email: 'nova@escola.com', name: 'Escola Nova', schoolId: 2 });
+      prisma.user.findUnique.mockResolvedValueOnce(null);
+      prisma.school.findUnique.mockResolvedValueOnce(null);
+      prisma.user.create.mockResolvedValue({ ...created, school: { ...school, id: 2, name: 'Escola Nova' } } as never);
+      prisma.user.findUnique.mockResolvedValue({ ...created, school: { ...school, id: 2, name: 'Escola Nova' } } as never);
 
       const res = await request(app).get('/api/auth/me').set('Authorization', authHeader());
 
       expect(res.status).toBe(200);
-      expect(prisma.school.create.mock.calls[0][0].data).toEqual({
-        name: 'Escola Nova',
-        email: 'nova@escola.com',
-        authUserId: AUTH_USER_ID,
+      expect(prisma.user.create.mock.calls[0][0]).toEqual({
+        data: {
+          authUserId: AUTH_USER_ID,
+          email: 'nova@escola.com',
+          name: 'Escola Nova',
+          role: 'SCHOOL',
+          school: { create: { name: 'Escola Nova', email: 'nova@escola.com' } },
+        },
+        include: { school: true },
       });
-      expect(res.body).toEqual({ id: 2, name: 'Escola Nova', email: 'nova@escola.com' });
+      expect(res.body).toMatchObject({ role: 'SCHOOL', school: { id: 2, name: 'Escola Nova' } });
     });
 
-    it('vincula a instituição já existente com o mesmo e-mail (dados do sistema antigo)', async () => {
+    it('primeiro acesso vincula escola criada pelo super admin', async () => {
       const { app, prisma } = buildTestApp();
-      const legacy = { ...school, authUserId: null };
-      prisma.school.findUnique.mockResolvedValueOnce(null).mockResolvedValueOnce(legacy);
-      prisma.school.update.mockResolvedValue(school);
+      prisma.user.findUnique.mockResolvedValueOnce(null);
+      prisma.school.findUnique.mockResolvedValueOnce({ ...school, users: [] } as never);
+      prisma.user.create.mockResolvedValue({ ...schoolUser, school } as never);
 
       const res = await request(app).get('/api/auth/me').set('Authorization', authHeader());
 
       expect(res.status).toBe(200);
-      expect(prisma.school.update).toHaveBeenCalledWith({ where: { id: school.id }, data: { authUserId: AUTH_USER_ID } });
+      expect(prisma.user.create.mock.calls[0][0]).toEqual({
+        data: { authUserId: AUTH_USER_ID, email: school.email, name: school.name, role: 'SCHOOL', schoolId: school.id },
+        include: { school: true },
+      });
       expect(prisma.school.create).not.toHaveBeenCalled();
     });
 
-    it('não vincula e-mail que já pertence a outro usuário', async () => {
+    it('não vincula escola que já tem login de escola', async () => {
       const { app, prisma } = buildTestApp();
-      prisma.school.findUnique
-        .mockResolvedValueOnce(null)
-        .mockResolvedValueOnce({ ...school, authUserId: '00000000-0000-4000-8000-000000000000' });
+      prisma.user.findUnique.mockResolvedValueOnce(null);
+      prisma.school.findUnique.mockResolvedValueOnce({ ...school, users: [{ id: 9 }] } as never);
 
       const res = await request(app).get('/api/auth/me').set('Authorization', authHeader());
 
       expect(res.status).toBe(409);
       expect(res.body.code).toBe('EMAIL_IN_USE');
-      expect(prisma.school.update).not.toHaveBeenCalled();
+      expect(prisma.user.create).not.toHaveBeenCalled();
+    });
+
+    it('e-mail de bootstrap nasce SUPER_ADMIN', async () => {
+      const { app, prisma, identity } = buildTestApp();
+      identity.user = { ...identity.user, email: 'RafaelHenriqueOliveira1234@gmail.com', name: 'Rafael' };
+      prisma.user.findUnique.mockResolvedValueOnce(null);
+      prisma.school.findUnique.mockResolvedValueOnce(null);
+      prisma.user.create.mockResolvedValue({ ...superAdmin, school } as never);
+
+      const res = await request(app).get('/api/auth/me').set('Authorization', authHeader());
+
+      expect(res.status).toBe(200);
+      expect(prisma.user.create.mock.calls[0][0].data).toMatchObject({
+        email: 'rafaelhenriqueoliveira1234@gmail.com',
+        role: 'SUPER_ADMIN',
+        school: { create: { name: 'Rafael', email: 'rafaelhenriqueoliveira1234@gmail.com' } },
+      });
     });
 
     it('exige e-mail confirmado no Supabase', async () => {
       const { app, prisma, identity } = buildTestApp();
       identity.user = { ...identity.user, emailConfirmed: false };
-      prisma.school.findUnique.mockResolvedValue(null);
+      prisma.user.findUnique.mockResolvedValue(null);
 
       const res = await request(app).get('/api/auth/me').set('Authorization', authHeader());
 
       expect(res.status).toBe(403);
       expect(res.body.code).toBe('EMAIL_NOT_VERIFIED');
-      expect(prisma.school.create).not.toHaveBeenCalled();
+      expect(prisma.user.create).not.toHaveBeenCalled();
     });
 
     it('usa o vínculo criado por uma requisição simultânea', async () => {
       const { app, prisma } = buildTestApp();
-      prisma.school.findUnique.mockResolvedValueOnce(null).mockResolvedValueOnce(null).mockResolvedValueOnce(school);
-      prisma.school.create.mockRejectedValue(
+      prisma.user.findUnique
+        .mockResolvedValueOnce(null)
+        .mockResolvedValueOnce({ ...schoolUser, school } as never)
+        .mockResolvedValue({ ...schoolUser, school } as never);
+      prisma.school.findUnique.mockResolvedValueOnce(null);
+      prisma.user.create.mockRejectedValue(
         new Prisma.PrismaClientKnownRequestError('Unique constraint failed', { code: 'P2002', clientVersion: 'test' }),
       );
 
       const res = await request(app).get('/api/auth/me').set('Authorization', authHeader());
 
       expect(res.status).toBe(200);
-      expect(res.body.id).toBe(school.id);
+      expect(res.body.id).toBe(schoolUser.id);
+    });
+
+    it('e-mail já usado por outra conta do Supabase recebe 409', async () => {
+      const { app, prisma } = buildTestApp();
+      prisma.user.findUnique.mockResolvedValue(null);
+      prisma.school.findUnique.mockResolvedValueOnce(null);
+      prisma.user.create.mockRejectedValue(
+        new Prisma.PrismaClientKnownRequestError('Unique constraint failed', { code: 'P2002', clientVersion: 'test' }),
+      );
+
+      const res = await request(app).get('/api/auth/me').set('Authorization', authHeader());
+
+      expect(res.status).toBe(409);
+      expect(res.body.code).toBe('EMAIL_IN_USE');
     });
   });
 });

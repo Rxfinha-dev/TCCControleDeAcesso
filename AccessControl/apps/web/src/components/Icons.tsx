@@ -87,6 +87,22 @@ export const MenuIcon = (p: SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
+export const BuildingIcon = (p: SVGProps<SVGSVGElement>) => (
+  <svg {...base(p)}>
+    <path d="M4 21V5a1 1 0 0 1 1-1h9a1 1 0 0 1 1 1v16" />
+    <path d="M15 9h4a1 1 0 0 1 1 1v11" />
+    <path d="M3 21h18" />
+    <path d="M8 8h3M8 12h3M8 16h3" />
+  </svg>
+);
+
+export const ShieldIcon = (p: SVGProps<SVGSVGElement>) => (
+  <svg {...base(p)}>
+    <path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z" />
+    <path d="M9 12l2 2 4-4" />
+  </svg>
+);
+
 export const UserIcon = (p: SVGProps<SVGSVGElement>) => (
   <svg {...base(p)}>
     <circle cx="12" cy="8" r="4" />

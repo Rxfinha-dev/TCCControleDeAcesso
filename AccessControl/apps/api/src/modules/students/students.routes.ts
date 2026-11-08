@@ -1,6 +1,6 @@
 import { Router, type Request } from 'express';
 import { idParamSchema } from '../../lib/validation';
-import { currentSchool } from '../../middlewares/auth';
+import { currentSchool } from '../../middlewares/school-scope';
 import { photoUpload } from '../../middlewares/upload';
 import type { StoredPhoto } from '../../services/storage';
 import { listStudentsQuerySchema, studentSchema } from './students.schemas';

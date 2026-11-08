@@ -4,6 +4,7 @@ import { errorMessage } from '../api/client';
 import type { AccessLog, AccessLogFilters } from '../api/types';
 import { DownloadIcon } from '../components/Icons';
 import { PageHeader } from '../components/PageHeader';
+import { useSchoolScope } from '../contexts/SchoolScopeContext';
 import { useToast } from '../contexts/ToastContext';
 import { dayBoundary, downloadBlob, formatDateTime } from '../utils/format';
 
@@ -11,6 +12,7 @@ const PAGE_SIZE = 20;
 
 /** Relatório de entradas (frmLog), agora com filtros, paginação e exportação. */
 export function AccessLogsPage() {
+  const allSchools = useSchoolScope().selected === 'all';
   const toast = useToast();
   const [logs, setLogs] = useState<AccessLog[]>([]);
   const [total, setTotal] = useState(0);
@@ -88,6 +90,7 @@ export function AccessLogsPage() {
           <table className="table">
             <thead>
               <tr>
+                {allSchools && <th>Escola</th>}
                 <th>Nome</th>
                 <th>Data / hora</th>
                 <th>Método</th>
@@ -96,6 +99,7 @@ export function AccessLogsPage() {
             <tbody>
               {logs.map((log) => (
                 <tr key={log.id}>
+                  {allSchools && <td>{log.school?.name ?? '—'}</td>}
                   <td>{log.studentName}</td>
                   <td>{formatDateTime(log.createdAt)}</td>
                   <td>
@@ -107,7 +111,7 @@ export function AccessLogsPage() {
               ))}
               {!loading && logs.length === 0 && (
                 <tr>
-                  <td colSpan={3} className="empty">
+                  <td colSpan={allSchools ? 4 : 3} className="empty">
                     Nenhuma entrada encontrada.
                   </td>
                 </tr>

@@ -1,7 +1,8 @@
 import { BrowserRouter, Link, Navigate, Outlet, Route, Routes, useLocation } from 'react-router';
 import { AppLayout } from './components/AppLayout';
 import { Logo } from './components/Logo';
-import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { RequireSchool } from './components/RequireSchool';
+import { AuthProvider, PANEL_ROLES, useAuth } from './contexts/AuthContext';
 import { SerialProvider } from './contexts/SerialContext';
 import { ToastProvider } from './contexts/ToastContext';
 import { AccessLogsPage } from './pages/AccessLogsPage';
@@ -10,13 +11,30 @@ import { DashboardPage } from './pages/DashboardPage';
 import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
 import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
+import { SchoolsPage } from './pages/SchoolsPage';
 import { SettingsPage } from './pages/SettingsPage';
 import { StudentsPage } from './pages/StudentsPage';
+import { UsersPage } from './pages/UsersPage';
 import { VerificationPage } from './pages/VerificationPage';
 import { VerifyEmailPage } from './pages/VerifyEmailPage';
 
+/** Perfis futuros (aluno, funcionário, professor) ainda não têm painel. */
+function ComingSoonPage() {
+  const { logout } = useAuth();
+  return (
+    <div className="splash">
+      <Logo variant="auto" />
+      <h1>Em breve</h1>
+      <p>Seu acesso à plataforma estará disponível em breve.</p>
+      <button type="button" className="btn btn-primary" onClick={() => void logout()}>
+        Sair
+      </button>
+    </div>
+  );
+}
+
 function RequireAuth() {
-  const { school, loading } = useAuth();
+  const { user, loading } = useAuth();
   const location = useLocation();
   if (loading) {
     return (
@@ -25,8 +43,15 @@ function RequireAuth() {
       </div>
     );
   }
-  if (!school) return <Navigate to="/login" replace state={{ from: location.pathname }} />;
+  if (!user) return <Navigate to="/login" replace state={{ from: location.pathname }} />;
+  if (!PANEL_ROLES.includes(user.role)) return <ComingSoonPage />;
   return <Outlet />;
+}
+
+/** Telas de gestão global: quem não é super admin volta para o início. */
+function SuperAdminRoute() {
+  const { isSuperAdmin } = useAuth();
+  return isSuperAdmin ? <Outlet /> : <Navigate to="/" replace />;
 }
 
 function NotFoundPage() {
@@ -51,11 +76,36 @@ export function AppRoutes() {
       <Route element={<RequireAuth />}>
         <Route element={<AppLayout />}>
           <Route index element={<DashboardPage />} />
-          <Route path="/alunos" element={<StudentsPage />} />
-          <Route path="/cursos" element={<CoursesPage />} />
-          <Route path="/verificacao" element={<VerificationPage />} />
+          <Route
+            path="/alunos"
+            element={
+              <RequireSchool>
+                <StudentsPage />
+              </RequireSchool>
+            }
+          />
+          <Route
+            path="/cursos"
+            element={
+              <RequireSchool>
+                <CoursesPage />
+              </RequireSchool>
+            }
+          />
+          <Route
+            path="/verificacao"
+            element={
+              <RequireSchool>
+                <VerificationPage />
+              </RequireSchool>
+            }
+          />
           <Route path="/entradas" element={<AccessLogsPage />} />
           <Route path="/configuracoes" element={<SettingsPage />} />
+          <Route element={<SuperAdminRoute />}>
+            <Route path="/escolas" element={<SchoolsPage />} />
+            <Route path="/usuarios" element={<UsersPage />} />
+          </Route>
         </Route>
       </Route>
       <Route path="*" element={<NotFoundPage />} />
