@@ -1,6 +1,7 @@
 import { BrowserRouter, Link, Navigate, Outlet, Route, Routes, useLocation } from 'react-router';
 import { AppLayout } from './components/AppLayout';
 import { Logo } from './components/Logo';
+import { RequireSchool } from './components/RequireSchool';
 import { AuthProvider, PANEL_ROLES, useAuth } from './contexts/AuthContext';
 import { SerialProvider } from './contexts/SerialContext';
 import { ToastProvider } from './contexts/ToastContext';
@@ -67,9 +68,30 @@ export function AppRoutes() {
       <Route element={<RequireAuth />}>
         <Route element={<AppLayout />}>
           <Route index element={<DashboardPage />} />
-          <Route path="/alunos" element={<StudentsPage />} />
-          <Route path="/cursos" element={<CoursesPage />} />
-          <Route path="/verificacao" element={<VerificationPage />} />
+          <Route
+            path="/alunos"
+            element={
+              <RequireSchool>
+                <StudentsPage />
+              </RequireSchool>
+            }
+          />
+          <Route
+            path="/cursos"
+            element={
+              <RequireSchool>
+                <CoursesPage />
+              </RequireSchool>
+            }
+          />
+          <Route
+            path="/verificacao"
+            element={
+              <RequireSchool>
+                <VerificationPage />
+              </RequireSchool>
+            }
+          />
           <Route path="/entradas" element={<AccessLogsPage />} />
           <Route path="/configuracoes" element={<SettingsPage />} />
         </Route>

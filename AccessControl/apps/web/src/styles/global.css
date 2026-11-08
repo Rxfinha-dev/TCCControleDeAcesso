@@ -730,6 +730,29 @@ select:disabled {
   display: none;
 }
 
+/* Seletor da escola em uso (super admin). */
+.school-scope-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 12px 16px;
+  border: 1px solid var(--sky-line);
+  border-radius: 12px;
+  background: var(--sky-soft);
+  color: var(--ink);
+}
+
+.school-scope-bar label {
+  font-weight: 600;
+}
+
+.school-scope-bar select {
+  flex: 1 1 220px;
+  max-width: 420px;
+  min-width: 0;
+}
+
 .app-content {
   width: 100%;
   max-width: 1280px;

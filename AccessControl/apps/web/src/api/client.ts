@@ -19,6 +19,19 @@ async function accessToken() {
 }
 
 let onUnauthorized: (() => void) | null = null;
+let onSchoolForbidden: (() => void) | null = null;
+/** Escola em uso enviada no cabeçalho X-School-Id (só o super admin define). */
+let schoolScope: number | 'all' | null = null;
+
+/** Define a escola enviada em todas as requisições (null = não envia o cabeçalho). */
+export function setSchoolScope(value: number | 'all' | null) {
+  schoolScope = value;
+}
+
+/** Registra o que fazer quando a API recusar a escola enviada (perfil alterado em outra sessão). */
+export function setSchoolForbiddenHandler(handler: (() => void) | null) {
+  onSchoolForbidden = handler;
+}
 
 /** Registra o que fazer quando a API responder 401 (sessão expirada). */
 export function setUnauthorizedHandler(handler: (() => void) | null) {
@@ -31,6 +44,8 @@ export async function request(path: string, options: { method?: string; body?: B
   const headers = new Headers();
   const token = await accessToken();
   if (token) headers.set('Authorization', `Bearer ${token}`);
+  const sentSchool = schoolScope;
+  if (sentSchool !== null) headers.set('X-School-Id', String(sentSchool));
 
   let body: BodyInit | undefined;
   if (options.body instanceof FormData) {
@@ -50,6 +65,7 @@ export async function request(path: string, options: { method?: string; body?: B
   if (!response.ok) {
     const data = await response.json().catch(() => ({}));
     if (response.status === 401 && token) onUnauthorized?.();
+    if (response.status === 403 && data.code === 'SCHOOL_FORBIDDEN' && sentSchool !== null) onSchoolForbidden?.();
     throw new ApiError(response.status, data.message ?? 'Erro inesperado. Tente novamente.', data.code);
   }
   return response;

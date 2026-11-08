@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, NavLink, Outlet, useNavigate } from 'react-router';
 import { displayName, useAuth } from '../contexts/AuthContext';
+import { SchoolScopeProvider, useSchoolScope } from '../contexts/SchoolScopeContext';
 import { useSerial } from '../contexts/SerialContext';
 import { firstName, initials } from '../utils/format';
 import {
@@ -14,6 +15,7 @@ import {
   StudentIcon,
 } from './Icons';
 import { Logo } from './Logo';
+import { SchoolSelector } from './SchoolSelector';
 import { ThemeToggle } from './ThemeToggle';
 
 const NAV_ITEMS = [
@@ -27,7 +29,16 @@ const NAV_ITEMS = [
 
 /** Menu lateral escuro (#2C2C2C) do frmMainMenu legado. */
 export function AppLayout() {
-  const { user, logout } = useAuth();
+  return (
+    <SchoolScopeProvider>
+      <AppShell />
+    </SchoolScopeProvider>
+  );
+}
+
+function AppShell() {
+  const { user, isSuperAdmin, logout } = useAuth();
+  const { selected } = useSchoolScope();
   const name = displayName(user);
   const { connected } = useSerial();
   const navigate = useNavigate();
@@ -88,7 +99,9 @@ export function AppLayout() {
       <div className="sidebar-backdrop" onClick={() => setMenuOpen(false)} />
 
       <main className="app-content">
-        <Outlet />
+        {isSuperAdmin && <SchoolSelector />}
+        {/* Trocar de escola remonta a tela: respostas da escola anterior são descartadas. */}
+        <Outlet key={String(selected)} />
       </main>
     </div>
   );
