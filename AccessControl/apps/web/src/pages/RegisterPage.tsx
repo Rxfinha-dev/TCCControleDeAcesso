@@ -12,6 +12,7 @@ export function RegisterPage() {
   const navigate = useNavigate();
   const toast = useToast();
   const { loadUser } = useAuth();
+  const [accountType, setAccountType] = useState<'school' | null>(null);
   const [form, setForm] = useState({ name: '', email: '', password: '', confirm: '' });
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -51,6 +52,24 @@ export function RegisterPage() {
     }
   }
 
+  if (accountType === null) {
+    return (
+      <AuthLayout title="Cadastro" subtitle="Como você vai usar a plataforma?" backTo="/login">
+        <div className="account-type-options">
+          <button type="button" className="account-type-card" onClick={() => setAccountType('school')}>
+            <strong>Sou uma escola</strong>
+            <span>Cadastre sua instituição para controlar os acessos dos alunos.</span>
+          </button>
+          <button type="button" className="account-type-card" disabled>
+            <strong>Sou um usuário</strong>
+            <span>Aluno, funcionário ou professor.</span>
+            <span className="badge badge-muted">Em breve</span>
+          </button>
+        </div>
+      </AuthLayout>
+    );
+  }
+
   return (
     <AuthLayout title="Cadastro" subtitle="Cadastre sua instituição para começar a controlar os acessos." backTo="/login">
       <form className="form" onSubmit={handleSubmit} noValidate>
@@ -80,6 +99,9 @@ export function RegisterPage() {
 
         <button type="submit" className="btn btn-primary btn-block" disabled={submitting}>
           {submitting ? 'Enviando código...' : 'Cadastrar'}
+        </button>
+        <button type="button" className="btn btn-outline btn-block" onClick={() => setAccountType(null)}>
+          Trocar tipo de conta
         </button>
       </form>
     </AuthLayout>

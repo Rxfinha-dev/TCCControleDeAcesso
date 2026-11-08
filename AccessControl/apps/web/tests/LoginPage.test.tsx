@@ -132,6 +132,7 @@ describe('Tela de cadastro', () => {
 
   async function fillForm(confirm = '123456789') {
     renderAt('/cadastro');
+    await userEvent.click(screen.getByRole('button', { name: /Sou uma escola/ }));
     await userEvent.type(screen.getByLabelText('Nome completo da instituição'), 'ETEC Jaú');
     await userEvent.type(screen.getByLabelText('E-mail'), 'a@b.com');
     await userEvent.type(screen.getByLabelText(/^Senha/), '123456789');
@@ -158,7 +159,7 @@ describe('Tela de cadastro', () => {
     expect(supabase.auth.signUp).toHaveBeenCalledWith({
       email: 'a@b.com',
       password: '123456789',
-      options: { data: { name: 'ETEC Jaú' } },
+      options: { data: { name: 'ETEC Jaú', account_type: 'school' } },
     });
   });
 

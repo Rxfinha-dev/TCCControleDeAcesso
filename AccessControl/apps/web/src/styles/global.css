@@ -1931,3 +1931,46 @@ select:disabled {
   white-space: nowrap;
   border: 0;
 }
+
+/* Cadastro: escolha do tipo de conta. */
+.account-type-options {
+  display: grid;
+  gap: 12px;
+}
+
+.account-type-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  width: 100%;
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+  color: var(--text);
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.account-type-card strong {
+  color: var(--ink);
+  font-size: 1.05rem;
+}
+
+.account-type-card:hover:not(:disabled) {
+  border-color: var(--sky);
+  background: var(--sky-soft);
+}
+
+.account-type-card:focus-visible {
+  outline: 2px solid var(--sky-ink);
+  outline-offset: 2px;
+}
+
+.account-type-card:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
