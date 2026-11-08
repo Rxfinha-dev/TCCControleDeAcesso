@@ -7,7 +7,7 @@ import type { PrismaClient } from '@prisma/client';
 import { corsOrigins, env } from './config/env';
 import { openApiSpec } from './docs/openapi';
 import { logger } from './lib/logger';
-import { createRequireAuth } from './middlewares/auth';
+import { createRequireAuth, requireRole } from './middlewares/auth';
 import { errorHandler, notFoundHandler } from './middlewares/error-handler';
 import { requirePanelAccess, requireSchoolScope } from './middlewares/school-scope';
 import { apiRateLimit } from './middlewares/rate-limit';
@@ -16,6 +16,8 @@ import { AccessLogsService } from './modules/access-logs/access-logs.service';
 import { authRoutes } from './modules/auth/auth.routes';
 import { AuthService } from './modules/auth/auth.service';
 import { coursesRoutes } from './modules/courses/courses.routes';
+import { schoolsRoutes } from './modules/schools/schools.routes';
+import { SchoolsService } from './modules/schools/schools.service';
 import { CoursesService } from './modules/courses/courses.service';
 import { statsRoutes } from './modules/stats/stats.routes';
 import { studentsRoutes } from './modules/students/students.routes';
@@ -109,6 +111,10 @@ export function createApp({ prisma, identity, storage }: AppDependencies) {
   app.use('/api/students', ...scoped, studentsRoutes(new StudentsService(prisma, storage)));
   app.use('/api/access-logs', ...scopedOrAll, accessLogsRoutes(new AccessLogsService(prisma)));
   app.use('/api/stats', ...scopedOrAll, statsRoutes(prisma));
+
+  // Gestão global: só super admin, sem escola em uso.
+  const superAdminOnly = [apiRateLimit, requireAuth, requireRole('SUPER_ADMIN')];
+  app.use('/api/schools', ...superAdminOnly, schoolsRoutes(new SchoolsService(prisma, storage)));
 
   app.use(notFoundHandler);
   app.use(errorHandler);

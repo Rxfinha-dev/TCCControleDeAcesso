@@ -30,6 +30,32 @@ const validationError = {
 
 const notFound = errorResponse('Registro não encontrado (`NOT_FOUND`)');
 
+/** Escola em uso nas rotas por escola (cursos, alunos, entradas, resumo). */
+const schoolHeader = {
+  name: 'X-School-Id',
+  in: 'header',
+  required: false,
+  description:
+    'Escola em uso. Login de escola: opcional (só a própria escola). Super admin: id de qualquer escola, ' +
+    'ou `all` (todas) em `GET /api/access-logs`, `GET /api/access-logs/export` e `GET /api/stats`. ' +
+    'Sem o cabeçalho, vale a escola do usuário.',
+  schema: { type: 'string', example: '1' },
+};
+
+/** Erros de escopo das rotas por escola. */
+const scopeErrors = {
+  400: errorResponse('Escola inválida (`INVALID_SCHOOL_ID`) ou não selecionada (`SCHOOL_REQUIRED`)'),
+  403: errorResponse('Sem acesso à escola (`SCHOOL_FORBIDDEN`) ou perfil sem acesso ao painel (`NO_PANEL_ACCESS`)'),
+};
+
+const superAdminErrors = {
+  ...authErrors,
+  403: errorResponse('Rota exclusiva do super admin (`FORBIDDEN_ROLE`)'),
+};
+
+const emailInUse = errorResponse('E-mail já vinculado a outra escola ou conta (`EMAIL_IN_USE`)');
+const schoolNotFound = errorResponse('Escola não encontrada (`SCHOOL_NOT_FOUND`)');
+
 const studentFields = {
   type: 'object',
   required: ['name', 'rm', 'age', 'year', 'courseId'],
@@ -72,9 +98,11 @@ export const openApiSpec = {
       '**Autenticação:** cadastro, login, ativação da conta e recuperação de senha são feitos pelo',
       'frontend direto no **Supabase Auth**. Para chamar as rotas protegidas, envie o `access_token`',
       'da sessão do Supabase no cabeçalho `Authorization: Bearer <token>` (botão **Authorize**).',
-      'No primeiro acesso, a instituição é criada automaticamente a partir do usuário do Supabase.',
+      'No primeiro acesso, o usuário e a escola dele são criados automaticamente (ou o usuário é vinculado',
+      'à escola já cadastrada com o mesmo e-mail).',
       '',
-      'Todos os dados são isolados por instituição: cada token só enxerga os registros da própria escola.',
+      '**Perfis:** `SCHOOL` (login da escola) só enxerga os registros da própria escola; `SUPER_ADMIN` opera',
+      'qualquer escola pelo cabeçalho `X-School-Id` e gerencia escolas e usuários.',
       '',
       '**Erros** seguem o formato `{ "code": "...", "message": "..." }`; erros de validação trazem também `issues`.',
     ].join('\n'),
@@ -87,6 +115,8 @@ export const openApiSpec = {
     { name: 'Alunos', description: 'Alunos, fotos e digitais' },
     { name: 'Entradas', description: 'Registro e consulta das entradas dos alunos' },
     { name: 'Painel', description: 'Resumo exibido na tela inicial' },
+    { name: 'Escolas', description: 'Gestão das escolas (super admin)' },
+    { name: 'Usuários', description: 'Gestão de usuários e perfis (super admin)' },
   ],
   security: [{ bearerAuth: [] }],
   paths: {
@@ -104,10 +134,10 @@ export const openApiSpec = {
     '/api/auth/me': {
       get: {
         tags: ['Auth'],
-        summary: 'Dados da instituição logada',
-        description: 'No primeiro acesso, cria a instituição (ou vincula uma existente com o mesmo e-mail).',
+        summary: 'Dados do usuário logado (perfil e escola)',
+        description: 'No primeiro acesso, cria o usuário e a escola (ou vincula a escola existente com o mesmo e-mail).',
         responses: {
-          200: { description: 'Instituição logada', content: json(ref('School')) },
+          200: { description: 'Usuário logado', content: json(ref('Me')) },
           409: errorResponse('E-mail já vinculado a outra conta (`EMAIL_IN_USE`)'),
           ...authErrors,
         },
@@ -375,6 +405,52 @@ export const openApiSpec = {
         },
       },
     },
+    '/api/schools': {
+      get: {
+        tags: ['Escolas'],
+        summary: 'Lista as escolas com contadores',
+        responses: {
+          200: { description: 'Escolas (ordem alfabética)', content: json({ type: 'array', items: ref('SchoolSummary') }) },
+          ...superAdminErrors,
+        },
+      },
+      post: {
+        tags: ['Escolas'],
+        summary: 'Cadastra uma escola',
+        description: 'Quem se cadastrar depois com o mesmo e-mail é vinculado a ela como login da escola.',
+        requestBody: { required: true, content: json(ref('SchoolInput')) },
+        responses: {
+          201: { description: 'Escola criada', content: json(ref('School')) },
+          400: validationError,
+          409: emailInUse,
+          ...superAdminErrors,
+        },
+      },
+    },
+    '/api/schools/{id}': {
+      parameters: [idParam],
+      put: {
+        tags: ['Escolas'],
+        summary: 'Edita nome e e-mail de contato (não altera o login)',
+        requestBody: { required: true, content: json(ref('SchoolInput')) },
+        responses: {
+          200: { description: 'Escola atualizada', content: json(ref('School')) },
+          400: validationError,
+          404: schoolNotFound,
+          409: emailInUse,
+          ...superAdminErrors,
+        },
+      },
+      delete: {
+        tags: ['Escolas'],
+        summary: 'Exclui a escola com cursos, alunos, fotos e entradas',
+        responses: {
+          204: { description: 'Escola excluída' },
+          404: schoolNotFound,
+          ...superAdminErrors,
+        },
+      },
+    },
   },
   components: {
     securitySchemes: {
@@ -427,6 +503,39 @@ export const openApiSpec = {
           id: { type: 'integer', example: 1 },
           name: { type: 'string', example: 'ETEC Exemplo' },
           email: { type: 'string', format: 'email', example: 'secretaria@exemplo.com' },
+        },
+      },
+      SchoolInput: {
+        type: 'object',
+        required: ['name', 'email'],
+        properties: {
+          name: { type: 'string', maxLength: 100, example: 'ETEC Exemplo' },
+          email: { type: 'string', format: 'email', maxLength: 120, example: 'secretaria@exemplo.com' },
+        },
+      },
+      SchoolSummary: {
+        type: 'object',
+        properties: {
+          id: { type: 'integer', example: 1 },
+          name: { type: 'string', example: 'ETEC Exemplo' },
+          email: { type: 'string', format: 'email' },
+          createdAt: { type: 'string', format: 'date-time' },
+          counts: {
+            type: 'object',
+            properties: { students: { type: 'integer' }, courses: { type: 'integer' }, accessLogs: { type: 'integer' } },
+          },
+          hasLogin: { type: 'boolean', description: 'Se a escola já tem login de escola (SCHOOL) vinculado' },
+        },
+      },
+      UserRole: { type: 'string', enum: ['SUPER_ADMIN', 'SCHOOL', 'STUDENT', 'EMPLOYEE', 'TEACHER'] },
+      Me: {
+        type: 'object',
+        properties: {
+          id: { type: 'integer', example: 1 },
+          name: { type: 'string', example: 'ETEC Exemplo' },
+          email: { type: 'string', format: 'email' },
+          role: ref('UserRole'),
+          school: { type: 'object', nullable: true, properties: { id: { type: 'integer' }, name: { type: 'string' } } },
         },
       },
       CourseInput: {
@@ -515,3 +624,15 @@ export const openApiSpec = {
     },
   },
 };
+
+// Rotas por escola aceitam o cabeçalho X-School-Id e seus erros de escopo.
+for (const [path, item] of Object.entries(openApiSpec.paths) as [string, Record<string, unknown>][]) {
+  if (!/^\/api\/(courses|students|access-logs|stats)/.test(path)) continue;
+  item.parameters = [...((item.parameters as object[] | undefined) ?? []), schoolHeader];
+  for (const operation of Object.values(item)) {
+    if (operation && typeof operation === 'object' && 'responses' in operation) {
+      const responses = (operation as { responses: Record<string, unknown> }).responses;
+      for (const [status, response] of Object.entries(scopeErrors)) responses[status] ??= response;
+    }
+  }
+}

@@ -26,6 +26,8 @@ describe('Documentação da API', () => {
         '/api/access-logs/fingerprint',
         '/api/access-logs/manual',
         '/api/stats',
+        '/api/schools',
+        '/api/schools/{id}',
       ]),
     );
   });
