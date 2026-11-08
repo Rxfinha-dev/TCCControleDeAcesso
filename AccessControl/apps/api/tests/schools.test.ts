@@ -128,6 +128,21 @@ describe('Escolas (super admin)', () => {
     expect(prisma.school.delete).toHaveBeenCalledWith({ where: { id: school.id } });
   });
 
+  it('excluir apaga os alunos antes da escola na mesma transação', async () => {
+    const { app, prisma } = buildTestApp({ user: superAdmin });
+    prisma.school.findUnique.mockResolvedValue(school);
+    prisma.student.findMany.mockResolvedValue([]);
+
+    const res = await request(app).delete(`/api/schools/${school.id}`).set('Authorization', authHeader());
+
+    expect(res.status).toBe(204);
+    expect(prisma.student.deleteMany).toHaveBeenCalledWith({ where: { schoolId: school.id } });
+    // students.course_id é ON DELETE RESTRICT: os alunos saem antes da cascata de cursos.
+    const operations: unknown = prisma.$transaction.mock.calls[0][0];
+    expect(Array.isArray(operations)).toBe(true);
+    expect(prisma.student.deleteMany.mock.invocationCallOrder[0]).toBeLessThan(prisma.school.delete.mock.invocationCallOrder[0]);
+  });
+
   it('excluir segue mesmo se o storage falhar', async () => {
     const { app, prisma, storage } = buildTestApp({ user: superAdmin });
     prisma.school.findUnique.mockResolvedValue(school);

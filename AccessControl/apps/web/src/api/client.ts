@@ -41,10 +41,11 @@ export function setUnauthorizedHandler(handler: (() => void) | null) {
 type Body = Record<string, unknown> | FormData | undefined;
 
 export async function request(path: string, options: { method?: string; body?: Body } = {}): Promise<Response> {
+  // Lida antes de qualquer await: trocar de escola durante a renovação do token não muda o destino da requisição.
+  const sentSchool = schoolScope;
   const headers = new Headers();
   const token = await accessToken();
   if (token) headers.set('Authorization', `Bearer ${token}`);
-  const sentSchool = schoolScope;
   if (sentSchool !== null) headers.set('X-School-Id', String(sentSchool));
 
   let body: BodyInit | undefined;

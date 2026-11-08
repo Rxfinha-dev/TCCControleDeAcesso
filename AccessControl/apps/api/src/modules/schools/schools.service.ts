@@ -75,8 +75,10 @@ export class SchoolsService {
         logger.warn({ err, studentId: student.id, schoolId: id }, 'exclusão de escola: falha ao remover foto do storage');
       }
     }
+    // students.course_id é ON DELETE RESTRICT: os alunos saem antes, para a cascata de cursos não falhar.
     await this.prisma.$transaction([
       this.prisma.user.deleteMany({ where: { schoolId: id, role: UserRole.SCHOOL } }),
+      this.prisma.student.deleteMany({ where: { schoolId: id } }),
       this.prisma.school.delete({ where: { id } }),
     ]);
   }

@@ -40,6 +40,9 @@ WHERE "auth_user_id" IS NOT NULL;
 -- Primeiro super admin (sem efeito em ambientes onde o e-mail não existe).
 UPDATE "users" SET "role" = 'SUPER_ADMIN' WHERE "email" = 'rafaelhenriqueoliveira1234@gmail.com';
 
+-- Como nas demais tabelas: RLS ligado e sem políticas, a Data API (anon/authenticated) não acessa os perfis.
+ALTER TABLE "users" ENABLE ROW LEVEL SECURITY;
+
 -- No máximo um login de escola (SCHOOL) por escola. O Prisma não modela índice parcial.
 CREATE UNIQUE INDEX "users_school_role_key" ON "users"("school_id") WHERE "role" = 'SCHOOL';
 

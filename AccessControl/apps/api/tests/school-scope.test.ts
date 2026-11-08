@@ -104,7 +104,7 @@ describe('Escola em uso (X-School-Id)', () => {
     });
   });
 
-  it.each(['abc', '0', '-1', '1.5'])('X-School-Id inválido (%p) recebe 400', async (value) => {
+  it.each(['abc', '0', '-1', '1.5', '9999999999'])('X-School-Id inválido (%p) recebe 400', async (value) => {
     const { app } = buildTestApp({ user: superAdmin });
 
     const res = await request(app).get('/api/courses').set('Authorization', authHeader()).set('X-School-Id', value);

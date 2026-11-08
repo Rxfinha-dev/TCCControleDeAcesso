@@ -9,7 +9,17 @@ export const SCHOOL_HEADER = 'x-school-id';
 
 const PANEL_ROLES: UserRole[] = [UserRole.SUPER_ADMIN, UserRole.SCHOOL];
 
-const headerSchema = z.union([z.literal('all'), z.string().regex(/^[1-9]\d{0,9}$/).transform(Number)]);
+/** Maior id possível (coluna INT4): acima disso o Prisma lançaria erro de validação (500). */
+const MAX_ID = 2_147_483_647;
+
+const headerSchema = z.union([
+  z.literal('all'),
+  z
+    .string()
+    .regex(/^[1-9]\d{0,9}$/)
+    .transform(Number)
+    .refine((id) => id <= MAX_ID),
+]);
 
 const schoolRequired = () => badRequest('Selecione uma escola para usar este recurso.', 'SCHOOL_REQUIRED');
 
