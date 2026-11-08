@@ -110,7 +110,7 @@ describe('Entradas', () => {
       const res = await request(app).get('/api/access-logs/export').set('Authorization', authHeader()).set('X-School-Id', 'all');
 
       expect(res.status).toBe(200);
-      const lines = res.text.replace(/^﻿/, '').split('\n');
+      const lines = res.text.replace(/^\uFEFF/, '').split('\n');
       expect(lines[0]).toBe('Escola;Nome;Data/Hora (UTC);Método');
       expect(lines[1]).toBe(`"${school.name}";"Ana Souza";2026-03-10T11:00:00.000Z;Digital`);
     });
