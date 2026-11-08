@@ -6,12 +6,14 @@ import { useSerial } from '../contexts/SerialContext';
 import { firstName, initials } from '../utils/format';
 import {
   BookIcon,
+  BuildingIcon,
   FingerprintIcon,
   HomeIcon,
   ListIcon,
   LogoutIcon,
   MenuIcon,
   SettingsIcon,
+  ShieldIcon,
   StudentIcon,
 } from './Icons';
 import { Logo } from './Logo';
@@ -25,6 +27,12 @@ const NAV_ITEMS = [
   { to: '/verificacao', label: 'Verificação', icon: FingerprintIcon },
   { to: '/entradas', label: 'Entradas', icon: ListIcon },
   { to: '/configuracoes', label: 'Configurações', icon: SettingsIcon },
+];
+
+/** Gestão global, só para o super admin. */
+const SUPER_ADMIN_NAV_ITEMS = [
+  { to: '/escolas', label: 'Escolas', icon: BuildingIcon, end: false },
+  { to: '/usuarios', label: 'Usuários', icon: ShieldIcon, end: false },
 ];
 
 /** Menu lateral escuro (#2C2C2C) do frmMainMenu legado. */
@@ -66,7 +74,7 @@ function AppShell() {
           <ThemeToggle />
         </div>
         <nav className="sidebar-nav" onClick={() => setMenuOpen(false)}>
-          {NAV_ITEMS.map(({ to, label, icon: Icon, end }) => (
+          {[...NAV_ITEMS, ...(isSuperAdmin ? SUPER_ADMIN_NAV_ITEMS : [])].map(({ to, label, icon: Icon, end }) => (
             <NavLink key={to} to={to} end={end} className="nav-item">
               <Icon />
               <span>{label}</span>

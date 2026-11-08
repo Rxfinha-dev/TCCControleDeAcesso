@@ -11,8 +11,10 @@ import { DashboardPage } from './pages/DashboardPage';
 import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
 import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
+import { SchoolsPage } from './pages/SchoolsPage';
 import { SettingsPage } from './pages/SettingsPage';
 import { StudentsPage } from './pages/StudentsPage';
+import { UsersPage } from './pages/UsersPage';
 import { VerificationPage } from './pages/VerificationPage';
 import { VerifyEmailPage } from './pages/VerifyEmailPage';
 
@@ -44,6 +46,12 @@ function RequireAuth() {
   if (!user) return <Navigate to="/login" replace state={{ from: location.pathname }} />;
   if (!PANEL_ROLES.includes(user.role)) return <ComingSoonPage />;
   return <Outlet />;
+}
+
+/** Telas de gestão global: quem não é super admin volta para o início. */
+function SuperAdminRoute() {
+  const { isSuperAdmin } = useAuth();
+  return isSuperAdmin ? <Outlet /> : <Navigate to="/" replace />;
 }
 
 function NotFoundPage() {
@@ -94,6 +102,10 @@ export function AppRoutes() {
           />
           <Route path="/entradas" element={<AccessLogsPage />} />
           <Route path="/configuracoes" element={<SettingsPage />} />
+          <Route element={<SuperAdminRoute />}>
+            <Route path="/escolas" element={<SchoolsPage />} />
+            <Route path="/usuarios" element={<UsersPage />} />
+          </Route>
         </Route>
       </Route>
       <Route path="*" element={<NotFoundPage />} />
