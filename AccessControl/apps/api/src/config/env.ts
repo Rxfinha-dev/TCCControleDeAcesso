@@ -17,6 +17,12 @@ const envSchema = z.object({
   STORAGE_DRIVER: z.enum(['database', 'supabase']).default('database'),
   SUPABASE_SERVICE_ROLE_KEY: z.string().optional(),
   SUPABASE_STORAGE_BUCKET: z.string().default('student-photos'),
+
+  // E-mail que nasce SUPER_ADMIN no primeiro login (bootstrap do primeiro super admin).
+  SUPER_ADMIN_BOOTSTRAP_EMAIL: z
+    .email()
+    .default('rafaelhenriqueoliveira1234@gmail.com')
+    .transform((email) => email.toLowerCase()),
 });
 
 const parsed = envSchema.safeParse(process.env);

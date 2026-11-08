@@ -1,4 +1,4 @@
-import type { PrismaClient, School, Student } from '@prisma/client';
+import type { PrismaClient, School, Student, User } from '@prisma/client';
 import { mockDeep, type DeepMockProxy } from 'jest-mock-extended';
 import { createApp } from '../src/app';
 import type { AuthUser, IdentityProvider } from '../src/services/identity';
@@ -44,13 +44,18 @@ export class MemoryStorage implements PhotoStorage {
   }
 }
 
-export function buildTestApp() {
+export interface TestAppOptions {
+  /** Usuário logado (padrão: o login SCHOOL da escola de teste). */
+  user?: User;
+}
+
+export function buildTestApp({ user = schoolUser }: TestAppOptions = {}) {
   const prisma = mockDeep<PrismaClient>() as DeepMockProxy<PrismaClient>;
   // Executa as operações recebidas em $transaction([...]) como Promise.all.
   prisma.$transaction.mockImplementation(((operations: unknown) =>
     Array.isArray(operations) ? Promise.all(operations) : Promise.resolve(operations)) as never);
-  // O middleware de autenticação busca a instituição do usuário logado a cada requisição.
-  prisma.school.findUnique.mockResolvedValue(school);
+  // O middleware de autenticação busca o usuário logado (com a escola) a cada requisição.
+  prisma.user.findUnique.mockResolvedValue({ ...user, school: user.schoolId === school.id ? school : null } as never);
   const identity = new FakeIdentity();
   const storage = new MemoryStorage();
   const app = createApp({ prisma, identity, storage });
@@ -61,9 +66,29 @@ export const school: School = {
   id: 1,
   name: 'ETEC Joaquim Ferreira do Amaral',
   email: 'etec@escola.com',
-  authUserId: AUTH_USER_ID,
   createdAt: new Date('2026-01-01T00:00:00Z'),
   updatedAt: new Date('2026-01-01T00:00:00Z'),
+};
+
+/** Login compartilhado da escola de teste (secretaria, guarda etc.). */
+export const schoolUser: User = {
+  id: 1,
+  authUserId: AUTH_USER_ID,
+  email: 'etec@escola.com',
+  name: 'ETEC Joaquim Ferreira do Amaral',
+  role: 'SCHOOL',
+  schoolId: 1,
+  createdAt: new Date('2026-01-01T00:00:00Z'),
+  updatedAt: new Date('2026-01-01T00:00:00Z'),
+};
+
+/** Super admin cuja escola padrão é a escola de teste. */
+export const superAdmin: User = {
+  ...schoolUser,
+  id: 2,
+  email: 'rafaelhenriqueoliveira1234@gmail.com',
+  name: 'Rafael',
+  role: 'SUPER_ADMIN',
 };
 
 export const authHeader = () => `Bearer ${VALID_TOKEN}`;

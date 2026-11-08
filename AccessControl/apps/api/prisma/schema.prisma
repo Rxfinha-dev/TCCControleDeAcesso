@@ -25,17 +25,45 @@ enum AccessMethod {
   MANUAL
 }
 
-/// Instituição (antiga tabela "escolas"). O login é feito pelo Supabase Auth.
-model School {
+/// Perfil de acesso. STUDENT, EMPLOYEE e TEACHER ainda não têm acesso ao painel.
+enum UserRole {
+  SUPER_ADMIN
+  SCHOOL
+  STUDENT
+  EMPLOYEE
+  TEACHER
+}
+
+/// Usuário do sistema, ligado ao Supabase Auth. O perfil vive só aqui (nunca em user_metadata).
+model User {
   id         Int      @id @default(autoincrement())
-  name       String   @db.VarChar(100)
+  /// ID do usuário no Supabase Auth (auth.users.id).
+  authUserId String   @unique @map("auth_user_id") @db.Uuid
   email      String   @unique @db.VarChar(120)
-  /// ID do usuário no Supabase Auth (auth.users.id). Fica vazio até o primeiro login,
-  /// quando a API vincula a instituição pelo e-mail confirmado.
-  authUserId String?  @unique @map("auth_user_id") @db.Uuid
+  name       String   @db.VarChar(100)
+  role       UserRole @default(SCHOOL)
+  /// Escola do usuário. Para SCHOOL é obrigatória; para SUPER_ADMIN é a "escola padrão" (opcional).
+  /// No máximo um SCHOOL por escola (índice único parcial users_school_role_key, criado na migration).
+  schoolId   Int?     @map("school_id")
   createdAt  DateTime @default(now()) @map("created_at")
   updatedAt  DateTime @updatedAt @map("updated_at")
 
+  school School? @relation(fields: [schoolId], references: [id], onDelete: SetNull)
+
+  @@index([schoolId])
+  @@map("users")
+}
+
+/// Instituição (antiga tabela "escolas"). O login é de um User (perfil SCHOOL) ligado a ela.
+model School {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(100)
+  /// Contato da escola e chave para vincular o primeiro login (provisionamento).
+  email     String   @unique @db.VarChar(120)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  users      User[]
   courses    Course[]
   students   Student[]
   accessLogs AccessLog[]
