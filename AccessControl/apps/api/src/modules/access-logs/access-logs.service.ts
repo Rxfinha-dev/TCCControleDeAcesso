@@ -23,14 +23,19 @@ export type ListAccessLogsQuery = z.infer<typeof listAccessLogsQuerySchema>;
 
 const EXPORT_LIMIT = 10_000;
 
+/** Escola de cada entrada (usada no modo "todas as escolas"). */
+export const accessLogSchoolInclude = { school: { select: { id: true, name: true } } } as const;
+
 export class AccessLogsService {
   constructor(private readonly prisma: PrismaClient) {}
 
-  async list(schoolId: number, query: ListAccessLogsQuery) {
+  /** schoolId null = todas as escolas (super admin). */
+  async list(schoolId: number | null, query: ListAccessLogsQuery) {
     const where = this.buildWhere(schoolId, query);
     const [items, total] = await this.prisma.$transaction([
       this.prisma.accessLog.findMany({
         where,
+        include: accessLogSchoolInclude,
         orderBy: { createdAt: 'desc' },
         skip: (query.page - 1) * query.pageSize,
         take: query.pageSize,
@@ -40,18 +45,27 @@ export class AccessLogsService {
     return { items, total, page: query.page, pageSize: query.pageSize };
   }
 
-  async exportCsv(schoolId: number, query: ListAccessLogsQuery) {
+  /** schoolId null = todas as escolas, com a coluna "Escola" no início. */
+  async exportCsv(schoolId: number | null, query: ListAccessLogsQuery) {
+    const allSchools = schoolId === null;
     const logs = await this.prisma.accessLog.findMany({
       where: this.buildWhere(schoolId, query),
+      include: accessLogSchoolInclude,
       orderBy: { createdAt: 'desc' },
       take: EXPORT_LIMIT,
     });
     // Prefixa com ' valores que o Excel interpretaria como fórmula (=, +, -, @, tab, CR).
     const escape = (value: string) => `"${value.replace(/^[=+\-@\t\r]/, "'$&").replace(/"/g, '""')}"`;
-    const lines = logs.map((log) =>
-      [escape(log.studentName), log.createdAt.toISOString(), log.method === AccessMethod.FINGERPRINT ? 'Digital' : 'Manual'].join(';'),
-    );
-    return ['Nome;Data/Hora (UTC);Método', ...lines].join('\n');
+    const lines = logs.map((log) => {
+      const columns = [
+        escape(log.studentName),
+        log.createdAt.toISOString(),
+        log.method === AccessMethod.FINGERPRINT ? 'Digital' : 'Manual',
+      ];
+      return (allSchools ? [escape(log.school.name), ...columns] : columns).join(';');
+    });
+    const header = allSchools ? 'Escola;Nome;Data/Hora (UTC);Método' : 'Nome;Data/Hora (UTC);Método';
+    return [header, ...lines].join('\n');
   }
 
   /** Chamado quando o Arduino responde "!found<posição>#". */
@@ -85,9 +99,9 @@ export class AccessLogsService {
     return { log, student: toStudentDto(student) };
   }
 
-  private buildWhere(schoolId: number, query: ListAccessLogsQuery): Prisma.AccessLogWhereInput {
+  private buildWhere(schoolId: number | null, query: ListAccessLogsQuery): Prisma.AccessLogWhereInput {
     return {
-      schoolId,
+      ...(schoolId === null ? {} : { schoolId }),
       createdAt: query.from || query.to ? { gte: query.from, lte: query.to } : undefined,
       studentName: query.search ? { contains: query.search, mode: 'insensitive' } : undefined,
     };
