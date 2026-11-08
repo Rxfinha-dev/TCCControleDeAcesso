@@ -451,6 +451,45 @@ export const openApiSpec = {
         },
       },
     },
+    '/api/users': {
+      get: {
+        tags: ['Usuários'],
+        summary: 'Lista os usuários (até 200, ordem alfabética)',
+        parameters: [
+          { name: 'search', in: 'query', description: 'Parte do nome ou do e-mail', schema: { type: 'string', maxLength: 100 } },
+          { name: 'role', in: 'query', description: 'Filtra por perfil', schema: ref('UserRole') },
+        ],
+        responses: {
+          200: { description: 'Usuários', content: json({ type: 'array', items: ref('UserSummary') }) },
+          400: validationError,
+          ...superAdminErrors,
+        },
+      },
+    },
+    '/api/users/{id}': {
+      parameters: [idParam],
+      patch: {
+        tags: ['Usuários'],
+        summary: 'Altera o perfil (login de escola ou super admin)',
+        requestBody: {
+          required: true,
+          content: json({
+            type: 'object',
+            required: ['role'],
+            properties: { role: { type: 'string', enum: ['SCHOOL', 'SUPER_ADMIN'] } },
+          }),
+        },
+        responses: {
+          200: { description: 'Usuário atualizado', content: json(ref('UserSummary')) },
+          400: errorResponse('Dados inválidos (`VALIDATION_ERROR`) ou usuário sem escola para virar login de escola (`SCHOOL_REQUIRED`)'),
+          404: errorResponse('Usuário não encontrado (`USER_NOT_FOUND`)'),
+          409: errorResponse(
+            'Rebaixar a si mesmo (`CANNOT_DEMOTE_SELF`), o último super admin (`LAST_SUPER_ADMIN`) ou escola que já tem login (`SCHOOL_HAS_LOGIN`)',
+          ),
+          ...superAdminErrors,
+        },
+      },
+    },
   },
   components: {
     securitySchemes: {
@@ -528,6 +567,17 @@ export const openApiSpec = {
         },
       },
       UserRole: { type: 'string', enum: ['SUPER_ADMIN', 'SCHOOL', 'STUDENT', 'EMPLOYEE', 'TEACHER'] },
+      UserSummary: {
+        type: 'object',
+        properties: {
+          id: { type: 'integer', example: 1 },
+          name: { type: 'string', example: 'ETEC Exemplo' },
+          email: { type: 'string', format: 'email' },
+          role: ref('UserRole'),
+          school: { type: 'object', nullable: true, properties: { id: { type: 'integer' }, name: { type: 'string' } } },
+          createdAt: { type: 'string', format: 'date-time' },
+        },
+      },
       Me: {
         type: 'object',
         properties: {

@@ -52,8 +52,13 @@ export interface TestAppOptions {
 export function buildTestApp({ user = schoolUser }: TestAppOptions = {}) {
   const prisma = mockDeep<PrismaClient>() as DeepMockProxy<PrismaClient>;
   // Executa as operações recebidas em $transaction([...]) como Promise.all.
+  // Transações interativas recebem o próprio mock como cliente da transação.
   prisma.$transaction.mockImplementation(((operations: unknown) =>
-    Array.isArray(operations) ? Promise.all(operations) : Promise.resolve(operations)) as never);
+    Array.isArray(operations)
+      ? Promise.all(operations)
+      : typeof operations === 'function'
+        ? operations(prisma)
+        : Promise.resolve(operations)) as never);
   // O middleware de autenticação busca o usuário logado (com a escola) a cada requisição.
   prisma.user.findUnique.mockResolvedValue({ ...user, school: user.schoolId === school.id ? school : null } as never);
   const identity = new FakeIdentity();

@@ -21,6 +21,8 @@ import { SchoolsService } from './modules/schools/schools.service';
 import { CoursesService } from './modules/courses/courses.service';
 import { statsRoutes } from './modules/stats/stats.routes';
 import { studentsRoutes } from './modules/students/students.routes';
+import { usersRoutes } from './modules/users/users.routes';
+import { UsersService } from './modules/users/users.service';
 import { StudentsService } from './modules/students/students.service';
 import type { IdentityProvider } from './services/identity';
 import type { PhotoStorage } from './services/storage';
@@ -115,6 +117,7 @@ export function createApp({ prisma, identity, storage }: AppDependencies) {
   // Gestão global: só super admin, sem escola em uso.
   const superAdminOnly = [apiRateLimit, requireAuth, requireRole('SUPER_ADMIN')];
   app.use('/api/schools', ...superAdminOnly, schoolsRoutes(new SchoolsService(prisma, storage)));
+  app.use('/api/users', ...superAdminOnly, usersRoutes(new UsersService(prisma)));
 
   app.use(notFoundHandler);
   app.use(errorHandler);
