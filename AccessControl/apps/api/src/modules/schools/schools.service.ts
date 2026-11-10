@@ -58,9 +58,10 @@ export class SchoolsService {
   }
 
   /**
-   * Apaga a escola e, em cascata, cursos, alunos e entradas. As fotos no storage são
-   * removidas antes (sem travar a exclusão: falhas só são logadas) para não deixar
-   * fotos de alunos órfãs. O login SCHOOL da escola é apagado; super admins ficam sem escola padrão.
+   * Apaga a escola e, em cascata, cursos, alunos, turmas e entradas. As fotos no storage são
+   * removidas depois que o banco confirma (sem travar a exclusão: falhas só são logadas), para
+   * não apagar fotos de alunos que continuam existindo. O login SCHOOL da escola é apagado;
+   * super admins ficam sem escola padrão.
    */
   async remove(id: number) {
     await this.findOrThrow(id);
@@ -68,6 +69,15 @@ export class SchoolsService {
       where: { schoolId: id, photoKey: { not: null } },
       select: { id: true, photoKey: true },
     });
+    // students.course_id é ON DELETE RESTRICT: os alunos saem antes, para a cascata de cursos não falhar.
+    // Atribuições e blocos da grade apontam para professores/disciplinas com NO ACTION, que o Postgres
+    // confere logo após a cascata deles: as turmas (e com elas atribuições e grade) saem antes.
+    await this.prisma.$transaction([
+      this.prisma.user.deleteMany({ where: { schoolId: id, role: UserRole.SCHOOL } }),
+      this.prisma.student.deleteMany({ where: { schoolId: id } }),
+      this.prisma.classGroup.deleteMany({ where: { schoolId: id } }),
+      this.prisma.school.delete({ where: { id } }),
+    ]);
     for (const student of students) {
       try {
         await this.storage.remove(student.id, student.photoKey as string);
@@ -75,12 +85,6 @@ export class SchoolsService {
         logger.warn({ err, studentId: student.id, schoolId: id }, 'exclusão de escola: falha ao remover foto do storage');
       }
     }
-    // students.course_id é ON DELETE RESTRICT: os alunos saem antes, para a cascata de cursos não falhar.
-    await this.prisma.$transaction([
-      this.prisma.user.deleteMany({ where: { schoolId: id, role: UserRole.SCHOOL } }),
-      this.prisma.student.deleteMany({ where: { schoolId: id } }),
-      this.prisma.school.delete({ where: { id } }),
-    ]);
   }
 
   private async findOrThrow(id: number) {

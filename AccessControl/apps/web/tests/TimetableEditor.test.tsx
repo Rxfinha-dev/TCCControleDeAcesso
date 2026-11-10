@@ -1,4 +1,4 @@
-import { screen, waitFor } from '@testing-library/react';
+import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { bodyOf, callsTo, jsonResponse, mockApi, renderAt } from './harness';
 import { setMockSession } from './mocks/supabase';
@@ -64,6 +64,65 @@ describe('Editor da grade', () => {
     });
   });
 
+  it('pelo teclado, a aula entra depois da última aula do dia (não em 00:00)', async () => {
+    const fetchMock = setup({ validFrom: '2026-02-01', blocks: [lesson(1, 450, 500)], warnings: [] });
+    await openGrade();
+
+    // Enter num botão gera um clique sem posição (clientY 0, detail 0); a coluna fica abaixo do topo da tela.
+    const column = await screen.findByRole('button', { name: 'Colocar em Seg' });
+    column.getBoundingClientRect = () => ({ top: 300, bottom: 732, left: 0, right: 100, width: 100, height: 432, x: 0, y: 300, toJSON: () => ({}) });
+    screen.getByRole('button', { name: /^MAT Matemática/ }).focus();
+    await userEvent.keyboard('{Enter}');
+    column.focus();
+    await userEvent.keyboard('{Enter}');
+    await userEvent.click(screen.getByRole('button', { name: 'Salvar grade' }));
+
+    await waitFor(() => expect(callsTo(fetchMock, '/class-groups/3/timetable', 'PUT')).toHaveLength(1));
+    expect(bodyOf(callsTo(fetchMock, '/class-groups/3/timetable', 'PUT')[0]).blocks[1]).toMatchObject({ startMinute: 500, endMinute: 550 });
+  });
+
+  it('se a grade não carregar, não deixa salvar por cima', async () => {
+    mockApi((path, method) => {
+      if (path === '/class-groups/3' && method === 'GET') return jsonResponse(200, DETAIL);
+      if (path === '/class-groups/3/students') return jsonResponse(200, []);
+      if (path === '/class-groups/3/timetable') return jsonResponse(500, { message: 'Erro interno' });
+      if (path.startsWith('/class-groups')) return jsonResponse(200, [DETAIL]);
+      return undefined;
+    });
+    await openGrade();
+
+    expect(await screen.findByText(/Não foi possível carregar a grade/)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Salvar grade' })).toBeDisabled();
+  });
+
+  it('pointercancel encerra o redimensionamento', async () => {
+    const fetchMock = setup({ validFrom: '2026-02-01', blocks: [lesson(1, 450, 500)], warnings: [] });
+    await openGrade();
+
+    const block = await screen.findByRole('button', { name: /^Matemática, Seg/ });
+    fireEvent.pointerDown(block.querySelector('.tt-handle.bottom')!);
+    fireEvent.pointerCancel(window);
+    fireEvent.pointerMove(window, { clientY: 900 });
+    await userEvent.click(screen.getByRole('button', { name: 'Salvar grade' }));
+
+    await waitFor(() => expect(callsTo(fetchMock, '/class-groups/3/timetable', 'PUT')).toHaveLength(1));
+    expect(bodyOf(callsTo(fetchMock, '/class-groups/3/timetable', 'PUT')[0]).blocks[0]).toMatchObject({ startMinute: 450, endMinute: 500 });
+  });
+
+  it('trocar de aba não perde a grade em edição', async () => {
+    const fetchMock = setup();
+    await openGrade();
+
+    await userEvent.click(await screen.findByRole('button', { name: /^MAT Matemática/ }));
+    await userEvent.click(screen.getByRole('button', { name: 'Colocar em Seg' }));
+    await userEvent.click(screen.getByRole('tab', { name: 'Alunos' }));
+    await userEvent.click(screen.getByRole('tab', { name: 'Grade' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Salvar grade' }));
+
+    await waitFor(() => expect(callsTo(fetchMock, '/class-groups/3/timetable', 'PUT')).toHaveLength(1));
+    expect(bodyOf(callsTo(fetchMock, '/class-groups/3/timetable', 'PUT')[0]).blocks).toHaveLength(1);
+  });
+
   it('com aulas sobrepostas o botão Salvar fica desativado', async () => {
     setup({ validFrom: '2026-02-01', blocks: [lesson(1, 450, 500), lesson(2, 480, 530)], warnings: [] });
     await openGrade();
@@ -98,7 +157,7 @@ describe('Editor da grade', () => {
     await openGrade();
 
     expect(await screen.findByText('Para editar a grade, use uma tela maior.')).toBeInTheDocument();
-    expect(screen.getByText('MAT')).toBeInTheDocument();
+    expect(within(screen.getByRole('tabpanel', { name: 'Grade' })).getByText('MAT')).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /Intervalo/ })).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Salvar grade' })).not.toBeInTheDocument();
   });

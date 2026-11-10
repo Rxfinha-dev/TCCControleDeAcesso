@@ -143,6 +143,32 @@ describe('Escolas (super admin)', () => {
     expect(prisma.student.deleteMany.mock.invocationCallOrder[0]).toBeLessThan(prisma.school.delete.mock.invocationCallOrder[0]);
   });
 
+  it('excluir apaga as turmas antes da escola na mesma transação', async () => {
+    const { app, prisma } = buildTestApp({ user: superAdmin });
+    prisma.school.findUnique.mockResolvedValue(school);
+    prisma.student.findMany.mockResolvedValue([]);
+
+    const res = await request(app).delete(`/api/schools/${school.id}`).set('Authorization', authHeader());
+
+    expect(res.status).toBe(204);
+    // Atribuições e blocos da grade apontam para professores/disciplinas com NO ACTION: saem junto com as turmas, antes.
+    expect(prisma.classGroup.deleteMany).toHaveBeenCalledWith({ where: { schoolId: school.id } });
+    expect(prisma.classGroup.deleteMany.mock.invocationCallOrder[0]).toBeLessThan(prisma.school.delete.mock.invocationCallOrder[0]);
+  });
+
+  it('excluir não apaga as fotos se a exclusão no banco falhar', async () => {
+    const { app, prisma, storage } = buildTestApp({ user: superAdmin });
+    prisma.school.findUnique.mockResolvedValue(school);
+    prisma.student.findMany.mockResolvedValue([{ id: 10, photoKey: 'mem:10' }] as never);
+    prisma.$transaction.mockRejectedValue(new Error('violação de chave estrangeira'));
+    const removeSpy = jest.spyOn(storage, 'remove');
+
+    const res = await request(app).delete(`/api/schools/${school.id}`).set('Authorization', authHeader());
+
+    expect(res.status).toBe(500);
+    expect(removeSpy).not.toHaveBeenCalled();
+  });
+
   it('excluir segue mesmo se o storage falhar', async () => {
     const { app, prisma, storage } = buildTestApp({ user: superAdmin });
     prisma.school.findUnique.mockResolvedValue(school);

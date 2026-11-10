@@ -2450,6 +2450,7 @@ button.tt-block {
   right: 0;
   height: 7px;
   cursor: ns-resize;
+  touch-action: none;
 }
 
 .tt-handle.top {

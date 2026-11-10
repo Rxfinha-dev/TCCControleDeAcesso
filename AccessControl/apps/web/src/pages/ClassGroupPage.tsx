@@ -67,10 +67,15 @@ export function ClassGroupPage() {
         ))}
       </div>
 
-      <div role="tabpanel" id={`panel-${tab}`} aria-labelledby={`tab-${tab}`}>
-        {tab === 'alunos' && <StudentsTab classGroupId={id} onChange={loadGroup} />}
-        {tab === 'disciplinas' && group && <AssignmentsTab group={group} onChange={loadGroup} />}
-        {tab === 'grade' && group && <TimetableEditor classGroup={group} />}
+      {/* As abas ficam montadas (só escondidas) para a grade em edição não se perder ao trocar de aba. */}
+      <div role="tabpanel" id="panel-alunos" aria-labelledby="tab-alunos" hidden={tab !== 'alunos'}>
+        <StudentsTab classGroupId={id} onChange={loadGroup} />
+      </div>
+      <div role="tabpanel" id="panel-disciplinas" aria-labelledby="tab-disciplinas" hidden={tab !== 'disciplinas'}>
+        {group && <AssignmentsTab group={group} onChange={loadGroup} />}
+      </div>
+      <div role="tabpanel" id="panel-grade" aria-labelledby="tab-grade" hidden={tab !== 'grade'}>
+        {group && <TimetableEditor classGroup={group} />}
       </div>
     </>
   );

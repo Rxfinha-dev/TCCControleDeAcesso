@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useReducer, useState, type CSSProperties } from 'react';
+import { useEffect, useMemo, useReducer, useRef, useState, type CSSProperties } from 'react';
 import { classGroupsApi } from '../../api';
 import { errorMessage } from '../../api/client';
 import type { ClassGroup, ClassGroupDetail, TeacherConflict, TimetableBlockInput } from '../../api/types';
@@ -18,6 +18,7 @@ export function TimetableEditor({ classGroup }: { classGroup: ClassGroupDetail }
   const readOnly = useMediaQuery('(max-width: 899px)');
   const [blocks, dispatch] = useReducer(timetableReducer, []);
   const [loading, setLoading] = useState(true);
+  const [loadFailed, setLoadFailed] = useState(false);
   const [validFrom, setValidFrom] = useState<string | null>(null);
   const [warnings, setWarnings] = useState<TeacherConflict[]>([]);
   const [armed, setArmed] = useState<PaletteItem | null>(null);
@@ -35,18 +36,25 @@ export function TimetableEditor({ classGroup }: { classGroup: ClassGroupDetail }
     [classGroup.assignments],
   );
   const allowed = useMemo(() => new Set(subjects.keys()), [subjects]);
+  // A grade só é lida ao abrir a turma: mudar as atribuições em outra aba não pode apagar a edição em curso.
+  const allowedRef = useRef(allowed);
+  allowedRef.current = allowed;
 
   useEffect(() => {
     classGroupsApi
       .timetable(classGroup.id)
       .then((timetable) => {
-        dispatch({ type: 'replace', blocks: fromTimetable(timetable.blocks, allowed).blocks });
+        dispatch({ type: 'replace', blocks: fromTimetable(timetable.blocks, allowedRef.current).blocks });
         setValidFrom(timetable.validFrom);
         setWarnings(timetable.warnings);
       })
-      .catch((err) => toast.error(errorMessage(err)))
+      .catch((err) => {
+        // Sem a grade atual, salvar gravaria uma grade vazia por cima da verdadeira.
+        setLoadFailed(true);
+        toast.error(errorMessage(err));
+      })
       .finally(() => setLoading(false));
-  }, [classGroup.id, allowed, toast]);
+  }, [classGroup.id, toast]);
 
   useEffect(() => {
     if (readOnly) return;
@@ -124,7 +132,9 @@ export function TimetableEditor({ classGroup }: { classGroup: ClassGroupDetail }
     />
   );
 
-  const since = validFrom ? `Grade em vigor desde ${validFrom.split('-').reverse().join('/')}.` : 'Esta turma ainda não tem grade salva.';
+  const since = loadFailed
+    ? 'Não foi possível carregar a grade. Recarregue a página para tentar de novo.'
+    : validFrom ? `Grade em vigor desde ${validFrom.split('-').reverse().join('/')}.` : 'Esta turma ainda não tem grade salva.';
 
   if (readOnly) {
     return (
@@ -142,7 +152,7 @@ export function TimetableEditor({ classGroup }: { classGroup: ClassGroupDetail }
         <p className="hint">{since} Ao salvar, a nova grade vale a partir de hoje.</p>
         <div className="tt-actions">
           {overlaps.size > 0 && <span className="tt-overlap-note">Há aulas sobrepostas</span>}
-          <button type="button" className="btn btn-primary" disabled={saving || loading || overlaps.size > 0} onClick={handleSave}>
+          <button type="button" className="btn btn-primary" disabled={saving || loading || loadFailed || overlaps.size > 0} onClick={handleSave}>
             Salvar grade
           </button>
         </div>

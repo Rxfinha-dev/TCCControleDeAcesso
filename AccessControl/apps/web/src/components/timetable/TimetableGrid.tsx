@@ -68,12 +68,15 @@ export function TimetableGrid(props: TimetableGridProps) {
     const column = event.currentTarget.closest('.tt-day-body');
     if (!column) return;
     const onMove = (move: globalThis.PointerEvent) => props.onResize(key, edge, minuteAt(column, move.clientY));
+    // pointercancel (toque que vira rolagem, arrasto nativo) também encerra, senão o bloco segue o ponteiro.
     const onUp = () => {
       window.removeEventListener('pointermove', onMove);
       window.removeEventListener('pointerup', onUp);
+      window.removeEventListener('pointercancel', onUp);
     };
     window.addEventListener('pointermove', onMove);
     window.addEventListener('pointerup', onUp);
+    window.addEventListener('pointercancel', onUp);
   }
 
   return (
@@ -109,9 +112,15 @@ export function TimetableGrid(props: TimetableGridProps) {
               type="button"
               className="tt-drop"
               aria-label={`Colocar em ${WEEKDAY_LABELS[weekday - 1]}`}
-              onClick={(event: MouseEvent<HTMLButtonElement>) =>
-                armed ? props.onPlace(weekday, minuteAt(event.currentTarget, event.clientY)) : props.onSelect(null)
-              }
+              onClick={(event: MouseEvent<HTMLButtonElement>) => {
+                if (!armed) return props.onSelect(null);
+                // Clique pelo teclado (detail 0) não tem posição: a aula entra depois da última do dia.
+                const minute =
+                  event.detail === 0
+                    ? Math.max(range.from, ...blocks.filter((block) => block.weekday === weekday).map((block) => block.endMinute))
+                    : minuteAt(event.currentTarget, event.clientY);
+                props.onPlace(weekday, minute);
+              }}
             />
           )}
           {blocks
