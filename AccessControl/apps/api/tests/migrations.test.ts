@@ -33,3 +33,15 @@ describe('Migration academic_structure', () => {
     );
   });
 });
+
+describe('Migration student_optional_course', () => {
+  const sql = readFileSync(
+    join(__dirname, '../prisma/migrations/20261109000100_student_optional_course/migration.sql'),
+    'utf-8',
+  );
+
+  it('torna curso e série do aluno opcionais', () => {
+    expect(sql).toMatch(/ALTER COLUMN "course_id" DROP NOT NULL/);
+    expect(sql).toMatch(/ALTER COLUMN "year" DROP NOT NULL/);
+  });
+});

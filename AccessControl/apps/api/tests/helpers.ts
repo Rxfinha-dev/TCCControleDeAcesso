@@ -98,7 +98,7 @@ export const superAdmin: User = {
 
 export const authHeader = () => `Bearer ${VALID_TOKEN}`;
 
-export function makeStudent(overrides: Partial<Student> = {}): Student & { course: { id: number; name: string } } {
+export function makeStudent(overrides: Partial<Student> = {}): Student & { course: { id: number; name: string } | null } {
   return {
     id: 10,
     name: 'Ana Souza',

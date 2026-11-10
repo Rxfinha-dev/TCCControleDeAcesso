@@ -93,8 +93,8 @@ export function StudentsPage() {
       name: student.name,
       rm: student.rm,
       age: String(student.age),
-      year: student.year,
-      courseId: String(student.course.id),
+      year: student.year ?? '',
+      courseId: student.course ? String(student.course.id) : '',
       photo: null,
     });
   };
@@ -110,8 +110,8 @@ export function StudentsPage() {
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
-    if (!form.name || !form.rm || !form.age || !form.year || !form.courseId || (!selected && !form.photo)) {
-      toast.error('Preencha todos os campos e escolha uma foto.');
+    if (!form.name || !form.rm || !form.age || (!selected && !form.photo)) {
+      toast.error('Preencha nome, RM e idade e escolha uma foto.');
       return;
     }
     setSaving(true);
@@ -190,7 +190,7 @@ export function StudentsPage() {
           <label className="field">
             <span>Curso</span>
             <select value={form.courseId} onChange={update('courseId')}>
-              <option value="">Selecione</option>
+              <option value="">Sem curso</option>
               {courses.map((course) => (
                 <option key={course.id} value={course.id}>
                   {course.name}
@@ -210,7 +210,7 @@ export function StudentsPage() {
             <label className="field">
               <span>Série</span>
               <select value={form.year} onChange={update('year')}>
-                <option value="">Selecione</option>
+                <option value="">Sem série</option>
                 {YEAR_OPTIONS.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
@@ -219,7 +219,7 @@ export function StudentsPage() {
               </select>
             </label>
           </div>
-          {courses.length === 0 && <p className="hint">Cadastre um curso antes de cadastrar alunos.</p>}
+          {courses.length === 0 && <p className="hint">Curso e série são opcionais: escolas sem curso técnico organizam os alunos por turma.</p>}
 
           <div className="form-actions">
             <button type="submit" className="btn btn-primary" disabled={saving}>
@@ -304,7 +304,7 @@ export function StudentsPage() {
                     </span>
                   </td>
                   <td className="nowrap">{yearLabel(student.year)}</td>
-                  <td>{student.course.name}</td>
+                  <td>{student.course?.name ?? '—'}</td>
                   <td>
                     <span className={`badge ${student.fingerprintEnrolled ? 'badge-success' : 'badge-warning'}`}>
                       {student.fingerprintEnrolled ? 'Cadastrada' : 'Pendente'}

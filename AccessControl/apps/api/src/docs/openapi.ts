@@ -58,13 +58,13 @@ const schoolNotFound = errorResponse('Escola não encontrada (`SCHOOL_NOT_FOUND`
 
 const studentFields = {
   type: 'object',
-  required: ['name', 'rm', 'age', 'year', 'courseId'],
+  required: ['name', 'rm', 'age'],
   properties: {
     name: { type: 'string', minLength: 2, maxLength: 100, example: 'Maria Souza' },
     rm: { type: 'string', minLength: 1, maxLength: 8, pattern: '^[A-Za-z0-9]+$', example: '12345' },
     age: { type: 'integer', minimum: 1, maximum: 120, example: 16 },
-    year: ref('SchoolYear'),
-    courseId: { type: 'integer', minimum: 1, example: 1 },
+    year: { allOf: [ref('SchoolYear')], nullable: true, description: 'Opcional (vazio = sem série)' },
+    courseId: { type: 'integer', minimum: 1, nullable: true, example: 1, description: 'Opcional (vazio = sem curso)' },
     photo: { type: 'string', format: 'binary', description: 'Foto do aluno (JPEG, PNG, WebP ou BMP, até 2 MB)' },
   },
 };
@@ -621,9 +621,10 @@ export const openApiSpec = {
           name: { type: 'string', example: 'Maria Souza' },
           rm: { type: 'string', example: '12345' },
           age: { type: 'integer', example: 16 },
-          year: ref('SchoolYear'),
+          year: { allOf: [ref('SchoolYear')], nullable: true },
           course: {
             type: 'object',
+            nullable: true,
             properties: { id: { type: 'integer', example: 1 }, name: { type: 'string', example: 'Informática' } },
           },
           hasPhoto: { type: 'boolean' },

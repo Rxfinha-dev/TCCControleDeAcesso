@@ -61,8 +61,9 @@ export interface Student {
   name: string;
   rm: string;
   age: number;
-  year: SchoolYear;
-  course: Pick<Course, 'id' | 'name'>;
+  /** Opcional: escolas de ensino regular organizam os alunos só por turma. */
+  year: SchoolYear | null;
+  course: Pick<Course, 'id' | 'name'> | null;
   hasPhoto: boolean;
   fingerprintId: number | null;
   fingerprintEnrolled: boolean;

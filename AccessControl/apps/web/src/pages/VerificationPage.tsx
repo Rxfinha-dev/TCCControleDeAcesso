@@ -149,7 +149,7 @@ export function VerificationPage() {
                     </div>
                     <div>
                       <dt>Curso</dt>
-                      <dd>{student.course.name}</dd>
+                      <dd>{student.course?.name ?? '—'}</dd>
                     </div>
                     <div>
                       <dt>Registro</dt>

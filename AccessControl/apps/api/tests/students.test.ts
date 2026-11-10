@@ -43,6 +43,46 @@ describe('Alunos', () => {
     );
   });
 
+  it('cadastra aluno sem curso e sem série (escola de ensino regular)', async () => {
+    const { app, prisma } = buildTestApp();
+    prisma.student.findFirst.mockResolvedValue(null);
+    prisma.student.create.mockResolvedValue(makeStudent({ photoKey: null, courseId: null, year: null }) as never);
+    prisma.student.update.mockResolvedValue(makeStudent({ courseId: null, year: null }) as never);
+
+    const res = await request(app)
+      .post('/api/students')
+      .set('Authorization', authHeader())
+      .field('name', 'Ana Souza')
+      .field('rm', '24001')
+      .field('age', '16')
+      .field('year', '')
+      .attach('photo', PNG, { filename: 'ana.png', contentType: 'image/png' });
+
+    expect(res.status).toBe(201);
+    expect(prisma.course.findFirst).not.toHaveBeenCalled();
+    expect(prisma.student.create).toHaveBeenCalledWith(
+      expect.objectContaining({ data: expect.objectContaining({ courseId: null, year: null }) }),
+    );
+  });
+
+  it('recusa curso de outra escola', async () => {
+    const { app, prisma } = buildTestApp();
+    prisma.course.findFirst.mockResolvedValue(null);
+
+    const res = await request(app)
+      .post('/api/students')
+      .set('Authorization', authHeader())
+      .field('name', 'Ana Souza')
+      .field('rm', '24001')
+      .field('age', '16')
+      .field('courseId', '99')
+      .attach('photo', PNG, { filename: 'ana.png', contentType: 'image/png' });
+
+    expect(res.status).toBe(400);
+    expect(res.body.code).toBe('INVALID_COURSE');
+    expect(prisma.course.findFirst).toHaveBeenCalledWith({ where: { id: 99, schoolId: school.id } });
+  });
+
   it('exige foto no cadastro (como no sistema legado)', async () => {
     const { app } = buildTestApp();
     const res = await request(app)

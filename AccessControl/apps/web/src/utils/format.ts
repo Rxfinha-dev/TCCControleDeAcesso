@@ -6,7 +6,8 @@ export const YEAR_OPTIONS: { value: SchoolYear; label: string }[] = [
   { value: 'THIRD', label: '3º Ano' },
 ];
 
-export const yearLabel = (year: SchoolYear) => YEAR_OPTIONS.find((option) => option.value === year)?.label ?? year;
+export const yearLabel = (year: SchoolYear | null) =>
+  year === null ? '—' : (YEAR_OPTIONS.find((option) => option.value === year)?.label ?? year);
 
 /** Primeiro nome exibido no menu (como no frmMainMenu legado). */
 export const firstName = (fullName: string) => fullName.trim().split(/\s+/)[0] ?? '';

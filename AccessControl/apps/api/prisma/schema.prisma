@@ -104,24 +104,26 @@ model Course {
 }
 
 model Student {
-  id                    Int        @id @default(autoincrement())
-  name                  String     @db.VarChar(100)
-  rm                    String     @db.VarChar(8)
+  id                    Int         @id @default(autoincrement())
+  name                  String      @db.VarChar(100)
+  rm                    String      @db.VarChar(8)
   age                   Int
-  year                  SchoolYear
-  courseId              Int        @map("course_id")
-  schoolId              Int        @map("school_id")
+  /// Série fixa (1º/2º/3º). Opcional: escolas de ensino regular usam só a turma.
+  year                  SchoolYear?
+  /// Curso técnico. Opcional: escolas de ensino regular não têm.
+  courseId              Int?        @map("course_id")
+  schoolId              Int         @map("school_id")
   /// Caminho da foto no storage (Supabase Storage ou tabela student_photos).
-  photoKey              String?    @map("photo_key") @db.VarChar(255)
+  photoKey              String?     @map("photo_key") @db.VarChar(255)
   /// Posição da digital no sensor biométrico do Arduino (1..127).
-  fingerprintId         Int?       @map("fingerprint_id")
+  fingerprintId         Int?        @map("fingerprint_id")
   /// Preenchido quando o Arduino confirma o cadastro da digital ("!enrolled<id>#").
-  fingerprintEnrolledAt DateTime?  @map("fingerprint_enrolled_at")
-  createdAt             DateTime   @default(now()) @map("created_at")
-  updatedAt             DateTime   @updatedAt @map("updated_at")
+  fingerprintEnrolledAt DateTime?   @map("fingerprint_enrolled_at")
+  createdAt             DateTime    @default(now()) @map("created_at")
+  updatedAt             DateTime    @updatedAt @map("updated_at")
 
   school      School        @relation(fields: [schoolId], references: [id], onDelete: Cascade)
-  course      Course        @relation(fields: [courseId], references: [id], onDelete: Restrict)
+  course      Course?       @relation(fields: [courseId], references: [id], onDelete: Restrict)
   photo       StudentPhoto?
   accessLogs  AccessLog[]
   enrollments Enrollment[]

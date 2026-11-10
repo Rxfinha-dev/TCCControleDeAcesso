@@ -3,7 +3,7 @@ import { badRequest, conflict, notFound } from '../../lib/errors';
 import type { PhotoStorage, StoredPhoto } from '../../services/storage';
 import { MAX_FINGERPRINT_SLOTS, type ListStudentsQuery, type StudentInput } from './students.schemas';
 
-type StudentWithCourse = Student & { course: Pick<Course, 'id' | 'name'> };
+type StudentWithCourse = Student & { course: Pick<Course, 'id' | 'name'> | null };
 
 const withCourse = { course: { select: { id: true, name: true } } } satisfies Prisma.StudentInclude;
 
@@ -148,7 +148,8 @@ export class StudentsService {
     return student;
   }
 
-  private async ensureCourse(schoolId: number, courseId: number) {
+  private async ensureCourse(schoolId: number, courseId: number | null) {
+    if (courseId === null) return;
     const course = await this.prisma.course.findFirst({ where: { id: courseId, schoolId } });
     if (!course) throw badRequest('Curso inválido', 'INVALID_COURSE');
   }
