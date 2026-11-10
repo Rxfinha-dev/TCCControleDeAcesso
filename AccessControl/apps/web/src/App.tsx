@@ -6,6 +6,8 @@ import { AuthProvider, PANEL_ROLES, useAuth } from './contexts/AuthContext';
 import { SerialProvider } from './contexts/SerialContext';
 import { ToastProvider } from './contexts/ToastContext';
 import { AccessLogsPage } from './pages/AccessLogsPage';
+import { ClassGroupPage } from './pages/ClassGroupPage';
+import { ClassGroupsPage } from './pages/ClassGroupsPage';
 import { CoursesPage } from './pages/CoursesPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
@@ -91,6 +93,22 @@ export function AppRoutes() {
             element={
               <RequireSchool>
                 <CoursesPage />
+              </RequireSchool>
+            }
+          />
+          <Route
+            path="/turmas"
+            element={
+              <RequireSchool>
+                <ClassGroupsPage />
+              </RequireSchool>
+            }
+          />
+          <Route
+            path="/turmas/:id"
+            element={
+              <RequireSchool>
+                <ClassGroupPage />
               </RequireSchool>
             }
           />
