@@ -6,6 +6,7 @@ import type { ClassGroupDetail, ClassGroupStudent, Student, Subject, Teacher } f
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import { ArrowLeftIcon } from '../components/Icons';
 import { PageHeader } from '../components/PageHeader';
+import { TimetableEditor } from '../components/timetable/TimetableEditor';
 import { useToast } from '../contexts/ToastContext';
 import { SHIFT_LABELS } from '../utils/academic';
 import { formatDate } from '../utils/format';
@@ -69,11 +70,7 @@ export function ClassGroupPage() {
       <div role="tabpanel" id={`panel-${tab}`} aria-labelledby={`tab-${tab}`}>
         {tab === 'alunos' && <StudentsTab classGroupId={id} onChange={loadGroup} />}
         {tab === 'disciplinas' && group && <AssignmentsTab group={group} onChange={loadGroup} />}
-        {tab === 'grade' && group && (
-          <section className="card">
-            <p className="muted">A grade semanal aparece aqui.</p>
-          </section>
-        )}
+        {tab === 'grade' && group && <TimetableEditor classGroup={group} />}
       </div>
     </>
   );

@@ -2178,3 +2178,303 @@ select:disabled {
   border-bottom-color: var(--sky);
   color: var(--ink);
 }
+
+/* ---------- Grade semanal ---------- */
+.tt-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.tt-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.tt-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.tt-overlap-note {
+  color: var(--danger);
+  font-weight: 600;
+}
+
+.tt-warnings {
+  margin: 0;
+  padding: 10px 14px 10px 30px;
+  border: 1px solid color-mix(in srgb, var(--warning) 40%, transparent);
+  border-radius: var(--radius-sm);
+  background: var(--warning-soft);
+  color: var(--ink);
+}
+
+.tt-editor {
+  display: grid;
+  grid-template-columns: 230px minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.tt-palette {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: sticky;
+  top: 16px;
+}
+
+.tt-palette ul {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tt-palette-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 44px;
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  cursor: grab;
+}
+
+.tt-palette-item:hover {
+  border-color: var(--sky-line);
+}
+
+.tt-palette-item[aria-pressed='true'] {
+  border-color: var(--sky);
+  background: var(--sky-soft);
+}
+
+.tt-palette-name {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.tt-palette-name small {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.tt-selected {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+}
+
+.tt-selected h3 {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.tt-selected .btn {
+  align-self: flex-start;
+}
+
+.tt-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  cursor: pointer;
+}
+
+.tt-check input {
+  width: auto;
+  min-height: 0;
+  accent-color: var(--sky-ink);
+}
+
+.tt-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tt-copy .btn {
+  align-self: flex-start;
+}
+
+.tt-scroll {
+  overflow-x: auto;
+}
+
+.tt-grid {
+  display: grid;
+  grid-template-columns: 52px repeat(var(--days), minmax(104px, 1fr));
+  min-width: calc(52px + var(--days) * 104px);
+}
+
+.tt-day-head {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.tt-axis {
+  position: relative;
+}
+
+.tt-axis span {
+  position: absolute;
+  right: 8px;
+  transform: translateY(-50%);
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.tt-axis span:first-child {
+  transform: none;
+}
+
+.tt-axis span:last-child {
+  transform: translateY(-100%);
+}
+
+/* Cada dia é uma faixa do cartão: fio fino a cada hora. */
+.tt-day-body {
+  position: relative;
+  border-left: 1px solid var(--line);
+  background-image: repeating-linear-gradient(to bottom, var(--line) 0 1px, transparent 1px var(--hour));
+}
+
+.tt-drop {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  border: none;
+  background: transparent;
+  cursor: default;
+}
+
+.tt-grid.armed .tt-drop {
+  background: color-mix(in srgb, var(--sky-soft) 55%, transparent);
+  cursor: copy;
+}
+
+.tt-block {
+  position: absolute;
+  left: 4px;
+  right: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  overflow: hidden;
+  padding: 4px 8px;
+  border: 1.5px solid var(--subject);
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--subject) 16%, var(--surface));
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.8rem;
+  line-height: 1.2;
+  text-align: left;
+}
+
+button.tt-block {
+  cursor: grab;
+}
+
+.tt-block strong {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.tt-time {
+  font-size: 0.75rem;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+
+.tt-teacher {
+  overflow: hidden;
+  color: var(--muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tt-block.break {
+  border-style: dashed;
+  border-color: var(--muted);
+  background: repeating-linear-gradient(-45deg, var(--surface) 0 6px, var(--paper) 6px 12px);
+}
+
+.tt-block.selected {
+  outline: 2px solid var(--sky);
+  outline-offset: 1px;
+  z-index: 1;
+}
+
+/* Sobreposição é erro: tinta vermelha, e o salvar fica travado. */
+.tt-block.overlap {
+  border: 2px solid var(--danger);
+  background: var(--danger-soft);
+}
+
+.tt-handle {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 7px;
+  cursor: ns-resize;
+}
+
+.tt-handle.top {
+  top: -2px;
+}
+
+.tt-handle.bottom {
+  bottom: -2px;
+}
+
+@media (max-width: 1100px) {
+  .tt-editor {
+    grid-template-columns: 1fr;
+  }
+
+  .tt-palette {
+    position: static;
+  }
+
+  .tt-palette ul {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .tt-palette-item {
+    width: auto;
+  }
+}
