@@ -34,6 +34,20 @@ enum UserRole {
   TEACHER
 }
 
+/// Turno da turma.
+enum Shift {
+  MORNING
+  AFTERNOON
+  EVENING
+  FULL_TIME
+}
+
+/// Tipo de bloco da grade: aula (conta presença) ou intervalo (só exibição).
+enum TimetableSlotKind {
+  LESSON
+  BREAK
+}
+
 /// Usuário do sistema, ligado ao Supabase Auth. O perfil vive só aqui (nunca em user_metadata).
 model User {
   id         Int      @id @default(autoincrement())
@@ -63,10 +77,13 @@ model School {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  users      User[]
-  courses    Course[]
-  students   Student[]
-  accessLogs AccessLog[]
+  users       User[]
+  courses     Course[]
+  students    Student[]
+  accessLogs  AccessLog[]
+  teachers    Teacher[]
+  subjects    Subject[]
+  classGroups ClassGroup[]
 
   @@map("schools")
 }
@@ -78,34 +95,36 @@ model Course {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  school   School    @relation(fields: [schoolId], references: [id], onDelete: Cascade)
-  students Student[]
+  school      School       @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  students    Student[]
+  classGroups ClassGroup[]
 
   @@unique([schoolId, name])
   @@map("courses")
 }
 
 model Student {
-  id            Int        @id @default(autoincrement())
-  name          String     @db.VarChar(100)
-  rm            String     @db.VarChar(8)
-  age           Int
-  year          SchoolYear
-  courseId      Int        @map("course_id")
-  schoolId      Int        @map("school_id")
+  id                    Int        @id @default(autoincrement())
+  name                  String     @db.VarChar(100)
+  rm                    String     @db.VarChar(8)
+  age                   Int
+  year                  SchoolYear
+  courseId              Int        @map("course_id")
+  schoolId              Int        @map("school_id")
   /// Caminho da foto no storage (Supabase Storage ou tabela student_photos).
-  photoKey      String?    @map("photo_key") @db.VarChar(255)
+  photoKey              String?    @map("photo_key") @db.VarChar(255)
   /// Posição da digital no sensor biométrico do Arduino (1..127).
-  fingerprintId Int?       @map("fingerprint_id")
+  fingerprintId         Int?       @map("fingerprint_id")
   /// Preenchido quando o Arduino confirma o cadastro da digital ("!enrolled<id>#").
-  fingerprintEnrolledAt DateTime? @map("fingerprint_enrolled_at")
-  createdAt     DateTime   @default(now()) @map("created_at")
-  updatedAt     DateTime   @updatedAt @map("updated_at")
+  fingerprintEnrolledAt DateTime?  @map("fingerprint_enrolled_at")
+  createdAt             DateTime   @default(now()) @map("created_at")
+  updatedAt             DateTime   @updatedAt @map("updated_at")
 
-  school     School        @relation(fields: [schoolId], references: [id], onDelete: Cascade)
-  course     Course        @relation(fields: [courseId], references: [id], onDelete: Restrict)
-  photo      StudentPhoto?
-  accessLogs AccessLog[]
+  school      School        @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  course      Course        @relation(fields: [courseId], references: [id], onDelete: Restrict)
+  photo       StudentPhoto?
+  accessLogs  AccessLog[]
+  enrollments Enrollment[]
 
   @@unique([schoolId, rm])
   @@unique([schoolId, fingerprintId])
@@ -140,4 +159,130 @@ model AccessLog {
 
   @@index([schoolId, createdAt])
   @@map("access_logs")
+}
+
+/// Professor da escola. Nesta etapa é só cadastro (o login vem depois).
+model Teacher {
+  id           Int      @id @default(autoincrement())
+  schoolId     Int      @map("school_id")
+  name         String   @db.VarChar(100)
+  contactEmail String?  @map("contact_email") @db.VarChar(120)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  school      School               @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  assignments TeachingAssignment[]
+
+  @@index([schoolId, name])
+  @@map("teachers")
+}
+
+/// Disciplina da escola, usada nas turmas e na grade.
+model Subject {
+  id           Int      @id @default(autoincrement())
+  schoolId     Int      @map("school_id")
+  name         String   @db.VarChar(60)
+  /// Sigla curta exibida na grade (ex.: "Mat.").
+  abbreviation String   @db.VarChar(8)
+  /// Cor no formato #RRGGBB.
+  color        String   @db.VarChar(7)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  school      School               @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  assignments TeachingAssignment[]
+  slots       TimetableSlot[]
+
+  @@unique([schoolId, name])
+  @@map("subjects")
+}
+
+/// Turma de um ano letivo. O curso é opcional (escolas de ensino regular não têm).
+model ClassGroup {
+  id         Int      @id @default(autoincrement())
+  schoolId   Int      @map("school_id")
+  name       String   @db.VarChar(40)
+  schoolYear Int      @map("school_year")
+  shift      Shift
+  courseId   Int?     @map("course_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  school            School               @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  course            Course?              @relation(fields: [courseId], references: [id], onDelete: SetNull)
+  enrollments       Enrollment[]
+  assignments       TeachingAssignment[]
+  timetableVersions TimetableVersion[]
+
+  @@unique([schoolId, schoolYear, name])
+  @@map("class_groups")
+}
+
+/// Matrícula do aluno numa turma, no intervalo [startDate, endDate).
+/// No máximo uma matrícula aberta por aluno e ano (índice parcial enrollments_open_key, criado na migration).
+model Enrollment {
+  id           Int       @id @default(autoincrement())
+  classGroupId Int       @map("class_group_id")
+  studentId    Int       @map("student_id")
+  schoolYear   Int       @map("school_year")
+  startDate    DateTime  @map("start_date") @db.Date
+  endDate      DateTime? @map("end_date") @db.Date
+  createdAt    DateTime  @default(now()) @map("created_at")
+
+  classGroup ClassGroup @relation(fields: [classGroupId], references: [id], onDelete: Cascade)
+  student    Student    @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([studentId, schoolYear])
+  @@index([classGroupId])
+  @@map("enrollments")
+}
+
+/// Quem leciona cada disciplina em cada turma.
+model TeachingAssignment {
+  id           Int      @id @default(autoincrement())
+  classGroupId Int      @map("class_group_id")
+  subjectId    Int      @map("subject_id")
+  teacherId    Int      @map("teacher_id")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  classGroup ClassGroup @relation(fields: [classGroupId], references: [id], onDelete: Cascade)
+  subject    Subject    @relation(fields: [subjectId], references: [id], onDelete: NoAction)
+  teacher    Teacher    @relation(fields: [teacherId], references: [id], onDelete: NoAction)
+
+  @@unique([classGroupId, subjectId])
+  @@index([teacherId])
+  @@map("teaching_assignments")
+}
+
+/// Versão da grade de uma turma. Vale a partir de validFrom até a próxima versão.
+model TimetableVersion {
+  id           Int      @id @default(autoincrement())
+  classGroupId Int      @map("class_group_id")
+  validFrom    DateTime @map("valid_from") @db.Date
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  classGroup ClassGroup      @relation(fields: [classGroupId], references: [id], onDelete: Cascade)
+  slots      TimetableSlot[]
+
+  @@unique([classGroupId, validFrom])
+  @@map("timetable_versions")
+}
+
+/// Bloco da grade: dia da semana (1 = segunda ... 6 = sábado) e minutos desde 00:00.
+model TimetableSlot {
+  id          Int               @id @default(autoincrement())
+  versionId   Int               @map("version_id")
+  kind        TimetableSlotKind
+  subjectId   Int?              @map("subject_id")
+  weekday     Int
+  startMinute Int               @map("start_minute")
+  endMinute   Int               @map("end_minute")
+
+  version TimetableVersion @relation(fields: [versionId], references: [id], onDelete: Cascade)
+  subject Subject?         @relation(fields: [subjectId], references: [id], onDelete: NoAction)
+
+  @@index([versionId])
+  @@index([subjectId])
+  @@map("timetable_slots")
 }
