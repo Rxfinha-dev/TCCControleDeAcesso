@@ -21,11 +21,13 @@ export function initials(fullName: string) {
   return (first + last).toUpperCase();
 }
 
-const dateTimeFormatter = new Intl.DateTimeFormat('pt-BR', { dateStyle: 'short', timeStyle: 'medium' });
 const timeFormatter = new Intl.DateTimeFormat('pt-BR', { timeStyle: 'short' });
+const dateFormatter = new Intl.DateTimeFormat('pt-BR', { dateStyle: 'short' });
+const timeSecondsFormatter = new Intl.DateTimeFormat('pt-BR', { timeStyle: 'medium' });
 
-export const formatDateTime = (value: string | Date) => dateTimeFormatter.format(new Date(value));
 export const formatTime = (value: string | Date) => timeFormatter.format(new Date(value));
+export const formatDate = (value: string | Date) => dateFormatter.format(new Date(value));
+export const formatTimeSeconds = (value: string | Date) => timeSecondsFormatter.format(new Date(value));
 
 /** Converte "AAAA-MM-DD" (input date) para ISO no início/fim do dia local. */
 export function dayBoundary(date: string, end = false): string | undefined {

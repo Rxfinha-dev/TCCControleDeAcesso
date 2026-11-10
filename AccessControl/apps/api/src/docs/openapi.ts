@@ -674,7 +674,7 @@ export const openApiSpec = {
           courses: { type: 'integer', example: 4 },
           entriesToday: { type: 'integer', example: 87 },
           pendingFingerprints: { type: 'integer', description: 'Alunos sem digital cadastrada', example: 5 },
-          recentEntries: { type: 'array', items: ref('AccessLog'), description: 'Últimas 5 entradas' },
+          recentEntries: { type: 'array', items: ref('AccessLog'), description: 'Últimas 8 entradas' },
         },
       },
     },

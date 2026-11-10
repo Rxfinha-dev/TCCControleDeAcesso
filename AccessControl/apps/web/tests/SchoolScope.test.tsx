@@ -191,12 +191,24 @@ describe('Escola em uso', () => {
     it('resumo em todas as escolas mostra a escola das últimas entradas', async () => {
       localStorage.setItem('helpus.schoolScope', 'all');
       mockApi(SUPER_ADMIN, (url) =>
+        url.includes('/stats')
+          ? jsonResponse(200, { ...EMPTY_STATS, recentEntries: [{ ...entry, createdAt: new Date().toISOString() }] })
+          : undefined,
+      );
+      renderAt('/');
+
+      expect(await screen.findByRole('cell', { name: 'Ana Souza' })).toBeInTheDocument();
+      expect(screen.getByRole('cell', { name: 'ETEC Bauru' })).toBeInTheDocument();
+    });
+
+    it('o cartão do dia não mostra leituras de outro dia', async () => {
+      mockApi(SUPER_ADMIN, (url) =>
         url.includes('/stats') ? jsonResponse(200, { ...EMPTY_STATS, recentEntries: [entry] }) : undefined,
       );
       renderAt('/');
 
-      expect(await screen.findByText('Ana Souza')).toBeInTheDocument();
-      expect(screen.getByText('ETEC Bauru', { selector: '.entry-school' })).toBeInTheDocument();
+      expect(await screen.findByText(/Nenhuma leitura hoje/)).toBeInTheDocument();
+      expect(screen.queryByText('Ana Souza')).not.toBeInTheDocument();
     });
 
     it('verificação mostra para qual escola o leitor registra', async () => {

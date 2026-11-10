@@ -39,7 +39,7 @@ function RequireAuth() {
   if (loading) {
     return (
       <div className="splash">
-        <Logo variant="auto" className="floating" />
+        <Logo variant="auto" />
       </div>
     );
   }

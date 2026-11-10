@@ -88,6 +88,8 @@ export interface AccessLog {
   createdAt: string;
   /** Escola da entrada (exibida no modo "todas as escolas"). */
   school?: SchoolRef;
+  /** Curso do aluno: só vem no resumo do Início (cartão do dia); null se o aluno foi excluído. */
+  student?: { course: { name: string } | null } | null;
 }
 
 export interface Paginated<T> {

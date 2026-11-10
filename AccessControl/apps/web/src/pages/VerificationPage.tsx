@@ -4,7 +4,6 @@ import { accessLogsApi } from '../api';
 import { errorMessage } from '../api/client';
 import type { EntryResult } from '../api/types';
 import { CheckIcon, FingerprintIcon } from '../components/Icons';
-import { NetworkMotif } from '../components/NetworkMotif';
 import { PageHeader } from '../components/PageHeader';
 import { ReaderSchoolBanner } from '../components/ReaderSchoolBanner';
 import { StudentPhoto } from '../components/StudentPhoto';
@@ -132,11 +131,13 @@ export function VerificationPage() {
                   <CheckIcon width={26} height={26} strokeWidth={2.6} />
                 </span>
                 <strong>Acesso liberado</strong>
-                <time dateTime={current.log.createdAt}>{formatTime(current.log.createdAt)}</time>
               </header>
               <div className="result-body">
                 <StudentPhoto studentId={student.id} hasPhoto={student.hasPhoto} alt={student.name} className="xlarge" />
                 <div className="result-details">
+                  <time dateTime={current.log.createdAt} className="stamp stamp-box stamp-in result-stamp">
+                    {formatTime(current.log.createdAt)}
+                  </time>
                   <h2>{student.name}</h2>
                   <dl className="student-info">
                     <div>
@@ -161,7 +162,6 @@ export function VerificationPage() {
             </article>
           ) : (
             <div className="result-empty">
-              <NetworkMotif className="result-motif" />
               <h2>Nenhuma entrada nesta sessão</h2>
               <p className="muted">Quando uma digital for reconhecida, a foto e os dados do aluno aparecem aqui.</p>
             </div>
@@ -180,7 +180,9 @@ export function VerificationPage() {
                 </span>
                 <span className="entry-name">{entry.student.name}</span>
                 {entry.log.method === 'MANUAL' && <span className="badge badge-muted">Manual</span>}
-                <time dateTime={entry.log.createdAt}>{formatTime(entry.log.createdAt)}</time>
+                <time dateTime={entry.log.createdAt} className="stamp">
+                  {formatTime(entry.log.createdAt)}
+                </time>
               </li>
             ))}
           </ul>

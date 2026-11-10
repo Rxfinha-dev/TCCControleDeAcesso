@@ -46,6 +46,10 @@ A presença sai da catraca. A digital do aluno na entrada e na saída vira prese
 ## Brand Commitments
 
 - Nome: **HelpUs** (logo em `apps/web/src/components/Logo.tsx`).
+- O logo atual fica como está.
+- O azul (sky, `#34bcfb` na base atual) continua como cor principal da marca.
+- Tema claro e escuro, com o botão de alternar, continuam existindo.
+- Não pode parecer: infantil demais, escuro "hacker" (preto com neon), frio/corporativo de ERP, nem painel genérico de template.
 
 ## Evidence on Hand
 

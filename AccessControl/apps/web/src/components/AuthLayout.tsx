@@ -22,7 +22,7 @@ export function AuthLayout({ title, subtitle, backTo, children }: AuthLayoutProp
       <aside className="auth-hero">
         <NetworkMotif className="auth-motif" />
         <div className="auth-brand">
-          <Logo className="auth-logo floating" />
+          <Logo className="auth-logo" />
           <p className="auth-tagline">Segurança que conecta</p>
           <p className="auth-pitch">Entrada dos alunos registrada pela digital, com foto e horário, em tempo real.</p>
         </div>

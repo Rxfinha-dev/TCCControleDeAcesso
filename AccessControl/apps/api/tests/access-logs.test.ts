@@ -129,5 +129,16 @@ describe('Entradas', () => {
       expect(prisma.accessLog.findMany.mock.calls[0][0]?.where).toEqual({});
       expect(res.body.recentEntries[0].school.name).toBe(school.name);
     });
+
+    it('stats trazem o curso do aluno nas últimas entradas (cartão do dia)', async () => {
+      const { app, prisma } = buildTestApp();
+      prisma.accessLog.findMany.mockResolvedValue([] as never);
+
+      await request(app).get('/api/stats').set('Authorization', authHeader());
+
+      expect(prisma.accessLog.findMany.mock.calls[0][0]?.include).toMatchObject({
+        student: { select: { course: { select: { name: true } } } },
+      });
+    });
   });
 });
