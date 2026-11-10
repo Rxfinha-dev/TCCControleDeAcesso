@@ -1,5 +1,5 @@
 import type { Prisma, PrismaClient } from '@prisma/client';
-import { currentSchoolYear } from '../../lib/dates';
+import { currentSchoolYear, dateOnly, todayInSaoPaulo } from '../../lib/dates';
 import { badRequest, conflict, notFound } from '../../lib/errors';
 import type { ClassGroupInput } from './class-groups.schemas';
 
@@ -78,6 +78,65 @@ export class ClassGroupsService {
       );
     }
     await this.prisma.classGroup.delete({ where: { id } });
+  }
+
+  /**
+   * Cria no ano novo as turmas do ano anterior (nome, turno, curso, professores e a grade vigente), sem alunos.
+   * Turmas com nome já existente no ano novo são puladas e listadas em `skipped`.
+   */
+  async copyYear(schoolId: number, fromYear: number, toYear: number) {
+    if (fromYear === toYear) throw badRequest('Escolha anos letivos diferentes', 'INVALID_YEAR');
+    const today = dateOnly(todayInSaoPaulo());
+    const sources = await this.prisma.classGroup.findMany({
+      where: { schoolId, schoolYear: fromYear },
+      orderBy: { name: 'asc' },
+      include: {
+        assignments: true,
+        timetableVersions: {
+          where: { validFrom: { lte: today } },
+          orderBy: { validFrom: 'desc' },
+          take: 1,
+          include: { slots: true },
+        },
+      },
+    });
+    const existing = await this.prisma.classGroup.findMany({
+      where: { schoolId, schoolYear: toYear },
+      select: { name: true },
+    });
+    const taken = new Set(existing.map(({ name }) => name.toLocaleLowerCase('pt-BR')));
+    const toCopy = sources.filter((source) => !taken.has(source.name.toLocaleLowerCase('pt-BR')));
+    const skipped = sources.filter((source) => !toCopy.includes(source)).map((source) => source.name);
+
+    await this.prisma.$transaction(async (tx) => {
+      for (const source of toCopy) {
+        const created = await tx.classGroup.create({
+          data: { schoolId, schoolYear: toYear, name: source.name, shift: source.shift, courseId: source.courseId },
+        });
+        if (source.assignments.length > 0) {
+          await tx.teachingAssignment.createMany({
+            data: source.assignments.map(({ subjectId, teacherId }) => ({ classGroupId: created.id, subjectId, teacherId })),
+          });
+        }
+        const version = source.timetableVersions[0];
+        if (version) {
+          const copy = await tx.timetableVersion.create({ data: { classGroupId: created.id, validFrom: today } });
+          if (version.slots.length > 0) {
+            await tx.timetableSlot.createMany({
+              data: version.slots.map(({ kind, subjectId, weekday, startMinute, endMinute }) => ({
+                versionId: copy.id,
+                kind,
+                subjectId,
+                weekday,
+                startMinute,
+                endMinute,
+              })),
+            });
+          }
+        }
+      }
+    });
+    return { created: toCopy.length, skipped };
   }
 
   /** Turma da escola, ou 404. Usada pelas matrículas, atribuições e grade. */

@@ -1,5 +1,5 @@
 import request from 'supertest';
-import { currentSchoolYear } from '../src/lib/dates';
+import { currentSchoolYear, dateOnly, todayInSaoPaulo } from '../src/lib/dates';
 import { authHeader, buildTestApp, classGroup, school } from './helpers';
 
 const course = { id: 3, name: 'DS', schoolId: school.id, createdAt: new Date(), updatedAt: new Date() };
@@ -174,5 +174,64 @@ describe('Turmas', () => {
 
     expect(res.status).toBe(204);
     expect(prisma.classGroup.delete).toHaveBeenCalledWith({ where: { id: 20 } });
+  });
+});
+
+describe('Copiar turmas do ano anterior', () => {
+  const source = {
+    ...classGroup,
+    schoolYear: 2025,
+    assignments: [{ id: 1, classGroupId: 20, subjectId: 5, teacherId: 8, createdAt: new Date(), updatedAt: new Date() }],
+    timetableVersions: [
+      {
+        id: 40,
+        classGroupId: 20,
+        validFrom: dateOnly('2025-02-01'),
+        createdAt: new Date(),
+        slots: [{ id: 1, versionId: 40, kind: 'LESSON', subjectId: 5, weekday: 1, startMinute: 450, endMinute: 500 }],
+      },
+    ],
+  };
+
+  it('copia nome, turno, curso, professores e grade vigente, sem alunos', async () => {
+    const { app, prisma } = buildTestApp();
+    prisma.classGroup.findMany
+      .mockResolvedValueOnce([source, { ...source, id: 21, name: '3º DS A' }] as never)
+      .mockResolvedValueOnce([{ name: '3º ds a' }] as never);
+    prisma.classGroup.create.mockResolvedValue({ ...classGroup, id: 30, schoolYear: 2026 });
+    prisma.timetableVersion.create.mockResolvedValue({ id: 50, classGroupId: 30, validFrom: new Date(), createdAt: new Date() });
+
+    const res = await request(app)
+      .post('/api/class-groups/copy')
+      .set('Authorization', authHeader())
+      .send({ fromYear: 2025, toYear: 2026 });
+
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual({ created: 1, skipped: ['3º DS A'] });
+    expect(prisma.classGroup.create).toHaveBeenCalledTimes(1);
+    expect(prisma.classGroup.create).toHaveBeenCalledWith({
+      data: { schoolId: school.id, schoolYear: 2026, name: '2º DS A', shift: 'MORNING', courseId: 3 },
+    });
+    expect(prisma.teachingAssignment.createMany).toHaveBeenCalledWith({
+      data: [{ classGroupId: 30, subjectId: 5, teacherId: 8 }],
+    });
+    expect(prisma.timetableVersion.create).toHaveBeenCalledWith({
+      data: { classGroupId: 30, validFrom: dateOnly(todayInSaoPaulo()) },
+    });
+    expect(prisma.timetableSlot.createMany).toHaveBeenCalledWith({
+      data: [{ versionId: 50, kind: 'LESSON', subjectId: 5, weekday: 1, startMinute: 450, endMinute: 500 }],
+    });
+    expect(prisma.enrollment.create).not.toHaveBeenCalled();
+    expect(prisma.classGroup.findMany.mock.calls[0][0]!.where).toEqual({ schoolId: school.id, schoolYear: 2025 });
+  });
+
+  it('recusa copiar um ano para ele mesmo', async () => {
+    const { app } = buildTestApp();
+    const res = await request(app)
+      .post('/api/class-groups/copy')
+      .set('Authorization', authHeader())
+      .send({ fromYear: 2026, toYear: 2026 });
+    expect(res.status).toBe(400);
+    expect(res.body.code).toBe('INVALID_YEAR');
   });
 });

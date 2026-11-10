@@ -6,6 +6,7 @@ import {
   addStudentsSchema,
   assignmentSchema,
   classGroupSchema,
+  copyYearSchema,
   listClassGroupsQuerySchema,
   studentParamsSchema,
   subjectParamsSchema,
@@ -32,6 +33,11 @@ export function classGroupsRoutes({ classGroups, enrollments, assignments, timet
 
   router.post('/', async (req, res) => {
     res.status(201).json(await classGroups.create(currentSchool(res).sub, classGroupSchema.parse(req.body)));
+  });
+
+  router.post('/copy', async (req, res) => {
+    const { fromYear, toYear } = copyYearSchema.parse(req.body);
+    res.json(await classGroups.copyYear(currentSchool(res).sub, fromYear, toYear));
   });
 
   router.get('/:id', async (req, res) => {

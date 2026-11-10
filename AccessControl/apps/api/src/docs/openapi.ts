@@ -3,6 +3,8 @@
  * Ao criar ou alterar uma rota, atualize também o trecho correspondente aqui.
  */
 
+import { academicPaths, academicSchemas, academicTags } from './academic';
+
 const ref = (name: string) => ({ $ref: `#/components/schemas/${name}` });
 const json = (schema: object) => ({ 'application/json': { schema } });
 const errorResponse = (description: string) => ({ description, content: json(ref('Error')) });
@@ -117,9 +119,11 @@ export const openApiSpec = {
     { name: 'Painel', description: 'Resumo exibido na tela inicial' },
     { name: 'Escolas', description: 'Gestão das escolas (super admin)' },
     { name: 'Usuários', description: 'Gestão de usuários e perfis (super admin)' },
+    ...academicTags,
   ],
   security: [{ bearerAuth: [] }],
   paths: {
+    ...academicPaths({ ref, json, errorResponse, authErrors, validationError, notFound, idParam }),
     '/api/health': {
       get: {
         tags: ['Health'],
@@ -501,6 +505,7 @@ export const openApiSpec = {
       },
     },
     schemas: {
+      ...academicSchemas(ref),
       Error: {
         type: 'object',
         required: ['code', 'message'],
@@ -678,7 +683,7 @@ export const openApiSpec = {
 
 // Rotas por escola aceitam o cabeçalho X-School-Id e seus erros de escopo.
 for (const [path, item] of Object.entries(openApiSpec.paths) as [string, Record<string, unknown>][]) {
-  if (!/^\/api\/(courses|students|access-logs|stats)/.test(path)) continue;
+  if (!/^\/api\/(courses|students|access-logs|stats|subjects|teachers|class-groups)/.test(path)) continue;
   item.parameters = [...((item.parameters as object[] | undefined) ?? []), schoolHeader];
   for (const operation of Object.values(item)) {
     if (operation && typeof operation === 'object' && 'responses' in operation) {
