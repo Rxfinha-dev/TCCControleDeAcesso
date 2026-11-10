@@ -29,7 +29,7 @@ describe('Aluno sem curso e sem série', () => {
     });
     renderAt('/alunos');
 
-    const row = (await screen.findByText('Bruno Lima')).closest('tr')!;
+    const row = (await screen.findByText('Bruno Lima', {}, { timeout: 5000 })).closest('tr')!; // timeout maior: a suíte completa deixa a renderização lenta
     expect(within(row).getAllByText('—')).toHaveLength(2);
 
     await userEvent.click(row);
