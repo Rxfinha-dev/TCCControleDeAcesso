@@ -1,18 +1,7 @@
 import request from 'supertest';
-import type { ClassGroup } from '@prisma/client';
 import { currentSchoolYear } from '../src/lib/dates';
-import { authHeader, buildTestApp, school } from './helpers';
+import { authHeader, buildTestApp, classGroup, school } from './helpers';
 
-export const classGroup: ClassGroup = {
-  id: 20,
-  schoolId: school.id,
-  name: '2º DS A',
-  schoolYear: 2026,
-  shift: 'MORNING',
-  courseId: 3,
-  createdAt: new Date(),
-  updatedAt: new Date(),
-};
 const course = { id: 3, name: 'DS', schoolId: school.id, createdAt: new Date(), updatedAt: new Date() };
 const body = { name: ' 2º DS A ', schoolYear: 2026, shift: 'MORNING', courseId: 3 };
 
@@ -147,6 +136,13 @@ describe('Turmas', () => {
       ],
     });
     expect(prisma.classGroup.findFirst.mock.calls[0][0]!.where).toEqual({ id: 20, schoolId: school.id });
+  });
+
+  it('recusa id acima do limite do banco com 400, não 500', async () => {
+    const { app, prisma } = buildTestApp();
+    const res = await request(app).delete('/api/class-groups/20/students/9999999999').set('Authorization', authHeader());
+    expect(res.status).toBe(400);
+    expect(prisma.classGroup.findFirst).not.toHaveBeenCalled();
   });
 
   it('retorna 404 para turma de outra escola', async () => {

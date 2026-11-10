@@ -1,5 +1,6 @@
 import { Shift } from '@prisma/client';
 import { z } from 'zod';
+import { idSchema } from '../../lib/validation';
 
 const emptyToNull = (value: unknown) => (value === '' || value === undefined ? null : value);
 
@@ -9,7 +10,7 @@ export const classGroupSchema = z.object({
   name: z.string().trim().min(1, 'Preencha o campo nome').max(40, 'O nome deve ter no máximo 40 caracteres'),
   schoolYear: schoolYearSchema,
   shift: z.enum(Shift, 'Selecione o turno'),
-  courseId: z.preprocess(emptyToNull, z.coerce.number().int().positive('Curso inválido').nullable()).default(null),
+  courseId: z.preprocess(emptyToNull, idSchema.nullable()).default(null),
 });
 
 export const listClassGroupsQuerySchema = z.object({
@@ -22,3 +23,15 @@ export const copyYearSchema = z.object({
 });
 
 export type ClassGroupInput = z.infer<typeof classGroupSchema>;
+
+export const addStudentsSchema = z.object({
+  studentIds: z.array(idSchema).min(1, 'Selecione ao menos um aluno').max(500),
+});
+
+export const studentParamsSchema = z.object({ id: idSchema, studentId: idSchema });
+
+export const subjectParamsSchema = z.object({ id: idSchema, subjectId: idSchema });
+
+export const assignmentSchema = z.object({
+  teacherId: idSchema,
+});
