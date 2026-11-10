@@ -21,10 +21,22 @@ describe('Entradas', () => {
 
     expect(res.status).toBe(201);
     expect(res.body.student).toMatchObject({ name: 'Ana Souza', rm: '24001', course: { name: 'Desenvolvimento de Sistemas' } });
-    expect(prisma.student.findFirst).toHaveBeenCalledWith(expect.objectContaining({ where: { schoolId: school.id, fingerprintId: 5 } }));
+    // Só digital com cadastro concluído: uma posição reservada e não confirmada ainda guarda o dedo do dono anterior no sensor.
+    expect(prisma.student.findFirst).toHaveBeenCalledWith(
+      expect.objectContaining({ where: { schoolId: school.id, fingerprintId: 5, fingerprintEnrolledAt: { not: null } } }),
+    );
     expect(prisma.accessLog.create).toHaveBeenCalledWith({
       data: { schoolId: school.id, studentId: 10, studentName: 'Ana Souza', method: 'FINGERPRINT' },
     });
+  });
+
+  it('recusa posição acima da capacidade do sensor', async () => {
+    const { app, prisma } = buildTestApp();
+
+    const res = await request(app).post('/api/access-logs/fingerprint').set('Authorization', authHeader()).send({ fingerprintId: 128 });
+
+    expect(res.status).toBe(400);
+    expect(prisma.student.findFirst).not.toHaveBeenCalled();
   });
 
   it('retorna 404 para digital não vinculada', async () => {

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState, type CSSProperties, type FormEvent } from 'react';
 import { Link, useParams } from 'react-router';
 import { classGroupsApi, studentsApi, subjectsApi, teachersApi } from '../api';
-import { errorMessage } from '../api/client';
+import { ApiError, errorMessage } from '../api/client';
 import type { ClassGroupDetail, ClassGroupStudent, Student, Subject, Teacher } from '../api/types';
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import { ArrowLeftIcon } from '../components/Icons';
@@ -25,12 +25,15 @@ export function ClassGroupPage() {
   const toast = useToast();
   const [group, setGroup] = useState<ClassGroupDetail | null>(null);
   const [tab, setTab] = useState<TabId>('alunos');
+  const [notFound, setNotFound] = useState(false);
 
   const loadGroup = useCallback(async () => {
     try {
       setGroup(await classGroupsApi.get(id));
     } catch (err) {
-      toast.error(errorMessage(err));
+      // 404 (outra escola ou apagada) e 400 (id inválido na URL): não há turma para mostrar.
+      if (err instanceof ApiError && (err.status === 404 || err.status === 400)) setNotFound(true);
+      else toast.error(errorMessage(err));
     }
   }, [id, toast]);
 
@@ -41,6 +44,18 @@ export function ClassGroupPage() {
   const description = group
     ? [SHIFT_LABELS[group.shift], `Ano letivo ${group.schoolYear}`, group.course?.name].filter(Boolean).join(' · ')
     : '';
+
+  if (notFound) {
+    return (
+      <>
+        <Link to="/turmas" className="back-link">
+          <ArrowLeftIcon width={18} height={18} />
+          Turmas
+        </Link>
+        <PageHeader title="Turma não encontrada" description="Ela pode ter sido excluída ou ser de outra escola." />
+      </>
+    );
+  }
 
   return (
     <>
@@ -69,7 +84,7 @@ export function ClassGroupPage() {
 
       {/* As abas ficam montadas (só escondidas) para a grade em edição não se perder ao trocar de aba. */}
       <div role="tabpanel" id="panel-alunos" aria-labelledby="tab-alunos" hidden={tab !== 'alunos'}>
-        <StudentsTab classGroupId={id} onChange={loadGroup} />
+        {group && <StudentsTab classGroupId={id} onChange={loadGroup} />}
       </div>
       <div role="tabpanel" id="panel-disciplinas" aria-labelledby="tab-disciplinas" hidden={tab !== 'disciplinas'}>
         {group && <AssignmentsTab group={group} onChange={loadGroup} />}

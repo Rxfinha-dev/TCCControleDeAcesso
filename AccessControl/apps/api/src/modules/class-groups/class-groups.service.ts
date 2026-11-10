@@ -60,7 +60,14 @@ export class ClassGroupsService {
   }
 
   async update(schoolId: number, id: number, input: ClassGroupInput) {
-    await this.findOwned(schoolId, id);
+    const current = await this.findOwned(schoolId, id);
+    // As matrículas guardam o ano letivo: mudar o ano de turma com alunos deixaria matrículas no ano errado.
+    if (input.schoolYear !== current.schoolYear && (await this.prisma.enrollment.count({ where: { classGroupId: id } })) > 0) {
+      throw conflict(
+        'Não é possível mudar o ano letivo: esta turma já teve alunos. Cadastre uma turma no ano novo ou copie as turmas.',
+        'CLASS_GROUP_HAS_STUDENTS',
+      );
+    }
     await this.ensureCourse(schoolId, input.courseId);
     await this.ensureUniqueName(schoolId, input.schoolYear, input.name, id);
     const group = await this.prisma.classGroup.update({ where: { id }, data: input, include: summaryInclude });

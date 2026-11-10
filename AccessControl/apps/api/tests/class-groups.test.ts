@@ -165,6 +165,22 @@ describe('Turmas', () => {
     expect(prisma.classGroup.delete).not.toHaveBeenCalled();
   });
 
+  it('não muda o ano letivo de turma que já teve alunos', async () => {
+    const { app, prisma } = buildTestApp();
+    prisma.classGroup.findFirst.mockResolvedValueOnce(classGroup).mockResolvedValueOnce(null);
+    prisma.course.findFirst.mockResolvedValue(course);
+    prisma.enrollment.count.mockResolvedValue(2);
+
+    const res = await request(app)
+      .put('/api/class-groups/20')
+      .set('Authorization', authHeader())
+      .send({ ...body, schoolYear: classGroup.schoolYear + 1 });
+
+    expect(res.status).toBe(409);
+    expect(res.body.code).toBe('CLASS_GROUP_HAS_STUDENTS');
+    expect(prisma.classGroup.update).not.toHaveBeenCalled();
+  });
+
   it('exclui turma sem alunos', async () => {
     const { app, prisma } = buildTestApp();
     prisma.classGroup.findFirst.mockResolvedValue(classGroup);

@@ -70,6 +70,14 @@ describe('Turmas', () => {
     expect(bodyOf(callsTo(fetchMock, '/class-groups/copy', 'POST')[0])).toEqual({ fromYear: YEAR - 1, toYear: YEAR });
   });
 
+  it('turma inexistente mostra "Turma não encontrada" sem abas', async () => {
+    mockApi((path) => (path.startsWith('/class-groups/99') ? jsonResponse(404, { message: 'Turma não encontrada' }) : undefined));
+    renderAt('/turmas/99');
+
+    expect(await screen.findByRole('heading', { name: 'Turma não encontrada' })).toBeInTheDocument();
+    expect(screen.queryByRole('tablist')).not.toBeInTheDocument();
+  });
+
   describe('detalhe da turma', () => {
     const route = (overrides: (path: string, method: string) => Response | undefined = () => undefined) =>
       mockApi((path, method, body) => {

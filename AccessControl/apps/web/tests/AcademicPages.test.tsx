@@ -1,7 +1,7 @@
 import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { fireEvent } from '@testing-library/react';
-import { formatMinute } from '../src/utils/academic';
+import { formatEndField, formatMinute, parseEndField } from '../src/utils/academic';
 import { bodyOf, callsTo, jsonResponse, mockApi, renderAt } from './harness';
 import { setMockSession } from './mocks/supabase';
 
@@ -14,6 +14,13 @@ describe('Disciplinas e professores', () => {
   it('formatMinute escreve HH:MM', () => {
     expect(formatMinute(450)).toBe('07:30');
     expect(formatMinute(1440)).toBe('24:00');
+  });
+
+  it('campo Fim: 24:00 aparece como 00:00 (type=time não aceita 24:00) e 00:00 volta a ser fim do dia', () => {
+    expect(formatEndField(1440)).toBe('00:00');
+    expect(formatEndField(500)).toBe('08:20');
+    expect(parseEndField('00:00')).toBe(1440);
+    expect(parseEndField('08:20')).toBe(500);
   });
 
   it('menu mostra Turmas, Disciplinas e Professores para login de escola', async () => {

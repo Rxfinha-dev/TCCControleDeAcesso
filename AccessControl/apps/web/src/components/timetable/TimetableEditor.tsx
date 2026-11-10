@@ -4,7 +4,7 @@ import { errorMessage } from '../../api/client';
 import type { ClassGroup, ClassGroupDetail, TeacherConflict, TimetableBlockInput } from '../../api/types';
 import { useToast } from '../../contexts/ToastContext';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
-import { WEEKDAY_LABELS, formatMinute, parseMinute } from '../../utils/academic';
+import { WEEKDAY_LABELS, formatEndField, formatMinute, parseEndField, parseMinute } from '../../utils/academic';
 import { PALETTE_MIME, TimetableGrid, type PaletteItem, type SubjectInfo } from './TimetableGrid';
 import { fromTimetable, overlappingKeys, timetableReducer, visibleRange } from './timetableReducer';
 
@@ -186,7 +186,7 @@ export function TimetableEditor({ classGroup }: { classGroup: ClassGroupDetail }
             ].map(({ item, tag, name, detail, color }) => {
               const active = armed?.kind === item.kind && armed.subjectId === item.subjectId;
               return (
-                <li key={name}>
+                <li key={`${item.kind}-${item.subjectId}`}>
                   <button
                     type="button"
                     className="tt-palette-item"
@@ -230,9 +230,9 @@ export function TimetableEditor({ classGroup }: { classGroup: ClassGroupDetail }
                   <input
                     type="time"
                     step={300}
-                    value={formatMinute(selected.endMinute)}
+                    value={formatEndField(selected.endMinute)}
                     onChange={(event) => {
-                      const end = parseMinute(event.target.value);
+                      const end = parseEndField(event.target.value);
                       if (!Number.isNaN(end))
                         dispatch({ type: 'setTimes', key: selected.key, startMinute: selected.startMinute, endMinute: end });
                     }}
