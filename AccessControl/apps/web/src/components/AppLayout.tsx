@@ -15,6 +15,9 @@ import {
   SettingsIcon,
   ShieldIcon,
   StudentIcon,
+  TagIcon,
+  TeacherIcon,
+  UsersIcon,
 } from './Icons';
 import { Logo } from './Logo';
 import { SchoolSelector } from './SchoolSelector';
@@ -24,6 +27,9 @@ const NAV_ITEMS = [
   { to: '/', label: 'Início', icon: HomeIcon, end: true },
   { to: '/alunos', label: 'Alunos', icon: StudentIcon },
   { to: '/cursos', label: 'Cursos', icon: BookIcon },
+  { to: '/turmas', label: 'Turmas', icon: UsersIcon },
+  { to: '/disciplinas', label: 'Disciplinas', icon: TagIcon },
+  { to: '/professores', label: 'Professores', icon: TeacherIcon },
   { to: '/verificacao', label: 'Verificação', icon: FingerprintIcon },
   { to: '/entradas', label: 'Entradas', icon: ListIcon },
   { to: '/configuracoes', label: 'Configurações', icon: SettingsIcon },

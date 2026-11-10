@@ -14,6 +14,8 @@ import { RegisterPage } from './pages/RegisterPage';
 import { SchoolsPage } from './pages/SchoolsPage';
 import { SettingsPage } from './pages/SettingsPage';
 import { StudentsPage } from './pages/StudentsPage';
+import { SubjectsPage } from './pages/SubjectsPage';
+import { TeachersPage } from './pages/TeachersPage';
 import { UsersPage } from './pages/UsersPage';
 import { VerificationPage } from './pages/VerificationPage';
 import { VerifyEmailPage } from './pages/VerifyEmailPage';
@@ -89,6 +91,22 @@ export function AppRoutes() {
             element={
               <RequireSchool>
                 <CoursesPage />
+              </RequireSchool>
+            }
+          />
+          <Route
+            path="/disciplinas"
+            element={
+              <RequireSchool>
+                <SubjectsPage />
+              </RequireSchool>
+            }
+          />
+          <Route
+            path="/professores"
+            element={
+              <RequireSchool>
+                <TeachersPage />
               </RequireSchool>
             }
           />

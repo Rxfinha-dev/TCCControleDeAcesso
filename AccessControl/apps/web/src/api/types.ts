@@ -119,3 +119,99 @@ export interface EntryResult {
   log: AccessLog;
   student: Student;
 }
+
+/* Módulo acadêmico: disciplinas, professores, turmas e grade. */
+
+export interface Subject {
+  id: number;
+  name: string;
+  abbreviation: string;
+  /** "#rrggbb" */
+  color: string;
+}
+
+export type SubjectInput = Omit<Subject, 'id'>;
+
+/** Professor é só cadastro (ainda sem login). */
+export interface Teacher {
+  id: number;
+  name: string;
+  contactEmail: string | null;
+  assignmentsCount: number;
+}
+
+export interface TeacherInput {
+  name: string;
+  contactEmail: string;
+}
+
+export type Shift = 'MORNING' | 'AFTERNOON' | 'EVENING' | 'FULL_TIME';
+
+export interface ClassGroup {
+  id: number;
+  name: string;
+  schoolYear: number;
+  shift: Shift;
+  course: Pick<Course, 'id' | 'name'> | null;
+  studentsCount: number;
+}
+
+export interface ClassGroupInput {
+  name: string;
+  schoolYear: number;
+  shift: Shift;
+  courseId: number | null;
+}
+
+export interface TeachingAssignment {
+  subject: Subject;
+  teacher: Pick<Teacher, 'id' | 'name'>;
+}
+
+export interface ClassGroupDetail extends ClassGroup {
+  assignments: TeachingAssignment[];
+}
+
+export interface ClassGroupStudent {
+  id: number;
+  name: string;
+  rm: string;
+  /** 'YYYY-MM-DD' */
+  enrolledSince: string;
+}
+
+export type TimetableSlotKind = 'LESSON' | 'BREAK';
+
+/** Bloco enviado ao salvar a grade (weekday 1 = segunda … 6 = sábado; minutos desde 00:00). */
+export interface TimetableBlockInput {
+  kind: TimetableSlotKind;
+  subjectId?: number | null;
+  weekday: number;
+  startMinute: number;
+  endMinute: number;
+}
+
+export interface TimetableBlock {
+  id: number;
+  kind: TimetableSlotKind;
+  weekday: number;
+  startMinute: number;
+  endMinute: number;
+  subject: Subject | null;
+  teacher: Pick<Teacher, 'id' | 'name'> | null;
+}
+
+/** Mesmo professor em outra turma no mesmo horário: aviso, não bloqueia. */
+export interface TeacherConflict {
+  weekday: number;
+  startMinute: number;
+  endMinute: number;
+  teacherName: string;
+  classGroupName: string;
+}
+
+export interface Timetable {
+  validFrom: string | null;
+  blocks: TimetableBlock[];
+  warnings: TeacherConflict[];
+}

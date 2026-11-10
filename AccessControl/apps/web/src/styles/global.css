@@ -2050,3 +2050,25 @@ select:disabled {
   cursor: not-allowed;
   opacity: 0.7;
 }
+
+/* ---------- Módulo acadêmico ---------- */
+
+/* Sigla da disciplina: a cor escolhida pela escola vira o fio e um fundo bem claro; o texto fica na tinta do tema. */
+.subject-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 8px;
+  border: 1.5px solid var(--subject);
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--subject) 14%, var(--surface));
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.field-color input[type='color'] {
+  padding: 4px;
+  cursor: pointer;
+}
