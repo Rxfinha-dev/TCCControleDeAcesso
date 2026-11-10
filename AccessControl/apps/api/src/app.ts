@@ -18,6 +18,7 @@ import { AuthService } from './modules/auth/auth.service';
 import { AssignmentsService } from './modules/class-groups/assignments.service';
 import { classGroupsRoutes } from './modules/class-groups/class-groups.routes';
 import { EnrollmentsService } from './modules/class-groups/enrollments.service';
+import { TimetableService } from './modules/class-groups/timetable.service';
 import { ClassGroupsService } from './modules/class-groups/class-groups.service';
 import { coursesRoutes } from './modules/courses/courses.routes';
 import { schoolsRoutes } from './modules/schools/schools.routes';
@@ -131,6 +132,7 @@ export function createApp({ prisma, identity, storage }: AppDependencies) {
       classGroups,
       enrollments: new EnrollmentsService(prisma, classGroups),
       assignments: new AssignmentsService(prisma, classGroups),
+      timetable: new TimetableService(prisma, classGroups),
     }),
   );
   app.use('/api/access-logs', ...scopedOrAll, accessLogsRoutes(new AccessLogsService(prisma)));

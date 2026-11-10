@@ -9,17 +9,20 @@ import {
   listClassGroupsQuerySchema,
   studentParamsSchema,
   subjectParamsSchema,
+  timetableSchema,
 } from './class-groups.schemas';
 import type { ClassGroupsService } from './class-groups.service';
 import type { EnrollmentsService } from './enrollments.service';
+import type { TimetableService } from './timetable.service';
 
 export interface ClassGroupsServices {
   classGroups: ClassGroupsService;
   enrollments: EnrollmentsService;
   assignments: AssignmentsService;
+  timetable: TimetableService;
 }
 
-export function classGroupsRoutes({ classGroups, enrollments, assignments }: ClassGroupsServices) {
+export function classGroupsRoutes({ classGroups, enrollments, assignments, timetable }: ClassGroupsServices) {
   const router = Router();
 
   router.get('/', async (req, res) => {
@@ -74,6 +77,17 @@ export function classGroupsRoutes({ classGroups, enrollments, assignments }: Cla
     const { id, subjectId } = subjectParamsSchema.parse(req.params);
     await assignments.remove(currentSchool(res).sub, id, subjectId);
     res.status(204).end();
+  });
+
+  router.get('/:id/timetable', async (req, res) => {
+    const { id } = idParamSchema.parse(req.params);
+    res.json(await timetable.current(currentSchool(res).sub, id));
+  });
+
+  router.put('/:id/timetable', async (req, res) => {
+    const { id } = idParamSchema.parse(req.params);
+    const { blocks } = timetableSchema.parse(req.body);
+    res.json(await timetable.save(currentSchool(res).sub, id, blocks));
   });
 
   return router;
