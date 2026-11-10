@@ -1729,10 +1729,10 @@ select:disabled {
 }
 
 .toast button {
+  display: inline-flex;
+  padding: 4px;
   border: none;
   background: none;
-  font-size: 1.3rem;
-  line-height: 1;
   cursor: pointer;
   color: #9da3a8;
 }

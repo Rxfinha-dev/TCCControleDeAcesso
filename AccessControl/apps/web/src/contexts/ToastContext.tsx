@@ -1,4 +1,5 @@
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react';
+import { CloseIcon } from '../components/Icons';
 
 type ToastType = 'success' | 'error' | 'info';
 
@@ -49,7 +50,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
           <div key={toast.id} className={`toast toast-${toast.type}`} role={toast.type === 'error' ? 'alert' : 'status'}>
             <span>{toast.message}</span>
             <button type="button" aria-label="Fechar" onClick={() => dismiss(toast.id)}>
-              ×
+              <CloseIcon width={16} height={16} />
             </button>
           </div>
         ))}
