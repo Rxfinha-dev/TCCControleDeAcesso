@@ -32,6 +32,10 @@ export function parseEndField(value: string) {
 /** 'YYYY-MM-DD' → 'DD/MM/YYYY'. */
 export const formatDay = (iso: string) => iso.split('-').reverse().join('/');
 
+/** Dia de hoje no fuso da escola, em 'YYYY-MM-DD'. */
+export const todayIso = () =>
+  new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Sao_Paulo', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
+
 /** Ano letivo atual no fuso da escola (o mesmo cálculo da API). */
 export const currentSchoolYear = () =>
   Number(new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Sao_Paulo', year: 'numeric' }).format(new Date()));

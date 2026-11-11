@@ -2518,3 +2518,112 @@ input.check {
   accent-color: var(--sky-ink);
   cursor: pointer;
 }
+
+/* ---------- Presença ---------- */
+.roll-legend {
+  margin-bottom: 14px;
+}
+
+.roll-table th,
+.roll-table td {
+  vertical-align: middle;
+}
+
+.roll-lesson {
+  min-width: 132px;
+  text-align: center;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.roll-lesson > * {
+  display: block;
+  margin: 0 auto 6px;
+}
+
+.roll-lesson .subject-tag {
+  display: inline-flex;
+}
+
+.roll-lesson select {
+  width: 100%;
+  min-height: 36px;
+  padding: 0 8px;
+  font-size: 0.8rem;
+  font-weight: 400;
+}
+
+.roll-time {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.8rem;
+  color: var(--text);
+}
+
+.roll-student {
+  font-weight: 400;
+  text-align: left;
+}
+
+.roll-student small {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+}
+
+.roll-cell {
+  text-align: center;
+}
+
+/* Presença é carimbo (tinta roxa); falta é tinta vermelha; correção à mão ganha contorno tracejado. */
+.roll-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 2px solid transparent;
+  border-radius: var(--radius-sm);
+  background: none;
+  font-family: var(--font-mono);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+button.roll-mark {
+  cursor: pointer;
+}
+
+button.roll-mark:hover:not(:disabled) {
+  background: var(--sky-soft);
+}
+
+.roll-mark.present {
+  color: var(--stamp);
+}
+
+.roll-mark.absent {
+  color: var(--danger);
+}
+
+.roll-mark.manual {
+  border: 2px dashed currentColor;
+}
+
+.roll-legend .roll-mark {
+  width: 26px;
+  height: 26px;
+  font-size: 0.85rem;
+  vertical-align: middle;
+}
+
+.freq-below {
+  color: var(--danger);
+  font-weight: 600;
+}
+
+.freq-near {
+  color: var(--warning);
+  font-weight: 600;
+}

@@ -13,6 +13,8 @@ import { requirePanelAccess, requireSchoolScope } from './middlewares/school-sco
 import { apiRateLimit } from './middlewares/rate-limit';
 import { accessLogsRoutes } from './modules/access-logs/access-logs.routes';
 import { AccessLogsService } from './modules/access-logs/access-logs.service';
+import { attendanceRoutes } from './modules/attendance/attendance.routes';
+import { AttendanceService } from './modules/attendance/attendance.service';
 import { authRoutes } from './modules/auth/auth.routes';
 import { calendarRoutes } from './modules/calendar/calendar.routes';
 import { CalendarService } from './modules/calendar/calendar.service';
@@ -26,6 +28,7 @@ import { coursesRoutes } from './modules/courses/courses.routes';
 import { schoolsRoutes } from './modules/schools/schools.routes';
 import { SchoolsService } from './modules/schools/schools.service';
 import { CoursesService } from './modules/courses/courses.service';
+import { settingsRoutes } from './modules/settings/settings.routes';
 import { statsRoutes } from './modules/stats/stats.routes';
 import { studentsRoutes } from './modules/students/students.routes';
 import { subjectsRoutes } from './modules/subjects/subjects.routes';
@@ -140,7 +143,10 @@ export function createApp({ prisma, identity, storage, holidays = brasilApiHolid
       timetable: new TimetableService(prisma, classGroups),
     }),
   );
-  app.use('/api/calendar', ...scoped, calendarRoutes(new CalendarService(prisma, holidays)));
+  const calendar = new CalendarService(prisma, holidays);
+  app.use('/api/calendar', ...scoped, calendarRoutes(calendar));
+  app.use('/api/attendance', ...scoped, attendanceRoutes(new AttendanceService(prisma, classGroups, calendar)));
+  app.use('/api/settings', ...scoped, settingsRoutes(prisma));
   app.use('/api/access-logs', ...scopedOrAll, accessLogsRoutes(new AccessLogsService(prisma)));
   app.use('/api/stats', ...scopedOrAll, statsRoutes(prisma));
 

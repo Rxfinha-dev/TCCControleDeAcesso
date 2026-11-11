@@ -62,7 +62,9 @@ model User {
   createdAt  DateTime @default(now()) @map("created_at")
   updatedAt  DateTime @updatedAt @map("updated_at")
 
-  school School? @relation(fields: [schoolId], references: [id], onDelete: SetNull)
+  school              School?              @relation(fields: [schoolId], references: [id], onDelete: SetNull)
+  attendanceOverrides AttendanceOverride[]
+  lessonCancellations LessonCancellation[]
 
   @@index([schoolId])
   @@map("users")
@@ -70,12 +72,14 @@ model User {
 
 /// Instituição (antiga tabela "escolas"). O login é de um User (perfil SCHOOL) ligado a ela.
 model School {
-  id        Int      @id @default(autoincrement())
-  name      String   @db.VarChar(100)
+  id            Int      @id @default(autoincrement())
+  name          String   @db.VarChar(100)
   /// Contato da escola e chave para vincular o primeiro login (provisionamento).
-  email     String   @unique @db.VarChar(120)
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  email         String   @unique @db.VarChar(120)
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+  /// Frequência mínima (%) para aprovação; 75 é o padrão da LDB.
+  minAttendance Int      @default(75) @map("min_attendance")
 
   users            User[]
   courses          Course[]
@@ -125,11 +129,12 @@ model Student {
   createdAt             DateTime    @default(now()) @map("created_at")
   updatedAt             DateTime    @updatedAt @map("updated_at")
 
-  school      School        @relation(fields: [schoolId], references: [id], onDelete: Cascade)
-  course      Course?       @relation(fields: [courseId], references: [id], onDelete: Restrict)
-  photo       StudentPhoto?
-  accessLogs  AccessLog[]
-  enrollments Enrollment[]
+  school              School               @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  course              Course?              @relation(fields: [courseId], references: [id], onDelete: Restrict)
+  photo               StudentPhoto?
+  accessLogs          AccessLog[]
+  enrollments         Enrollment[]
+  attendanceOverrides AttendanceOverride[]
 
   @@unique([schoolId, rm])
   @@unique([schoolId, fingerprintId])
@@ -163,6 +168,7 @@ model AccessLog {
   student Student? @relation(fields: [studentId], references: [id], onDelete: SetNull)
 
   @@index([schoolId, createdAt])
+  @@index([studentId, createdAt])
   @@map("access_logs")
 }
 
@@ -213,11 +219,13 @@ model ClassGroup {
   createdAt  DateTime @default(now()) @map("created_at")
   updatedAt  DateTime @updatedAt @map("updated_at")
 
-  school            School               @relation(fields: [schoolId], references: [id], onDelete: Cascade)
-  course            Course?              @relation(fields: [courseId], references: [id], onDelete: SetNull)
-  enrollments       Enrollment[]
-  assignments       TeachingAssignment[]
-  timetableVersions TimetableVersion[]
+  school              School               @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  course              Course?              @relation(fields: [courseId], references: [id], onDelete: SetNull)
+  enrollments         Enrollment[]
+  assignments         TeachingAssignment[]
+  timetableVersions   TimetableVersion[]
+  attendanceOverrides AttendanceOverride[]
+  lessonCancellations LessonCancellation[]
 
   @@unique([schoolId, schoolYear, name])
   @@map("class_groups")
@@ -339,4 +347,49 @@ model SchoolTerm {
 
   @@unique([schoolId, schoolYear, number])
   @@map("school_terms")
+}
+
+enum CancellationReason {
+  TEACHER_ABSENT
+  CANCELLED
+}
+
+/// Correção manual da presença de um aluno numa aula (turma + data + minuto de início).
+/// Sempre prevalece sobre o cálculo automático pela catraca.
+model AttendanceOverride {
+  id           Int      @id @default(autoincrement())
+  classGroupId Int      @map("class_group_id")
+  studentId    Int      @map("student_id")
+  date         DateTime @db.Date
+  startMinute  Int      @map("start_minute")
+  present      Boolean
+  /// Quem corrigiu por último.
+  userId       Int?     @map("user_id")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  classGroup ClassGroup @relation(fields: [classGroupId], references: [id], onDelete: Cascade)
+  student    Student    @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  user       User?      @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@unique([classGroupId, studentId, date, startMinute])
+  @@index([studentId, date])
+  @@map("attendance_overrides")
+}
+
+/// Aula em que o professor faltou ou que foi cancelada: a turma inteira recebe presença.
+model LessonCancellation {
+  id           Int                @id @default(autoincrement())
+  classGroupId Int                @map("class_group_id")
+  date         DateTime           @db.Date
+  startMinute  Int                @map("start_minute")
+  reason       CancellationReason
+  /// Quem marcou por último.
+  userId       Int?               @map("user_id")
+  updatedAt    DateTime           @updatedAt @map("updated_at")
+
+  classGroup ClassGroup @relation(fields: [classGroupId], references: [id], onDelete: Cascade)
+  user       User?      @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@unique([classGroupId, date, startMinute])
+  @@map("lesson_cancellations")
 }

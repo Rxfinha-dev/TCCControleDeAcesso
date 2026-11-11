@@ -1,6 +1,6 @@
 import type { NoClassDay, PrismaClient, SchoolTerm } from '@prisma/client';
 import { z } from 'zod';
-import { dateOnly, isoDate } from '../../lib/dates';
+import { dateOnly, isoDate, weekdayOf } from '../../lib/dates';
 import { notFound } from '../../lib/errors';
 import { logger } from '../../lib/logger';
 import type { HolidayProvider } from '../../services/holidays';
@@ -57,6 +57,32 @@ export const termsSchema = z.object({
 
 export type TermInput = z.infer<typeof termSchema>;
 
+export type DayInfo =
+  | { kind: 'SCHOOL_DAY' | 'WEEKEND' | 'OUT_OF_TERM' }
+  | { kind: 'HOLIDAY' | 'NO_CLASS'; name: string };
+
+/** Dados do calendário já carregados para um intervalo de datas (tudo em YYYY-MM-DD). */
+export interface CalendarData {
+  /** Feriados nacionais que valem para a escola (os desmarcados ficam de fora). */
+  holidays: Map<string, string>;
+  noClassDays: { name: string; startDate: string; endDate: string }[];
+  terms: { number: number; startDate: string; endDate: string }[];
+}
+
+/**
+ * Diz se há aula num dia. Só em SCHOOL_DAY existe presença ou falta; nos outros o dia fica fora da conta.
+ * Sábado é dia letivo (a grade decide se há aula); domingo nunca.
+ */
+export function classifyDay(iso: string, calendar: CalendarData): DayInfo {
+  if (weekdayOf(iso) === 7) return { kind: 'WEEKEND' };
+  const holiday = calendar.holidays.get(iso);
+  if (holiday) return { kind: 'HOLIDAY', name: holiday };
+  const noClass = calendar.noClassDays.find((day) => day.startDate <= iso && iso <= day.endDate);
+  if (noClass) return { kind: 'NO_CLASS', name: noClass.name };
+  if (!calendar.terms.some((term) => term.startDate <= iso && iso <= term.endDate)) return { kind: 'OUT_OF_TERM' };
+  return { kind: 'SCHOOL_DAY' };
+}
+
 const toNoClassDayDto = (day: NoClassDay) => ({
   id: day.id,
   name: day.name,
@@ -103,6 +129,31 @@ export class CalendarService {
       }),
       noClassDays: noClassDays.map(toNoClassDayDto),
       terms: terms.map(toTermDto),
+    };
+  }
+
+  /** Calendário de um intervalo de datas, pronto para `classifyDay`. Carrega os feriados dos anos envolvidos. */
+  async load(schoolId: number, from: string, to: string): Promise<CalendarData> {
+    for (let year = Number(from.slice(0, 4)); year <= Number(to.slice(0, 4)); year += 1) {
+      await this.ensureHolidays(year);
+    }
+    const range = { gte: dateOnly(from), lte: dateOnly(to) };
+    const [holidays, overrides, noClassDays, terms] = await Promise.all([
+      this.prisma.nationalHoliday.findMany({ where: { date: range } }),
+      this.prisma.holidayOverride.findMany({ where: { schoolId, date: range } }),
+      this.prisma.noClassDay.findMany({ where: { schoolId, startDate: { lte: dateOnly(to) }, endDate: { gte: dateOnly(from) } } }),
+      this.prisma.schoolTerm.findMany({
+        where: { schoolId, startDate: { lte: dateOnly(to) }, endDate: { gte: dateOnly(from) } },
+        orderBy: { startDate: 'asc' },
+      }),
+    ]);
+    const disabled = new Set(overrides.map((override) => isoDate(override.date)));
+    return {
+      holidays: new Map(
+        holidays.map((holiday) => [isoDate(holiday.date), holiday.name] as const).filter(([date]) => !disabled.has(date)),
+      ),
+      noClassDays: noClassDays.map((day) => ({ name: day.name, startDate: isoDate(day.startDate), endDate: isoDate(day.endDate) })),
+      terms: terms.map((term) => ({ number: term.number, startDate: isoDate(term.startDate), endDate: isoDate(term.endDate) })),
     };
   }
 
