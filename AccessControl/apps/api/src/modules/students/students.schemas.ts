@@ -3,6 +3,8 @@ import { z } from 'zod';
 
 export const MAX_FINGERPRINT_SLOTS = 127;
 
+const emptyToNull = (value: unknown) => (value === '' || value === 'null' || value === undefined ? null : value);
+
 export const studentSchema = z.object({
   name: z.string().trim().min(2, 'Informe o nome do aluno').max(100),
   rm: z
@@ -12,8 +14,9 @@ export const studentSchema = z.object({
     .max(8, 'O RM deve ter no máximo 8 caracteres')
     .regex(/^[A-Za-z0-9]+$/, 'O RM deve conter apenas letras e números'),
   age: z.coerce.number().int('Idade inválida').min(1, 'Idade inválida').max(120, 'Idade inválida'),
-  year: z.enum(SchoolYear, 'Selecione a série'),
-  courseId: z.coerce.number().int().positive('Selecione o curso'),
+  // Curso e série são opcionais (escola de ensino regular): campo vazio do formulário vira null.
+  year: z.preprocess(emptyToNull, z.enum(SchoolYear, 'Série inválida').nullable()).default(null),
+  courseId: z.preprocess(emptyToNull, z.coerce.number().int().positive('Curso inválido').nullable()).default(null),
 });
 
 export const listStudentsQuerySchema = z.object({

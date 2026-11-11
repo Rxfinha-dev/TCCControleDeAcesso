@@ -1,0 +1,178 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-10T12:00:00-03:00",
+  "title": "Design System: HelpUs",
+  "extensions": {
+    "colorMeta": {
+      "sky": { "role": "primary", "displayName": "Azul Céu HelpUs", "canonical": "#34bcfb", "dark": "#34bcfb", "tonalRamp": ["oklch(25% 0.06 235)", "oklch(35% 0.09 235)", "oklch(45% 0.11 235)", "oklch(58% 0.13 235)", "oklch(74% 0.14 235)", "oklch(83% 0.09 235)", "oklch(90% 0.05 235)", "oklch(96% 0.02 235)"] },
+      "sky-hover": { "role": "primary", "displayName": "Azul Céu Pressionado", "canonical": "#1fb0f3", "dark": "#1fb0f3" },
+      "sky-ink": { "role": "primary", "displayName": "Azul Tinta", "canonical": "#05638e", "dark": "#74d2fd" },
+      "sky-soft": { "role": "primary", "displayName": "Azul Névoa", "canonical": "#dff1f8", "dark": "#1b3442" },
+      "sky-line": { "role": "primary", "displayName": "Fio Azul", "canonical": "#a9dcf3", "dark": "#285970" },
+      "on-sky": { "role": "primary", "displayName": "Azul Noite", "canonical": "#10202b", "dark": "#10202b" },
+      "stamp": { "role": "secondary", "displayName": "Tinta de Carimbo", "canonical": "#5b3f8c", "dark": "#c7b3f0", "tonalRamp": ["oklch(22% 0.07 300)", "oklch(32% 0.10 300)", "oklch(42% 0.12 300)", "oklch(52% 0.12 300)", "oklch(64% 0.10 300)", "oklch(76% 0.08 300)", "oklch(87% 0.04 300)", "oklch(94% 0.02 300)"] },
+      "stamp-soft": { "role": "secondary", "displayName": "Carimbo Lavado", "canonical": "#ebe3f3", "dark": "#312a40" },
+      "graphite": { "role": "neutral", "displayName": "Grafite", "canonical": "#24262a", "dark": "#131416" },
+      "graphite-raised": { "role": "neutral", "displayName": "Grafite Elevado", "canonical": "#32353a", "dark": "#26282c" },
+      "paper": { "role": "neutral", "displayName": "Cartolina", "canonical": "#efe7d2", "dark": "#1b1c1f", "tonalRamp": ["oklch(20% 0.01 85)", "oklch(30% 0.015 85)", "oklch(42% 0.02 85)", "oklch(55% 0.03 85)", "oklch(70% 0.04 85)", "oklch(83% 0.04 85)", "oklch(92% 0.03 85)", "oklch(97% 0.015 85)"] },
+      "surface": { "role": "neutral", "displayName": "Papel", "canonical": "#fbf8ef", "dark": "#242528" },
+      "ink": { "role": "neutral", "displayName": "Tinta", "canonical": "#22252a", "dark": "#f1eadb" },
+      "text": { "role": "neutral", "displayName": "Texto", "canonical": "#3b3a36", "dark": "#d4cdbd" },
+      "muted": { "role": "neutral", "displayName": "Apagado", "canonical": "#625c4f", "dark": "#a39c8c" },
+      "line": { "role": "neutral", "displayName": "Fio", "canonical": "#ddd3bb", "dark": "#3a3832" },
+      "input-hover": { "role": "neutral", "displayName": "Fio em Hover", "canonical": "#c6b997", "dark": "#55524a" },
+      "placeholder": { "role": "neutral", "displayName": "Placeholder", "canonical": "#8a826f", "dark": "#857f72" },
+      "dashed": { "role": "neutral", "displayName": "Fio Tracejado", "canonical": "#cfc3a5", "dark": "#4a473f" },
+      "neutral-soft": { "role": "neutral", "displayName": "Neutro Lavado", "canonical": "#e8e0cc", "dark": "#33322e" },
+      "neutral-text": { "role": "neutral", "displayName": "Texto Neutro", "canonical": "#545045", "dark": "#c2bba9" },
+      "success": { "role": "tertiary", "displayName": "Tinta Verde", "canonical": "#276b3c", "dark": "#8fd19b" },
+      "success-soft": { "role": "tertiary", "displayName": "Verde Lavado", "canonical": "#e1eedb", "dark": "#1d3324" },
+      "success-line": { "role": "tertiary", "displayName": "Fio Verde", "canonical": "#a9cca0", "dark": "#2f5d3a" },
+      "warning": { "role": "tertiary", "displayName": "Tinta Âmbar", "canonical": "#8a5300", "dark": "#f0bd66" },
+      "warning-soft": { "role": "tertiary", "displayName": "Âmbar Lavado", "canonical": "#f7e7c6", "dark": "#3a2d16" },
+      "danger": { "role": "tertiary", "displayName": "Tinta Vermelha", "canonical": "#9e2219", "dark": "#ff9c8f", "tonalRamp": ["oklch(22% 0.07 30)", "oklch(32% 0.11 30)", "oklch(42% 0.14 30)", "oklch(52% 0.15 30)", "oklch(65% 0.13 30)", "oklch(77% 0.09 30)", "oklch(88% 0.04 30)", "oklch(95% 0.02 30)"] },
+      "danger-soft": { "role": "tertiary", "displayName": "Vermelho Lavado", "canonical": "#f6e0d9", "dark": "#3d221f" },
+      "danger-line": { "role": "tertiary", "displayName": "Fio Vermelho", "canonical": "#e2b3a8", "dark": "#6b342d" }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Título de página; 1.6rem abaixo de 860px." },
+      "headline": { "displayName": "Headline", "purpose": "Título do Cartão do dia e de resultados." },
+      "title": { "displayName": "Title", "purpose": "Títulos de cartão, gaveta e diálogo." },
+      "body": { "displayName": "Body", "purpose": "Texto corrido de todas as telas." },
+      "label": { "displayName": "Label", "purpose": "Cabeçalhos de coluna em maiúsculas; roxo no Cartão do dia, apagado nas demais tabelas." },
+      "stamp": { "displayName": "Carimbo", "purpose": "Horários curtos, RM e colunas numéricas; gira -1.5deg fora de tabelas." },
+      "stamp-total": { "displayName": "Total carimbado", "purpose": "Totais do dia e digitais pendentes." }
+    },
+    "shadows": [
+      { "name": "paper", "value": "0 1px 1px rgba(60, 48, 20, 0.06), 0 6px 16px -10px rgba(60, 48, 20, 0.22)", "dark": "0 1px 1px rgba(0, 0, 0, 0.3), 0 8px 20px -12px rgba(0, 0, 0, 0.6)", "purpose": "Cartões, Cartão do dia, painel de resultado." },
+      { "name": "paper-lifted", "value": "0 2px 4px rgba(60, 48, 20, 0.06), 0 24px 48px -28px rgba(60, 48, 20, 0.34)", "dark": "0 2px 4px rgba(0, 0, 0, 0.3), 0 28px 56px -28px rgba(0, 0, 0, 0.75)", "purpose": "Cartão de login e gaveta lateral." },
+      { "name": "granted-glow", "value": "0 28px 60px -36px var(--sky-glow)", "purpose": "Só o painel Acesso liberado." },
+      { "name": "focus-ring", "value": "0 0 0 3px var(--sky-soft)", "purpose": "Campo em foco." }
+    ],
+    "motion": [
+      { "name": "stamp-in", "value": "0.32s cubic-bezier(0.16, 1, 0.3, 1); scale(1.35) rotate(-6deg) -> scale(1) rotate(-1.5deg)", "purpose": "Movimento assinatura: carimbo de uma leitura nova na Verificação." },
+      { "name": "drawer-in", "value": "0.22s cubic-bezier(0.2, 0.8, 0.2, 1); translateX(40px)", "purpose": "Entrada da gaveta lateral." },
+      { "name": "ripple", "value": "1.8s ease-out infinite; scale(0.92) -> scale(1.18)", "purpose": "Anéis do scanner ativo." },
+      { "name": "state", "value": "0.15s", "purpose": "Transições de cor e borda em botões, campos e itens de menu." },
+      { "name": "reduced-motion", "value": "animation: none; transition: none", "purpose": "Tudo parado em prefers-reduced-motion: reduce." }
+    ],
+    "breakpoints": [
+      { "name": "phone", "value": "480px" },
+      { "name": "timecard-compact", "value": "640px" },
+      { "name": "mobile-shell", "value": "860px" },
+      { "name": "split-stack", "value": "960px" },
+      { "name": "dash-stack", "value": "1100px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Botão primário",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Ação principal da tela, em sky.",
+      "html": "<button class=\"ds-btn ds-btn-primary\">Abrir Verificação</button>",
+      "css": ".ds-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 6px; border: 1.5px solid transparent; font-family: var(--font); font-weight: 600; font-size: 0.95rem; cursor: pointer; transition: background 0.15s, color 0.15s, border-color 0.15s, transform 0.05s; } .ds-btn:active { transform: translateY(1px); } .ds-btn:focus-visible { outline: 3px solid var(--sky-line); outline-offset: 2px; } .ds-btn-primary { background: var(--sky); border-color: var(--sky); color: var(--on-sky); } .ds-btn-primary:hover { background: var(--sky-hover); border-color: var(--sky-hover); }"
+    },
+    {
+      "name": "Botão contornado",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Ação secundária sobre papel.",
+      "html": "<button class=\"ds-btn-outline\">Exportar</button>",
+      "css": ".ds-btn-outline { display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; border-radius: 6px; border: 1.5px solid var(--line); background: var(--surface); color: var(--ink); font-family: var(--font); font-weight: 600; font-size: 0.95rem; cursor: pointer; transition: background 0.15s, border-color 0.15s; } .ds-btn-outline:hover { border-color: var(--sky); background: var(--sky-soft); } .ds-btn-outline:focus-visible { outline: 3px solid var(--sky-line); outline-offset: 2px; }"
+    },
+    {
+      "name": "Botão destrutivo",
+      "kind": "button",
+      "refersTo": "button-danger",
+      "description": "Excluir e ações irreversíveis, em tinta vermelha.",
+      "html": "<button class=\"ds-btn-danger\">Excluir</button>",
+      "css": ".ds-btn-danger { display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; border-radius: 6px; border: 1.5px solid var(--danger-line); background: var(--surface); color: var(--danger); font-family: var(--font); font-weight: 600; font-size: 0.95rem; cursor: pointer; transition: background 0.15s, border-color 0.15s; } .ds-btn-danger:hover { background: var(--danger-soft); border-color: var(--danger); } .ds-btn-danger:focus-visible { outline: 3px solid var(--sky-line); outline-offset: 2px; }"
+    },
+    {
+      "name": "Campo",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Campo de texto com rótulo.",
+      "html": "<label class=\"ds-field\"><span>RM do aluno</span><input class=\"ds-input\" placeholder=\"Ex.: 24015\" /></label>",
+      "css": ".ds-field { display: flex; flex-direction: column; gap: 6px; font-family: var(--font); } .ds-field > span { font-weight: 600; font-size: 0.875rem; color: var(--ink); } .ds-input { min-height: 44px; padding: 0 14px; border-radius: 6px; border: 1.5px solid var(--line); background: var(--surface); color: var(--ink); font: inherit; transition: border-color 0.15s, box-shadow 0.15s; } .ds-input::placeholder { color: var(--placeholder); } .ds-input:hover { border-color: var(--input-hover); } .ds-input:focus { outline: none; border-color: var(--sky); box-shadow: 0 0 0 3px var(--sky-soft); }"
+    },
+    {
+      "name": "Menu lateral",
+      "kind": "nav",
+      "refersTo": "nav-item",
+      "description": "Navegação grafite com item ativo em sky.",
+      "html": "<nav class=\"ds-nav\"><a class=\"ds-nav-item ds-active\" href=\"#\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M3 10l9-7 9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z\"/></svg>Início</a><a class=\"ds-nav-item\" href=\"#\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><circle cx=\"12\" cy=\"8\" r=\"4\"/><path d=\"M4 21a8 8 0 0 1 16 0\"/></svg>Alunos</a><a class=\"ds-nav-item\" href=\"#\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M12 7v5l3 2\"/></svg>Entradas</a></nav>",
+      "css": ".ds-nav { display: flex; flex-direction: column; gap: 4px; width: 224px; padding: 16px; background: var(--graphite); font-family: var(--font); } .ds-nav-item { display: flex; align-items: center; gap: 14px; min-height: 44px; padding: 0 14px; border-radius: 6px; color: #b9bfc5; font-weight: 500; text-decoration: none; transition: background 0.15s, color 0.15s; } .ds-nav-item:hover { background: var(--graphite-raised); color: #fff; } .ds-nav-item:focus-visible { outline: 3px solid var(--sky-line); outline-offset: 2px; } .ds-nav-item.ds-active { background: var(--sky); color: var(--on-sky); font-weight: 600; }"
+    },
+    {
+      "name": "Badge de estado",
+      "kind": "chip",
+      "refersTo": "badge-success",
+      "description": "Estado com ponto na cor da tinta.",
+      "html": "<span class=\"ds-badge ds-badge-success\">Digital cadastrada</span> <span class=\"ds-badge ds-badge-warning\">Pendente</span> <span class=\"ds-badge ds-badge-muted\">Inativo</span>",
+      "css": ".ds-badge { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 4px; font-family: var(--font); font-size: 0.78rem; font-weight: 600; white-space: nowrap; } .ds-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; } .ds-badge-success { background: var(--success-soft); color: var(--success); } .ds-badge-warning { background: var(--warning-soft); color: var(--warning); } .ds-badge-muted { background: var(--neutral-soft); color: var(--neutral-text); }"
+    },
+    {
+      "name": "Cartão",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Papel sobre cartolina com sombra Papel.",
+      "html": "<div class=\"ds-card\"><h3>Digitais pendentes</h3><p>Alunos sem digital cadastrada.</p></div>",
+      "css": ".ds-card { background: var(--surface); border-radius: 8px; border: 1px solid transparent; box-shadow: var(--shadow); padding: 24px; font-family: var(--font); color: var(--text); } .ds-card h3 { margin: 0 0 12px; font-size: 1.1rem; font-weight: 600; letter-spacing: -0.02em; color: var(--ink); } .ds-card p { margin: 0; color: var(--muted); }"
+    },
+    {
+      "name": "Cartão do dia",
+      "kind": "custom",
+      "refersTo": "timecard",
+      "description": "Assinatura: tabela de leituras do dia com horários carimbados em mono roxo.",
+      "html": "<section class=\"ds-timecard\"><header class=\"ds-tc-head\"><h2>Cartão do dia</h2><p>Terça-feira, 10 de novembro</p></header><table class=\"ds-tc-table\"><thead><tr><th>Aluno</th><th class=\"ds-tc-time\">Horário</th></tr></thead><tbody><tr><td>Ana Souza</td><td class=\"ds-tc-time\"><time class=\"ds-stamp ds-stamp-box\">07:42</time></td></tr><tr><td>Bruno Lima <span class=\"ds-ink-tag\">Manual</span></td><td class=\"ds-tc-time\"><time class=\"ds-stamp\">07:38</time></td></tr></tbody></table><footer class=\"ds-tc-foot\"><strong>2</strong> entradas hoje</footer></section>",
+      "css": ".ds-timecard { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; box-shadow: var(--shadow); overflow: hidden; font-family: var(--font); color: var(--text); } .ds-tc-head { padding: 22px 26px 18px; border-bottom: 2px solid var(--stamp); } .ds-tc-head h2 { margin: 0; font-size: 1.5rem; font-weight: 600; letter-spacing: -0.02em; color: var(--ink); } .ds-tc-head p { margin: 4px 0 0; color: var(--muted); } .ds-tc-table { width: 100%; border-collapse: collapse; font-size: 0.95rem; } .ds-tc-table th { padding: 12px 26px 10px; text-align: left; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--stamp); border-bottom: 1px solid var(--line); } .ds-tc-table td { padding: 11px 26px; border-bottom: 1px solid var(--line); color: var(--ink); font-weight: 500; } .ds-tc-table .ds-tc-time { text-align: right; width: 7.5rem; } .ds-stamp { display: inline-block; font-family: var(--font-mono); font-weight: 600; font-variant-numeric: tabular-nums; font-size: 1.05rem; color: var(--stamp); transform: rotate(-1.5deg); } .ds-stamp-box { padding: 1px 8px; border: 2px solid currentColor; border-radius: 6px; } .ds-ink-tag { display: inline-block; margin-left: 10px; padding: 0 6px; border: 1.5px solid currentColor; border-radius: 4px; color: var(--danger); font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; vertical-align: 2px; } .ds-tc-foot { padding: 16px 26px; color: var(--muted); } .ds-tc-foot strong { margin-right: 4px; font-family: var(--font-mono); font-size: 1.6rem; font-weight: 600; color: var(--stamp); font-variant-numeric: tabular-nums; }"
+    },
+    {
+      "name": "Carimbo que entra",
+      "kind": "custom",
+      "refersTo": "stamp-box",
+      "description": "Movimento assinatura da Verificação: o carimbo emoldurado entra com escala e giro.",
+      "html": "<time class=\"ds-stamp-in\">07:42:15</time>",
+      "css": ".ds-stamp-in { display: inline-block; padding: 2px 12px; border: 2px solid currentColor; border-radius: 6px; font-family: var(--font-mono); font-weight: 600; font-variant-numeric: tabular-nums; font-size: clamp(2.4rem, 4vw, 3.4rem); line-height: 1.1; color: var(--stamp); transform: rotate(-1.5deg); animation: ds-stamp-in 0.32s cubic-bezier(0.16, 1, 0.3, 1) both; } .ds-stamp-in:hover { animation: none; } @keyframes ds-stamp-in { from { transform: scale(1.35) rotate(-6deg); opacity: 0; } to { transform: scale(1) rotate(-1.5deg); opacity: 1; } } @media (prefers-reduced-motion: reduce) { .ds-stamp-in { animation: none; } }"
+    }
+  ],
+  "narrative": {
+    "northStar": "O Cartão de Ponto",
+    "overview": "Cada leitura da catraca é um carimbo no cartão de ponto do dia. O sistema inteiro é um cartão de ponto de escola: cartolina creme no tema claro, grafite de relógio de ponto no tema escuro, horários batidos em tinta roxa de carimbo e um azul de marca reservado ao que se clica. A presença vem sozinha da catraca; a interface existe para que a escola confie no horário carimbado e só aja nas exceções.\n\nA densidade é de ferramenta de trabalho, não de vitrine: tabelas com fios finos, linhas de 11 a 14px de respiro, cabeçalhos de coluna em versalete pequeno, um menu lateral grafite fixo. O Início não é uma fileira de cartões de indicador com gráfico genérico; é o Cartão do dia, uma tabela de leituras com cabeçalho, linhas e rodapé de totais.\n\nOs tokens valem para os dois temas: os nomes são os mesmos e o tema escuro redefine os valores em `:root[data-theme='dark']` (valores escuros no sidecar). Rejeições confirmadas pelo produto: nada infantil, nada de escuro \"hacker\" (preto com neon), nada de ERP frio, nada de painel genérico de template.",
+    "keyCharacteristics": [
+      "Cartolina creme (claro) e grafite (escuro) como chão; superfícies de papel mais claro por cima.",
+      "Tinta roxa de carimbo exclusiva dos horários, em IBM Plex Mono com números tabulares.",
+      "Sky (#34bcfb) só em ações, navegação ativa e nas duas superfícies de marca aprovadas.",
+      "Tinta vermelha para exceção e erro.",
+      "Cantos de 6px, fios de 1px, sombras suaves e difusas.",
+      "Um movimento assinatura: o carimbo que entra."
+    ],
+    "rules": [
+      { "name": "A Regra da Tinta de Carimbo", "body": "O roxo de carimbo pertence ao tempo: horários, totais do dia e a moldura do Cartão. Nunca vira cor de botão, link ou estado.", "section": "colors" },
+      { "name": "A Regra do Céu que se Clica", "body": "Sky marca o que se clica e onde se está. As únicas superfícies grandes em sky são o painel de marca do login e a faixa \"Acesso liberado\" da Verificação, por decisão do dono do produto; fora delas, sky em área grande é erro.", "section": "colors" },
+      { "name": "A Regra da Tinta Vermelha", "body": "Vermelho é exceção: erro, ação destrutiva e entrada fora da catraca. Uma exceção recebe etiqueta emoldurada em vermelho, nunca uma cor de linha inteira.", "section": "colors" },
+      { "name": "A Regra da Mono que Marca", "body": "IBM Plex Mono só aparece em horários, RM e colunas numéricas, sempre com números tabulares. Texto corrido em mono é erro.", "section": "typography" },
+      { "name": "A Regra do Carimbo Torto", "body": "Horário curto carimbado gira -1.5deg, como um carimbo de verdade. Data e hora completas em tabela ficam retas: o giro só cabe em horários curtos.", "section": "typography" },
+      { "name": "A Regra do Papel Assentado", "body": "Sombra é a de papel sobre mesa: difusa, deslocada para baixo, de tom quente no claro. Sombra dura deslocada ou brilho colorido fora do \"Acesso liberado\" não pertence a este mundo.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do usar IBM Plex Mono 600 com números tabulares e tinta de carimbo para todo horário, RM e total do dia.",
+      "Do girar -1.5deg só horários curtos; manter retas data e hora completas em tabela.",
+      "Do emoldurar o carimbo (borda de 2px, cantos de 6px) apenas na leitura mais recente do Cartão do dia e na leitura da Verificação.",
+      "Do marcar exceção com a etiqueta emoldurada em tinta vermelha, ao lado do nome.",
+      "Do manter alvos de toque de 44px e o contorno de foco de 3px em fio azul.",
+      "Do definir toda cor nova como token nos dois temas (`:root` e `:root[data-theme='dark']`).",
+      "Do respeitar `prefers-reduced-motion`: carimbo, ondulação, gaveta e toasts ficam parados."
+    ],
+    "donts": [
+      "Don't abrir o Início com uma fileira de cartões de indicador e gráfico genérico; o Início é o Cartão do dia.",
+      "Don't usar sky em superfície grande fora do painel de marca do login e da faixa \"Acesso liberado\".",
+      "Don't usar a tinta de carimbo em botões, links ou estados.",
+      "Don't usar sombra dura deslocada ou brilho neon; o tema escuro é grafite quente, não preto com neon.",
+      "Don't escrever texto corrido em mono.",
+      "Don't alterar o logo HelpUs nem trocar o sky por outro azul de marca."
+    ]
+  }
+}

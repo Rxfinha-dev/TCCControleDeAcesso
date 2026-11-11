@@ -6,7 +6,7 @@ import { DownloadIcon } from '../components/Icons';
 import { PageHeader } from '../components/PageHeader';
 import { useSchoolScope } from '../contexts/SchoolScopeContext';
 import { useToast } from '../contexts/ToastContext';
-import { dayBoundary, downloadBlob, formatDateTime } from '../utils/format';
+import { dayBoundary, downloadBlob, formatDate, formatTimeSeconds } from '../utils/format';
 
 const PAGE_SIZE = 20;
 
@@ -101,7 +101,12 @@ export function AccessLogsPage() {
                 <tr key={log.id}>
                   {allSchools && <td>{log.school?.name ?? '—'}</td>}
                   <td>{log.studentName}</td>
-                  <td>{formatDateTime(log.createdAt)}</td>
+                  <td className="nowrap">
+                    <time dateTime={log.createdAt}>
+                      <span className="muted">{formatDate(log.createdAt)}</span>{' '}
+                      <span className="stamp">{formatTimeSeconds(log.createdAt)}</span>
+                    </time>
+                  </td>
                   <td>
                     <span className={`badge ${log.method === 'FINGERPRINT' ? 'badge-primary' : 'badge-muted'}`}>
                       {log.method === 'FINGERPRINT' ? 'Digital' : 'Manual'}

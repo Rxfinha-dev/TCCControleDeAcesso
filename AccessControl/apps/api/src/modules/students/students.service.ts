@@ -3,7 +3,7 @@ import { badRequest, conflict, notFound } from '../../lib/errors';
 import type { PhotoStorage, StoredPhoto } from '../../services/storage';
 import { MAX_FINGERPRINT_SLOTS, type ListStudentsQuery, type StudentInput } from './students.schemas';
 
-type StudentWithCourse = Student & { course: Pick<Course, 'id' | 'name'> };
+type StudentWithCourse = Student & { course: Pick<Course, 'id' | 'name'> | null };
 
 const withCourse = { course: { select: { id: true, name: true } } } satisfies Prisma.StudentInclude;
 
@@ -57,7 +57,14 @@ export class StudentsService {
     await this.ensureUniqueRm(schoolId, input.rm);
 
     const student = await this.prisma.student.create({ data: { ...input, schoolId }, include: withCourse });
-    const photoKey = await this.storage.save(student.id, schoolId, photo);
+    let photoKey: string;
+    try {
+      photoKey = await this.storage.save(student.id, schoolId, photo);
+    } catch (err) {
+      // Sem a foto o cadastro não vale (e prenderia o RM): desfaz o aluno recém-criado.
+      await this.prisma.student.delete({ where: { id: student.id } });
+      throw err;
+    }
     const saved = await this.prisma.student.update({ where: { id: student.id }, data: { photoKey }, include: withCourse });
     return toStudentDto(saved);
   }
@@ -67,19 +74,16 @@ export class StudentsService {
     await this.ensureCourse(schoolId, input.courseId);
     await this.ensureUniqueRm(schoolId, input.rm, id);
 
-    let photoKey = current.photoKey;
-    if (photo) {
-      photoKey = await this.storage.save(id, schoolId, photo);
-      if (current.photoKey && current.photoKey !== photoKey) {
-        await this.storage.remove(id, current.photoKey);
-      }
-    }
-
+    const photoKey = photo ? await this.storage.save(id, schoolId, photo) : current.photoKey;
     const updated = await this.prisma.student.update({
       where: { id },
       data: { ...input, photoKey },
       include: withCourse,
     });
+    // A foto antiga só sai depois que o cadastro aponta para a nova.
+    if (current.photoKey && current.photoKey !== photoKey) {
+      await this.storage.remove(id, current.photoKey);
+    }
     return toStudentDto(updated);
   }
 
@@ -148,14 +152,16 @@ export class StudentsService {
     return student;
   }
 
-  private async ensureCourse(schoolId: number, courseId: number) {
+  private async ensureCourse(schoolId: number, courseId: number | null) {
+    if (courseId === null) return;
     const course = await this.prisma.course.findFirst({ where: { id: courseId, schoolId } });
     if (!course) throw badRequest('Curso inválido', 'INVALID_COURSE');
   }
 
   private async ensureUniqueRm(schoolId: number, rm: string, ignoreId?: number) {
     const duplicate = await this.prisma.student.findFirst({
-      where: { schoolId, rm, NOT: ignoreId ? { id: ignoreId } : undefined },
+      // Mesma regra da entrada manual, que acha o RM sem diferenciar maiúsculas.
+      where: { schoolId, rm: { equals: rm, mode: 'insensitive' }, NOT: ignoreId ? { id: ignoreId } : undefined },
     });
     if (duplicate) throw conflict('Já existe um aluno com esse RM', 'RM_IN_USE');
   }

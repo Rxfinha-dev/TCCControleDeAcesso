@@ -6,6 +6,8 @@ import { AuthProvider, PANEL_ROLES, useAuth } from './contexts/AuthContext';
 import { SerialProvider } from './contexts/SerialContext';
 import { ToastProvider } from './contexts/ToastContext';
 import { AccessLogsPage } from './pages/AccessLogsPage';
+import { ClassGroupPage } from './pages/ClassGroupPage';
+import { ClassGroupsPage } from './pages/ClassGroupsPage';
 import { CoursesPage } from './pages/CoursesPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
@@ -14,6 +16,8 @@ import { RegisterPage } from './pages/RegisterPage';
 import { SchoolsPage } from './pages/SchoolsPage';
 import { SettingsPage } from './pages/SettingsPage';
 import { StudentsPage } from './pages/StudentsPage';
+import { SubjectsPage } from './pages/SubjectsPage';
+import { TeachersPage } from './pages/TeachersPage';
 import { UsersPage } from './pages/UsersPage';
 import { VerificationPage } from './pages/VerificationPage';
 import { VerifyEmailPage } from './pages/VerifyEmailPage';
@@ -39,7 +43,7 @@ function RequireAuth() {
   if (loading) {
     return (
       <div className="splash">
-        <Logo variant="auto" className="floating" />
+        <Logo variant="auto" />
       </div>
     );
   }
@@ -89,6 +93,38 @@ export function AppRoutes() {
             element={
               <RequireSchool>
                 <CoursesPage />
+              </RequireSchool>
+            }
+          />
+          <Route
+            path="/turmas"
+            element={
+              <RequireSchool>
+                <ClassGroupsPage />
+              </RequireSchool>
+            }
+          />
+          <Route
+            path="/turmas/:id"
+            element={
+              <RequireSchool>
+                <ClassGroupPage />
+              </RequireSchool>
+            }
+          />
+          <Route
+            path="/disciplinas"
+            element={
+              <RequireSchool>
+                <SubjectsPage />
+              </RequireSchool>
+            }
+          />
+          <Route
+            path="/professores"
+            element={
+              <RequireSchool>
+                <TeachersPage />
               </RequireSchool>
             }
           />

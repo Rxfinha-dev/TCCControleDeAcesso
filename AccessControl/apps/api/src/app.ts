@@ -15,12 +15,21 @@ import { accessLogsRoutes } from './modules/access-logs/access-logs.routes';
 import { AccessLogsService } from './modules/access-logs/access-logs.service';
 import { authRoutes } from './modules/auth/auth.routes';
 import { AuthService } from './modules/auth/auth.service';
+import { AssignmentsService } from './modules/class-groups/assignments.service';
+import { classGroupsRoutes } from './modules/class-groups/class-groups.routes';
+import { EnrollmentsService } from './modules/class-groups/enrollments.service';
+import { TimetableService } from './modules/class-groups/timetable.service';
+import { ClassGroupsService } from './modules/class-groups/class-groups.service';
 import { coursesRoutes } from './modules/courses/courses.routes';
 import { schoolsRoutes } from './modules/schools/schools.routes';
 import { SchoolsService } from './modules/schools/schools.service';
 import { CoursesService } from './modules/courses/courses.service';
 import { statsRoutes } from './modules/stats/stats.routes';
 import { studentsRoutes } from './modules/students/students.routes';
+import { subjectsRoutes } from './modules/subjects/subjects.routes';
+import { SubjectsService } from './modules/subjects/subjects.service';
+import { teachersRoutes } from './modules/teachers/teachers.routes';
+import { TeachersService } from './modules/teachers/teachers.service';
 import { usersRoutes } from './modules/users/users.routes';
 import { UsersService } from './modules/users/users.service';
 import { StudentsService } from './modules/students/students.service';
@@ -111,6 +120,21 @@ export function createApp({ prisma, identity, storage }: AppDependencies) {
 
   app.use('/api/courses', ...scoped, coursesRoutes(new CoursesService(prisma)));
   app.use('/api/students', ...scoped, studentsRoutes(new StudentsService(prisma, storage)));
+  const subjects = new SubjectsService(prisma);
+  const teachers = new TeachersService(prisma);
+  app.use('/api/subjects', ...scoped, subjectsRoutes(subjects));
+  app.use('/api/teachers', ...scoped, teachersRoutes(teachers));
+  const classGroups = new ClassGroupsService(prisma);
+  app.use(
+    '/api/class-groups',
+    ...scoped,
+    classGroupsRoutes({
+      classGroups,
+      enrollments: new EnrollmentsService(prisma, classGroups),
+      assignments: new AssignmentsService(prisma, classGroups),
+      timetable: new TimetableService(prisma, classGroups),
+    }),
+  );
   app.use('/api/access-logs', ...scopedOrAll, accessLogsRoutes(new AccessLogsService(prisma)));
   app.use('/api/stats', ...scopedOrAll, statsRoutes(prisma));
 

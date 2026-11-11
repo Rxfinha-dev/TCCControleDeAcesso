@@ -1,6 +1,7 @@
 import { AccessMethod, type Prisma, type PrismaClient } from '@prisma/client';
 import { z } from 'zod';
 import { notFound } from '../../lib/errors';
+import { MAX_FINGERPRINT_SLOTS } from '../students/students.schemas';
 import { toStudentDto } from '../students/students.service';
 
 export const listAccessLogsQuerySchema = z.object({
@@ -12,7 +13,7 @@ export const listAccessLogsQuerySchema = z.object({
 });
 
 export const fingerprintEntrySchema = z.object({
-  fingerprintId: z.coerce.number().int().min(1).max(1000),
+  fingerprintId: z.coerce.number().int().min(1).max(MAX_FINGERPRINT_SLOTS),
 });
 
 export const manualEntrySchema = z.object({
@@ -71,7 +72,8 @@ export class AccessLogsService {
   /** Chamado quando o Arduino responde "!found<posição>#". */
   async registerByFingerprint(schoolId: number, fingerprintId: number) {
     const student = await this.prisma.student.findFirst({
-      where: { schoolId, fingerprintId },
+      // Só cadastro concluído: posição reservada e não confirmada ainda guarda o dedo do dono anterior no sensor.
+      where: { schoolId, fingerprintId, fingerprintEnrolledAt: { not: null } },
       include: { course: { select: { id: true, name: true } } },
     });
     if (!student) throw notFound('Digital não vinculada a nenhum aluno', 'FINGERPRINT_NOT_FOUND');

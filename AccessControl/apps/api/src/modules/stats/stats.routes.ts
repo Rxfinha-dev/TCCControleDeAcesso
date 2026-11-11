@@ -23,7 +23,13 @@ export function statsRoutes(prisma: PrismaClient) {
       prisma.course.count({ where: bySchool }),
       prisma.accessLog.count({ where: { ...bySchool, createdAt: { gte: startOfDay } } }),
       prisma.student.count({ where: { ...bySchool, fingerprintEnrolledAt: null } }),
-      prisma.accessLog.findMany({ where: bySchool, include: accessLogSchoolInclude, orderBy: { createdAt: 'desc' }, take: 5 }),
+      prisma.accessLog.findMany({
+        where: bySchool,
+        // Curso do aluno para o cartão do dia (null se o aluno foi excluído ou não tem curso).
+        include: { ...accessLogSchoolInclude, student: { select: { course: { select: { name: true } } } } },
+        orderBy: { createdAt: 'desc' },
+        take: 8,
+      }),
     ]);
 
     res.json({ students, courses, entriesToday, pendingFingerprints, recentEntries });
