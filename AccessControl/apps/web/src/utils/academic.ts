@@ -1,4 +1,6 @@
-import type { CancellationReason, DayInfo, Shift } from '../api/types';
+import type { AssessmentKind, CancellationReason, DayInfo, Shift } from '../api/types';
+
+export const KIND_LABELS: Record<AssessmentKind, string> = { EXAM: 'Prova', ASSIGNMENT: 'Trabalho' };
 
 export const CANCELLATION_LABELS: Record<CancellationReason, string> = {
   TEACHER_ABSENT: 'Falta do professor',

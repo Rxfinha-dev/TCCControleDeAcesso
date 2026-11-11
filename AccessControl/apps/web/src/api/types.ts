@@ -319,6 +319,7 @@ export interface SchoolSettings {
   minAttendance: number;
   /** Sufixo dos logins ("etec-jau"). */
   code: string | null;
+  grading: Grading;
 }
 
 export type AttendanceOverrideInput = LessonKey & { studentId: number; present: boolean | null };
@@ -340,4 +341,75 @@ export interface TeacherLessons {
   day: DayInfo;
   classGroups: { id: number; name: string }[];
   lessons: (Omit<AttendanceLesson, 'teacher'> & { classGroup: { id: number; name: string } })[];
+}
+
+/* Avaliações, notas e médias. */
+
+export type AssessmentKind = 'EXAM' | 'ASSIGNMENT';
+
+/** Sistema de notas da escola. Em CONCEPT, `concepts` vem do maior para o menor. */
+export interface Grading {
+  kind: 'NUMERIC' | 'CONCEPT';
+  max: number;
+  decimals: number;
+  /** Menor nota (ou valor de conceito) que aprova. */
+  passing: number;
+  concepts: { label: string; value: number }[];
+}
+
+export type GradingInput =
+  | { kind: 'NUMERIC'; max: number; decimals: number; passing: number }
+  | { kind: 'CONCEPT'; passing: number; concepts: { label: string; value: number }[] };
+
+export interface AssessmentInput {
+  classGroupId: number;
+  subjectId: number;
+  kind: AssessmentKind;
+  /** 'YYYY-MM-DD' */
+  date: string;
+  /** Aula da prova (minutos desde 00:00); trabalho não tem. */
+  startMinute: number | null;
+  title: string;
+  content: string | null;
+  note: string | null;
+  weight: number;
+}
+
+export interface Assessment extends Omit<AssessmentInput, 'subjectId'> {
+  id: number;
+  subject: Subject;
+  gradesCount?: number;
+}
+
+export interface AssessmentList {
+  grading: Grading;
+  /** Disciplinas em que quem está logado pode marcar avaliação. */
+  subjects: Subject[];
+  assessments: Assessment[];
+}
+
+export interface AssessmentGrades {
+  grading: Grading;
+  assessment: Assessment;
+  students: { id: number; name: string; rm: string; value: number | null }[];
+}
+
+/** Nota ou média pronta para exibir (`label: null` = sem nota). */
+export interface GradeCell {
+  value: number | null;
+  label: string | null;
+  passed: boolean | null;
+}
+
+export interface SubjectAverages {
+  subjectId: number;
+  terms: GradeCell[];
+  semesters: GradeCell[];
+  annual: GradeCell;
+}
+
+export interface GradesReport {
+  grading: Grading;
+  subjects: Subject[];
+  students: { id: number; name: string; rm: string; subjects: SubjectAverages[] }[];
 }

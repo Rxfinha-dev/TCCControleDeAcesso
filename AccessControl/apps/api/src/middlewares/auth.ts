@@ -46,6 +46,14 @@ export function currentUser(res: Response): AuthContext {
   return res.locals.auth as AuthContext;
 }
 
+/** Professor: o cadastro dele (só mexe nas próprias aulas e disciplinas). Escola e super admin: null (sem restrição). */
+export function currentTeacherId(res: Response): number | null {
+  const user = currentUser(res);
+  if (user.role !== 'TEACHER') return null;
+  if (user.teacherId === null) throw forbidden('Este login não está ligado a um professor.', 'NO_TEACHER');
+  return user.teacherId;
+}
+
 /** Libera a rota só para os perfis informados. */
 export function requireRole(...roles: UserRole[]): RequestHandler {
   return (_req, res, next) => {

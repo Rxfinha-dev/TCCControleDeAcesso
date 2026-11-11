@@ -6,6 +6,7 @@ import { AuthProvider, PANEL_ROLES, useAuth } from './contexts/AuthContext';
 import { SerialProvider } from './contexts/SerialContext';
 import { ToastProvider } from './contexts/ToastContext';
 import { AccessLogsPage } from './pages/AccessLogsPage';
+import { AssessmentsPage } from './pages/AssessmentsPage';
 import { AttendancePage } from './pages/AttendancePage';
 import { CalendarPage } from './pages/CalendarPage';
 import { ChangePasswordPage } from './pages/ChangePasswordPage';
@@ -101,6 +102,14 @@ export function AppRoutes() {
             element={
               <RequireSchool>
                 <AttendancePage />
+              </RequireSchool>
+            }
+          />
+          <Route
+            path="/avaliacoes"
+            element={
+              <RequireSchool>
+                <AssessmentsPage />
               </RequireSchool>
             }
           />

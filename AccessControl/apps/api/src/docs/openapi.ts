@@ -4,6 +4,7 @@
  */
 
 import { academicPaths, academicSchemas, academicTags } from './academic';
+import { assessmentsPaths, assessmentsSchemas, assessmentsTags } from './assessments';
 import { attendancePaths, attendanceSchemas, attendanceTags } from './attendance';
 import { loginsPaths, loginsSchemas, loginsTags } from './logins';
 import { calendarPaths, calendarSchemas, calendarTags } from './calendar';
@@ -126,6 +127,7 @@ export const openApiSpec = {
     ...calendarTags,
     ...attendanceTags,
     ...loginsTags,
+    ...assessmentsTags,
   ],
   security: [{ bearerAuth: [] }],
   paths: {
@@ -133,6 +135,7 @@ export const openApiSpec = {
     ...calendarPaths({ ref, json, errorResponse, authErrors, validationError, notFound, idParam }),
     ...attendancePaths({ ref, json, errorResponse, authErrors, validationError, notFound }),
     ...loginsPaths({ ref, json, errorResponse, authErrors, validationError, notFound, idParam }),
+    ...assessmentsPaths({ ref, json, errorResponse, authErrors, validationError, notFound, idParam }),
     '/api/health': {
       get: {
         tags: ['Health'],
@@ -518,6 +521,7 @@ export const openApiSpec = {
       ...calendarSchemas(ref),
       ...attendanceSchemas(ref),
       ...loginsSchemas,
+      ...assessmentsSchemas(ref),
       Error: {
         type: 'object',
         required: ['code', 'message'],

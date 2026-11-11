@@ -73,7 +73,7 @@ describe('Professor', () => {
     expect(within(row).getByText('07:30–08:20')).toBeInTheDocument();
     expect(within(row).getByRole('link', { name: /Abrir chamada/ })).toHaveAttribute('href', `/presenca?turma=20&dia=${todayIso()}`);
     const nav = within(screen.getByRole('navigation'));
-    expect(nav.getAllByRole('link').map((link) => link.textContent)).toEqual(['Início', 'Chamada']);
+    expect(nav.getAllByRole('link').map((link) => link.textContent)).toEqual(['Início', 'Chamada', 'Avaliações']);
   });
 
   it('telas da escola voltam para o início', async () => {

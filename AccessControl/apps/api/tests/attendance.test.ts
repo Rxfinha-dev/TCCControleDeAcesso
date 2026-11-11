@@ -366,18 +366,17 @@ describe('Presença', () => {
   describe('frequência mínima da escola', () => {
     it('lê e altera', async () => {
       const { app, prisma } = setup();
-      prisma.school.findUniqueOrThrow.mockResolvedValue({ minAttendance: 75 } as never);
-      prisma.school.update.mockResolvedValue({ minAttendance: 80 } as never);
+      prisma.school.update.mockResolvedValue({ ...school, minAttendance: 80 });
 
       const read = await request(app).get('/api/settings').set('Authorization', authHeader());
       const write = await request(app).put('/api/settings').set('Authorization', authHeader()).send({ minAttendance: 80 });
 
-      expect(read.body).toEqual({ minAttendance: 75 });
-      expect(write.body).toEqual({ minAttendance: 80 });
+      expect(read.body).toMatchObject({ minAttendance: 75, code: 'etec-jau', grading: { kind: 'NUMERIC', max: 10, passing: 6 } });
+      expect(write.body).toMatchObject({ minAttendance: 80 });
       expect(prisma.school.update).toHaveBeenCalledWith({
         where: { id: school.id },
         data: { minAttendance: 80 },
-        select: { minAttendance: true, code: true },
+        select: expect.objectContaining({ minAttendance: true, code: true, gradingKind: true }),
       });
     });
 

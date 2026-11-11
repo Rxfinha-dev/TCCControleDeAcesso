@@ -48,6 +48,18 @@ enum TimetableSlotKind {
   BREAK
 }
 
+/// Tipo de avaliação: prova (presa a uma aula) ou trabalho (só data de entrega).
+enum AssessmentKind {
+  EXAM
+  ASSIGNMENT
+}
+
+/// Sistema de notas da escola.
+enum GradingKind {
+  NUMERIC
+  CONCEPT
+}
+
 /// Usuário do sistema, ligado ao Supabase Auth. O perfil vive só aqui (nunca em user_metadata).
 model User {
   id                 Int      @id @default(autoincrement())
@@ -73,6 +85,8 @@ model User {
   student             Student?             @relation(fields: [studentId], references: [id], onDelete: Cascade)
   attendanceOverrides AttendanceOverride[]
   lessonCancellations LessonCancellation[]
+  assessments         Assessment[]
+  grades              Grade[]
 
   @@index([schoolId])
   @@map("users")
@@ -80,16 +94,24 @@ model User {
 
 /// Instituição (antiga tabela "escolas"). O login é de um User (perfil SCHOOL) ligado a ela.
 model School {
-  id            Int      @id @default(autoincrement())
-  name          String   @db.VarChar(100)
+  id            Int         @id @default(autoincrement())
+  name          String      @db.VarChar(100)
   /// Contato da escola e chave para vincular o primeiro login (provisionamento).
-  email         String   @unique @db.VarChar(120)
+  email         String      @unique @db.VarChar(120)
   /// Código curto único (ex.: "etec-jau"), sufixo dos logins de professores e alunos.
-  code          String?  @unique @db.VarChar(30)
-  createdAt     DateTime @default(now()) @map("created_at")
-  updatedAt     DateTime @updatedAt @map("updated_at")
+  code          String?     @unique @db.VarChar(30)
+  createdAt     DateTime    @default(now()) @map("created_at")
+  updatedAt     DateTime    @updatedAt @map("updated_at")
   /// Frequência mínima (%) para aprovação; 75 é o padrão da LDB.
-  minAttendance Int      @default(75) @map("min_attendance")
+  minAttendance Int         @default(75) @map("min_attendance")
+  /// Sistema de notas. Numérico: nota máxima, casas decimais e mínimo para aprovar.
+  gradingKind   GradingKind @default(NUMERIC) @map("grading_kind")
+  gradeMax      Int         @default(10) @map("grade_max")
+  gradeDecimals Int         @default(1) @map("grade_decimals")
+  /// Menor nota (ou valor de conceito) que aprova.
+  passingGrade  Float       @default(6) @map("passing_grade")
+  /// Conceitos: [{ label, value }] do maior para o menor (ex.: MB=4, B=3, R=2, I=1). Null no sistema numérico.
+  gradeConcepts Json?       @map("grade_concepts")
 
   users            User[]
   courses          Course[]
@@ -143,6 +165,7 @@ model Student {
   course              Course?              @relation(fields: [courseId], references: [id], onDelete: Restrict)
   photo               StudentPhoto?
   user                User?
+  grades              Grade[]
   accessLogs          AccessLog[]
   enrollments         Enrollment[]
   attendanceOverrides AttendanceOverride[]
@@ -215,6 +238,7 @@ model Subject {
   school      School               @relation(fields: [schoolId], references: [id], onDelete: Cascade)
   assignments TeachingAssignment[]
   slots       TimetableSlot[]
+  assessments Assessment[]
 
   @@unique([schoolId, name])
   @@map("subjects")
@@ -238,6 +262,7 @@ model ClassGroup {
   timetableVersions   TimetableVersion[]
   attendanceOverrides AttendanceOverride[]
   lessonCancellations LessonCancellation[]
+  assessments         Assessment[]
 
   @@unique([schoolId, schoolYear, name])
   @@map("class_groups")
@@ -404,4 +429,50 @@ model LessonCancellation {
 
   @@unique([classGroupId, date, startMinute])
   @@map("lesson_cancellations")
+}
+
+/// Prova ou trabalho de uma disciplina numa turma. O bimestre vem da data.
+model Assessment {
+  id           Int            @id @default(autoincrement())
+  classGroupId Int            @map("class_group_id")
+  subjectId    Int            @map("subject_id")
+  kind         AssessmentKind
+  date         DateTime       @db.Date
+  /// Aula em que a prova acontece (início, em minutos). Trabalho não tem.
+  startMinute  Int?           @map("start_minute")
+  title        String         @db.VarChar(100)
+  content      String?        @db.VarChar(2000)
+  /// Observação (local, material).
+  note         String?        @db.VarChar(300)
+  weight       Float          @default(1)
+  /// Quem criou.
+  userId       Int?           @map("user_id")
+  createdAt    DateTime       @default(now()) @map("created_at")
+  updatedAt    DateTime       @updatedAt @map("updated_at")
+
+  classGroup ClassGroup @relation(fields: [classGroupId], references: [id], onDelete: Cascade)
+  subject    Subject    @relation(fields: [subjectId], references: [id], onDelete: Restrict)
+  user       User?      @relation(fields: [userId], references: [id], onDelete: SetNull)
+  grades     Grade[]
+
+  @@index([classGroupId, date])
+  @@map("assessments")
+}
+
+/// Nota de um aluno numa avaliação. Conceitos são guardados pelo valor numérico.
+model Grade {
+  assessmentId Int      @map("assessment_id")
+  studentId    Int      @map("student_id")
+  value        Float
+  /// Quem lançou por último.
+  userId       Int?     @map("user_id")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  assessment Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  student    Student    @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  user       User?      @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@id([assessmentId, studentId])
+  @@index([studentId])
+  @@map("grades")
 }
