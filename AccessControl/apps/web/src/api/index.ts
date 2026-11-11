@@ -5,6 +5,9 @@ import type {
   AttendanceDay,
   AttendanceOverrideInput,
   AttendanceSummary,
+  ClassGroupLogins,
+  LoginCredentials,
+  TeacherLessons,
   ClassGroup,
   ClassGroupDetail,
   ClassGroupInput,
@@ -113,6 +116,7 @@ export const calendarApi = {
 
 export const attendanceApi = {
   day: (classGroupId: number, date: string) => requestJson<AttendanceDay>(`/attendance/day${query({ classGroupId, date })}`),
+  myLessons: (date?: string) => requestJson<TeacherLessons>(`/attendance/my-lessons${query({ date })}`),
   summary: (classGroupId: number) => requestJson<AttendanceSummary>(`/attendance/summary${query({ classGroupId })}`),
   setOverride: (input: AttendanceOverrideInput) => requestJson<void>('/attendance/override', { method: 'PUT', body: { ...input } }),
   setCancellation: (input: LessonCancellationInput) =>
@@ -121,7 +125,15 @@ export const attendanceApi = {
 
 export const settingsApi = {
   get: () => requestJson<SchoolSettings>('/settings'),
-  save: (input: SchoolSettings) => requestJson<SchoolSettings>('/settings', { method: 'PUT', body: { ...input } }),
+  save: (input: Partial<Omit<SchoolSettings, 'code'>> & { code?: string }) => requestJson<SchoolSettings>('/settings', { method: 'PUT', body: { ...input } }),
+};
+
+/** Sem senha, a API gera uma. A senha volta só nesta resposta. */
+export const loginsApi = {
+  teacher: (id: number, password?: string) =>
+    requestJson<LoginCredentials>(`/logins/teachers/${id}`, { method: 'PUT', body: { password } }),
+  student: (id: number) => requestJson<LoginCredentials>(`/logins/students/${id}`, { method: 'PUT', body: {} }),
+  classGroup: (id: number) => requestJson<ClassGroupLogins>(`/logins/class-groups/${id}`, { method: 'POST' }),
 };
 
 export const studentsApi = {

@@ -63,7 +63,7 @@ describe('Tela de login', () => {
     });
 
     renderAt('/login');
-    await userEvent.type(screen.getByPlaceholderText('Digite seu e-mail'), 'etec@jau.com');
+    await userEvent.type(screen.getByLabelText('E-mail ou usuário'), 'etec@jau.com');
     await userEvent.type(screen.getByPlaceholderText('Digite sua senha'), 'senhaforte123');
     await userEvent.click(screen.getByRole('button', { name: 'Entrar' }));
 
@@ -85,7 +85,7 @@ describe('Tela de login', () => {
     );
 
     renderAt('/login');
-    await userEvent.type(screen.getByPlaceholderText('Digite seu e-mail'), 'ana@aluna.com');
+    await userEvent.type(screen.getByLabelText('E-mail ou usuário'), 'ana@aluna.com');
     await userEvent.type(screen.getByPlaceholderText('Digite sua senha'), 'senhaforte123');
     await userEvent.click(screen.getByRole('button', { name: 'Entrar' }));
 
@@ -98,11 +98,11 @@ describe('Tela de login', () => {
     supabase.auth.signInWithPassword.mockResolvedValueOnce({ data: {}, error: authError('invalid_credentials') } as never);
 
     renderAt('/login');
-    await userEvent.type(screen.getByPlaceholderText('Digite seu e-mail'), 'etec@jau.com');
+    await userEvent.type(screen.getByLabelText('E-mail ou usuário'), 'etec@jau.com');
     await userEvent.type(screen.getByPlaceholderText('Digite sua senha'), 'errada');
     await userEvent.click(screen.getByRole('button', { name: 'Entrar' }));
 
-    expect(await screen.findByRole('alert')).toHaveTextContent('E-mail ou senha incorretos');
+    expect(await screen.findByRole('alert')).toHaveTextContent('Usuário ou senha incorretos');
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
@@ -110,7 +110,7 @@ describe('Tela de login', () => {
     supabase.auth.signInWithPassword.mockResolvedValueOnce({ data: {}, error: authError('email_not_confirmed') } as never);
 
     renderAt('/login');
-    await userEvent.type(screen.getByPlaceholderText('Digite seu e-mail'), 'etec@jau.com');
+    await userEvent.type(screen.getByLabelText('E-mail ou usuário'), 'etec@jau.com');
     await userEvent.type(screen.getByPlaceholderText('Digite sua senha'), 'senhaforte123');
     await userEvent.click(screen.getByRole('button', { name: 'Entrar' }));
 

@@ -14,12 +14,12 @@ interface AuthContextValue {
   logout: () => Promise<void>;
 }
 
-/** Perfis que já usam o painel. Os demais veem o aviso de "em breve". */
-export const PANEL_ROLES: UserRole[] = ['SUPER_ADMIN', 'SCHOOL'];
+/** Perfis que já usam o painel. Os demais (aluno, por enquanto) veem o aviso de "em breve". */
+export const PANEL_ROLES: UserRole[] = ['SUPER_ADMIN', 'SCHOOL', 'TEACHER'];
 
 /** Nome exibido no painel: o do super admin, ou o da escola para o login da escola. */
 export const displayName = (user: AuthUser | null) =>
-  user ? (user.role === 'SUPER_ADMIN' ? user.name : (user.school?.name ?? user.name)) : '';
+  user ? (user.role === 'SCHOOL' ? (user.school?.name ?? user.name) : user.name) : '';
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 

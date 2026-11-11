@@ -21,14 +21,33 @@ export function SettingsPage() {
   const hasSchool = selected !== 'all';
   const [minAttendance, setMinAttendance] = useState('');
   const [savingMin, setSavingMin] = useState(false);
+  const [code, setCode] = useState('');
+  const [savingCode, setSavingCode] = useState(false);
 
   useEffect(() => {
     if (!hasSchool) return;
     settingsApi
       .get()
-      .then((settings) => setMinAttendance(String(settings.minAttendance)))
+      .then((settings) => {
+        setMinAttendance(String(settings.minAttendance));
+        setCode(settings.code ?? '');
+      })
       .catch((err) => toast.error(errorMessage(err)));
   }, [hasSchool, selected, toast]);
+
+  async function saveCode(event: FormEvent) {
+    event.preventDefault();
+    setSavingCode(true);
+    try {
+      const saved = await settingsApi.save({ code });
+      setCode(saved.code ?? '');
+      toast.success('Código da escola salvo.');
+    } catch (err) {
+      toast.error(errorMessage(err));
+    } finally {
+      setSavingCode(false);
+    }
+  }
 
   async function saveMinAttendance(event: FormEvent) {
     event.preventDefault();
@@ -135,6 +154,26 @@ export function SettingsPage() {
             <div className="form-actions">
               <button type="submit" className="btn btn-primary" disabled={savingMin}>
                 Salvar frequência mínima
+              </button>
+            </div>
+          </form>
+        )}
+
+        {hasSchool && (
+          <form className="card form" onSubmit={saveCode} noValidate>
+            <h2 className="card-title">Logins de professores e alunos</h2>
+            <label className="field">
+              <span>Código da escola</span>
+              <input value={code} onChange={(event) => setCode(event.target.value)} maxLength={30} placeholder="ex.: etec-jau" />
+            </label>
+            <p className="hint">
+              Os usuários ficam como <span className="mono">nome.sobrenome@{code || 'código'}</span> (professor) e{' '}
+              <span className="mono">RM@{code || 'código'}</span> (aluno). Use letras, números e hífen. Depois de criar logins, o
+              código não muda mais.
+            </p>
+            <div className="form-actions">
+              <button type="submit" className="btn btn-primary" disabled={savingCode || !code.trim()}>
+                Salvar código
               </button>
             </div>
           </form>

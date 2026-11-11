@@ -1,4 +1,25 @@
-import type { Shift } from '../api/types';
+import type { CancellationReason, DayInfo, Shift } from '../api/types';
+
+export const CANCELLATION_LABELS: Record<CancellationReason, string> = {
+  TEACHER_ABSENT: 'Falta do professor',
+  CANCELLED: 'Aula cancelada',
+};
+
+/** Por que não há chamada num dia que não é letivo (null = dia letivo). */
+export function dayMessage(day: DayInfo) {
+  switch (day.kind) {
+    case 'HOLIDAY':
+      return `Feriado: ${day.name}. Sem aula, ninguém leva presença nem falta.`;
+    case 'NO_CLASS':
+      return `Dia sem aula: ${day.name}.`;
+    case 'WEEKEND':
+      return 'Domingo não tem aula.';
+    case 'OUT_OF_TERM':
+      return 'Este dia está fora dos bimestres, então não conta presença.';
+    default:
+      return null;
+  }
+}
 
 export const SHIFT_LABELS: Record<Shift, string> = {
   MORNING: 'Manhã',

@@ -45,11 +45,12 @@ export function LoginPage() {
     <AuthLayout title="Entrar" subtitle="Acesse o painel de controle de acesso da sua instituição.">
       <form className="form" onSubmit={handleSubmit} noValidate>
         <label className="field">
-          <span>Usuário</span>
+          <span>E-mail ou usuário</span>
           <input
-            type="email"
-            autoComplete="email"
-            placeholder="Digite seu e-mail"
+            type="text"
+            autoComplete="username"
+            autoCapitalize="none"
+            placeholder="E-mail da escola ou usuário (ex.: 24001@etec-jau)"
             value={email}
             onChange={(event) => setEmail(event.target.value)}
             required

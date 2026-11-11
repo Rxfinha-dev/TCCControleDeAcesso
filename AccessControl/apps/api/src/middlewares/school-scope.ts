@@ -7,7 +7,6 @@ import { currentUser } from './auth';
 /** Cabeçalho com a escola em uso: id da escola ou "all" (todas, só super admin e só leitura). */
 export const SCHOOL_HEADER = 'x-school-id';
 
-const PANEL_ROLES: UserRole[] = [UserRole.SUPER_ADMIN, UserRole.SCHOOL];
 
 /** Maior id possível (coluna INT4): acima disso o Prisma lançaria erro de validação (500). */
 const MAX_ID = 2_147_483_647;
@@ -23,13 +22,20 @@ const headerSchema = z.union([
 
 const schoolRequired = () => badRequest('Selecione uma escola para usar este recurso.', 'SCHOOL_REQUIRED');
 
-/** Perfis futuros (aluno, funcionário, professor) ainda não acessam o painel. */
-export const requirePanelAccess: RequestHandler = (_req, res, next) => {
-  if (!PANEL_ROLES.includes(currentUser(res).role)) {
-    throw forbidden('Seu acesso à plataforma estará disponível em breve.', 'NO_PANEL_ACCESS');
-  }
-  next();
-};
+/** Libera a rota para os perfis informados, depois que a senha inicial foi trocada. */
+export function requireAccess(...roles: UserRole[]): RequestHandler {
+  return (_req, res, next) => {
+    const user = currentUser(res);
+    if (!roles.includes(user.role)) {
+      throw forbidden('Seu acesso a esta parte da plataforma estará disponível em breve.', 'NO_PANEL_ACCESS');
+    }
+    if (user.mustChangePassword) throw forbidden('Troque a senha inicial para continuar.', 'PASSWORD_CHANGE_REQUIRED');
+    next();
+  };
+}
+
+/** Painel da escola: super admin e login de escola. */
+export const requirePanelAccess = requireAccess(UserRole.SUPER_ADMIN, UserRole.SCHOOL);
 
 /**
  * Resolve a escola sobre a qual a requisição opera.

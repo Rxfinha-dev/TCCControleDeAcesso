@@ -13,11 +13,13 @@ export const teacherSchema = z.object({
 
 export type TeacherInput = z.infer<typeof teacherSchema>;
 
-const toDto = (teacher: Teacher, assignmentsCount = 0) => ({
+const toDto = (teacher: Teacher, assignmentsCount = 0, username: string | null = null) => ({
   id: teacher.id,
   name: teacher.name,
   contactEmail: teacher.contactEmail,
   assignmentsCount,
+  /** Usuário do login do professor, se a escola já criou. */
+  username,
 });
 
 export class TeachersService {
@@ -27,9 +29,9 @@ export class TeachersService {
     const teachers = await this.prisma.teacher.findMany({
       where: { schoolId },
       orderBy: { name: 'asc' },
-      include: { _count: { select: { assignments: true } } },
+      include: { _count: { select: { assignments: true } }, user: { select: { username: true } } },
     });
-    return teachers.map(({ _count, ...teacher }) => toDto(teacher, _count.assignments));
+    return teachers.map(({ _count, user, ...teacher }) => toDto(teacher, _count.assignments, user?.username ?? null));
   }
 
   async create(schoolId: number, input: TeacherInput) {

@@ -5,6 +5,7 @@
 
 import { academicPaths, academicSchemas, academicTags } from './academic';
 import { attendancePaths, attendanceSchemas, attendanceTags } from './attendance';
+import { loginsPaths, loginsSchemas, loginsTags } from './logins';
 import { calendarPaths, calendarSchemas, calendarTags } from './calendar';
 
 const ref = (name: string) => ({ $ref: `#/components/schemas/${name}` });
@@ -124,12 +125,14 @@ export const openApiSpec = {
     ...academicTags,
     ...calendarTags,
     ...attendanceTags,
+    ...loginsTags,
   ],
   security: [{ bearerAuth: [] }],
   paths: {
     ...academicPaths({ ref, json, errorResponse, authErrors, validationError, notFound, idParam }),
     ...calendarPaths({ ref, json, errorResponse, authErrors, validationError, notFound, idParam }),
     ...attendancePaths({ ref, json, errorResponse, authErrors, validationError, notFound }),
+    ...loginsPaths({ ref, json, errorResponse, authErrors, validationError, notFound, idParam }),
     '/api/health': {
       get: {
         tags: ['Health'],
@@ -514,6 +517,7 @@ export const openApiSpec = {
       ...academicSchemas(ref),
       ...calendarSchemas(ref),
       ...attendanceSchemas(ref),
+      ...loginsSchemas,
       Error: {
         type: 'object',
         required: ['code', 'message'],
@@ -599,6 +603,8 @@ export const openApiSpec = {
           email: { type: 'string', format: 'email' },
           role: ref('UserRole'),
           school: { type: 'object', nullable: true, properties: { id: { type: 'integer' }, name: { type: 'string' } } },
+          username: { type: 'string', nullable: true, example: 'ana.prado@etec-jau', description: 'Só para professor e aluno' },
+          mustChangePassword: { type: 'boolean', description: 'Senha inicial ainda não trocada (PUT /api/auth/password)' },
         },
       },
       CourseInput: {
