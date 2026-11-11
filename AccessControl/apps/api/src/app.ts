@@ -14,6 +14,8 @@ import { apiRateLimit } from './middlewares/rate-limit';
 import { accessLogsRoutes } from './modules/access-logs/access-logs.routes';
 import { AccessLogsService } from './modules/access-logs/access-logs.service';
 import { authRoutes } from './modules/auth/auth.routes';
+import { calendarRoutes } from './modules/calendar/calendar.routes';
+import { CalendarService } from './modules/calendar/calendar.service';
 import { AuthService } from './modules/auth/auth.service';
 import { AssignmentsService } from './modules/class-groups/assignments.service';
 import { classGroupsRoutes } from './modules/class-groups/class-groups.routes';
@@ -33,6 +35,7 @@ import { TeachersService } from './modules/teachers/teachers.service';
 import { usersRoutes } from './modules/users/users.routes';
 import { UsersService } from './modules/users/users.service';
 import { StudentsService } from './modules/students/students.service';
+import { brasilApiHolidays, type HolidayProvider } from './services/holidays';
 import type { IdentityProvider } from './services/identity';
 import type { PhotoStorage } from './services/storage';
 
@@ -40,9 +43,11 @@ export interface AppDependencies {
   prisma: PrismaClient;
   identity: IdentityProvider;
   storage: PhotoStorage;
+  /** Fonte dos feriados nacionais (padrão: BrasilAPI). */
+  holidays?: HolidayProvider;
 }
 
-export function createApp({ prisma, identity, storage }: AppDependencies) {
+export function createApp({ prisma, identity, storage, holidays = brasilApiHolidays }: AppDependencies) {
   const app = express();
 
   // Necessário atrás do proxy do Render/Fly para o rate limit identificar o IP real.
@@ -135,6 +140,7 @@ export function createApp({ prisma, identity, storage }: AppDependencies) {
       timetable: new TimetableService(prisma, classGroups),
     }),
   );
+  app.use('/api/calendar', ...scoped, calendarRoutes(new CalendarService(prisma, holidays)));
   app.use('/api/access-logs', ...scopedOrAll, accessLogsRoutes(new AccessLogsService(prisma)));
   app.use('/api/stats', ...scopedOrAll, statsRoutes(prisma));
 

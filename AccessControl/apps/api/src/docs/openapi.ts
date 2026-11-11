@@ -4,6 +4,7 @@
  */
 
 import { academicPaths, academicSchemas, academicTags } from './academic';
+import { calendarPaths, calendarSchemas, calendarTags } from './calendar';
 
 const ref = (name: string) => ({ $ref: `#/components/schemas/${name}` });
 const json = (schema: object) => ({ 'application/json': { schema } });
@@ -120,10 +121,12 @@ export const openApiSpec = {
     { name: 'Escolas', description: 'Gestão das escolas (super admin)' },
     { name: 'Usuários', description: 'Gestão de usuários e perfis (super admin)' },
     ...academicTags,
+    ...calendarTags,
   ],
   security: [{ bearerAuth: [] }],
   paths: {
     ...academicPaths({ ref, json, errorResponse, authErrors, validationError, notFound, idParam }),
+    ...calendarPaths({ ref, json, errorResponse, authErrors, validationError, notFound, idParam }),
     '/api/health': {
       get: {
         tags: ['Health'],
@@ -506,6 +509,7 @@ export const openApiSpec = {
     },
     schemas: {
       ...academicSchemas(ref),
+      ...calendarSchemas(ref),
       Error: {
         type: 'object',
         required: ['code', 'message'],

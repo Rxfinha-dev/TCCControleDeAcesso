@@ -4,7 +4,7 @@ import { errorMessage } from '../../api/client';
 import type { ClassGroup, ClassGroupDetail, TeacherConflict, TimetableBlockInput } from '../../api/types';
 import { useToast } from '../../contexts/ToastContext';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
-import { WEEKDAY_LABELS, formatEndField, formatMinute, parseEndField, parseMinute } from '../../utils/academic';
+import { WEEKDAY_LABELS, formatDay, formatEndField, formatMinute, parseEndField, parseMinute } from '../../utils/academic';
 import { PALETTE_MIME, TimetableGrid, type PaletteItem, type SubjectInfo } from './TimetableGrid';
 import { fromTimetable, overlappingKeys, timetableReducer, visibleRange } from './timetableReducer';
 
@@ -134,7 +134,7 @@ export function TimetableEditor({ classGroup }: { classGroup: ClassGroupDetail }
 
   const since = loadFailed
     ? 'Não foi possível carregar a grade. Recarregue a página para tentar de novo.'
-    : validFrom ? `Grade em vigor desde ${validFrom.split('-').reverse().join('/')}.` : 'Esta turma ainda não tem grade salva.';
+    : validFrom ? `Grade em vigor desde ${formatDay(validFrom)}.` : 'Esta turma ainda não tem grade salva.';
 
   if (readOnly) {
     return (

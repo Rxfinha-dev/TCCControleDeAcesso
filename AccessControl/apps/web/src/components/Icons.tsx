@@ -168,6 +168,13 @@ export const TagIcon = (p: SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
+export const CalendarIcon = (p: SVGProps<SVGSVGElement>) => (
+  <svg {...base(p)}>
+    <rect x="3" y="5" width="18" height="16" rx="2" />
+    <path d="M3 10h18M8 3v4M16 3v4" />
+  </svg>
+);
+
 export const TeacherIcon = (p: SVGProps<SVGSVGElement>) => (
   <svg {...base(p)}>
     <rect x="9" y="3" width="12" height="9" rx="1" />

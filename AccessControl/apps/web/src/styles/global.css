@@ -2479,3 +2479,42 @@ button.tt-block {
     width: auto;
   }
 }
+
+/* ---------- Calendário ---------- */
+.term-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.term-row legend {
+  padding: 0;
+  margin-bottom: 6px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--ink);
+}
+
+.term-row input {
+  flex: 1;
+  min-width: 0;
+}
+
+.calendar-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr));
+}
+
+.calendar-grid .hint {
+  margin-bottom: 12px;
+}
+
+input.check {
+  width: 20px;
+  min-height: 20px;
+  height: 20px;
+  accent-color: var(--sky-ink);
+  cursor: pointer;
+}

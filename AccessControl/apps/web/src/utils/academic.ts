@@ -29,6 +29,9 @@ export function parseEndField(value: string) {
   return minute === 0 ? 24 * 60 : minute;
 }
 
+/** 'YYYY-MM-DD' → 'DD/MM/YYYY'. */
+export const formatDay = (iso: string) => iso.split('-').reverse().join('/');
+
 /** Ano letivo atual no fuso da escola (o mesmo cálculo da API). */
 export const currentSchoolYear = () =>
   Number(new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Sao_Paulo', year: 'numeric' }).format(new Date()));

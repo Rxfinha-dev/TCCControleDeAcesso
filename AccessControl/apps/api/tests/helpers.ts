@@ -1,6 +1,7 @@
 import type { ClassGroup, PrismaClient, School, Student, User } from '@prisma/client';
 import { mockDeep, type DeepMockProxy } from 'jest-mock-extended';
 import { createApp } from '../src/app';
+import type { Holiday, HolidayProvider } from '../src/services/holidays';
 import type { AuthUser, IdentityProvider } from '../src/services/identity';
 import type { PhotoStorage, StoredPhoto } from '../src/services/storage';
 
@@ -44,6 +45,18 @@ export class MemoryStorage implements PhotoStorage {
   }
 }
 
+/** Simula a BrasilAPI: devolve os feriados configurados por ano, ou falha. */
+export class FakeHolidays implements HolidayProvider {
+  byYear: Record<number, Holiday[]> = {};
+  fail = false;
+  calls: number[] = [];
+  async fetch(year: number) {
+    this.calls.push(year);
+    if (this.fail) throw new Error('BrasilAPI fora do ar');
+    return this.byYear[year] ?? [];
+  }
+}
+
 export interface TestAppOptions {
   /** Usuário logado (padrão: o login SCHOOL da escola de teste). */
   user?: User;
@@ -63,8 +76,9 @@ export function buildTestApp({ user = schoolUser }: TestAppOptions = {}) {
   prisma.user.findUnique.mockResolvedValue({ ...user, school: user.schoolId === school.id ? school : null } as never);
   const identity = new FakeIdentity();
   const storage = new MemoryStorage();
-  const app = createApp({ prisma, identity, storage });
-  return { app, prisma, identity, storage };
+  const holidays = new FakeHolidays();
+  const app = createApp({ prisma, identity, storage, holidays });
+  return { app, prisma, identity, storage, holidays };
 }
 
 export const school: School = {

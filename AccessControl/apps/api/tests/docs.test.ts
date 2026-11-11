@@ -41,6 +41,11 @@ describe('Documentação da API', () => {
         '/api/class-groups/{id}/students/{studentId}',
         '/api/class-groups/{id}/assignments/{subjectId}',
         '/api/class-groups/{id}/timetable',
+        '/api/calendar',
+        '/api/calendar/holidays/{date}',
+        '/api/calendar/no-class-days',
+        '/api/calendar/no-class-days/{id}',
+        '/api/calendar/terms/{schoolYear}',
       ]),
     );
   });

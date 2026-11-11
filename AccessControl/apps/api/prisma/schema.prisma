@@ -77,13 +77,16 @@ model School {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  users       User[]
-  courses     Course[]
-  students    Student[]
-  accessLogs  AccessLog[]
-  teachers    Teacher[]
-  subjects    Subject[]
-  classGroups ClassGroup[]
+  users            User[]
+  courses          Course[]
+  students         Student[]
+  accessLogs       AccessLog[]
+  teachers         Teacher[]
+  subjects         Subject[]
+  classGroups      ClassGroup[]
+  holidayOverrides HolidayOverride[]
+  noClassDays      NoClassDay[]
+  terms            SchoolTerm[]
 
   @@map("schools")
 }
@@ -287,4 +290,53 @@ model TimetableSlot {
   @@index([versionId])
   @@index([subjectId])
   @@map("timetable_slots")
+}
+
+/// Feriado nacional (BrasilAPI), compartilhado por todas as escolas.
+model NationalHoliday {
+  date DateTime @id @db.Date
+  name String   @db.VarChar(80)
+
+  @@map("national_holidays")
+}
+
+/// Feriado nacional que a escola desmarcou (ex.: dia de reposição): volta a ser dia letivo.
+model HolidayOverride {
+  schoolId Int      @map("school_id")
+  date     DateTime @db.Date
+
+  school School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+
+  @@id([schoolId, date])
+  @@map("holiday_overrides")
+}
+
+/// Dia (ou intervalo) sem aula para a escola inteira: não gera presença nem falta.
+model NoClassDay {
+  id        Int      @id @default(autoincrement())
+  schoolId  Int      @map("school_id")
+  name      String   @db.VarChar(80)
+  startDate DateTime @map("start_date") @db.Date
+  endDate   DateTime @map("end_date") @db.Date
+  createdAt DateTime @default(now()) @map("created_at")
+
+  school School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+
+  @@index([schoolId, startDate])
+  @@map("no_class_days")
+}
+
+/// Bimestre do ano letivo (number 1 a 4). Dias fora de qualquer bimestre não contam presença.
+model SchoolTerm {
+  id         Int      @id @default(autoincrement())
+  schoolId   Int      @map("school_id")
+  schoolYear Int      @map("school_year")
+  number     Int
+  startDate  DateTime @map("start_date") @db.Date
+  endDate    DateTime @map("end_date") @db.Date
+
+  school School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+
+  @@unique([schoolId, schoolYear, number])
+  @@map("school_terms")
 }
