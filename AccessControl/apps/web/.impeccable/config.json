@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "design-system-font",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/*.html"
+        ],
+        "createdAt": "2026-11-10T11:57:01.153Z",
+        "reason": "comps das direções rejeitadas na escolha do 'cartão de ponto'; usam fontes de outras direções de propósito"
+      }
+    ]
+  }
+}

@@ -3,6 +3,8 @@
  * Ao criar ou alterar uma rota, atualize também o trecho correspondente aqui.
  */
 
+import { academicPaths, academicSchemas, academicTags } from './academic';
+
 const ref = (name: string) => ({ $ref: `#/components/schemas/${name}` });
 const json = (schema: object) => ({ 'application/json': { schema } });
 const errorResponse = (description: string) => ({ description, content: json(ref('Error')) });
@@ -58,13 +60,13 @@ const schoolNotFound = errorResponse('Escola não encontrada (`SCHOOL_NOT_FOUND`
 
 const studentFields = {
   type: 'object',
-  required: ['name', 'rm', 'age', 'year', 'courseId'],
+  required: ['name', 'rm', 'age'],
   properties: {
     name: { type: 'string', minLength: 2, maxLength: 100, example: 'Maria Souza' },
     rm: { type: 'string', minLength: 1, maxLength: 8, pattern: '^[A-Za-z0-9]+$', example: '12345' },
     age: { type: 'integer', minimum: 1, maximum: 120, example: 16 },
-    year: ref('SchoolYear'),
-    courseId: { type: 'integer', minimum: 1, example: 1 },
+    year: { allOf: [ref('SchoolYear')], nullable: true, description: 'Opcional (vazio = sem série)' },
+    courseId: { type: 'integer', minimum: 1, nullable: true, example: 1, description: 'Opcional (vazio = sem curso)' },
     photo: { type: 'string', format: 'binary', description: 'Foto do aluno (JPEG, PNG, WebP ou BMP, até 2 MB)' },
   },
 };
@@ -117,9 +119,11 @@ export const openApiSpec = {
     { name: 'Painel', description: 'Resumo exibido na tela inicial' },
     { name: 'Escolas', description: 'Gestão das escolas (super admin)' },
     { name: 'Usuários', description: 'Gestão de usuários e perfis (super admin)' },
+    ...academicTags,
   ],
   security: [{ bearerAuth: [] }],
   paths: {
+    ...academicPaths({ ref, json, errorResponse, authErrors, validationError, notFound, idParam }),
     '/api/health': {
       get: {
         tags: ['Health'],
@@ -501,6 +505,7 @@ export const openApiSpec = {
       },
     },
     schemas: {
+      ...academicSchemas(ref),
       Error: {
         type: 'object',
         required: ['code', 'message'],
@@ -621,9 +626,10 @@ export const openApiSpec = {
           name: { type: 'string', example: 'Maria Souza' },
           rm: { type: 'string', example: '12345' },
           age: { type: 'integer', example: 16 },
-          year: ref('SchoolYear'),
+          year: { allOf: [ref('SchoolYear')], nullable: true },
           course: {
             type: 'object',
+            nullable: true,
             properties: { id: { type: 'integer', example: 1 }, name: { type: 'string', example: 'Informática' } },
           },
           hasPhoto: { type: 'boolean' },
@@ -668,7 +674,7 @@ export const openApiSpec = {
           courses: { type: 'integer', example: 4 },
           entriesToday: { type: 'integer', example: 87 },
           pendingFingerprints: { type: 'integer', description: 'Alunos sem digital cadastrada', example: 5 },
-          recentEntries: { type: 'array', items: ref('AccessLog'), description: 'Últimas 5 entradas' },
+          recentEntries: { type: 'array', items: ref('AccessLog'), description: 'Últimas 8 entradas' },
         },
       },
     },
@@ -677,7 +683,7 @@ export const openApiSpec = {
 
 // Rotas por escola aceitam o cabeçalho X-School-Id e seus erros de escopo.
 for (const [path, item] of Object.entries(openApiSpec.paths) as [string, Record<string, unknown>][]) {
-  if (!/^\/api\/(courses|students|access-logs|stats)/.test(path)) continue;
+  if (!/^\/api\/(courses|students|access-logs|stats|subjects|teachers|class-groups)/.test(path)) continue;
   item.parameters = [...((item.parameters as object[] | undefined) ?? []), schoolHeader];
   for (const operation of Object.values(item)) {
     if (operation && typeof operation === 'object' && 'responses' in operation) {

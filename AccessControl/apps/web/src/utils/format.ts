@@ -6,7 +6,8 @@ export const YEAR_OPTIONS: { value: SchoolYear; label: string }[] = [
   { value: 'THIRD', label: '3º Ano' },
 ];
 
-export const yearLabel = (year: SchoolYear) => YEAR_OPTIONS.find((option) => option.value === year)?.label ?? year;
+export const yearLabel = (year: SchoolYear | null) =>
+  year === null ? '—' : (YEAR_OPTIONS.find((option) => option.value === year)?.label ?? year);
 
 /** Primeiro nome exibido no menu (como no frmMainMenu legado). */
 export const firstName = (fullName: string) => fullName.trim().split(/\s+/)[0] ?? '';
@@ -20,11 +21,13 @@ export function initials(fullName: string) {
   return (first + last).toUpperCase();
 }
 
-const dateTimeFormatter = new Intl.DateTimeFormat('pt-BR', { dateStyle: 'short', timeStyle: 'medium' });
 const timeFormatter = new Intl.DateTimeFormat('pt-BR', { timeStyle: 'short' });
+const dateFormatter = new Intl.DateTimeFormat('pt-BR', { dateStyle: 'short' });
+const timeSecondsFormatter = new Intl.DateTimeFormat('pt-BR', { timeStyle: 'medium' });
 
-export const formatDateTime = (value: string | Date) => dateTimeFormatter.format(new Date(value));
 export const formatTime = (value: string | Date) => timeFormatter.format(new Date(value));
+export const formatDate = (value: string | Date) => dateFormatter.format(new Date(value));
+export const formatTimeSeconds = (value: string | Date) => timeSecondsFormatter.format(new Date(value));
 
 /** Converte "AAAA-MM-DD" (input date) para ISO no início/fim do dia local. */
 export function dayBoundary(date: string, end = false): string | undefined {

@@ -43,6 +43,46 @@ describe('Alunos', () => {
     );
   });
 
+  it('cadastra aluno sem curso e sem série (escola de ensino regular)', async () => {
+    const { app, prisma } = buildTestApp();
+    prisma.student.findFirst.mockResolvedValue(null);
+    prisma.student.create.mockResolvedValue(makeStudent({ photoKey: null, courseId: null, year: null }) as never);
+    prisma.student.update.mockResolvedValue(makeStudent({ courseId: null, year: null }) as never);
+
+    const res = await request(app)
+      .post('/api/students')
+      .set('Authorization', authHeader())
+      .field('name', 'Ana Souza')
+      .field('rm', '24001')
+      .field('age', '16')
+      .field('year', '')
+      .attach('photo', PNG, { filename: 'ana.png', contentType: 'image/png' });
+
+    expect(res.status).toBe(201);
+    expect(prisma.course.findFirst).not.toHaveBeenCalled();
+    expect(prisma.student.create).toHaveBeenCalledWith(
+      expect.objectContaining({ data: expect.objectContaining({ courseId: null, year: null }) }),
+    );
+  });
+
+  it('recusa curso de outra escola', async () => {
+    const { app, prisma } = buildTestApp();
+    prisma.course.findFirst.mockResolvedValue(null);
+
+    const res = await request(app)
+      .post('/api/students')
+      .set('Authorization', authHeader())
+      .field('name', 'Ana Souza')
+      .field('rm', '24001')
+      .field('age', '16')
+      .field('courseId', '99')
+      .attach('photo', PNG, { filename: 'ana.png', contentType: 'image/png' });
+
+    expect(res.status).toBe(400);
+    expect(res.body.code).toBe('INVALID_COURSE');
+    expect(prisma.course.findFirst).toHaveBeenCalledWith({ where: { id: 99, schoolId: school.id } });
+  });
+
   it('exige foto no cadastro (como no sistema legado)', async () => {
     const { app } = buildTestApp();
     const res = await request(app)
@@ -86,6 +126,66 @@ describe('Alunos', () => {
 
     expect(res.status).toBe(409);
     expect(res.body.message).toBe('Já existe um aluno com esse RM');
+  });
+
+  it('RM repetido com outra caixa também é duplicado', async () => {
+    const { app, prisma } = buildTestApp();
+    prisma.course.findFirst.mockResolvedValue(course);
+    prisma.student.findFirst.mockResolvedValue(makeStudent({ rm: 'AB12' }) as never);
+
+    const res = await request(app)
+      .post('/api/students')
+      .set('Authorization', authHeader())
+      .field('name', 'Outro')
+      .field('rm', 'ab12')
+      .field('age', '16')
+      .field('courseId', '3')
+      .attach('photo', PNG, { filename: 'a.png', contentType: 'image/png' });
+
+    expect(res.status).toBe(409);
+    expect(prisma.student.findFirst).toHaveBeenCalledWith(
+      expect.objectContaining({ where: expect.objectContaining({ rm: { equals: 'ab12', mode: 'insensitive' } }) }),
+    );
+  });
+
+  it('se a foto não for salva, o aluno não fica cadastrado pela metade', async () => {
+    const { app, prisma, storage } = buildTestApp();
+    prisma.course.findFirst.mockResolvedValue(course);
+    prisma.student.findFirst.mockResolvedValue(null);
+    prisma.student.create.mockResolvedValue(makeStudent({ photoKey: null }) as never);
+    jest.spyOn(storage, 'save').mockRejectedValue(new Error('storage fora do ar'));
+
+    const res = await request(app)
+      .post('/api/students')
+      .set('Authorization', authHeader())
+      .field('name', 'Ana Souza')
+      .field('rm', '24001')
+      .field('age', '16')
+      .field('courseId', '3')
+      .attach('photo', PNG, { filename: 'ana.png', contentType: 'image/png' });
+
+    expect(res.status).toBe(500);
+    expect(prisma.student.delete).toHaveBeenCalledWith({ where: { id: 10 } });
+  });
+
+  it('trocar a foto mantém a antiga se o cadastro não for salvo', async () => {
+    const { app, prisma, storage } = buildTestApp();
+    storage.photos.set('antiga', { buffer: PNG, mimeType: 'image/png' } as never);
+    prisma.course.findFirst.mockResolvedValue(course);
+    prisma.student.findFirst.mockResolvedValueOnce(makeStudent({ photoKey: 'antiga' }) as never).mockResolvedValueOnce(null);
+    prisma.student.update.mockRejectedValue(new Error('banco fora do ar'));
+
+    const res = await request(app)
+      .put('/api/students/10')
+      .set('Authorization', authHeader())
+      .field('name', 'Ana Souza')
+      .field('rm', '24001')
+      .field('age', '16')
+      .field('courseId', '3')
+      .attach('photo', PNG, { filename: 'ana.png', contentType: 'image/png' });
+
+    expect(res.status).toBe(500);
+    expect(storage.photos.has('antiga')).toBe(true);
   });
 
   it('retorna a foto do aluno', async () => {

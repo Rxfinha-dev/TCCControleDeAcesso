@@ -1,4 +1,4 @@
-import type { PrismaClient, School, Student, User } from '@prisma/client';
+import type { ClassGroup, PrismaClient, School, Student, User } from '@prisma/client';
 import { mockDeep, type DeepMockProxy } from 'jest-mock-extended';
 import { createApp } from '../src/app';
 import type { AuthUser, IdentityProvider } from '../src/services/identity';
@@ -98,7 +98,7 @@ export const superAdmin: User = {
 
 export const authHeader = () => `Bearer ${VALID_TOKEN}`;
 
-export function makeStudent(overrides: Partial<Student> = {}): Student & { course: { id: number; name: string } } {
+export function makeStudent(overrides: Partial<Student> = {}): Student & { course: { id: number; name: string } | null } {
   return {
     id: 10,
     name: 'Ana Souza',
@@ -116,3 +116,15 @@ export function makeStudent(overrides: Partial<Student> = {}): Student & { cours
     ...overrides,
   };
 }
+
+/** Turma da escola de teste. */
+export const classGroup: ClassGroup = {
+  id: 20,
+  schoolId: school.id,
+  name: '2º DS A',
+  schoolYear: 2026,
+  shift: 'MORNING',
+  courseId: 3,
+  createdAt: new Date(),
+  updatedAt: new Date(),
+};

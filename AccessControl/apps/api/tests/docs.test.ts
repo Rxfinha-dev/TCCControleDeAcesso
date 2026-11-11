@@ -30,6 +30,17 @@ describe('Documentação da API', () => {
         '/api/schools/{id}',
         '/api/users',
         '/api/users/{id}',
+        '/api/subjects',
+        '/api/subjects/{id}',
+        '/api/teachers',
+        '/api/teachers/{id}',
+        '/api/class-groups',
+        '/api/class-groups/{id}',
+        '/api/class-groups/copy',
+        '/api/class-groups/{id}/students',
+        '/api/class-groups/{id}/students/{studentId}',
+        '/api/class-groups/{id}/assignments/{subjectId}',
+        '/api/class-groups/{id}/timetable',
       ]),
     );
   });
