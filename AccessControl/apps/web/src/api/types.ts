@@ -215,3 +215,41 @@ export interface Timetable {
   blocks: TimetableBlock[];
   warnings: TeacherConflict[];
 }
+
+/* Calendário escolar: feriados, dias sem aula e bimestres. Datas em 'YYYY-MM-DD'. */
+
+export interface Holiday {
+  date: string;
+  name: string;
+  /** false quando a escola desmarcou o feriado (vira dia letivo). */
+  active: boolean;
+}
+
+export interface NoClassDay {
+  id: number;
+  name: string;
+  startDate: string;
+  endDate: string;
+}
+
+export interface NoClassDayInput {
+  name: string;
+  startDate: string;
+  endDate?: string;
+}
+
+export interface SchoolTerm {
+  /** 1 a 4 */
+  number: number;
+  startDate: string;
+  endDate: string;
+}
+
+export interface SchoolCalendar {
+  year: number;
+  /** false quando a busca dos feriados nacionais falhou. */
+  holidaysLoaded: boolean;
+  holidays: Holiday[];
+  noClassDays: NoClassDay[];
+  terms: SchoolTerm[];
+}

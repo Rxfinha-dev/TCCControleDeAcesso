@@ -6,6 +6,7 @@ import { AuthProvider, PANEL_ROLES, useAuth } from './contexts/AuthContext';
 import { SerialProvider } from './contexts/SerialContext';
 import { ToastProvider } from './contexts/ToastContext';
 import { AccessLogsPage } from './pages/AccessLogsPage';
+import { CalendarPage } from './pages/CalendarPage';
 import { ClassGroupPage } from './pages/ClassGroupPage';
 import { ClassGroupsPage } from './pages/ClassGroupsPage';
 import { CoursesPage } from './pages/CoursesPage';
@@ -125,6 +126,14 @@ export function AppRoutes() {
             element={
               <RequireSchool>
                 <TeachersPage />
+              </RequireSchool>
+            }
+          />
+          <Route
+            path="/calendario"
+            element={
+              <RequireSchool>
+                <CalendarPage />
               </RequireSchool>
             }
           />

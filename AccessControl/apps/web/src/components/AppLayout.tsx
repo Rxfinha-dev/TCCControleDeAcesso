@@ -7,6 +7,7 @@ import { firstName, initials } from '../utils/format';
 import {
   BookIcon,
   BuildingIcon,
+  CalendarIcon,
   FingerprintIcon,
   HomeIcon,
   ListIcon,
@@ -30,6 +31,7 @@ const NAV_ITEMS = [
   { to: '/turmas', label: 'Turmas', icon: UsersIcon },
   { to: '/disciplinas', label: 'Disciplinas', icon: TagIcon },
   { to: '/professores', label: 'Professores', icon: TeacherIcon },
+  { to: '/calendario', label: 'Calendário', icon: CalendarIcon },
   { to: '/verificacao', label: 'Verificação', icon: FingerprintIcon },
   { to: '/entradas', label: 'Entradas', icon: ListIcon },
   { to: '/configuracoes', label: 'Configurações', icon: SettingsIcon },

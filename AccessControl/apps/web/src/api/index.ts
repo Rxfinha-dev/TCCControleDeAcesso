@@ -7,6 +7,10 @@ import type {
   ClassGroupInput,
   ClassGroupStudent,
   Course,
+  NoClassDay,
+  NoClassDayInput,
+  SchoolCalendar,
+  SchoolTerm,
   EntryResult,
   Paginated,
   SchoolInput,
@@ -89,6 +93,17 @@ export const classGroupsApi = {
   timetable: (id: number) => requestJson<Timetable>(`/class-groups/${id}/timetable`),
   saveTimetable: (id: number, blocks: TimetableBlockInput[]) =>
     requestJson<Timetable>(`/class-groups/${id}/timetable`, { method: 'PUT', body: { blocks } }),
+};
+
+export const calendarApi = {
+  get: (year: number) => requestJson<SchoolCalendar>(`/calendar${query({ year })}`),
+  setHoliday: (date: string, active: boolean) =>
+    requestJson<void>(`/calendar/holidays/${date}`, { method: 'PUT', body: { active } }),
+  addNoClassDay: (input: NoClassDayInput) =>
+    requestJson<NoClassDay>('/calendar/no-class-days', { method: 'POST', body: { ...input } }),
+  removeNoClassDay: (id: number) => requestJson<void>(`/calendar/no-class-days/${id}`, { method: 'DELETE' }),
+  saveTerms: (year: number, terms: SchoolTerm[]) =>
+    requestJson<SchoolTerm[]>(`/calendar/terms/${year}`, { method: 'PUT', body: { terms } }),
 };
 
 export const studentsApi = {
