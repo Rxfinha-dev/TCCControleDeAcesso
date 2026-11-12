@@ -19,7 +19,7 @@ describe('Professores', () => {
     const res = await request(app).get('/api/teachers').set('Authorization', authHeader());
 
     expect(res.status).toBe(200);
-    expect(res.body).toEqual([{ id: 8, name: 'Ana Prado', contactEmail: 'ana@email.com', assignmentsCount: 2 }]);
+    expect(res.body).toEqual([{ id: 8, name: 'Ana Prado', contactEmail: 'ana@email.com', assignmentsCount: 2, username: null }]);
     expect(prisma.teacher.findMany).toHaveBeenCalledWith(expect.objectContaining({ where: { schoolId: school.id } }));
   });
 

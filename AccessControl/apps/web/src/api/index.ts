@@ -2,14 +2,34 @@ import { request, requestJson } from './client';
 import type {
   AccessLog,
   AccessLogFilters,
+  Assessment,
+  AssessmentGrades,
+  AssessmentInput,
+  AssessmentList,
+  GradesReport,
+  GradingInput,
+  ReportCard,
+  StudentPanel,
+  AttendanceDay,
+  AttendanceOverrideInput,
+  AttendanceSummary,
+  ClassGroupLogins,
+  LoginCredentials,
+  TeacherLessons,
   ClassGroup,
   ClassGroupDetail,
   ClassGroupInput,
   ClassGroupStudent,
   Course,
+  LessonCancellationInput,
+  NoClassDay,
+  NoClassDayInput,
+  SchoolCalendar,
+  SchoolTerm,
   EntryResult,
   Paginated,
   SchoolInput,
+  SchoolSettings,
   SchoolSummary,
   Stats,
   Student,
@@ -89,6 +109,59 @@ export const classGroupsApi = {
   timetable: (id: number) => requestJson<Timetable>(`/class-groups/${id}/timetable`),
   saveTimetable: (id: number, blocks: TimetableBlockInput[]) =>
     requestJson<Timetable>(`/class-groups/${id}/timetable`, { method: 'PUT', body: { blocks } }),
+};
+
+export const calendarApi = {
+  get: (year: number) => requestJson<SchoolCalendar>(`/calendar${query({ year })}`),
+  setHoliday: (date: string, active: boolean) =>
+    requestJson<void>(`/calendar/holidays/${date}`, { method: 'PUT', body: { active } }),
+  addNoClassDay: (input: NoClassDayInput) =>
+    requestJson<NoClassDay>('/calendar/no-class-days', { method: 'POST', body: { ...input } }),
+  removeNoClassDay: (id: number) => requestJson<void>(`/calendar/no-class-days/${id}`, { method: 'DELETE' }),
+  saveTerms: (year: number, terms: SchoolTerm[]) =>
+    requestJson<SchoolTerm[]>(`/calendar/terms/${year}`, { method: 'PUT', body: { terms } }),
+};
+
+export const attendanceApi = {
+  day: (classGroupId: number, date: string) => requestJson<AttendanceDay>(`/attendance/day${query({ classGroupId, date })}`),
+  myLessons: (date?: string) => requestJson<TeacherLessons>(`/attendance/my-lessons${query({ date })}`),
+  summary: (classGroupId: number) => requestJson<AttendanceSummary>(`/attendance/summary${query({ classGroupId })}`),
+  setOverride: (input: AttendanceOverrideInput) => requestJson<void>('/attendance/override', { method: 'PUT', body: { ...input } }),
+  setCancellation: (input: LessonCancellationInput) =>
+    requestJson<void>('/attendance/cancellation', { method: 'PUT', body: { ...input } }),
+};
+
+export const settingsApi = {
+  get: () => requestJson<SchoolSettings>('/settings'),
+  save: (input: { minAttendance?: number; code?: string; grading?: GradingInput }) => requestJson<SchoolSettings>('/settings', { method: 'PUT', body: { ...input } }),
+};
+
+export const assessmentsApi = {
+  list: (classGroupId: number) => requestJson<AssessmentList>(`/assessments${query({ classGroupId })}`),
+  report: (classGroupId: number) => requestJson<GradesReport>(`/assessments/report${query({ classGroupId })}`),
+  create: (input: AssessmentInput) => requestJson<Assessment>('/assessments', { method: 'POST', body: { ...input } }),
+  update: (id: number, input: AssessmentInput) => requestJson<Assessment>(`/assessments/${id}`, { method: 'PUT', body: { ...input } }),
+  remove: (id: number) => requestJson<void>(`/assessments/${id}`, { method: 'DELETE' }),
+  grades: (id: number) => requestJson<AssessmentGrades>(`/assessments/${id}/grades`),
+  setGrades: (id: number, grades: { studentId: number; value: number | null }[]) =>
+    requestJson<void>(`/assessments/${id}/grades`, { method: 'PUT', body: { grades } }),
+};
+
+export const reportCardsApi = {
+  get: (studentId: number) => requestJson<ReportCard>(`/report-cards/${studentId}`),
+};
+
+/** Painel do aluno logado. */
+export const studentApi = {
+  panel: () => requestJson<StudentPanel>('/student/panel'),
+};
+
+/** Sem senha, a API gera uma. A senha volta só nesta resposta. */
+export const loginsApi = {
+  teacher: (id: number, password?: string) =>
+    requestJson<LoginCredentials>(`/logins/teachers/${id}`, { method: 'PUT', body: { password } }),
+  student: (id: number) => requestJson<LoginCredentials>(`/logins/students/${id}`, { method: 'PUT', body: {} }),
+  classGroup: (id: number) => requestJson<ClassGroupLogins>(`/logins/class-groups/${id}`, { method: 'POST' }),
 };
 
 export const studentsApi = {

@@ -7,7 +7,10 @@ import { firstName, initials } from '../utils/format';
 import {
   BookIcon,
   BuildingIcon,
+  CalendarIcon,
+  ChecklistIcon,
   FingerprintIcon,
+  GradeIcon,
   HomeIcon,
   ListIcon,
   LogoutIcon,
@@ -30,9 +33,25 @@ const NAV_ITEMS = [
   { to: '/turmas', label: 'Turmas', icon: UsersIcon },
   { to: '/disciplinas', label: 'Disciplinas', icon: TagIcon },
   { to: '/professores', label: 'Professores', icon: TeacherIcon },
+  { to: '/calendario', label: 'Calendário', icon: CalendarIcon },
+  { to: '/presenca', label: 'Presença', icon: ChecklistIcon },
+  { to: '/avaliacoes', label: 'Avaliações', icon: GradeIcon },
   { to: '/verificacao', label: 'Verificação', icon: FingerprintIcon },
   { to: '/entradas', label: 'Entradas', icon: ListIcon },
   { to: '/configuracoes', label: 'Configurações', icon: SettingsIcon },
+];
+
+/** Professor: só as aulas dele. */
+const TEACHER_NAV_ITEMS = [
+  { to: '/', label: 'Início', icon: HomeIcon, end: true },
+  { to: '/presenca', label: 'Chamada', icon: ChecklistIcon, end: false },
+  { to: '/avaliacoes', label: 'Avaliações', icon: GradeIcon, end: false },
+];
+
+/** Aluno: o painel dele e o boletim. */
+const STUDENT_NAV_ITEMS = [
+  { to: '/', label: 'Início', icon: HomeIcon, end: true },
+  { to: '/boletim', label: 'Boletim', icon: GradeIcon, end: false },
 ];
 
 /** Gestão global, só para o super admin. */
@@ -52,6 +71,10 @@ export function AppLayout() {
 
 function AppShell() {
   const { user, isSuperAdmin, logout } = useAuth();
+  const isTeacher = user?.role === 'TEACHER';
+  const isStudent = user?.role === 'STUDENT';
+  // Professor e aluno não usam o leitor de digitais.
+  const hasReader = !isTeacher && !isStudent;
   const { selected } = useSchoolScope();
   const name = displayName(user);
   const { connected } = useSerial();
@@ -71,7 +94,9 @@ function AppShell() {
         </button>
         <Logo variant="light" className="mobile-logo" />
         <ThemeToggle />
-        <span className={`status-dot ${connected ? 'on' : 'off'}`} title={connected ? 'Leitor conectado' : 'Leitor desconectado'} />
+        {hasReader && (
+          <span className={`status-dot ${connected ? 'on' : 'off'}`} title={connected ? 'Leitor conectado' : 'Leitor desconectado'} />
+        )}
       </header>
 
       <aside className="sidebar">
@@ -80,7 +105,7 @@ function AppShell() {
           <ThemeToggle />
         </div>
         <nav className="sidebar-nav" onClick={() => setMenuOpen(false)}>
-          {[...NAV_ITEMS, ...(isSuperAdmin ? SUPER_ADMIN_NAV_ITEMS : [])].map(({ to, label, icon: Icon, end }) => (
+          {(isStudent ? STUDENT_NAV_ITEMS : isTeacher ? TEACHER_NAV_ITEMS : [...NAV_ITEMS, ...(isSuperAdmin ? SUPER_ADMIN_NAV_ITEMS : [])]).map(({ to, label, icon: Icon, end }) => (
             <NavLink key={to} to={to} end={end} className="nav-item">
               <Icon />
               <span>{label}</span>
@@ -88,6 +113,7 @@ function AppShell() {
           ))}
         </nav>
 
+        {hasReader && (
         <Link to="/configuracoes" className={`reader-status ${connected ? 'on' : 'off'}`} onClick={() => setMenuOpen(false)}>
           <span className={`status-dot ${connected ? 'on' : 'off'}`} />
           <span>
@@ -95,6 +121,7 @@ function AppShell() {
             <small>{connected ? 'Pronto para ler digitais' : 'Conecte o Arduino'}</small>
           </span>
         </Link>
+        )}
 
         <div className="sidebar-user">
           <span className="avatar" aria-hidden>

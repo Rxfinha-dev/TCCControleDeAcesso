@@ -48,21 +48,45 @@ enum TimetableSlotKind {
   BREAK
 }
 
+/// Tipo de avaliação: prova (presa a uma aula) ou trabalho (só data de entrega).
+enum AssessmentKind {
+  EXAM
+  ASSIGNMENT
+}
+
+/// Sistema de notas da escola.
+enum GradingKind {
+  NUMERIC
+  CONCEPT
+}
+
 /// Usuário do sistema, ligado ao Supabase Auth. O perfil vive só aqui (nunca em user_metadata).
 model User {
-  id         Int      @id @default(autoincrement())
+  id                 Int      @id @default(autoincrement())
   /// ID do usuário no Supabase Auth (auth.users.id).
-  authUserId String   @unique @map("auth_user_id") @db.Uuid
-  email      String   @unique @db.VarChar(120)
-  name       String   @db.VarChar(100)
-  role       UserRole @default(SCHOOL)
+  authUserId         String   @unique @map("auth_user_id") @db.Uuid
+  email              String   @unique @db.VarChar(120)
+  name               String   @db.VarChar(100)
+  role               UserRole @default(SCHOOL)
   /// Escola do usuário. Para SCHOOL é obrigatória; para SUPER_ADMIN é a "escola padrão" (opcional).
   /// No máximo um SCHOOL por escola (índice único parcial users_school_role_key, criado na migration).
-  schoolId   Int?     @map("school_id")
-  createdAt  DateTime @default(now()) @map("created_at")
-  updatedAt  DateTime @updatedAt @map("updated_at")
+  schoolId           Int?     @map("school_id")
+  /// Login de professor/aluno criado pela escola ("joao.silva@etec-jau", "24001@etec-jau"). O e-mail é sintético.
+  username           String?  @unique @db.VarChar(80)
+  /// Senha inicial definida pela escola: o usuário troca antes de usar o sistema.
+  mustChangePassword Boolean  @default(false) @map("must_change_password")
+  teacherId          Int?     @unique @map("teacher_id")
+  studentId          Int?     @unique @map("student_id")
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
 
-  school School? @relation(fields: [schoolId], references: [id], onDelete: SetNull)
+  school              School?              @relation(fields: [schoolId], references: [id], onDelete: SetNull)
+  teacher             Teacher?             @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  student             Student?             @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  attendanceOverrides AttendanceOverride[]
+  lessonCancellations LessonCancellation[]
+  assessments         Assessment[]
+  grades              Grade[]
 
   @@index([schoolId])
   @@map("users")
@@ -70,20 +94,35 @@ model User {
 
 /// Instituição (antiga tabela "escolas"). O login é de um User (perfil SCHOOL) ligado a ela.
 model School {
-  id        Int      @id @default(autoincrement())
-  name      String   @db.VarChar(100)
+  id            Int         @id @default(autoincrement())
+  name          String      @db.VarChar(100)
   /// Contato da escola e chave para vincular o primeiro login (provisionamento).
-  email     String   @unique @db.VarChar(120)
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  email         String      @unique @db.VarChar(120)
+  /// Código curto único (ex.: "etec-jau"), sufixo dos logins de professores e alunos.
+  code          String?     @unique @db.VarChar(30)
+  createdAt     DateTime    @default(now()) @map("created_at")
+  updatedAt     DateTime    @updatedAt @map("updated_at")
+  /// Frequência mínima (%) para aprovação; 75 é o padrão da LDB.
+  minAttendance Int         @default(75) @map("min_attendance")
+  /// Sistema de notas. Numérico: nota máxima, casas decimais e mínimo para aprovar.
+  gradingKind   GradingKind @default(NUMERIC) @map("grading_kind")
+  gradeMax      Int         @default(10) @map("grade_max")
+  gradeDecimals Int         @default(1) @map("grade_decimals")
+  /// Menor nota (ou valor de conceito) que aprova.
+  passingGrade  Float       @default(6) @map("passing_grade")
+  /// Conceitos: [{ label, value }] do maior para o menor (ex.: MB=4, B=3, R=2, I=1). Null no sistema numérico.
+  gradeConcepts Json?       @map("grade_concepts")
 
-  users       User[]
-  courses     Course[]
-  students    Student[]
-  accessLogs  AccessLog[]
-  teachers    Teacher[]
-  subjects    Subject[]
-  classGroups ClassGroup[]
+  users            User[]
+  courses          Course[]
+  students         Student[]
+  accessLogs       AccessLog[]
+  teachers         Teacher[]
+  subjects         Subject[]
+  classGroups      ClassGroup[]
+  holidayOverrides HolidayOverride[]
+  noClassDays      NoClassDay[]
+  terms            SchoolTerm[]
 
   @@map("schools")
 }
@@ -122,11 +161,14 @@ model Student {
   createdAt             DateTime    @default(now()) @map("created_at")
   updatedAt             DateTime    @updatedAt @map("updated_at")
 
-  school      School        @relation(fields: [schoolId], references: [id], onDelete: Cascade)
-  course      Course?       @relation(fields: [courseId], references: [id], onDelete: Restrict)
-  photo       StudentPhoto?
-  accessLogs  AccessLog[]
-  enrollments Enrollment[]
+  school              School               @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  course              Course?              @relation(fields: [courseId], references: [id], onDelete: Restrict)
+  photo               StudentPhoto?
+  user                User?
+  grades              Grade[]
+  accessLogs          AccessLog[]
+  enrollments         Enrollment[]
+  attendanceOverrides AttendanceOverride[]
 
   @@unique([schoolId, rm])
   @@unique([schoolId, fingerprintId])
@@ -160,6 +202,7 @@ model AccessLog {
   student Student? @relation(fields: [studentId], references: [id], onDelete: SetNull)
 
   @@index([schoolId, createdAt])
+  @@index([studentId, createdAt])
   @@map("access_logs")
 }
 
@@ -174,6 +217,7 @@ model Teacher {
 
   school      School               @relation(fields: [schoolId], references: [id], onDelete: Cascade)
   assignments TeachingAssignment[]
+  user        User?
 
   @@index([schoolId, name])
   @@map("teachers")
@@ -194,6 +238,7 @@ model Subject {
   school      School               @relation(fields: [schoolId], references: [id], onDelete: Cascade)
   assignments TeachingAssignment[]
   slots       TimetableSlot[]
+  assessments Assessment[]
 
   @@unique([schoolId, name])
   @@map("subjects")
@@ -210,11 +255,14 @@ model ClassGroup {
   createdAt  DateTime @default(now()) @map("created_at")
   updatedAt  DateTime @updatedAt @map("updated_at")
 
-  school            School               @relation(fields: [schoolId], references: [id], onDelete: Cascade)
-  course            Course?              @relation(fields: [courseId], references: [id], onDelete: SetNull)
-  enrollments       Enrollment[]
-  assignments       TeachingAssignment[]
-  timetableVersions TimetableVersion[]
+  school              School               @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  course              Course?              @relation(fields: [courseId], references: [id], onDelete: SetNull)
+  enrollments         Enrollment[]
+  assignments         TeachingAssignment[]
+  timetableVersions   TimetableVersion[]
+  attendanceOverrides AttendanceOverride[]
+  lessonCancellations LessonCancellation[]
+  assessments         Assessment[]
 
   @@unique([schoolId, schoolYear, name])
   @@map("class_groups")
@@ -287,4 +335,144 @@ model TimetableSlot {
   @@index([versionId])
   @@index([subjectId])
   @@map("timetable_slots")
+}
+
+/// Feriado nacional (BrasilAPI), compartilhado por todas as escolas.
+model NationalHoliday {
+  date DateTime @id @db.Date
+  name String   @db.VarChar(80)
+
+  @@map("national_holidays")
+}
+
+/// Feriado nacional que a escola desmarcou (ex.: dia de reposição): volta a ser dia letivo.
+model HolidayOverride {
+  schoolId Int      @map("school_id")
+  date     DateTime @db.Date
+
+  school School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+
+  @@id([schoolId, date])
+  @@map("holiday_overrides")
+}
+
+/// Dia (ou intervalo) sem aula para a escola inteira: não gera presença nem falta.
+model NoClassDay {
+  id        Int      @id @default(autoincrement())
+  schoolId  Int      @map("school_id")
+  name      String   @db.VarChar(80)
+  startDate DateTime @map("start_date") @db.Date
+  endDate   DateTime @map("end_date") @db.Date
+  createdAt DateTime @default(now()) @map("created_at")
+
+  school School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+
+  @@index([schoolId, startDate])
+  @@map("no_class_days")
+}
+
+/// Bimestre do ano letivo (number 1 a 4). Dias fora de qualquer bimestre não contam presença.
+model SchoolTerm {
+  id         Int      @id @default(autoincrement())
+  schoolId   Int      @map("school_id")
+  schoolYear Int      @map("school_year")
+  number     Int
+  startDate  DateTime @map("start_date") @db.Date
+  endDate    DateTime @map("end_date") @db.Date
+
+  school School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+
+  @@unique([schoolId, schoolYear, number])
+  @@map("school_terms")
+}
+
+enum CancellationReason {
+  TEACHER_ABSENT
+  CANCELLED
+}
+
+/// Correção manual da presença de um aluno numa aula (turma + data + minuto de início).
+/// Sempre prevalece sobre o cálculo automático pela catraca.
+model AttendanceOverride {
+  id           Int      @id @default(autoincrement())
+  classGroupId Int      @map("class_group_id")
+  studentId    Int      @map("student_id")
+  date         DateTime @db.Date
+  startMinute  Int      @map("start_minute")
+  present      Boolean
+  /// Quem corrigiu por último.
+  userId       Int?     @map("user_id")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  classGroup ClassGroup @relation(fields: [classGroupId], references: [id], onDelete: Cascade)
+  student    Student    @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  user       User?      @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@unique([classGroupId, studentId, date, startMinute])
+  @@index([studentId, date])
+  @@map("attendance_overrides")
+}
+
+/// Aula em que o professor faltou ou que foi cancelada: a turma inteira recebe presença.
+model LessonCancellation {
+  id           Int                @id @default(autoincrement())
+  classGroupId Int                @map("class_group_id")
+  date         DateTime           @db.Date
+  startMinute  Int                @map("start_minute")
+  reason       CancellationReason
+  /// Quem marcou por último.
+  userId       Int?               @map("user_id")
+  updatedAt    DateTime           @updatedAt @map("updated_at")
+
+  classGroup ClassGroup @relation(fields: [classGroupId], references: [id], onDelete: Cascade)
+  user       User?      @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@unique([classGroupId, date, startMinute])
+  @@map("lesson_cancellations")
+}
+
+/// Prova ou trabalho de uma disciplina numa turma. O bimestre vem da data.
+model Assessment {
+  id           Int            @id @default(autoincrement())
+  classGroupId Int            @map("class_group_id")
+  subjectId    Int            @map("subject_id")
+  kind         AssessmentKind
+  date         DateTime       @db.Date
+  /// Aula em que a prova acontece (início, em minutos). Trabalho não tem.
+  startMinute  Int?           @map("start_minute")
+  title        String         @db.VarChar(100)
+  content      String?        @db.VarChar(2000)
+  /// Observação (local, material).
+  note         String?        @db.VarChar(300)
+  weight       Float          @default(1)
+  /// Quem criou.
+  userId       Int?           @map("user_id")
+  createdAt    DateTime       @default(now()) @map("created_at")
+  updatedAt    DateTime       @updatedAt @map("updated_at")
+
+  classGroup ClassGroup @relation(fields: [classGroupId], references: [id], onDelete: Cascade)
+  subject    Subject    @relation(fields: [subjectId], references: [id], onDelete: Restrict)
+  user       User?      @relation(fields: [userId], references: [id], onDelete: SetNull)
+  grades     Grade[]
+
+  @@index([classGroupId, date])
+  @@map("assessments")
+}
+
+/// Nota de um aluno numa avaliação. Conceitos são guardados pelo valor numérico.
+model Grade {
+  assessmentId Int      @map("assessment_id")
+  studentId    Int      @map("student_id")
+  value        Float
+  /// Quem lançou por último.
+  userId       Int?     @map("user_id")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  assessment Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  student    Student    @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  user       User?      @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@id([assessmentId, studentId])
+  @@index([studentId])
+  @@map("grades")
 }

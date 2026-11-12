@@ -66,6 +66,9 @@ export class UsersService {
       async (tx) => {
         const target = await tx.user.findUnique({ where: { id: targetId } });
         if (!target) throw notFound('Usuário não encontrado.', 'USER_NOT_FOUND');
+        if (target.role !== UserRole.SCHOOL && target.role !== UserRole.SUPER_ADMIN) {
+          throw badRequest('Logins de professor e aluno são gerenciados pela escola.', 'ROLE_NOT_CHANGEABLE');
+        }
 
         if (target.role === UserRole.SUPER_ADMIN && role !== UserRole.SUPER_ADMIN) {
           if (target.id === actorId) {

@@ -28,7 +28,7 @@ describe('Alunos na turma', () => {
     const res = await request(app).get('/api/class-groups/20/students').set('Authorization', authHeader());
 
     expect(res.status).toBe(200);
-    expect(res.body).toEqual([{ id: 10, name: 'Ana Souza', rm: '24001', enrolledSince: '2026-02-02' }]);
+    expect(res.body).toEqual([{ id: 10, name: 'Ana Souza', rm: '24001', enrolledSince: '2026-02-02', username: null }]);
     expect(prisma.enrollment.findMany.mock.calls[0][0]!.where).toEqual({ classGroupId: 20, endDate: null });
   });
 

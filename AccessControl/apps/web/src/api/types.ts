@@ -23,6 +23,10 @@ export interface AuthUser {
   email: string;
   role: UserRole;
   school: SchoolRef | null;
+  /** Login de professor/aluno ("joao.silva@etec-jau"). */
+  username: string | null;
+  /** Senha inicial ainda não trocada. */
+  mustChangePassword: boolean;
 }
 
 /** Escola na gestão do super admin (GET /schools). */
@@ -138,6 +142,7 @@ export interface Teacher {
   name: string;
   contactEmail: string | null;
   assignmentsCount: number;
+  username: string | null;
 }
 
 export interface TeacherInput {
@@ -178,6 +183,7 @@ export interface ClassGroupStudent {
   rm: string;
   /** 'YYYY-MM-DD' */
   enrolledSince: string;
+  username: string | null;
 }
 
 export type TimetableSlotKind = 'LESSON' | 'BREAK';
@@ -214,4 +220,245 @@ export interface Timetable {
   validFrom: string | null;
   blocks: TimetableBlock[];
   warnings: TeacherConflict[];
+}
+
+/* Calendário escolar: feriados, dias sem aula e bimestres. Datas em 'YYYY-MM-DD'. */
+
+export interface Holiday {
+  date: string;
+  name: string;
+  /** false quando a escola desmarcou o feriado (vira dia letivo). */
+  active: boolean;
+}
+
+export interface NoClassDay {
+  id: number;
+  name: string;
+  startDate: string;
+  endDate: string;
+}
+
+export interface NoClassDayInput {
+  name: string;
+  startDate: string;
+  endDate?: string;
+}
+
+export interface SchoolTerm {
+  /** 1 a 4 */
+  number: number;
+  startDate: string;
+  endDate: string;
+}
+
+export interface SchoolCalendar {
+  year: number;
+  /** false quando a busca dos feriados nacionais falhou. */
+  holidaysLoaded: boolean;
+  holidays: Holiday[];
+  noClassDays: NoClassDay[];
+  terms: SchoolTerm[];
+}
+
+/* Presença por aula (calculada pela catraca; só correções e aulas canceladas são gravadas). */
+
+export type DayInfo =
+  | { kind: 'SCHOOL_DAY' | 'WEEKEND' | 'OUT_OF_TERM' }
+  | { kind: 'HOLIDAY' | 'NO_CLASS'; name: string };
+
+export type CancellationReason = 'TEACHER_ABSENT' | 'CANCELLED';
+export type AttendanceSource = 'AUTO' | 'MANUAL' | 'COLLECTIVE';
+export type AttendanceStatus = 'OK' | 'NEAR' | 'BELOW';
+
+export interface AttendanceLesson {
+  startMinute: number;
+  endMinute: number;
+  subject: Subject;
+  teacher: Pick<Teacher, 'id' | 'name'> | null;
+  cancellation: CancellationReason | null;
+  finished: boolean;
+}
+
+export interface AttendanceMark {
+  startMinute: number;
+  /** null = aula ainda não terminada. */
+  present: boolean | null;
+  source: AttendanceSource;
+}
+
+export interface AttendanceDay {
+  date: string;
+  day: DayInfo;
+  lessons: AttendanceLesson[];
+  students: { id: number; name: string; rm: string; marks: AttendanceMark[] }[];
+}
+
+export interface AttendanceTally {
+  given: number;
+  present: number;
+  /** null quando ainda não houve aula. */
+  percent: number | null;
+  status: AttendanceStatus;
+}
+
+export interface AttendanceSummary {
+  from: string;
+  to: string;
+  minAttendance: number;
+  subjects: Subject[];
+  students: (AttendanceTally & { id: number; name: string; rm: string; subjects: (AttendanceTally & { subjectId: number })[] })[];
+}
+
+interface LessonKey {
+  classGroupId: number;
+  date: string;
+  startMinute: number;
+}
+
+export interface SchoolSettings {
+  minAttendance: number;
+  /** Sufixo dos logins ("etec-jau"). */
+  code: string | null;
+  grading: Grading;
+}
+
+export type AttendanceOverrideInput = LessonKey & { studentId: number; present: boolean | null };
+export type LessonCancellationInput = LessonKey & { reason: CancellationReason | null };
+
+export interface LoginCredentials {
+  username: string;
+  password: string;
+}
+
+export interface ClassGroupLogins {
+  created: (LoginCredentials & { studentId: number; name: string; rm: string })[];
+  failed: { studentId: number; name: string; rm: string; reason: string }[];
+}
+
+/** Aulas do professor logado num dia. */
+export interface TeacherLessons {
+  date: string;
+  day: DayInfo;
+  classGroups: { id: number; name: string }[];
+  lessons: (Omit<AttendanceLesson, 'teacher'> & { classGroup: { id: number; name: string } })[];
+}
+
+/* Avaliações, notas e médias. */
+
+export type AssessmentKind = 'EXAM' | 'ASSIGNMENT';
+
+/** Sistema de notas da escola. Em CONCEPT, `concepts` vem do maior para o menor. */
+export interface Grading {
+  kind: 'NUMERIC' | 'CONCEPT';
+  max: number;
+  decimals: number;
+  /** Menor nota (ou valor de conceito) que aprova. */
+  passing: number;
+  concepts: { label: string; value: number }[];
+}
+
+export type GradingInput =
+  | { kind: 'NUMERIC'; max: number; decimals: number; passing: number }
+  | { kind: 'CONCEPT'; passing: number; concepts: { label: string; value: number }[] };
+
+export interface AssessmentInput {
+  classGroupId: number;
+  subjectId: number;
+  kind: AssessmentKind;
+  /** 'YYYY-MM-DD' */
+  date: string;
+  /** Aula da prova (minutos desde 00:00); trabalho não tem. */
+  startMinute: number | null;
+  title: string;
+  content: string | null;
+  note: string | null;
+  weight: number;
+}
+
+export interface Assessment extends Omit<AssessmentInput, 'subjectId'> {
+  id: number;
+  subject: Subject;
+  gradesCount?: number;
+}
+
+export interface AssessmentList {
+  grading: Grading;
+  /** Disciplinas em que quem está logado pode marcar avaliação. */
+  subjects: Subject[];
+  assessments: Assessment[];
+}
+
+export interface AssessmentGrades {
+  grading: Grading;
+  assessment: Assessment;
+  students: { id: number; name: string; rm: string; value: number | null }[];
+}
+
+/** Nota ou média pronta para exibir (`label: null` = sem nota). */
+export interface GradeCell {
+  value: number | null;
+  label: string | null;
+  passed: boolean | null;
+}
+
+export interface SubjectAverages {
+  subjectId: number;
+  terms: GradeCell[];
+  semesters: GradeCell[];
+  annual: GradeCell;
+}
+
+export interface GradesReport {
+  grading: Grading;
+  subjects: Subject[];
+  students: { id: number; name: string; rm: string; subjects: SubjectAverages[] }[];
+}
+
+/* Boletim e painel do aluno. */
+
+/** Boletim do ano letivo até a data de emissão. */
+export interface ReportCard {
+  school: { name: string };
+  student: { id: number; name: string; rm: string };
+  classGroup: { id: number; name: string } | null;
+  schoolYear: number;
+  /** 'YYYY-MM-DD' */
+  issuedOn: string;
+  minAttendance: number;
+  grading: Grading;
+  attendance: AttendanceTally;
+  subjects: (Omit<SubjectAverages, 'subjectId'> & {
+    subject: Subject;
+    attendance: AttendanceTally;
+    assessments: { id: number; kind: AssessmentKind; title: string; date: string; weight: number; term: number | null; grade: GradeCell }[];
+  })[];
+}
+
+/** Prova ou trabalho marcado, como o aluno vê. */
+export interface MarkedAssessment {
+  id: number;
+  kind: AssessmentKind;
+  title: string;
+  content: string | null;
+  note: string | null;
+  date: string;
+  startMinute: number | null;
+  subject: Subject;
+}
+
+export interface StudentPanel {
+  reportCard: ReportCard;
+  /** Segunda a sábado desta semana. */
+  week: {
+    date: string;
+    day: DayInfo;
+    lessons: {
+      startMinute: number;
+      endMinute: number;
+      subject: Subject;
+      cancellation: CancellationReason | null;
+      assessments: MarkedAssessment[];
+    }[];
+  }[];
+  upcoming: MarkedAssessment[];
 }

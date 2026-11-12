@@ -38,13 +38,14 @@ export class SubjectsService {
 
   async remove(schoolId: number, id: number) {
     await this.findOwned(schoolId, id);
-    const [assignments, slots] = await Promise.all([
+    const [assignments, slots, assessments] = await Promise.all([
       this.prisma.teachingAssignment.count({ where: { subjectId: id } }),
       this.prisma.timetableSlot.count({ where: { subjectId: id } }),
+      this.prisma.assessment.count({ where: { subjectId: id } }),
     ]);
-    if (assignments > 0 || slots > 0) {
+    if (assignments > 0 || slots > 0 || assessments > 0) {
       throw conflict(
-        'Não é possível excluir: a disciplina está em uso em turmas ou na grade.',
+        'Não é possível excluir: a disciplina está em uso em turmas, na grade ou em avaliações.',
         'SUBJECT_IN_USE',
       );
     }

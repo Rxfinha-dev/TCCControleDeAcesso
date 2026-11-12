@@ -1,6 +1,7 @@
 import type { ClassGroup, PrismaClient, School, Student, User } from '@prisma/client';
 import { mockDeep, type DeepMockProxy } from 'jest-mock-extended';
 import { createApp } from '../src/app';
+import type { Holiday, HolidayProvider } from '../src/services/holidays';
 import type { AuthUser, IdentityProvider } from '../src/services/identity';
 import type { PhotoStorage, StoredPhoto } from '../src/services/storage';
 
@@ -27,6 +28,23 @@ export class FakeIdentity implements IdentityProvider {
   async getUser(token: string) {
     return token === VALID_TOKEN ? this.user : null;
   }
+  /** Logins criados (e-mail -> senha) e senhas trocadas (id -> senha). */
+  created = new Map<string, string>();
+  passwords = new Map<string, string>();
+  deleted: string[] = [];
+  /** E-mails cuja criação falha (simula erro do Supabase). */
+  failEmails = new Set<string>();
+  async createUser(email: string, password: string) {
+    if (this.failEmails.has(email)) throw new Error('Supabase recusou');
+    this.created.set(email, password);
+    return `auth-${email}`;
+  }
+  async setPassword(authUserId: string, password: string) {
+    this.passwords.set(authUserId, password);
+  }
+  async deleteUser(authUserId: string) {
+    this.deleted.push(authUserId);
+  }
 }
 
 export class MemoryStorage implements PhotoStorage {
@@ -41,6 +59,18 @@ export class MemoryStorage implements PhotoStorage {
   }
   async remove(_studentId: number, key: string) {
     this.photos.delete(key);
+  }
+}
+
+/** Simula a BrasilAPI: devolve os feriados configurados por ano, ou falha. */
+export class FakeHolidays implements HolidayProvider {
+  byYear: Record<number, Holiday[]> = {};
+  fail = false;
+  calls: number[] = [];
+  async fetch(year: number) {
+    this.calls.push(year);
+    if (this.fail) throw new Error('BrasilAPI fora do ar');
+    return this.byYear[year] ?? [];
   }
 }
 
@@ -63,14 +93,22 @@ export function buildTestApp({ user = schoolUser }: TestAppOptions = {}) {
   prisma.user.findUnique.mockResolvedValue({ ...user, school: user.schoolId === school.id ? school : null } as never);
   const identity = new FakeIdentity();
   const storage = new MemoryStorage();
-  const app = createApp({ prisma, identity, storage });
-  return { app, prisma, identity, storage };
+  const holidays = new FakeHolidays();
+  const app = createApp({ prisma, identity, storage, holidays });
+  return { app, prisma, identity, storage, holidays };
 }
 
 export const school: School = {
   id: 1,
   name: 'ETEC Joaquim Ferreira do Amaral',
   email: 'etec@escola.com',
+  code: 'etec-jau',
+  minAttendance: 75,
+  gradingKind: 'NUMERIC',
+  gradeMax: 10,
+  gradeDecimals: 1,
+  passingGrade: 6,
+  gradeConcepts: null,
   createdAt: new Date('2026-01-01T00:00:00Z'),
   updatedAt: new Date('2026-01-01T00:00:00Z'),
 };
@@ -83,6 +121,10 @@ export const schoolUser: User = {
   name: 'ETEC Joaquim Ferreira do Amaral',
   role: 'SCHOOL',
   schoolId: 1,
+  username: null,
+  mustChangePassword: false,
+  teacherId: null,
+  studentId: null,
   createdAt: new Date('2026-01-01T00:00:00Z'),
   updatedAt: new Date('2026-01-01T00:00:00Z'),
 };

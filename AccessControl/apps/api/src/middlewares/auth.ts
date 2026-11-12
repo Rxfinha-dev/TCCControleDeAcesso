@@ -11,6 +11,11 @@ export interface AuthContext {
   email: string;
   /** Escola "dona" do usuário (SCHOOL) ou escola padrão (SUPER_ADMIN). */
   homeSchoolId: number | null;
+  /** Cadastro ligado ao login (perfis TEACHER e STUDENT). */
+  teacherId: number | null;
+  studentId: number | null;
+  /** Senha inicial ainda não trocada: só /api/auth funciona até a troca. */
+  mustChangePassword: boolean;
 }
 
 /** Valida o token do Supabase Auth e identifica o usuário. */
@@ -28,6 +33,9 @@ export function createRequireAuth(auth: AuthService): RequestHandler {
       name: user.name,
       email: user.email,
       homeSchoolId: user.schoolId,
+      teacherId: user.teacherId,
+      studentId: user.studentId,
+      mustChangePassword: user.mustChangePassword,
     } satisfies AuthContext;
     next();
   };
@@ -36,6 +44,14 @@ export function createRequireAuth(auth: AuthService): RequestHandler {
 /** Retorna o usuário autenticado na requisição atual. */
 export function currentUser(res: Response): AuthContext {
   return res.locals.auth as AuthContext;
+}
+
+/** Professor: o cadastro dele (só mexe nas próprias aulas e disciplinas). Escola e super admin: null (sem restrição). */
+export function currentTeacherId(res: Response): number | null {
+  const user = currentUser(res);
+  if (user.role !== 'TEACHER') return null;
+  if (user.teacherId === null) throw forbidden('Este login não está ligado a um professor.', 'NO_TEACHER');
+  return user.teacherId;
 }
 
 /** Libera a rota só para os perfis informados. */

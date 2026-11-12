@@ -1,4 +1,27 @@
-import type { Shift } from '../api/types';
+import type { AssessmentKind, CancellationReason, DayInfo, Shift } from '../api/types';
+
+export const KIND_LABELS: Record<AssessmentKind, string> = { EXAM: 'Prova', ASSIGNMENT: 'Trabalho' };
+
+export const CANCELLATION_LABELS: Record<CancellationReason, string> = {
+  TEACHER_ABSENT: 'Falta do professor',
+  CANCELLED: 'Aula cancelada',
+};
+
+/** Por que não há chamada num dia que não é letivo (null = dia letivo). */
+export function dayMessage(day: DayInfo) {
+  switch (day.kind) {
+    case 'HOLIDAY':
+      return `Feriado: ${day.name}. Sem aula, ninguém leva presença nem falta.`;
+    case 'NO_CLASS':
+      return `Dia sem aula: ${day.name}.`;
+    case 'WEEKEND':
+      return 'Domingo não tem aula.';
+    case 'OUT_OF_TERM':
+      return 'Este dia está fora dos bimestres, então não conta presença.';
+    default:
+      return null;
+  }
+}
 
 export const SHIFT_LABELS: Record<Shift, string> = {
   MORNING: 'Manhã',
@@ -28,6 +51,13 @@ export function parseEndField(value: string) {
   const minute = parseMinute(value);
   return minute === 0 ? 24 * 60 : minute;
 }
+
+/** 'YYYY-MM-DD' → 'DD/MM/YYYY'. */
+export const formatDay = (iso: string) => iso.split('-').reverse().join('/');
+
+/** Dia de hoje no fuso da escola, em 'YYYY-MM-DD'. */
+export const todayIso = () =>
+  new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Sao_Paulo', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
 
 /** Ano letivo atual no fuso da escola (o mesmo cálculo da API). */
 export const currentSchoolYear = () =>

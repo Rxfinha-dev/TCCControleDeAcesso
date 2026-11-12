@@ -39,6 +39,8 @@ describe('Auth (Supabase)', () => {
         email: schoolUser.email,
         role: 'SCHOOL',
         school: { id: school.id, name: school.name },
+        username: null,
+        mustChangePassword: false,
       });
       expect(prisma.user.findUnique.mock.calls[0][0]).toEqual({ where: { authUserId: AUTH_USER_ID }, include: { school: true } });
     });

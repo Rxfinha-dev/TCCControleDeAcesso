@@ -4,6 +4,11 @@
  */
 
 import { academicPaths, academicSchemas, academicTags } from './academic';
+import { assessmentsPaths, assessmentsSchemas, assessmentsTags } from './assessments';
+import { attendancePaths, attendanceSchemas, attendanceTags } from './attendance';
+import { reportCardPaths, reportCardSchemas, reportCardTags } from './report-card';
+import { loginsPaths, loginsSchemas, loginsTags } from './logins';
+import { calendarPaths, calendarSchemas, calendarTags } from './calendar';
 
 const ref = (name: string) => ({ $ref: `#/components/schemas/${name}` });
 const json = (schema: object) => ({ 'application/json': { schema } });
@@ -120,10 +125,20 @@ export const openApiSpec = {
     { name: 'Escolas', description: 'Gestão das escolas (super admin)' },
     { name: 'Usuários', description: 'Gestão de usuários e perfis (super admin)' },
     ...academicTags,
+    ...calendarTags,
+    ...attendanceTags,
+    ...loginsTags,
+    ...assessmentsTags,
+    ...reportCardTags,
   ],
   security: [{ bearerAuth: [] }],
   paths: {
     ...academicPaths({ ref, json, errorResponse, authErrors, validationError, notFound, idParam }),
+    ...calendarPaths({ ref, json, errorResponse, authErrors, validationError, notFound, idParam }),
+    ...attendancePaths({ ref, json, errorResponse, authErrors, validationError, notFound }),
+    ...loginsPaths({ ref, json, errorResponse, authErrors, validationError, notFound, idParam }),
+    ...assessmentsPaths({ ref, json, errorResponse, authErrors, validationError, notFound, idParam }),
+    ...reportCardPaths({ ref, json, authErrors, notFound, idParam }),
     '/api/health': {
       get: {
         tags: ['Health'],
@@ -506,6 +521,11 @@ export const openApiSpec = {
     },
     schemas: {
       ...academicSchemas(ref),
+      ...calendarSchemas(ref),
+      ...attendanceSchemas(ref),
+      ...loginsSchemas,
+      ...assessmentsSchemas(ref),
+      ...reportCardSchemas(ref),
       Error: {
         type: 'object',
         required: ['code', 'message'],
@@ -591,6 +611,8 @@ export const openApiSpec = {
           email: { type: 'string', format: 'email' },
           role: ref('UserRole'),
           school: { type: 'object', nullable: true, properties: { id: { type: 'integer' }, name: { type: 'string' } } },
+          username: { type: 'string', nullable: true, example: 'ana.prado@etec-jau', description: 'Só para professor e aluno' },
+          mustChangePassword: { type: 'boolean', description: 'Senha inicial ainda não trocada (PUT /api/auth/password)' },
         },
       },
       CourseInput: {

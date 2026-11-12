@@ -1,6 +1,7 @@
 import { Prisma, UserRole, type PrismaClient, type School, type User } from '@prisma/client';
 import { env } from '../../config/env';
 import { conflict, forbidden, notFound, unauthorized } from '../../lib/errors';
+import { isLoginEmail } from '../../lib/logins';
 import type { IdentityProvider } from '../../services/identity';
 
 export type AuthenticatedUser = User & { school: School | null };
@@ -11,6 +12,9 @@ export interface MeDto {
   email: string;
   role: UserRole;
   school: { id: number; name: string } | null;
+  /** Usuário de professor/aluno ("joao.silva@etec-jau"); null para escola e super admin. */
+  username: string | null;
+  mustChangePassword: boolean;
 }
 
 const SESSION_EXPIRED = 'Sessão expirada ou inválida. Faça login novamente.';
@@ -52,7 +56,17 @@ export class AuthService {
       email: user.email,
       role: user.role,
       school: user.school ? { id: user.school.id, name: user.school.name } : null,
+      username: user.username,
+      mustChangePassword: user.mustChangePassword,
     };
+  }
+
+  /** O próprio usuário troca a senha (obrigatório no primeiro acesso de professor e aluno). */
+  async changePassword(userId: number, password: string) {
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    if (!user) throw notFound('Usuário não encontrado');
+    await this.identity.setPassword(user.authUserId, password);
+    await this.prisma.user.update({ where: { id: userId }, data: { mustChangePassword: false } });
   }
 
   private findByAuthUserId(authUserId: string) {
@@ -72,6 +86,8 @@ export class AuthService {
     }
 
     const email = authUser.email.toLowerCase();
+    // Login de professor/aluno sem usuário no banco (cadastro excluído): não pode virar escola nova.
+    if (isLoginEmail(email)) throw unauthorized('Este login foi desativado pela escola.', 'LOGIN_DISABLED');
     const role = email === env.SUPER_ADMIN_BOOTSTRAP_EMAIL ? UserRole.SUPER_ADMIN : UserRole.SCHOOL;
     const base = { authUserId: authUser.userId, email, name: (authUser.name ?? email).slice(0, 100), role };
 

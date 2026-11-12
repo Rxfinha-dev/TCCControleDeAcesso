@@ -1,7 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
+import { settingsApi } from '../api';
+import type { Grading } from '../api/types';
+import { GradingForm } from '../components/GradingForm';
 import { errorMessage } from '../api/client';
 import { PageHeader } from '../components/PageHeader';
 import { useAuth } from '../contexts/AuthContext';
+import { useSchoolScope } from '../contexts/SchoolScopeContext';
 import { useSerial } from '../contexts/SerialContext';
 import { useToast } from '../contexts/ToastContext';
 
@@ -15,6 +19,57 @@ export function SettingsPage() {
   const { user } = useAuth();
   const [baudRate, setBaudRate] = useState(() => Number(localStorage.getItem(BAUD_KEY)) || 9600);
   const [busy, setBusy] = useState(false);
+  const { selected } = useSchoolScope();
+  const hasSchool = selected !== 'all';
+  const [minAttendance, setMinAttendance] = useState('');
+  const [savingMin, setSavingMin] = useState(false);
+  const [code, setCode] = useState('');
+  const [grading, setGrading] = useState<Grading | null>(null);
+  const [savingCode, setSavingCode] = useState(false);
+
+  useEffect(() => {
+    if (!hasSchool) return;
+    settingsApi
+      .get()
+      .then((settings) => {
+        setMinAttendance(String(settings.minAttendance));
+        setCode(settings.code ?? '');
+        setGrading(settings.grading);
+      })
+      .catch((err) => toast.error(errorMessage(err)));
+  }, [hasSchool, selected, toast]);
+
+  async function saveCode(event: FormEvent) {
+    event.preventDefault();
+    setSavingCode(true);
+    try {
+      const saved = await settingsApi.save({ code });
+      setCode(saved.code ?? '');
+      toast.success('Código da escola salvo.');
+    } catch (err) {
+      toast.error(errorMessage(err));
+    } finally {
+      setSavingCode(false);
+    }
+  }
+
+  async function saveMinAttendance(event: FormEvent) {
+    event.preventDefault();
+    const value = Number(minAttendance);
+    if (minAttendance === '' || !Number.isInteger(value) || value < 0 || value > 100) {
+      toast.error('Informe um número inteiro de 0 a 100');
+      return;
+    }
+    setSavingMin(true);
+    try {
+      await settingsApi.save({ minAttendance: value });
+      toast.success('Frequência mínima salva.');
+    } catch (err) {
+      toast.error(errorMessage(err));
+    } finally {
+      setSavingMin(false);
+    }
+  }
 
   async function toggleConnection() {
     setBusy(true);
@@ -82,6 +137,53 @@ export function SettingsPage() {
             </>
           )}
         </section>
+
+        {hasSchool && (
+          <form className="card form" onSubmit={saveMinAttendance} noValidate>
+            <h2 className="card-title">Frequência</h2>
+            <label className="field">
+              <span>Frequência mínima (%)</span>
+              <input
+                type="number"
+                min={0}
+                max={100}
+                step={1}
+                value={minAttendance}
+                onChange={(event) => setMinAttendance(event.target.value)}
+              />
+            </label>
+            <p className="hint">
+              Abaixo disso o aluno aparece em vermelho na Presença. O padrão da LDB é 75%.
+            </p>
+            <div className="form-actions">
+              <button type="submit" className="btn btn-primary" disabled={savingMin}>
+                Salvar frequência mínima
+              </button>
+            </div>
+          </form>
+        )}
+
+        {hasSchool && grading && <GradingForm initial={grading} />}
+
+        {hasSchool && (
+          <form className="card form" onSubmit={saveCode} noValidate>
+            <h2 className="card-title">Logins de professores e alunos</h2>
+            <label className="field">
+              <span>Código da escola</span>
+              <input value={code} onChange={(event) => setCode(event.target.value)} maxLength={30} placeholder="ex.: etec-jau" />
+            </label>
+            <p className="hint">
+              Os usuários ficam como <span className="mono">nome.sobrenome@{code || 'código'}</span> (professor) e{' '}
+              <span className="mono">RM@{code || 'código'}</span> (aluno). Use letras, números e hífen. Depois de criar logins, o
+              código não muda mais.
+            </p>
+            <div className="form-actions">
+              <button type="submit" className="btn btn-primary" disabled={savingCode || !code.trim()}>
+                Salvar código
+              </button>
+            </div>
+          </form>
+        )}
 
         <section className="card">
           <h2 className="card-title">Conta</h2>
