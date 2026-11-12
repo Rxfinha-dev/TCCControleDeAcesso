@@ -10,6 +10,7 @@ import {
   CalendarIcon,
   ChecklistIcon,
   FingerprintIcon,
+  GradeIcon,
   HomeIcon,
   ListIcon,
   LogoutIcon,
@@ -34,6 +35,7 @@ const NAV_ITEMS = [
   { to: '/professores', label: 'Professores', icon: TeacherIcon },
   { to: '/calendario', label: 'Calendário', icon: CalendarIcon },
   { to: '/presenca', label: 'Presença', icon: ChecklistIcon },
+  { to: '/avaliacoes', label: 'Avaliações', icon: GradeIcon },
   { to: '/verificacao', label: 'Verificação', icon: FingerprintIcon },
   { to: '/entradas', label: 'Entradas', icon: ListIcon },
   { to: '/configuracoes', label: 'Configurações', icon: SettingsIcon },
@@ -43,6 +45,7 @@ const NAV_ITEMS = [
 const TEACHER_NAV_ITEMS = [
   { to: '/', label: 'Início', icon: HomeIcon, end: true },
   { to: '/presenca', label: 'Chamada', icon: ChecklistIcon, end: false },
+  { to: '/avaliacoes', label: 'Avaliações', icon: GradeIcon, end: false },
 ];
 
 /** Gestão global, só para o super admin. */

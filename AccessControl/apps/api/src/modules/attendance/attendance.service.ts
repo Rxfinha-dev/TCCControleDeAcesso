@@ -325,7 +325,7 @@ export class AttendanceService {
   }
 
   /** Disciplinas que o professor leciona na turma (null = sem restrição). Turma sem atribuição dele = 404. */
-  private async teacherSubjects(schoolId: number, classGroupId: number, teacherId: number | null) {
+  async teacherSubjects(schoolId: number, classGroupId: number, teacherId: number | null) {
     if (teacherId === null) return null;
     const assignments = await this.prisma.teachingAssignment.findMany({
       where: { classGroupId, teacherId, classGroup: { schoolId } },

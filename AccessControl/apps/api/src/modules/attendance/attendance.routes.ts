@@ -1,7 +1,6 @@
-import { UserRole } from '@prisma/client';
-import { Router, type Response } from 'express';
+import { Router } from 'express';
 import { forbidden } from '../../lib/errors';
-import { currentUser } from '../../middlewares/auth';
+import { currentTeacherId as teacherOf, currentUser } from '../../middlewares/auth';
 import { currentSchool } from '../../middlewares/school-scope';
 import {
   cancellationSchema,
@@ -11,14 +10,6 @@ import {
   summaryQuerySchema,
   type AttendanceService,
 } from './attendance.service';
-
-/** Professor: o cadastro dele (só vê e corrige as próprias aulas). Escola e super admin: null (sem restrição). */
-function teacherOf(res: Response) {
-  const user = currentUser(res);
-  if (user.role !== UserRole.TEACHER) return null;
-  if (user.teacherId === null) throw forbidden('Este login não está ligado a um professor.', 'NO_TEACHER');
-  return user.teacherId;
-}
 
 export function attendanceRoutes(service: AttendanceService) {
   const router = Router();

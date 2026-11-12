@@ -1,5 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { settingsApi } from '../api';
+import type { Grading } from '../api/types';
+import { GradingForm } from '../components/GradingForm';
 import { errorMessage } from '../api/client';
 import { PageHeader } from '../components/PageHeader';
 import { useAuth } from '../contexts/AuthContext';
@@ -22,6 +24,7 @@ export function SettingsPage() {
   const [minAttendance, setMinAttendance] = useState('');
   const [savingMin, setSavingMin] = useState(false);
   const [code, setCode] = useState('');
+  const [grading, setGrading] = useState<Grading | null>(null);
   const [savingCode, setSavingCode] = useState(false);
 
   useEffect(() => {
@@ -31,6 +34,7 @@ export function SettingsPage() {
       .then((settings) => {
         setMinAttendance(String(settings.minAttendance));
         setCode(settings.code ?? '');
+        setGrading(settings.grading);
       })
       .catch((err) => toast.error(errorMessage(err)));
   }, [hasSchool, selected, toast]);
@@ -158,6 +162,8 @@ export function SettingsPage() {
             </div>
           </form>
         )}
+
+        {hasSchool && grading && <GradingForm initial={grading} />}
 
         {hasSchool && (
           <form className="card form" onSubmit={saveCode} noValidate>

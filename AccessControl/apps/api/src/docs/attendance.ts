@@ -143,6 +143,7 @@ export function attendanceSchemas(ref: (name: string) => object) {
           example: 'etec-jau',
           description: 'Código dos logins (letras, números e hífen). Não muda depois de criados os logins (`SCHOOL_CODE_LOCKED`).',
         },
+        grading: ref('Grading'),
       },
     },
     AttendanceDay: {

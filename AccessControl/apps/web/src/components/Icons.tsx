@@ -181,6 +181,12 @@ export const ChecklistIcon = (p: SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
+export const GradeIcon = (p: SVGProps<SVGSVGElement>) => (
+  <svg {...base(p)}>
+    <path d="M6 3h9l4 4v14H6zM14 3v5h5M9 17l2-5 2 5M9.7 15.5h2.6M15.5 12v5" />
+  </svg>
+);
+
 export const TeacherIcon = (p: SVGProps<SVGSVGElement>) => (
   <svg {...base(p)}>
     <rect x="9" y="3" width="12" height="9" rx="1" />

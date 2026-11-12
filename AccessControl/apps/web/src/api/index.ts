@@ -2,6 +2,12 @@ import { request, requestJson } from './client';
 import type {
   AccessLog,
   AccessLogFilters,
+  Assessment,
+  AssessmentGrades,
+  AssessmentInput,
+  AssessmentList,
+  GradesReport,
+  GradingInput,
   AttendanceDay,
   AttendanceOverrideInput,
   AttendanceSummary,
@@ -125,7 +131,18 @@ export const attendanceApi = {
 
 export const settingsApi = {
   get: () => requestJson<SchoolSettings>('/settings'),
-  save: (input: Partial<Omit<SchoolSettings, 'code'>> & { code?: string }) => requestJson<SchoolSettings>('/settings', { method: 'PUT', body: { ...input } }),
+  save: (input: { minAttendance?: number; code?: string; grading?: GradingInput }) => requestJson<SchoolSettings>('/settings', { method: 'PUT', body: { ...input } }),
+};
+
+export const assessmentsApi = {
+  list: (classGroupId: number) => requestJson<AssessmentList>(`/assessments${query({ classGroupId })}`),
+  report: (classGroupId: number) => requestJson<GradesReport>(`/assessments/report${query({ classGroupId })}`),
+  create: (input: AssessmentInput) => requestJson<Assessment>('/assessments', { method: 'POST', body: { ...input } }),
+  update: (id: number, input: AssessmentInput) => requestJson<Assessment>(`/assessments/${id}`, { method: 'PUT', body: { ...input } }),
+  remove: (id: number) => requestJson<void>(`/assessments/${id}`, { method: 'DELETE' }),
+  grades: (id: number) => requestJson<AssessmentGrades>(`/assessments/${id}/grades`),
+  setGrades: (id: number, grades: { studentId: number; value: number | null }[]) =>
+    requestJson<void>(`/assessments/${id}/grades`, { method: 'PUT', body: { grades } }),
 };
 
 /** Sem senha, a API gera uma. A senha volta só nesta resposta. */

@@ -13,6 +13,8 @@ import { requireAccess, requirePanelAccess, requireSchoolScope } from './middlew
 import { apiRateLimit } from './middlewares/rate-limit';
 import { accessLogsRoutes } from './modules/access-logs/access-logs.routes';
 import { AccessLogsService } from './modules/access-logs/access-logs.service';
+import { assessmentsRoutes } from './modules/assessments/assessments.routes';
+import { AssessmentsService } from './modules/assessments/assessments.service';
 import { attendanceRoutes } from './modules/attendance/attendance.routes';
 import { AttendanceService } from './modules/attendance/attendance.service';
 import { authRoutes } from './modules/auth/auth.routes';
@@ -149,7 +151,9 @@ export function createApp({ prisma, identity, storage, holidays = brasilApiHolid
   app.use('/api/calendar', ...scoped, calendarRoutes(calendar));
   // Presença: o professor também usa, limitado às aulas atribuídas a ele.
   const teacherScoped = [apiRateLimit, requireAuth, requireAccess('SUPER_ADMIN', 'SCHOOL', 'TEACHER'), requireSchoolScope(prisma)];
-  app.use('/api/attendance', ...teacherScoped, attendanceRoutes(new AttendanceService(prisma, classGroups, calendar)));
+  const attendance = new AttendanceService(prisma, classGroups, calendar);
+  app.use('/api/attendance', ...teacherScoped, attendanceRoutes(attendance));
+  app.use('/api/assessments', ...teacherScoped, assessmentsRoutes(new AssessmentsService(prisma, classGroups, attendance)));
   app.use('/api/logins', ...scoped, loginsRoutes(new LoginsService(prisma, identity, classGroups)));
   app.use('/api/settings', ...scoped, settingsRoutes(prisma));
   app.use('/api/access-logs', ...scopedOrAll, accessLogsRoutes(new AccessLogsService(prisma)));
