@@ -23,6 +23,10 @@ export interface AuthUser {
   email: string;
   role: UserRole;
   school: SchoolRef | null;
+  /** Login de professor/aluno ("joao.silva@etec-jau"). */
+  username: string | null;
+  /** Senha inicial ainda não trocada. */
+  mustChangePassword: boolean;
 }
 
 /** Escola na gestão do super admin (GET /schools). */
@@ -138,6 +142,7 @@ export interface Teacher {
   name: string;
   contactEmail: string | null;
   assignmentsCount: number;
+  username: string | null;
 }
 
 export interface TeacherInput {
@@ -178,6 +183,7 @@ export interface ClassGroupStudent {
   rm: string;
   /** 'YYYY-MM-DD' */
   enrolledSince: string;
+  username: string | null;
 }
 
 export type TimetableSlotKind = 'LESSON' | 'BREAK';
@@ -311,7 +317,27 @@ interface LessonKey {
 
 export interface SchoolSettings {
   minAttendance: number;
+  /** Sufixo dos logins ("etec-jau"). */
+  code: string | null;
 }
 
 export type AttendanceOverrideInput = LessonKey & { studentId: number; present: boolean | null };
 export type LessonCancellationInput = LessonKey & { reason: CancellationReason | null };
+
+export interface LoginCredentials {
+  username: string;
+  password: string;
+}
+
+export interface ClassGroupLogins {
+  created: (LoginCredentials & { studentId: number; name: string; rm: string })[];
+  failed: { studentId: number; name: string; rm: string; reason: string }[];
+}
+
+/** Aulas do professor logado num dia. */
+export interface TeacherLessons {
+  date: string;
+  day: DayInfo;
+  classGroups: { id: number; name: string }[];
+  lessons: (Omit<AttendanceLesson, 'teacher'> & { classGroup: { id: number; name: string } })[];
+}

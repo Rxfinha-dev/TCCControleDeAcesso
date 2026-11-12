@@ -28,6 +28,23 @@ export class FakeIdentity implements IdentityProvider {
   async getUser(token: string) {
     return token === VALID_TOKEN ? this.user : null;
   }
+  /** Logins criados (e-mail -> senha) e senhas trocadas (id -> senha). */
+  created = new Map<string, string>();
+  passwords = new Map<string, string>();
+  deleted: string[] = [];
+  /** E-mails cuja criação falha (simula erro do Supabase). */
+  failEmails = new Set<string>();
+  async createUser(email: string, password: string) {
+    if (this.failEmails.has(email)) throw new Error('Supabase recusou');
+    this.created.set(email, password);
+    return `auth-${email}`;
+  }
+  async setPassword(authUserId: string, password: string) {
+    this.passwords.set(authUserId, password);
+  }
+  async deleteUser(authUserId: string) {
+    this.deleted.push(authUserId);
+  }
 }
 
 export class MemoryStorage implements PhotoStorage {
@@ -85,6 +102,7 @@ export const school: School = {
   id: 1,
   name: 'ETEC Joaquim Ferreira do Amaral',
   email: 'etec@escola.com',
+  code: 'etec-jau',
   minAttendance: 75,
   createdAt: new Date('2026-01-01T00:00:00Z'),
   updatedAt: new Date('2026-01-01T00:00:00Z'),
@@ -98,6 +116,10 @@ export const schoolUser: User = {
   name: 'ETEC Joaquim Ferreira do Amaral',
   role: 'SCHOOL',
   schoolId: 1,
+  username: null,
+  mustChangePassword: false,
+  teacherId: null,
+  studentId: null,
   createdAt: new Date('2026-01-01T00:00:00Z'),
   updatedAt: new Date('2026-01-01T00:00:00Z'),
 };

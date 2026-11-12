@@ -195,6 +195,7 @@ export function academicPaths({ ref, json, errorResponse, authErrors, validation
                   name: { type: 'string' },
                   rm: { type: 'string' },
                   enrolledSince: { type: 'string', format: 'date', example: '2026-02-02' },
+                  username: { type: 'string', nullable: true, example: '24001@etec-jau', description: 'Login do aluno, se já criado' },
                 },
               },
             }),
@@ -342,6 +343,7 @@ export function academicSchemas(ref: (name: string) => object) {
         name: { type: 'string', example: 'Ana Prado' },
         contactEmail: { type: 'string', nullable: true, example: 'ana@email.com' },
         assignmentsCount: { type: 'integer', example: 3 },
+        username: { type: 'string', nullable: true, example: 'ana.prado@etec-jau', description: 'Login do professor, se já criado' },
       },
     },
     TeacherInput: {

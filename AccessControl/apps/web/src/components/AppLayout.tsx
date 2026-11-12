@@ -39,6 +39,12 @@ const NAV_ITEMS = [
   { to: '/configuracoes', label: 'Configurações', icon: SettingsIcon },
 ];
 
+/** Professor: só as aulas dele. */
+const TEACHER_NAV_ITEMS = [
+  { to: '/', label: 'Início', icon: HomeIcon, end: true },
+  { to: '/presenca', label: 'Chamada', icon: ChecklistIcon, end: false },
+];
+
 /** Gestão global, só para o super admin. */
 const SUPER_ADMIN_NAV_ITEMS = [
   { to: '/escolas', label: 'Escolas', icon: BuildingIcon, end: false },
@@ -56,6 +62,7 @@ export function AppLayout() {
 
 function AppShell() {
   const { user, isSuperAdmin, logout } = useAuth();
+  const isTeacher = user?.role === 'TEACHER';
   const { selected } = useSchoolScope();
   const name = displayName(user);
   const { connected } = useSerial();
@@ -75,7 +82,9 @@ function AppShell() {
         </button>
         <Logo variant="light" className="mobile-logo" />
         <ThemeToggle />
-        <span className={`status-dot ${connected ? 'on' : 'off'}`} title={connected ? 'Leitor conectado' : 'Leitor desconectado'} />
+        {!isTeacher && (
+          <span className={`status-dot ${connected ? 'on' : 'off'}`} title={connected ? 'Leitor conectado' : 'Leitor desconectado'} />
+        )}
       </header>
 
       <aside className="sidebar">
@@ -84,7 +93,7 @@ function AppShell() {
           <ThemeToggle />
         </div>
         <nav className="sidebar-nav" onClick={() => setMenuOpen(false)}>
-          {[...NAV_ITEMS, ...(isSuperAdmin ? SUPER_ADMIN_NAV_ITEMS : [])].map(({ to, label, icon: Icon, end }) => (
+          {(isTeacher ? TEACHER_NAV_ITEMS : [...NAV_ITEMS, ...(isSuperAdmin ? SUPER_ADMIN_NAV_ITEMS : [])]).map(({ to, label, icon: Icon, end }) => (
             <NavLink key={to} to={to} end={end} className="nav-item">
               <Icon />
               <span>{label}</span>
@@ -92,6 +101,7 @@ function AppShell() {
           ))}
         </nav>
 
+        {!isTeacher && (
         <Link to="/configuracoes" className={`reader-status ${connected ? 'on' : 'off'}`} onClick={() => setMenuOpen(false)}>
           <span className={`status-dot ${connected ? 'on' : 'off'}`} />
           <span>
@@ -99,6 +109,7 @@ function AppShell() {
             <small>{connected ? 'Pronto para ler digitais' : 'Conecte o Arduino'}</small>
           </span>
         </Link>
+        )}
 
         <div className="sidebar-user">
           <span className="avatar" aria-hidden>

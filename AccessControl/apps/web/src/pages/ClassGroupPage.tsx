@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useState, type CSSProperties, type FormEvent } from 'react';
 import { Link, useParams } from 'react-router';
-import { classGroupsApi, studentsApi, subjectsApi, teachersApi } from '../api';
+import { classGroupsApi, loginsApi, studentsApi, subjectsApi, teachersApi } from '../api';
 import { ApiError, errorMessage } from '../api/client';
 import type { ClassGroupDetail, ClassGroupStudent, Student, Subject, Teacher } from '../api/types';
 import { ConfirmDialog } from '../components/ConfirmDialog';
+import { LoginSheet, type LoginSheetRow } from '../components/LoginSheet';
 import { ArrowLeftIcon } from '../components/Icons';
 import { PageHeader } from '../components/PageHeader';
 import { TimetableEditor } from '../components/timetable/TimetableEditor';
@@ -105,6 +106,9 @@ function StudentsTab({ classGroupId, onChange }: { classGroupId: number; onChang
   const [picked, setPicked] = useState<Set<number>>(new Set());
   const [adding, setAdding] = useState(false);
   const [removing, setRemoving] = useState<ClassGroupStudent | null>(null);
+  const [resetting, setResetting] = useState<ClassGroupStudent | null>(null);
+  const [generating, setGenerating] = useState(false);
+  const [sheet, setSheet] = useState<{ title: string; rows: LoginSheetRow[]; failed: { name: string; reason: string }[] } | null>(null);
 
   const load = useCallback(async () => {
     try {
@@ -168,10 +172,38 @@ function StudentsTab({ classGroupId, onChange }: { classGroupId: number; onChang
     }
   }
 
+  async function handleGenerate() {
+    setGenerating(true);
+    try {
+      const { created, failed } = await loginsApi.classGroup(classGroupId);
+      if (created.length === 0 && failed.length === 0) toast.info('Todos os alunos da turma já têm login.');
+      else setSheet({ title: 'Logins dos alunos', rows: created, failed });
+      await load();
+    } catch (err) {
+      toast.error(errorMessage(err));
+    } finally {
+      setGenerating(false);
+    }
+  }
+
+  async function handleReset() {
+    if (!resetting) return;
+    const student = resetting;
+    setResetting(null);
+    try {
+      const credentials = await loginsApi.student(student.id);
+      setSheet({ title: `Nova senha de ${student.name}`, rows: [{ name: student.name, rm: student.rm, ...credentials }], failed: [] });
+    } catch (err) {
+      toast.error(errorMessage(err));
+    }
+  }
+
   const memberIds = new Set(members.map((member) => member.id));
   const candidates = results?.filter((student) => !memberIds.has(student.id)) ?? [];
 
   return (
+    <>
+    {sheet && <LoginSheet title={sheet.title} rows={sheet.rows} failed={sheet.failed} onClose={() => setSheet(null)} />}
     <div className="split-layout">
       <section className="card form">
         <h2 className="card-title">Adicionar alunos</h2>
@@ -212,6 +244,11 @@ function StudentsTab({ classGroupId, onChange }: { classGroupId: number; onChang
       </section>
 
       <section className="card">
+        <div className="form-actions">
+          <button type="button" className="btn btn-outline" disabled={generating || members.length === 0} onClick={handleGenerate}>
+            Gerar logins da turma
+          </button>
+        </div>
         <div className="table-wrapper">
           <table className="table">
             <thead>
@@ -219,6 +256,7 @@ function StudentsTab({ classGroupId, onChange }: { classGroupId: number; onChang
                 <th>Aluno</th>
                 <th className="numeric">RM</th>
                 <th>Na turma desde</th>
+                <th>Login</th>
                 <th>
                   <span className="sr-only">Ações</span>
                 </th>
@@ -230,7 +268,18 @@ function StudentsTab({ classGroupId, onChange }: { classGroupId: number; onChang
                   <td>{member.name}</td>
                   <td className="numeric">{member.rm}</td>
                   <td className="muted">{formatDate(`${member.enrolledSince}T12:00:00`)}</td>
+                  <td className="muted mono">{member.username ?? '—'}</td>
                   <td className="row-action">
+                    {member.username && (
+                      <button
+                        type="button"
+                        className="btn btn-outline btn-small"
+                        aria-label={`Nova senha para ${member.name}`}
+                        onClick={() => setResetting(member)}
+                      >
+                        Nova senha
+                      </button>
+                    )}{' '}
                     <button type="button" className="btn btn-outline btn-small" onClick={() => setRemoving(member)}>
                       Retirar
                     </button>
@@ -239,7 +288,7 @@ function StudentsTab({ classGroupId, onChange }: { classGroupId: number; onChang
               ))}
               {!loading && members.length === 0 && (
                 <tr>
-                  <td colSpan={4} className="empty">
+                  <td colSpan={5} className="empty">
                     Nenhum aluno nesta turma ainda.
                   </td>
                 </tr>
@@ -257,7 +306,16 @@ function StudentsTab({ classGroupId, onChange }: { classGroupId: number; onChang
         onConfirm={handleRemove}
         onCancel={() => setRemoving(null)}
       />
+      <ConfirmDialog
+        open={resetting !== null}
+        title="Nova senha"
+        message={`Gerar uma nova senha para ${resetting?.name}? A senha atual deixa de funcionar.`}
+        confirmLabel="Gerar nova senha"
+        onConfirm={handleReset}
+        onCancel={() => setResetting(null)}
+      />
     </div>
+    </>
   );
 }
 

@@ -30,10 +30,18 @@ export const attendanceTags = [
 export function attendancePaths({ ref, json, errorResponse, authErrors, validationError, notFound }: DocHelpers) {
   const lessonNotFound = errorResponse('Turma não encontrada ou sem aula nesse dia e horário (`LESSON_NOT_FOUND`)');
   return {
+    '/api/attendance/my-lessons': {
+      get: {
+        tags: [TAG],
+        summary: 'Aulas do professor logado num dia, em todas as turmas dele',
+        parameters: [{ name: 'date', in: 'query', schema: isoDay('2026-03-09'), description: 'Padrão: hoje' }],
+        responses: { 200: { description: 'Aulas do dia', content: json(ref('TeacherLessons')) }, 400: validationError, ...authErrors },
+      },
+    },
     '/api/attendance/day': {
       get: {
         tags: [TAG],
-        summary: 'Chamada de um dia: aulas da turma e presença de cada aluno',
+        summary: 'Chamada de um dia: aulas da turma e presença de cada aluno (professor: só as aulas dele)',
         description:
           'Presença = o aluno ficou dentro da escola por pelo menos metade da aula (leituras alternam entrada/saída; ' +
           'leitura repetida em até 1 minuto é ignorada; sem saída, vale até o fim do dia). ' +
@@ -127,7 +135,15 @@ export function attendanceSchemas(ref: (name: string) => object) {
     SchoolSettings: {
       type: 'object',
       required: ['minAttendance'],
-      properties: { minAttendance: { type: 'integer', minimum: 0, maximum: 100, example: 75, description: 'Frequência mínima (%)' } },
+      properties: {
+        minAttendance: { type: 'integer', minimum: 0, maximum: 100, example: 75, description: 'Frequência mínima (%)' },
+        code: {
+          type: 'string',
+          nullable: true,
+          example: 'etec-jau',
+          description: 'Código dos logins (letras, números e hífen). Não muda depois de criados os logins (`SCHOOL_CODE_LOCKED`).',
+        },
+      },
     },
     AttendanceDay: {
       type: 'object',
@@ -171,6 +187,28 @@ export function attendanceSchemas(ref: (name: string) => object) {
                   },
                 },
               },
+            },
+          },
+        },
+      },
+    },
+    TeacherLessons: {
+      type: 'object',
+      properties: {
+        date: isoDay('2026-03-09'),
+        day: { type: 'object', properties: { kind: { type: 'string' }, name: { type: 'string' } } },
+        classGroups: { type: 'array', items: { type: 'object', properties: { id: { type: 'integer' }, name: { type: 'string' } } } },
+        lessons: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              classGroup: { type: 'object', properties: { id: { type: 'integer' }, name: { type: 'string' } } },
+              startMinute: { type: 'integer', example: 450 },
+              endMinute: { type: 'integer', example: 500 },
+              subject: ref('Subject'),
+              cancellation: { ...ref('CancellationReason'), nullable: true },
+              finished: { type: 'boolean' },
             },
           },
         },

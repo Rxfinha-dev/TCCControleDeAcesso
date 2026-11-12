@@ -1,6 +1,6 @@
-import { createClient, isAuthRetryableFetchError } from '@supabase/supabase-js';
+import { createClient, isAuthRetryableFetchError, type AuthError } from '@supabase/supabase-js';
 import { env } from '../config/env';
-import { serviceUnavailable } from '../lib/errors';
+import { badRequest, conflict, serviceUnavailable } from '../lib/errors';
 
 /** Por quanto tempo uma sessão confirmada no Supabase Auth dispensa nova consulta. */
 export const SESSION_CHECK_TTL_MS = 30_000;
@@ -33,6 +33,26 @@ export interface IdentityProvider {
   isSessionActive(token: string, sessionId: string): Promise<boolean>;
   /** Busca o usuário no servidor de autenticação. Retorna null se o token for inválido. */
   getUser(token: string): Promise<AuthUser | null>;
+  /** Cria um login já confirmado (professor/aluno) e devolve o id dele no servidor de autenticação. */
+  createUser(email: string, password: string): Promise<string>;
+  /** Define uma nova senha para o login. */
+  setPassword(authUserId: string, password: string): Promise<void>;
+  /** Apaga o login (desfaz uma criação que não terminou). */
+  deleteUser(authUserId: string): Promise<void>;
+}
+
+const loginsUnavailable = () =>
+  serviceUnavailable('Criação de logins indisponível: configure SUPABASE_SERVICE_ROLE_KEY na API.', 'LOGINS_UNAVAILABLE');
+
+/** Traduz os erros da API de administração do Supabase Auth. */
+function adminError(error: AuthError) {
+  if (error.code === 'weak_password') {
+    return badRequest('Senha muito fraca para as regras do login. Use letras e números, com pelo menos 8 caracteres.', 'WEAK_PASSWORD');
+  }
+  if (error.code === 'email_exists' || error.code === 'user_already_exists') {
+    return conflict('Esse usuário já existe no login.', 'USERNAME_TAKEN');
+  }
+  return serviceUnavailable('Não foi possível falar com o servidor de login agora. Tente novamente.', 'AUTH_UNAVAILABLE');
 }
 
 /**
@@ -77,6 +97,32 @@ export class SupabaseIdentityProvider implements IdentityProvider {
     }
     this.activeSessions.set(sessionId, now + SESSION_CHECK_TTL_MS);
     return true;
+  }
+
+  /** Cliente com a chave de serviço, só para criar logins e trocar senhas. */
+  private admin() {
+    if (!env.SUPABASE_SERVICE_ROLE_KEY) throw loginsUnavailable();
+    this.adminClient ??= createClient(env.SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY, {
+      auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
+    });
+    return this.adminClient.auth.admin;
+  }
+  private adminClient: ReturnType<typeof createClient> | undefined;
+
+  async createUser(email: string, password: string) {
+    const { data, error } = await this.admin().createUser({ email, password, email_confirm: true });
+    if (error || !data.user) throw error ? adminError(error) : loginsUnavailable();
+    return data.user.id;
+  }
+
+  async setPassword(authUserId: string, password: string) {
+    const { error } = await this.admin().updateUserById(authUserId, { password });
+    if (error) throw adminError(error);
+  }
+
+  async deleteUser(authUserId: string) {
+    const { error } = await this.admin().deleteUser(authUserId);
+    if (error) throw adminError(error);
   }
 
   async getUser(token: string) {

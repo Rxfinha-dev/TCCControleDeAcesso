@@ -7,6 +7,13 @@ import type { AuthUser } from './types';
 const isAuthError = (error: unknown): error is AuthError =>
   typeof error === 'object' && error !== null && '__isAuthError' in error;
 
+/** Logins de professor/aluno ("24001@etec-jau") viram o e-mail sintético que o Supabase conhece (igual à API). */
+export const toLoginEmail = (identifier: string) => {
+  const value = identifier.trim().toLowerCase();
+  const domain = value.split('@')[1];
+  return domain && !domain.includes('.') ? `${value}.helpus.invalid` : value;
+};
+
 const CODE_SENT = 'Se o e-mail estiver cadastrado, você receberá um código em instantes. Verifique também a caixa de spam.';
 
 /** Traduz os erros do Supabase Auth para as mensagens do HelpUs. */
@@ -14,7 +21,7 @@ function toApiError(error: AuthError | Error): ApiError {
   if (!isAuthError(error)) return new ApiError(0, error.message);
   switch (error.code) {
     case 'invalid_credentials':
-      return new ApiError(401, 'E-mail ou senha incorretos', 'INVALID_CREDENTIALS');
+      return new ApiError(401, 'Usuário ou senha incorretos', 'INVALID_CREDENTIALS');
     case 'email_not_confirmed':
       return new ApiError(403, 'Sua conta ainda não foi ativada. Verifique o código enviado ao seu e-mail.', 'EMAIL_NOT_VERIFIED');
     case 'otp_expired':
@@ -50,7 +57,7 @@ async function run<T extends { error: AuthError | null }>(promise: Promise<T>): 
  */
 export const authApi = {
   login: async (email: string, password: string) => {
-    await run(supabase.auth.signInWithPassword({ email: email.trim(), password }));
+    await run(supabase.auth.signInWithPassword({ email: toLoginEmail(email), password }));
   },
 
   /**
@@ -105,4 +112,7 @@ export const authApi = {
 
   /** Usuário logado com perfil e escola (a API cria ou vincula no primeiro acesso). */
   me: () => requestJson<AuthUser>('/auth/me'),
+
+  /** Troca da senha inicial (professor e aluno). */
+  changePassword: (password: string) => requestJson<void>('/auth/password', { method: 'PUT', body: { password } }),
 };

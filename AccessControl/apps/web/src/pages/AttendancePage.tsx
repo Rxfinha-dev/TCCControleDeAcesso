@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState, type CSSProperties } from 'react';
-import { Link } from 'react-router';
+import { Link, useSearchParams } from 'react-router';
 import { attendanceApi, classGroupsApi } from '../api';
 import { errorMessage } from '../api/client';
 import type {
@@ -9,11 +9,11 @@ import type {
   AttendanceSummary,
   CancellationReason,
   ClassGroup,
-  DayInfo,
 } from '../api/types';
 import { PageHeader } from '../components/PageHeader';
+import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
-import { currentSchoolYear, formatMinute, todayIso } from '../utils/academic';
+import { CANCELLATION_LABELS, currentSchoolYear, dayMessage, formatMinute, todayIso } from '../utils/academic';
 
 const TABS = [
   { id: 'chamada', label: 'Chamada do dia' },
@@ -21,27 +21,6 @@ const TABS = [
 ] as const;
 
 type TabId = (typeof TABS)[number]['id'];
-
-const CANCELLATION_LABELS: Record<CancellationReason, string> = {
-  TEACHER_ABSENT: 'Falta do professor',
-  CANCELLED: 'Aula cancelada',
-};
-
-/** Por que não há chamada num dia que não é letivo. */
-function dayMessage(day: DayInfo) {
-  switch (day.kind) {
-    case 'HOLIDAY':
-      return `Feriado: ${day.name}. Sem aula, ninguém leva presença nem falta.`;
-    case 'NO_CLASS':
-      return `Dia sem aula: ${day.name}.`;
-    case 'WEEKEND':
-      return 'Domingo não tem aula.';
-    case 'OUT_OF_TERM':
-      return 'Este dia está fora dos bimestres, então não conta presença.';
-    default:
-      return null;
-  }
-}
 
 /** O que a marca mostra, o que ela quer dizer e o que o clique faz. */
 function describe(mark: AttendanceMark) {
@@ -68,23 +47,25 @@ function Percent({ value, status }: { value: number | null; status: AttendanceSt
 /** Presença: chamada de qualquer aula (calculada pela catraca, com correção manual) e frequência da turma. */
 export function AttendancePage() {
   const toast = useToast();
-  const [groups, setGroups] = useState<ClassGroup[] | null>(null);
-  const [classGroupId, setClassGroupId] = useState<number | null>(null);
-  const [date, setDate] = useState(todayIso);
+  // O professor vê só as turmas e aulas dele, e não a frequência da turma.
+  const isTeacher = useAuth().user?.role === 'TEACHER';
+  const [params] = useSearchParams();
+  const [groups, setGroups] = useState<Pick<ClassGroup, 'id' | 'name'>[] | null>(null);
+  const [classGroupId, setClassGroupId] = useState<number | null>(() => Number(params.get('turma')) || null);
+  const [date, setDate] = useState(() => params.get('dia') || todayIso());
   const [tab, setTab] = useState<TabId>('chamada');
   const [day, setDay] = useState<AttendanceDay | null>(null);
   const [summary, setSummary] = useState<AttendanceSummary | null>(null);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    classGroupsApi
-      .list(currentSchoolYear())
+    (isTeacher ? attendanceApi.myLessons().then((data) => data.classGroups) : classGroupsApi.list(currentSchoolYear()))
       .then((list) => {
         setGroups(list);
         setClassGroupId((current) => current ?? list[0]?.id ?? null);
       })
       .catch((err) => toast.error(errorMessage(err)));
-  }, [toast]);
+  }, [isTeacher, toast]);
 
   const loadDay = useCallback(async () => {
     if (classGroupId === null || !date) return;
@@ -150,11 +131,17 @@ export function AttendancePage() {
 
       {groups?.length === 0 ? (
         <p className="banner">
-          Nenhuma turma neste ano letivo. <Link to="/turmas">Cadastre as turmas</Link> para acompanhar a presença.
+          {isTeacher ? (
+            'Você ainda não leciona em nenhuma turma deste ano. Fale com a secretaria da escola.'
+          ) : (
+            <>
+              Nenhuma turma neste ano letivo. <Link to="/turmas">Cadastre as turmas</Link> para acompanhar a presença.
+            </>
+          )}
         </p>
       ) : (
         <>
-          <div className="tabs" role="tablist" aria-label="Presença">
+          <div className="tabs" role="tablist" aria-label="Presença" hidden={isTeacher}>
             {TABS.map(({ id, label }) => (
               <button
                 key={id}

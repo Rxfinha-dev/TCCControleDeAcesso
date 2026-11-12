@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useState, type FormEvent } from 'react';
-import { teachersApi } from '../api';
+import { loginsApi, teachersApi } from '../api';
 import { errorMessage } from '../api/client';
 import type { Teacher, TeacherInput } from '../api/types';
 import { ConfirmDialog } from '../components/ConfirmDialog';
+import { LoginSheet, type LoginSheetRow } from '../components/LoginSheet';
 import { PageHeader } from '../components/PageHeader';
+import { PasswordInput } from '../components/PasswordInput';
 import { useToast } from '../contexts/ToastContext';
 
 const EMPTY: TeacherInput = { name: '', contactEmail: '' };
@@ -16,6 +18,9 @@ export function TeachersPage() {
   const [selected, setSelected] = useState<Teacher | null>(null);
   const [saving, setSaving] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [loginPassword, setLoginPassword] = useState('');
+  const [savingLogin, setSavingLogin] = useState(false);
+  const [sheet, setSheet] = useState<LoginSheetRow | null>(null);
 
   const load = useCallback(async () => {
     try {
@@ -34,10 +39,12 @@ export function TeachersPage() {
   const clear = () => {
     setForm(EMPTY);
     setSelected(null);
+    setLoginPassword('');
   };
 
   const pick = (teacher: Teacher) => {
     setSelected(teacher);
+    setLoginPassword('');
     setForm({ name: teacher.name, contactEmail: teacher.contactEmail ?? '' });
   };
 
@@ -65,6 +72,27 @@ export function TeachersPage() {
     }
   }
 
+  /** Cria o login ou gera uma nova senha (em branco: o sistema gera). */
+  async function handleLogin() {
+    if (!selected) return;
+    if (loginPassword && loginPassword.length < 8) {
+      toast.error('A senha precisa de pelo menos 8 caracteres');
+      return;
+    }
+    setSavingLogin(true);
+    try {
+      const credentials = await loginsApi.teacher(selected.id, loginPassword || undefined);
+      setSheet({ name: selected.name, ...credentials });
+      setSelected({ ...selected, username: credentials.username });
+      setLoginPassword('');
+      await load();
+    } catch (err) {
+      toast.error(errorMessage(err));
+    } finally {
+      setSavingLogin(false);
+    }
+  }
+
   async function handleDelete() {
     if (!selected) return;
     setConfirmDelete(false);
@@ -80,7 +108,9 @@ export function TeachersPage() {
 
   return (
     <>
-      <PageHeader title="Professores" description="Cadastro dos professores que lecionam nas turmas (ainda sem acesso ao painel)." />
+      <PageHeader title="Professores" description="Cadastro dos professores que lecionam nas turmas e o login de cada um." />
+
+      {sheet && <LoginSheet title={`Login de ${sheet.name}`} rows={[sheet]} onClose={() => setSheet(null)} />}
 
       <div className="split-layout">
         <form className="card form" onSubmit={handleSubmit} noValidate>
@@ -112,6 +142,35 @@ export function TeachersPage() {
               </button>
             )}
           </div>
+
+          {selected && (
+            <>
+              <h2 className="card-title">Acesso ao sistema</h2>
+              <p className="hint">
+                {selected.username ? (
+                  <>
+                    Usuário: <strong className="mono">{selected.username}</strong>. Esqueceu a senha? Gere uma nova.
+                  </>
+                ) : (
+                  'Ainda sem login. O usuário fica como nome.sobrenome@código-da-escola.'
+                )}
+              </p>
+              <label className="field">
+                <span>{selected.username ? 'Nova senha' : 'Senha inicial'}</span>
+                <PasswordInput
+                  autoComplete="new-password"
+                  placeholder="Em branco: o sistema gera uma"
+                  value={loginPassword}
+                  onChange={(event) => setLoginPassword(event.target.value)}
+                />
+              </label>
+              <div className="form-actions">
+                <button type="button" className="btn btn-outline" disabled={savingLogin} onClick={handleLogin}>
+                  {selected.username ? 'Gerar nova senha' : 'Criar login'}
+                </button>
+              </div>
+            </>
+          )}
         </form>
 
         <section className="card">
@@ -122,6 +181,7 @@ export function TeachersPage() {
                   <th>Nome</th>
                   <th>E-mail</th>
                   <th className="numeric">Disciplinas</th>
+                  <th>Login</th>
                 </tr>
               </thead>
               <tbody>
@@ -136,11 +196,12 @@ export function TeachersPage() {
                     <td>{teacher.name}</td>
                     <td className="muted">{teacher.contactEmail ?? '—'}</td>
                     <td className="numeric">{teacher.assignmentsCount}</td>
+                    <td className="muted mono">{teacher.username ?? '—'}</td>
                   </tr>
                 ))}
                 {!loading && teachers.length === 0 && (
                   <tr>
-                    <td colSpan={3} className="empty">
+                    <td colSpan={4} className="empty">
                       Nenhum professor cadastrado ainda.
                     </td>
                   </tr>

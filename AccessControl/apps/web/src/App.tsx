@@ -8,6 +8,7 @@ import { ToastProvider } from './contexts/ToastContext';
 import { AccessLogsPage } from './pages/AccessLogsPage';
 import { AttendancePage } from './pages/AttendancePage';
 import { CalendarPage } from './pages/CalendarPage';
+import { ChangePasswordPage } from './pages/ChangePasswordPage';
 import { ClassGroupPage } from './pages/ClassGroupPage';
 import { ClassGroupsPage } from './pages/ClassGroupsPage';
 import { CoursesPage } from './pages/CoursesPage';
@@ -19,12 +20,13 @@ import { SchoolsPage } from './pages/SchoolsPage';
 import { SettingsPage } from './pages/SettingsPage';
 import { StudentsPage } from './pages/StudentsPage';
 import { SubjectsPage } from './pages/SubjectsPage';
+import { TeacherHomePage } from './pages/TeacherHomePage';
 import { TeachersPage } from './pages/TeachersPage';
 import { UsersPage } from './pages/UsersPage';
 import { VerificationPage } from './pages/VerificationPage';
 import { VerifyEmailPage } from './pages/VerifyEmailPage';
 
-/** Perfis futuros (aluno, funcionário, professor) ainda não têm painel. */
+/** Perfis ainda sem painel (aluno, funcionário). */
 function ComingSoonPage() {
   const { logout } = useAuth();
   return (
@@ -49,9 +51,21 @@ function RequireAuth() {
       </div>
     );
   }
-  if (!user) return <Navigate to="/login" replace state={{ from: location.pathname }} />;
+  if (!user) return <Navigate to="/login" replace state={{ from: `${location.pathname}${location.search}` }} />;
+  if (user.mustChangePassword) return <ChangePasswordPage />;
   if (!PANEL_ROLES.includes(user.role)) return <ComingSoonPage />;
   return <Outlet />;
+}
+
+/** Telas da escola: o professor só usa o início e a chamada. */
+function SchoolPanelRoute() {
+  const { user } = useAuth();
+  return user?.role === 'TEACHER' ? <Navigate to="/" replace /> : <Outlet />;
+}
+
+function HomePage() {
+  const { user } = useAuth();
+  return user?.role === 'TEACHER' ? <TeacherHomePage /> : <DashboardPage />;
 }
 
 /** Telas de gestão global: quem não é super admin volta para o início. */
@@ -81,7 +95,16 @@ export function AppRoutes() {
       <Route path="/esqueci-senha" element={<ForgotPasswordPage />} />
       <Route element={<RequireAuth />}>
         <Route element={<AppLayout />}>
-          <Route index element={<DashboardPage />} />
+          <Route index element={<HomePage />} />
+          <Route
+            path="/presenca"
+            element={
+              <RequireSchool>
+                <AttendancePage />
+              </RequireSchool>
+            }
+          />
+          <Route element={<SchoolPanelRoute />}>
           <Route
             path="/alunos"
             element={
@@ -139,14 +162,6 @@ export function AppRoutes() {
             }
           />
           <Route
-            path="/presenca"
-            element={
-              <RequireSchool>
-                <AttendancePage />
-              </RequireSchool>
-            }
-          />
-          <Route
             path="/verificacao"
             element={
               <RequireSchool>
@@ -159,6 +174,7 @@ export function AppRoutes() {
           <Route element={<SuperAdminRoute />}>
             <Route path="/escolas" element={<SchoolsPage />} />
             <Route path="/usuarios" element={<UsersPage />} />
+          </Route>
           </Route>
         </Route>
       </Route>

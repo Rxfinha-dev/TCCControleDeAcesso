@@ -50,19 +50,27 @@ enum TimetableSlotKind {
 
 /// Usuário do sistema, ligado ao Supabase Auth. O perfil vive só aqui (nunca em user_metadata).
 model User {
-  id         Int      @id @default(autoincrement())
+  id                 Int      @id @default(autoincrement())
   /// ID do usuário no Supabase Auth (auth.users.id).
-  authUserId String   @unique @map("auth_user_id") @db.Uuid
-  email      String   @unique @db.VarChar(120)
-  name       String   @db.VarChar(100)
-  role       UserRole @default(SCHOOL)
+  authUserId         String   @unique @map("auth_user_id") @db.Uuid
+  email              String   @unique @db.VarChar(120)
+  name               String   @db.VarChar(100)
+  role               UserRole @default(SCHOOL)
   /// Escola do usuário. Para SCHOOL é obrigatória; para SUPER_ADMIN é a "escola padrão" (opcional).
   /// No máximo um SCHOOL por escola (índice único parcial users_school_role_key, criado na migration).
-  schoolId   Int?     @map("school_id")
-  createdAt  DateTime @default(now()) @map("created_at")
-  updatedAt  DateTime @updatedAt @map("updated_at")
+  schoolId           Int?     @map("school_id")
+  /// Login de professor/aluno criado pela escola ("joao.silva@etec-jau", "24001@etec-jau"). O e-mail é sintético.
+  username           String?  @unique @db.VarChar(80)
+  /// Senha inicial definida pela escola: o usuário troca antes de usar o sistema.
+  mustChangePassword Boolean  @default(false) @map("must_change_password")
+  teacherId          Int?     @unique @map("teacher_id")
+  studentId          Int?     @unique @map("student_id")
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
 
   school              School?              @relation(fields: [schoolId], references: [id], onDelete: SetNull)
+  teacher             Teacher?             @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  student             Student?             @relation(fields: [studentId], references: [id], onDelete: Cascade)
   attendanceOverrides AttendanceOverride[]
   lessonCancellations LessonCancellation[]
 
@@ -76,6 +84,8 @@ model School {
   name          String   @db.VarChar(100)
   /// Contato da escola e chave para vincular o primeiro login (provisionamento).
   email         String   @unique @db.VarChar(120)
+  /// Código curto único (ex.: "etec-jau"), sufixo dos logins de professores e alunos.
+  code          String?  @unique @db.VarChar(30)
   createdAt     DateTime @default(now()) @map("created_at")
   updatedAt     DateTime @updatedAt @map("updated_at")
   /// Frequência mínima (%) para aprovação; 75 é o padrão da LDB.
@@ -132,6 +142,7 @@ model Student {
   school              School               @relation(fields: [schoolId], references: [id], onDelete: Cascade)
   course              Course?              @relation(fields: [courseId], references: [id], onDelete: Restrict)
   photo               StudentPhoto?
+  user                User?
   accessLogs          AccessLog[]
   enrollments         Enrollment[]
   attendanceOverrides AttendanceOverride[]
@@ -183,6 +194,7 @@ model Teacher {
 
   school      School               @relation(fields: [schoolId], references: [id], onDelete: Cascade)
   assignments TeachingAssignment[]
+  user        User?
 
   @@index([schoolId, name])
   @@map("teachers")

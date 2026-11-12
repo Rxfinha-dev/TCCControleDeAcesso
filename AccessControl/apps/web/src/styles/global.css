@@ -2627,3 +2627,38 @@ button.roll-mark:hover:not(:disabled) {
   color: var(--warning);
   font-weight: 600;
 }
+
+/* ---------- Logins (lista para imprimir) ---------- */
+.mono {
+  font-family: var(--font-mono);
+}
+
+.print-only {
+  display: none;
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  .print-sheet,
+  .print-sheet * {
+    visibility: visible;
+  }
+
+  .print-sheet {
+    position: absolute;
+    inset: 0;
+    border: 0;
+    box-shadow: none;
+  }
+
+  .print-sheet .no-print {
+    display: none;
+  }
+
+  .print-sheet .print-only {
+    display: block;
+  }
+}

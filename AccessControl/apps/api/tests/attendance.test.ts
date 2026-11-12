@@ -5,6 +5,7 @@ import { dateOnly } from '../src/lib/dates';
 import { AttendanceService } from '../src/modules/attendance/attendance.service';
 import { CalendarService } from '../src/modules/calendar/calendar.service';
 import { ClassGroupsService } from '../src/modules/class-groups/class-groups.service';
+import type { User } from '@prisma/client';
 import { authHeader, buildTestApp, classGroup, school, schoolUser } from './helpers';
 
 const MATH = { id: 1, name: 'Matemática', abbreviation: 'MAT', color: '#2266aa' };
@@ -45,8 +46,8 @@ const reading = (studentId: number, date: string, hhmm: string) => ({
   createdAt: new Date(`${date}T${hhmm}:00.000-03:00`),
 });
 
-function setup() {
-  const ctx = buildTestApp();
+function setup(user?: User) {
+  const ctx = buildTestApp({ user });
   const { prisma } = ctx;
   prisma.classGroup.findFirst.mockResolvedValue(classGroup);
   prisma.school.findUniqueOrThrow.mockResolvedValue(school);
@@ -376,7 +377,7 @@ describe('Presença', () => {
       expect(prisma.school.update).toHaveBeenCalledWith({
         where: { id: school.id },
         data: { minAttendance: 80 },
-        select: { minAttendance: true },
+        select: { minAttendance: true, code: true },
       });
     });
 
@@ -395,5 +396,107 @@ describe('Presença', () => {
     for (const table of ['attendance_overrides', 'lesson_cancellations']) {
       expect(sql).toMatch(new RegExp(`ALTER TABLE "${table}" ENABLE ROW LEVEL SECURITY;`));
     }
+  });
+});
+
+describe('Presença: professor', () => {
+  /** Ana Prado (professora 5) leciona só Matemática na turma. */
+  const teacherUser: User = {
+    ...schoolUser,
+    id: 7,
+    role: 'TEACHER',
+    teacherId: 5,
+    username: 'ana.prado@etec-jau',
+    email: 'ana.prado@etec-jau.helpus.invalid',
+  };
+
+  it('vê só as aulas das disciplinas atribuídas a ele', async () => {
+    const { app, prisma } = setup(teacherUser);
+
+    const res = await day(app);
+
+    expect(res.status).toBe(200);
+    expect(res.body.lessons.map((lesson: { subject: { id: number } }) => lesson.subject.id)).toEqual([MATH.id]);
+    expect(res.body.students[0].marks).toEqual([{ startMinute: 450, present: false, source: 'AUTO' }]);
+    expect(prisma.teachingAssignment.findMany.mock.calls[0][0]!.where).toEqual({
+      classGroupId: 20,
+      teacherId: 5,
+      classGroup: { schoolId: school.id },
+    });
+  });
+
+  it('turma em que não leciona é 404', async () => {
+    const { app, prisma } = setup(teacherUser);
+    prisma.teachingAssignment.findMany.mockResolvedValueOnce([]);
+
+    const res = await day(app);
+
+    expect(res.status).toBe(404);
+    expect(res.body.code).toBe('CLASS_GROUP_NOT_FOUND');
+  });
+
+  it('não corrige aula de outra disciplina', async () => {
+    const { app, prisma } = setup(teacherUser);
+
+    const res = await put(app, 'override', { classGroupId: 20, date: MONDAY, startMinute: 500, studentId: 10, present: true });
+
+    expect(res.status).toBe(404);
+    expect(res.body.code).toBe('LESSON_NOT_FOUND');
+    expect(prisma.attendanceOverride.upsert).not.toHaveBeenCalled();
+  });
+
+  it('corrige a própria aula', async () => {
+    const { app, prisma } = setup(teacherUser);
+
+    const res = await put(app, 'override', { classGroupId: 20, date: MONDAY, startMinute: 450, studentId: 10, present: true });
+
+    expect(res.status).toBe(204);
+    expect(prisma.attendanceOverride.upsert).toHaveBeenCalledWith(expect.objectContaining({ create: expect.objectContaining({ userId: 7 }) }));
+  });
+
+  it('não vê a frequência da turma', async () => {
+    const { app } = setup(teacherUser);
+
+    const res = await request(app).get('/api/attendance/summary?classGroupId=20').set('Authorization', authHeader());
+
+    expect(res.status).toBe(403);
+  });
+
+  it('lista as aulas dele no dia, em todas as turmas', async () => {
+    const { app, prisma } = setup(teacherUser);
+    prisma.teachingAssignment.findMany.mockResolvedValueOnce([{ subjectId: 1, classGroup: { id: 20, name: '2º DS A' } }] as never);
+
+    const res = await request(app).get(`/api/attendance/my-lessons?date=${MONDAY}`).set('Authorization', authHeader());
+
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual({
+      date: MONDAY,
+      day: { kind: 'SCHOOL_DAY' },
+      classGroups: [{ id: 20, name: '2º DS A' }],
+      lessons: [
+        { startMinute: 450, endMinute: 500, subject: MATH, cancellation: null, finished: true, classGroup: { id: 20, name: '2º DS A' } },
+      ],
+    });
+    expect(prisma.teachingAssignment.findMany.mock.calls[0][0]!.where).toEqual({
+      teacherId: 5,
+      classGroup: { schoolId: school.id, schoolYear: 2026 },
+    });
+  });
+
+  it('escola não usa a lista de aulas do professor', async () => {
+    const { app } = setup();
+
+    const res = await request(app).get('/api/attendance/my-lessons').set('Authorization', authHeader());
+
+    expect(res.status).toBe(403);
+  });
+
+  it('antes de trocar a senha inicial, nada funciona', async () => {
+    const { app } = setup({ ...teacherUser, mustChangePassword: true });
+
+    const res = await day(app);
+
+    expect(res.status).toBe(403);
+    expect(res.body.code).toBe('PASSWORD_CHANGE_REQUIRED');
   });
 });

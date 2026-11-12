@@ -20,6 +20,8 @@ const startMinuteSchema = z.coerce.number().int().min(0).max(24 * 60);
 
 export const dayQuerySchema = z.object({ classGroupId: idSchema, date: isoDay.optional() });
 
+export const myLessonsQuerySchema = z.object({ date: isoDay.optional() });
+
 export const summaryQuerySchema = z
   .object({ classGroupId: idSchema, from: isoDay.optional(), to: isoDay.optional() })
   .refine((query) => !query.from || !query.to || query.from <= query.to, 'O início precisa ser antes do fim');
@@ -184,9 +186,22 @@ export class AttendanceService {
     return { group, calendar, lessons, records, studentsOn };
   }
 
-  /** Chamada de um dia: as aulas da turma e a presença de cada aluno em cada uma. */
-  async day(schoolId: number, classGroupId: number, date: string = todayInSaoPaulo(), now: Date = new Date()) {
-    const { calendar, lessons, records, studentsOn } = await this.compute(schoolId, classGroupId, date, date, now);
+  /**
+   * Chamada de um dia: as aulas da turma e a presença de cada aluno em cada uma.
+   * Com `teacherId`, só as aulas das disciplinas atribuídas a esse professor.
+   */
+  async day(
+    schoolId: number,
+    classGroupId: number,
+    date: string = todayInSaoPaulo(),
+    now: Date = new Date(),
+    teacherId: number | null = null,
+  ) {
+    const allowed = await this.teacherSubjects(schoolId, classGroupId, teacherId);
+    const computed = await this.compute(schoolId, classGroupId, date, date, now);
+    const { calendar, studentsOn } = computed;
+    const lessons = computed.lessons.filter((lesson) => !allowed || allowed.has(lesson.subject.id));
+    const records = computed.records.filter((record) => !allowed || allowed.has(record.subjectId));
     const assignments = await this.prisma.teachingAssignment.findMany({
       where: { classGroupId },
       select: { subjectId: true, teacher: { select: { id: true, name: true } } },
@@ -206,8 +221,8 @@ export class AttendanceService {
   }
 
   /** Correção manual da presença de um aluno numa aula: nunca é sobrescrita pelo cálculo automático. */
-  async setOverride(schoolId: number, userId: number, input: OverrideInput) {
-    const { studentsOn } = await this.findLesson(schoolId, input);
+  async setOverride(schoolId: number, userId: number, input: OverrideInput, teacherId: number | null = null) {
+    const { studentsOn } = await this.findLesson(schoolId, input, teacherId);
     if (!studentsOn(input.date).some((student) => student.id === input.studentId)) {
       throw badRequest('O aluno não estava nesta turma nesse dia', 'INVALID_STUDENT');
     }
@@ -229,8 +244,8 @@ export class AttendanceService {
   }
 
   /** Falta do professor ou aula cancelada: todos os alunos da turma recebem presença nessa aula. */
-  async setCancellation(schoolId: number, userId: number, input: CancellationInput) {
-    await this.findLesson(schoolId, input);
+  async setCancellation(schoolId: number, userId: number, input: CancellationInput, teacherId: number | null = null) {
+    await this.findLesson(schoolId, input, teacherId);
     const key = { classGroupId: input.classGroupId, date: dateOnly(input.date), startMinute: input.startMinute };
     if (input.reason === null) {
       await this.prisma.lessonCancellation.deleteMany({ where: key });
@@ -283,10 +298,55 @@ export class AttendanceService {
     };
   }
 
-  /** A aula (turma + data + início) precisa existir na grade daquele dia letivo. */
-  private async findLesson(schoolId: number, key: { classGroupId: number; date: string; startMinute: number }) {
+  /**
+   * Aulas do professor num dia, em todas as turmas em que ele leciona naquele ano letivo.
+   * shortcut: calcula a chamada de cada turma inteira; trocar por uma consulta só da grade se o professor tiver muitas turmas.
+   */
+  async teacherLessons(schoolId: number, teacherId: number, date: string = todayInSaoPaulo(), now: Date = new Date()) {
+    const assignments = await this.prisma.teachingAssignment.findMany({
+      where: { teacherId, classGroup: { schoolId, schoolYear: Number(date.slice(0, 4)) } },
+      select: { subjectId: true, classGroup: { select: { id: true, name: true } } },
+      orderBy: { classGroup: { name: 'asc' } },
+    });
+    const classGroups = [...new Map(assignments.map(({ classGroup }) => [classGroup.id, classGroup])).values()];
+    const calendar = await this.calendar.load(schoolId, date, date);
+    const lessons = [];
+    for (const classGroup of classGroups) {
+      const subjects = new Set(assignments.filter((item) => item.classGroup.id === classGroup.id).map((item) => item.subjectId));
+      const { lessons: groupLessons } = await this.compute(schoolId, classGroup.id, date, date, now);
+      lessons.push(
+        ...groupLessons
+          .filter((lesson) => subjects.has(lesson.subject.id))
+          .map(({ date: _date, ...lesson }) => ({ ...lesson, classGroup })),
+      );
+    }
+    lessons.sort((a, b) => a.startMinute - b.startMinute || a.classGroup.name.localeCompare(b.classGroup.name, 'pt-BR'));
+    return { date, day: classifyDay(date, calendar), classGroups, lessons };
+  }
+
+  /** Disciplinas que o professor leciona na turma (null = sem restrição). Turma sem atribuição dele = 404. */
+  private async teacherSubjects(schoolId: number, classGroupId: number, teacherId: number | null) {
+    if (teacherId === null) return null;
+    const assignments = await this.prisma.teachingAssignment.findMany({
+      where: { classGroupId, teacherId, classGroup: { schoolId } },
+      select: { subjectId: true },
+    });
+    if (assignments.length === 0) throw notFound('Turma não encontrada', 'CLASS_GROUP_NOT_FOUND');
+    return new Set(assignments.map((assignment) => assignment.subjectId));
+  }
+
+  /** A aula (turma + data + início) precisa existir na grade daquele dia letivo (e ser do professor, se houver). */
+  private async findLesson(
+    schoolId: number,
+    key: { classGroupId: number; date: string; startMinute: number },
+    teacherId: number | null = null,
+  ) {
+    const allowed = await this.teacherSubjects(schoolId, key.classGroupId, teacherId);
     const computed = await this.compute(schoolId, key.classGroupId, key.date, key.date);
-    if (!computed.lessons.some((lesson) => lesson.startMinute === key.startMinute)) {
+    const exists = computed.lessons.some(
+      (lesson) => lesson.startMinute === key.startMinute && (!allowed || allowed.has(lesson.subject.id)),
+    );
+    if (!exists) {
       throw notFound('Não há aula dessa turma nesse dia e horário', 'LESSON_NOT_FOUND');
     }
     return computed;
