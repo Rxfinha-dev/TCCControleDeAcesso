@@ -237,7 +237,7 @@ export class AssessmentsService {
     }
     const startMinute = input.kind === 'EXAM' ? input.startMinute : null;
     if (input.kind === 'EXAM') {
-      const { lessons } = await this.attendance.compute(schoolId, input.classGroupId, input.date, input.date);
+      const { lessons } = await this.attendance.compute(schoolId, input.classGroupId, input.date, input.date, undefined, 'none');
       if (!lessons.some((lesson) => lesson.subject.id === input.subjectId && lesson.startMinute === startMinute)) {
         throw badRequest('Não há aula dessa disciplina nesse dia e horário', 'NO_LESSON');
       }

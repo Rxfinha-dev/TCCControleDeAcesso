@@ -147,9 +147,15 @@ export class LoginsService {
     return { username: input.username, password: input.password };
   }
 
-  private async resetPassword(user: { id: number; authUserId: string; username: string | null }, password: string) {
-    await this.identity.setPassword(user.authUserId, password);
-    await this.prisma.user.update({ where: { id: user.id }, data: { mustChangePassword: true } });
+  /**
+   * Nova senha = usuário novo no Supabase. Só trocar a senha manteria logado quem já estava com a conta aberta
+   * (por exemplo, quem entrou na conta de um colega); recriar o usuário encerra todas as sessões antigas.
+   */
+  private async resetPassword(user: { id: number; authUserId: string; username: string | null; email: string }, password: string) {
+    // Se o usuário antigo já não existe (redefinição anterior que parou no meio), segue para criar o novo.
+    await this.identity.deleteUser(user.authUserId).catch((err) => logger.warn({ err, userId: user.id }, 'login antigo não apagado'));
+    const authUserId = await this.identity.createUser(user.email, password);
+    await this.prisma.user.update({ where: { id: user.id }, data: { authUserId, mustChangePassword: true } });
     return { username: user.username ?? '', password };
   }
 }

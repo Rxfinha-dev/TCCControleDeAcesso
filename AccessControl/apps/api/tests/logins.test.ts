@@ -95,8 +95,13 @@ describe('Logins de professores', () => {
 
     expect(res.status).toBe(200);
     expect(res.body.username).toBe('ana.prado@etec-jau');
-    expect(identity.passwords.get('auth-30')).toBe(res.body.password);
-    expect(prisma.user.update).toHaveBeenCalledWith({ where: { id: 30 }, data: { mustChangePassword: true } });
+    // O usuário antigo do Supabase é apagado (as sessões abertas caem) e um novo nasce com a nova senha.
+    expect(identity.deleted).toEqual(['auth-30']);
+    expect(identity.created.get('ana.prado@etec-jau.helpus.invalid')).toBe(res.body.password);
+    expect(prisma.user.update).toHaveBeenCalledWith({
+      where: { id: 30 },
+      data: { authUserId: 'auth-ana.prado@etec-jau.helpus.invalid', mustChangePassword: true },
+    });
     expect(prisma.user.create).not.toHaveBeenCalled();
   });
 
@@ -191,7 +196,8 @@ describe('Logins de alunos', () => {
 
     expect(res.status).toBe(200);
     expect(res.body.username).toBe('24001@etec-jau');
-    expect(identity.passwords.get('auth-30')).toBe(res.body.password);
+    expect(identity.deleted).toEqual(['auth-30']);
+    expect([...identity.created.values()]).toEqual([res.body.password]);
   });
 
   it('primeiro login do aluno usa o RM', async () => {
@@ -223,6 +229,16 @@ describe('Troca de senha', () => {
     const res = await request(app).put('/api/auth/password').set('Authorization', authHeader()).send({ password: 'curta' });
 
     expect(res.status).toBe(400);
+    expect(identity.passwords.size).toBe(0);
+  });
+
+  it('escola e super admin não trocam a senha por aqui (usam o código por e-mail)', async () => {
+    const { app, identity } = setup();
+
+    const res = await request(app).put('/api/auth/password').set('Authorization', authHeader()).send({ password: 'nova-senha-1' });
+
+    expect(res.status).toBe(403);
+    expect(res.body.code).toBe('PASSWORD_CHANGE_NOT_ALLOWED');
     expect(identity.passwords.size).toBe(0);
   });
 
@@ -287,5 +303,42 @@ describe('Código da escola', () => {
 
     expect(res.status).toBe(409);
     expect(res.body.code).toBe('SCHOOL_CODE_TAKEN');
+  });
+});
+
+describe('Excluir cadastro apaga o login', () => {
+  it('professor: apaga o usuário do Supabase', async () => {
+    const { app, prisma, identity } = setup();
+    prisma.teacher.findFirst.mockResolvedValue(teacher as never);
+    prisma.teachingAssignment.count.mockResolvedValue(0);
+    prisma.user.findFirst.mockResolvedValue({ authUserId: 'auth-30' } as never);
+
+    const res = await request(app).delete('/api/teachers/8').set('Authorization', authHeader());
+
+    expect(res.status).toBe(204);
+    expect(prisma.user.findFirst.mock.calls[0][0]!.where).toEqual({ teacherId: 8 });
+    expect(identity.deleted).toEqual(['auth-30']);
+  });
+
+  it('aluno: apaga o usuário do Supabase', async () => {
+    const { app, prisma, identity } = setup();
+    prisma.student.findFirst.mockResolvedValue(makeStudent({ photoKey: null }));
+    prisma.user.findFirst.mockResolvedValue({ authUserId: 'auth-31' } as never);
+
+    const res = await request(app).delete('/api/students/10').set('Authorization', authHeader());
+
+    expect(res.status).toBe(204);
+    expect(identity.deleted).toEqual(['auth-31']);
+  });
+
+  it('sem login, não chama o Supabase', async () => {
+    const { app, prisma, identity } = setup();
+    prisma.teacher.findFirst.mockResolvedValue(teacher as never);
+    prisma.teachingAssignment.count.mockResolvedValue(0);
+    prisma.user.findFirst.mockResolvedValue(null);
+
+    await request(app).delete('/api/teachers/8').set('Authorization', authHeader());
+
+    expect(identity.deleted).toEqual([]);
   });
 });

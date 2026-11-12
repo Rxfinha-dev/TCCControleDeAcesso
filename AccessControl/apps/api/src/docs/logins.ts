@@ -29,7 +29,9 @@ export function loginsPaths({ ref, json, errorResponse, authErrors, validationEr
     put: {
       tags: [TAG],
       summary: `Cria o login do ${who} ou, se já existir, define uma nova senha`,
-      description: 'Sem `password`, o sistema gera uma senha de 8 caracteres. Nos dois casos o usuário troca a senha no próximo acesso.',
+      description:
+        'Sem `password`, o sistema gera uma senha de 8 caracteres. Nos dois casos o usuário troca a senha no próximo acesso. ' +
+        'Gerar nova senha encerra todas as sessões abertas desse login.',
       parameters: [idParam],
       requestBody: { content: json({ type: 'object', properties: { password } }) },
       responses: {
@@ -87,8 +89,10 @@ export function loginsPaths({ ref, json, errorResponse, authErrors, validationEr
     '/api/auth/password': {
       put: {
         tags: ['Auth'],
-        summary: 'O usuário logado troca a própria senha',
-        description: 'Obrigatório no primeiro acesso de professor e aluno: até lá as outras rotas respondem `PASSWORD_CHANGE_REQUIRED`.',
+        summary: 'Professor ou aluno troca a própria senha',
+        description:
+          'Obrigatório no primeiro acesso: até lá as outras rotas respondem `PASSWORD_CHANGE_REQUIRED`. ' +
+          'Escola e super admin recebem 403 (`PASSWORD_CHANGE_NOT_ALLOWED`): trocam a senha pelo Supabase, com código por e-mail.',
         requestBody: { required: true, content: json({ type: 'object', required: ['password'], properties: { password } }) },
         responses: { 204: { description: 'Senha trocada' }, 400: validationError, ...authErrors },
       },

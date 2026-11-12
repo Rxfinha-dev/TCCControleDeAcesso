@@ -89,6 +89,8 @@ export function buildTestApp({ user = schoolUser }: TestAppOptions = {}) {
       : typeof operations === 'function'
         ? operations(prisma)
         : Promise.resolve(operations)) as never);
+  // Sem atestados por padrão (o cálculo de presença sempre consulta).
+  prisma.absenceJustification.findMany.mockResolvedValue([]);
   // O middleware de autenticação busca o usuário logado (com a escola) a cada requisição.
   prisma.user.findUnique.mockResolvedValue({ ...user, school: user.schoolId === school.id ? school : null } as never);
   const identity = new FakeIdentity();
