@@ -253,3 +253,65 @@ export interface SchoolCalendar {
   noClassDays: NoClassDay[];
   terms: SchoolTerm[];
 }
+
+/* Presença por aula (calculada pela catraca; só correções e aulas canceladas são gravadas). */
+
+export type DayInfo =
+  | { kind: 'SCHOOL_DAY' | 'WEEKEND' | 'OUT_OF_TERM' }
+  | { kind: 'HOLIDAY' | 'NO_CLASS'; name: string };
+
+export type CancellationReason = 'TEACHER_ABSENT' | 'CANCELLED';
+export type AttendanceSource = 'AUTO' | 'MANUAL' | 'COLLECTIVE';
+export type AttendanceStatus = 'OK' | 'NEAR' | 'BELOW';
+
+export interface AttendanceLesson {
+  startMinute: number;
+  endMinute: number;
+  subject: Subject;
+  teacher: Pick<Teacher, 'id' | 'name'> | null;
+  cancellation: CancellationReason | null;
+  finished: boolean;
+}
+
+export interface AttendanceMark {
+  startMinute: number;
+  /** null = aula ainda não terminada. */
+  present: boolean | null;
+  source: AttendanceSource;
+}
+
+export interface AttendanceDay {
+  date: string;
+  day: DayInfo;
+  lessons: AttendanceLesson[];
+  students: { id: number; name: string; rm: string; marks: AttendanceMark[] }[];
+}
+
+export interface AttendanceTally {
+  given: number;
+  present: number;
+  /** null quando ainda não houve aula. */
+  percent: number | null;
+  status: AttendanceStatus;
+}
+
+export interface AttendanceSummary {
+  from: string;
+  to: string;
+  minAttendance: number;
+  subjects: Subject[];
+  students: (AttendanceTally & { id: number; name: string; rm: string; subjects: (AttendanceTally & { subjectId: number })[] })[];
+}
+
+interface LessonKey {
+  classGroupId: number;
+  date: string;
+  startMinute: number;
+}
+
+export interface SchoolSettings {
+  minAttendance: number;
+}
+
+export type AttendanceOverrideInput = LessonKey & { studentId: number; present: boolean | null };
+export type LessonCancellationInput = LessonKey & { reason: CancellationReason | null };

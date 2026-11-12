@@ -175,6 +175,12 @@ export const CalendarIcon = (p: SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
+export const ChecklistIcon = (p: SVGProps<SVGSVGElement>) => (
+  <svg {...base(p)}>
+    <path d="M4 6l1.5 1.5L8 5M4 12l1.5 1.5L8 11M4 18l1.5 1.5L8 17M12 6h8M12 12h8M12 18h8" />
+  </svg>
+);
+
 export const TeacherIcon = (p: SVGProps<SVGSVGElement>) => (
   <svg {...base(p)}>
     <rect x="9" y="3" width="12" height="9" rx="1" />

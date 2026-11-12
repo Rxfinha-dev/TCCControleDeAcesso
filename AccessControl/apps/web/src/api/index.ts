@@ -2,11 +2,15 @@ import { request, requestJson } from './client';
 import type {
   AccessLog,
   AccessLogFilters,
+  AttendanceDay,
+  AttendanceOverrideInput,
+  AttendanceSummary,
   ClassGroup,
   ClassGroupDetail,
   ClassGroupInput,
   ClassGroupStudent,
   Course,
+  LessonCancellationInput,
   NoClassDay,
   NoClassDayInput,
   SchoolCalendar,
@@ -14,6 +18,7 @@ import type {
   EntryResult,
   Paginated,
   SchoolInput,
+  SchoolSettings,
   SchoolSummary,
   Stats,
   Student,
@@ -104,6 +109,19 @@ export const calendarApi = {
   removeNoClassDay: (id: number) => requestJson<void>(`/calendar/no-class-days/${id}`, { method: 'DELETE' }),
   saveTerms: (year: number, terms: SchoolTerm[]) =>
     requestJson<SchoolTerm[]>(`/calendar/terms/${year}`, { method: 'PUT', body: { terms } }),
+};
+
+export const attendanceApi = {
+  day: (classGroupId: number, date: string) => requestJson<AttendanceDay>(`/attendance/day${query({ classGroupId, date })}`),
+  summary: (classGroupId: number) => requestJson<AttendanceSummary>(`/attendance/summary${query({ classGroupId })}`),
+  setOverride: (input: AttendanceOverrideInput) => requestJson<void>('/attendance/override', { method: 'PUT', body: { ...input } }),
+  setCancellation: (input: LessonCancellationInput) =>
+    requestJson<void>('/attendance/cancellation', { method: 'PUT', body: { ...input } }),
+};
+
+export const settingsApi = {
+  get: () => requestJson<SchoolSettings>('/settings'),
+  save: (input: SchoolSettings) => requestJson<SchoolSettings>('/settings', { method: 'PUT', body: { ...input } }),
 };
 
 export const studentsApi = {

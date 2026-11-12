@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
+import { settingsApi } from '../api';
 import { errorMessage } from '../api/client';
 import { PageHeader } from '../components/PageHeader';
 import { useAuth } from '../contexts/AuthContext';
+import { useSchoolScope } from '../contexts/SchoolScopeContext';
 import { useSerial } from '../contexts/SerialContext';
 import { useToast } from '../contexts/ToastContext';
 
@@ -15,6 +17,36 @@ export function SettingsPage() {
   const { user } = useAuth();
   const [baudRate, setBaudRate] = useState(() => Number(localStorage.getItem(BAUD_KEY)) || 9600);
   const [busy, setBusy] = useState(false);
+  const { selected } = useSchoolScope();
+  const hasSchool = selected !== 'all';
+  const [minAttendance, setMinAttendance] = useState('');
+  const [savingMin, setSavingMin] = useState(false);
+
+  useEffect(() => {
+    if (!hasSchool) return;
+    settingsApi
+      .get()
+      .then((settings) => setMinAttendance(String(settings.minAttendance)))
+      .catch((err) => toast.error(errorMessage(err)));
+  }, [hasSchool, selected, toast]);
+
+  async function saveMinAttendance(event: FormEvent) {
+    event.preventDefault();
+    const value = Number(minAttendance);
+    if (minAttendance === '' || !Number.isInteger(value) || value < 0 || value > 100) {
+      toast.error('Informe um número inteiro de 0 a 100');
+      return;
+    }
+    setSavingMin(true);
+    try {
+      await settingsApi.save({ minAttendance: value });
+      toast.success('Frequência mínima salva.');
+    } catch (err) {
+      toast.error(errorMessage(err));
+    } finally {
+      setSavingMin(false);
+    }
+  }
 
   async function toggleConnection() {
     setBusy(true);
@@ -82,6 +114,31 @@ export function SettingsPage() {
             </>
           )}
         </section>
+
+        {hasSchool && (
+          <form className="card form" onSubmit={saveMinAttendance} noValidate>
+            <h2 className="card-title">Frequência</h2>
+            <label className="field">
+              <span>Frequência mínima (%)</span>
+              <input
+                type="number"
+                min={0}
+                max={100}
+                step={1}
+                value={minAttendance}
+                onChange={(event) => setMinAttendance(event.target.value)}
+              />
+            </label>
+            <p className="hint">
+              Abaixo disso o aluno aparece em vermelho na Presença. O padrão da LDB é 75%.
+            </p>
+            <div className="form-actions">
+              <button type="submit" className="btn btn-primary" disabled={savingMin}>
+                Salvar frequência mínima
+              </button>
+            </div>
+          </form>
+        )}
 
         <section className="card">
           <h2 className="card-title">Conta</h2>
