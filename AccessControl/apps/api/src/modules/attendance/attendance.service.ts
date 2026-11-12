@@ -23,7 +23,13 @@ export const dayQuerySchema = z.object({ classGroupId: idSchema, date: isoDay.op
 export const myLessonsQuerySchema = z.object({ date: isoDay.optional() });
 
 export const summaryQuerySchema = z
-  .object({ classGroupId: idSchema, from: isoDay.optional(), to: isoDay.optional() })
+  .object({
+    classGroupId: idSchema,
+    from: isoDay.optional(),
+    to: isoDay.optional(),
+    /** Bimestre (1 a 4): usa as datas dele em vez de from/to. */
+    term: z.coerce.number().int().min(1).max(4).optional(),
+  })
   .refine((query) => !query.from || !query.to || query.from <= query.to, 'O início precisa ser antes do fim');
 
 const lessonKeySchema = { classGroupId: idSchema, date: isoDay, startMinute: startMinuteSchema };
@@ -34,11 +40,29 @@ export const overrideSchema = z.object({ ...lessonKeySchema, studentId: idSchema
 /** `reason: null` desfaz a marcação e a aula volta ao normal. */
 export const cancellationSchema = z.object({ ...lessonKeySchema, reason: z.enum(CancellationReason).nullable() });
 
+/** Falta justificada (atestado) de um aluno num período. */
+export const justificationSchema = z
+  .object({
+    studentId: idSchema,
+    startDate: isoDay,
+    endDate: isoDay.optional(),
+    reason: z.string().trim().min(2, 'Informe o motivo').max(200, 'O motivo pode ter até 200 caracteres'),
+  })
+  .transform((input) => ({ ...input, endDate: input.endDate ?? input.startDate }))
+  .refine((input) => input.startDate <= input.endDate, 'O início precisa ser antes do fim');
+
+export type JustificationInput = z.infer<typeof justificationSchema>;
 export type OverrideInput = z.infer<typeof overrideSchema>;
 export type CancellationInput = z.infer<typeof cancellationSchema>;
 
-/** De onde veio a presença: catraca, correção manual, ou presença coletiva (professor faltou / aula cancelada). */
-export type AttendanceSource = 'AUTO' | 'MANUAL' | 'COLLECTIVE';
+/**
+ * De onde veio a presença: catraca, correção manual, presença coletiva (professor faltou / aula cancelada)
+ * ou falta justificada (não conta como aula dada para o aluno: `present` fica null).
+ */
+export type AttendanceSource = 'AUTO' | 'MANUAL' | 'COLLECTIVE' | 'JUSTIFIED';
+
+/** Dias sem leitura na catraca para o aluno entrar nos alertas. */
+export const ABSENT_ALERT_DAYS = 7;
 
 const subjectSelect = { id: true, name: true, abbreviation: true, color: true } as const;
 
@@ -89,11 +113,20 @@ export class AttendanceService {
   ) {}
 
   /**
-   * Aulas e presenças de uma turma num intervalo de datas.
+   * Aulas e presenças de uma turma num intervalo de datas. `students` limita o cálculo: 'none' devolve só
+   * as aulas (sem ler matrículas nem leituras) e um id calcula só aquele aluno.
    * shortcut: recalcula tudo a cada consulta (uma turma, um ano ≈ dezenas de milhares de registros em memória);
    * guardar o resultado por dia se relatórios de muitas turmas ficarem lentos.
    */
-  async compute(schoolId: number, classGroupId: number, from: string, to: string, now: Date = new Date()) {
+  async compute(
+    schoolId: number,
+    classGroupId: number,
+    from: string,
+    to: string,
+    now: Date = new Date(),
+    students: 'all' | 'none' | number = 'all',
+  ) {
+    const onlyStudent = typeof students === 'number' ? { studentId: students } : {};
     const group = await this.classGroups.findOwned(schoolId, classGroupId);
     const dateRange = { gte: dateOnly(from), lte: dateOnly(to) };
     const [calendar, versions, enrollments, overrides, cancellations] = await Promise.all([
@@ -105,29 +138,56 @@ export class AttendanceService {
           slots: { where: { kind: 'LESSON' }, orderBy: { startMinute: 'asc' }, include: { subject: { select: subjectSelect } } },
         },
       }),
-      this.prisma.enrollment.findMany({
-        where: { classGroupId, startDate: { lte: dateOnly(to) }, OR: [{ endDate: null }, { endDate: { gt: dateOnly(from) } }] },
-        include: { student: { select: { id: true, name: true, rm: true } } },
-        orderBy: { student: { name: 'asc' } },
-      }),
-      this.prisma.attendanceOverride.findMany({ where: { classGroupId, date: dateRange } }),
+      students === 'none'
+        ? []
+        : this.prisma.enrollment.findMany({
+            where: {
+              classGroupId,
+              ...onlyStudent,
+              startDate: { lte: dateOnly(to) },
+              OR: [{ endDate: null }, { endDate: { gt: dateOnly(from) } }],
+            },
+            include: { student: { select: { id: true, name: true, rm: true } } },
+            orderBy: { student: { name: 'asc' } },
+          }),
+      students === 'none' ? [] : this.prisma.attendanceOverride.findMany({ where: { classGroupId, ...onlyStudent, date: dateRange } }),
       this.prisma.lessonCancellation.findMany({ where: { classGroupId, date: dateRange } }),
     ]);
-    const logs = await this.prisma.accessLog.findMany({
-      where: {
-        schoolId,
-        studentId: { in: [...new Set(enrollments.map((enrollment) => enrollment.studentId))] },
-        createdAt: { gte: saoPauloDayStart(from), lt: saoPauloDayStart(addDays(to, 1)) },
-      },
-      select: { studentId: true, createdAt: true },
-    });
+    const studentIds = [...new Set(enrollments.map((enrollment) => enrollment.studentId))];
+    const hasStudents = studentIds.length > 0;
+    const [logs, justifications] = await Promise.all([
+      hasStudents
+        ? this.prisma.accessLog.findMany({
+            where: {
+              schoolId,
+              studentId: { in: studentIds },
+              createdAt: { gte: saoPauloDayStart(from), lt: saoPauloDayStart(addDays(to, 1)) },
+            },
+            select: { studentId: true, createdAt: true },
+          })
+        : [],
+      hasStudents
+        ? this.prisma.absenceJustification.findMany({
+            where: { studentId: { in: studentIds }, startDate: { lte: dateOnly(to) }, endDate: { gte: dateOnly(from) } },
+            select: { studentId: true, startDate: true, endDate: true },
+          })
+        : [],
+    ]);
 
     // Leituras de cada aluno em cada dia, em minutos desde 00:00 de São Paulo.
     const readings = new Map<string, number[]>();
     for (const log of logs) {
       const date = todayInSaoPaulo(log.createdAt);
       const key = `${log.studentId}|${date}`;
-      readings.set(key, [...(readings.get(key) ?? []), minuteOfDayInSaoPaulo(log.createdAt, date)]);
+      const list = readings.get(key);
+      const minute = minuteOfDayInSaoPaulo(log.createdAt, date);
+      if (list) list.push(minute);
+      else readings.set(key, [minute]);
+    }
+    // Períodos justificados de cada aluno.
+    const justified = new Map<number, [start: string, end: string][]>();
+    for (const item of justifications) {
+      justified.set(item.studentId, [...(justified.get(item.studentId) ?? []), [isoDate(item.startDate), isoDate(item.endDate)]]);
     }
     const manual = new Map(overrides.map((item) => [`${item.studentId}|${isoDate(item.date)}|${item.startMinute}`, item.present]));
     const cancelled = new Map(cancellations.map((item) => [`${isoDate(item.date)}|${item.startMinute}`, item.reason]));
@@ -157,14 +217,19 @@ export class AttendanceService {
         // Matrícula vale no intervalo meio-aberto [startDate, endDate).
         if (isoDate(enrollment.startDate) > date || (enrollment.endDate && isoDate(enrollment.endDate) <= date)) continue;
         const inside = insideIntervals(readings.get(`${enrollment.studentId}|${date}`) ?? []);
+        const excused = justified.get(enrollment.studentId)?.some(([start, end]) => start <= date && date <= end) ?? false;
         for (const lesson of dayLessons) {
           const corrected = manual.get(`${enrollment.studentId}|${date}|${lesson.startMinute}`);
+          const auto = lesson.finished ? isPresent(inside, lesson.startMinute, lesson.endMinute) : null;
+          // Prioridade: correção manual > presença coletiva > catraca. Falta da catraca em período justificado não conta.
           const [present, source]: [boolean | null, AttendanceSource] =
             corrected !== undefined
               ? [corrected, 'MANUAL']
               : lesson.cancellation
                 ? [true, 'COLLECTIVE']
-                : [lesson.finished ? isPresent(inside, lesson.startMinute, lesson.endMinute) : null, 'AUTO'];
+                : auto === false && excused
+                  ? [null, 'JUSTIFIED']
+                  : [auto, 'AUTO'];
           records.push({
             studentId: enrollment.studentId,
             date,
@@ -258,17 +323,45 @@ export class AttendanceService {
     }
   }
 
-  /** Frequência dos alunos da turma, no total e por disciplina, do início do ano letivo até hoje (ou no intervalo pedido). */
-  async summary(schoolId: number, classGroupId: number, range: { from?: string; to?: string } = {}, now: Date = new Date()) {
+  /**
+   * Frequência dos alunos da turma, no total e por disciplina: do início do ano letivo até hoje, num bimestre
+   * (`term`) ou no intervalo pedido. Com `teacherId`, só as disciplinas atribuídas a esse professor.
+   */
+  async summary(
+    schoolId: number,
+    classGroupId: number,
+    range: { from?: string; to?: string; term?: number } = {},
+    now: Date = new Date(),
+    teacherId: number | null = null,
+  ) {
     const group = await this.classGroups.findOwned(schoolId, classGroupId);
+    const allowed = await this.teacherSubjects(schoolId, classGroupId, teacherId);
     const today = todayInSaoPaulo(now);
     const yearEnd = `${group.schoolYear}-12-31`;
-    const from = range.from ?? `${group.schoolYear}-01-01`;
-    const to = range.to ?? (today < yearEnd ? today : yearEnd);
-    const { minAttendance } = await this.prisma.school.findUniqueOrThrow({ where: { id: schoolId }, select: { minAttendance: true } });
-    if (to < from) return { from, to, minAttendance, subjects: [], students: [] };
+    const [{ minAttendance }, schoolTerms] = await Promise.all([
+      this.prisma.school.findUniqueOrThrow({ where: { id: schoolId }, select: { minAttendance: true } }),
+      this.prisma.schoolTerm.findMany({ where: { schoolId, schoolYear: group.schoolYear }, orderBy: { number: 'asc' } }),
+    ]);
+    const term = range.term === undefined ? null : schoolTerms.find((item) => item.number === range.term);
+    if (term === undefined) throw badRequest('Esse bimestre ainda não foi definido no Calendário', 'TERM_NOT_FOUND');
+    const from = term ? isoDate(term.startDate) : (range.from ?? `${group.schoolYear}-01-01`);
+    const end = term ? isoDate(term.endDate) : (range.to ?? yearEnd);
+    // Nunca passa de hoje: aula futura não é aula dada.
+    const to = range.to && !term ? range.to : end < today ? end : today;
+    const base = { from, to, term: term?.number ?? null, terms: schoolTerms.map((item) => item.number), minAttendance };
+    if (to < from) return { ...base, subjects: [], students: [] };
 
-    const { lessons, records, studentsOn } = await this.compute(schoolId, classGroupId, from, to, now);
+    const computed = await this.compute(schoolId, classGroupId, from, to, now);
+    const { studentsOn } = computed;
+    const lessons = computed.lessons.filter((lesson) => !allowed || allowed.has(lesson.subject.id));
+    // Uma passada só: os registros de cada aluno já separados.
+    const byStudent = new Map<number, AttendanceRecord[]>();
+    for (const record of computed.records) {
+      if (allowed && !allowed.has(record.subjectId)) continue;
+      const list = byStudent.get(record.studentId);
+      if (list) list.push(record);
+      else byStudent.set(record.studentId, [record]);
+    }
     const subjects = [...new Map(lessons.map((lesson) => [lesson.subject.id, lesson.subject])).values()].sort((a, b) =>
       a.name.localeCompare(b.name, 'pt-BR'),
     );
@@ -280,12 +373,10 @@ export class AttendanceService {
       return { given: counted.length, present, percent: value, status: attendanceStatus(value, minAttendance) };
     };
     return {
-      from,
-      to,
-      minAttendance,
+      ...base,
       subjects,
       students: studentsOn(to).map((student) => {
-        const mine = records.filter((record) => record.studentId === student.id);
+        const mine = byStudent.get(student.id) ?? [];
         return {
           ...student,
           ...tally(mine),
@@ -300,7 +391,6 @@ export class AttendanceService {
 
   /**
    * Aulas do professor num dia, em todas as turmas em que ele leciona naquele ano letivo.
-   * shortcut: calcula a chamada de cada turma inteira; trocar por uma consulta só da grade se o professor tiver muitas turmas.
    */
   async teacherLessons(schoolId: number, teacherId: number, date: string = todayInSaoPaulo(), now: Date = new Date()) {
     const assignments = await this.prisma.teachingAssignment.findMany({
@@ -313,7 +403,7 @@ export class AttendanceService {
     const lessons = [];
     for (const classGroup of classGroups) {
       const subjects = new Set(assignments.filter((item) => item.classGroup.id === classGroup.id).map((item) => item.subjectId));
-      const { lessons: groupLessons } = await this.compute(schoolId, classGroup.id, date, date, now);
+      const { lessons: groupLessons } = await this.compute(schoolId, classGroup.id, date, date, now, 'none');
       lessons.push(
         ...groupLessons
           .filter((lesson) => subjects.has(lesson.subject.id))
@@ -322,6 +412,98 @@ export class AttendanceService {
     }
     lessons.sort((a, b) => a.startMinute - b.startMinute || a.classGroup.name.localeCompare(b.classGroup.name, 'pt-BR'));
     return { date, day: classifyDay(date, calendar), classGroups, lessons };
+  }
+
+  /** Faltas justificadas dos alunos que estão (ou estiveram) na turma. */
+  async justifications(schoolId: number, classGroupId: number) {
+    const group = await this.classGroups.findOwned(schoolId, classGroupId);
+    const items = await this.prisma.absenceJustification.findMany({
+      where: {
+        student: { schoolId, enrollments: { some: { classGroupId } } },
+        startDate: { lte: dateOnly(`${group.schoolYear}-12-31`) },
+        endDate: { gte: dateOnly(`${group.schoolYear}-01-01`) },
+      },
+      include: { student: { select: { id: true, name: true, rm: true } } },
+      orderBy: [{ startDate: 'desc' }, { id: 'desc' }],
+    });
+    return items.map((item) => ({
+      id: item.id,
+      student: item.student,
+      startDate: isoDate(item.startDate),
+      endDate: isoDate(item.endDate),
+      reason: item.reason,
+    }));
+  }
+
+  /** Registra um atestado: as faltas da catraca nesse período deixam de contar para o aluno. */
+  async createJustification(schoolId: number, userId: number, input: JustificationInput) {
+    const student = await this.prisma.student.findFirst({ where: { id: input.studentId, schoolId }, select: { id: true } });
+    if (!student) throw notFound('Aluno não encontrado', 'STUDENT_NOT_FOUND');
+    const { id } = await this.prisma.absenceJustification.create({
+      data: {
+        studentId: input.studentId,
+        startDate: dateOnly(input.startDate),
+        endDate: dateOnly(input.endDate),
+        reason: input.reason,
+        userId,
+      },
+    });
+    return { id };
+  }
+
+  async removeJustification(schoolId: number, id: number) {
+    const { count } = await this.prisma.absenceJustification.deleteMany({ where: { id, student: { schoolId } } });
+    if (count === 0) throw notFound('Justificativa não encontrada', 'JUSTIFICATION_NOT_FOUND');
+  }
+
+  /**
+   * Alunos que pedem atenção no ano letivo atual: frequência abaixo ou perto do mínimo, e quem não passa
+   * na catraca há ABSENT_ALERT_DAYS dias (só depois da primeira semana do bimestre, para as férias não acusarem todos).
+   * shortcut: calcula a frequência do ano de todas as turmas; guardar o resultado por dia se o início ficar lento.
+   */
+  async alerts(schoolId: number, now: Date = new Date()) {
+    const today = todayInSaoPaulo(now);
+    const schoolYear = Number(today.slice(0, 4));
+    const groups = await this.prisma.classGroup.findMany({
+      where: { schoolId, schoolYear },
+      select: { id: true, name: true },
+      orderBy: { name: 'asc' },
+    });
+    const attendance = [];
+    const enrolled = new Map<number, { id: number; name: string; rm: string; classGroup: { id: number; name: string } }>();
+    for (const classGroup of groups) {
+      const summary = await this.summary(schoolId, classGroup.id, {}, now);
+      for (const student of summary.students) {
+        enrolled.set(student.id, { id: student.id, name: student.name, rm: student.rm, classGroup });
+        if (student.status !== 'OK' && student.given > 0) {
+          attendance.push({ id: student.id, name: student.name, rm: student.rm, classGroup, percent: student.percent, status: student.status });
+        }
+      }
+    }
+    attendance.sort((a, b) => (a.percent ?? 0) - (b.percent ?? 0));
+
+    const term = await this.prisma.schoolTerm.findFirst({
+      where: { schoolId, startDate: { lte: dateOnly(addDays(today, -ABSENT_ALERT_DAYS)) }, endDate: { gte: dateOnly(today) } },
+      select: { id: true },
+    });
+    let absent: { id: number; name: string; rm: string; classGroup: { id: number; name: string }; lastSeen: string | null }[] = [];
+    if (term && enrolled.size > 0) {
+      const last = await this.prisma.accessLog.groupBy({
+        by: ['studentId'],
+        where: { schoolId, studentId: { in: [...enrolled.keys()] } },
+        _max: { createdAt: true },
+      });
+      const lastSeen = new Map(last.map((item) => [item.studentId, item._max.createdAt]));
+      const limit = addDays(today, -ABSENT_ALERT_DAYS);
+      absent = [...enrolled.values()]
+        .map((student) => {
+          const seen = lastSeen.get(student.id);
+          return { ...student, lastSeen: seen ? todayInSaoPaulo(seen) : null };
+        })
+        .filter((student) => student.lastSeen === null || student.lastSeen <= limit)
+        .sort((a, b) => (a.lastSeen ?? '').localeCompare(b.lastSeen ?? ''));
+    }
+    return { minAttendance: (await this.prisma.school.findUniqueOrThrow({ where: { id: schoolId }, select: { minAttendance: true } })).minAttendance, attendance, absent };
   }
 
   /** Disciplinas que o professor leciona na turma (null = sem restrição). Turma sem atribuição dele = 404. */

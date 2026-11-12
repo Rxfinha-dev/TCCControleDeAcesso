@@ -289,3 +289,40 @@ describe('Código da escola', () => {
     expect(res.body.code).toBe('SCHOOL_CODE_TAKEN');
   });
 });
+
+describe('Excluir cadastro apaga o login', () => {
+  it('professor: apaga o usuário do Supabase', async () => {
+    const { app, prisma, identity } = setup();
+    prisma.teacher.findFirst.mockResolvedValue(teacher as never);
+    prisma.teachingAssignment.count.mockResolvedValue(0);
+    prisma.user.findFirst.mockResolvedValue({ authUserId: 'auth-30' } as never);
+
+    const res = await request(app).delete('/api/teachers/8').set('Authorization', authHeader());
+
+    expect(res.status).toBe(204);
+    expect(prisma.user.findFirst.mock.calls[0][0]!.where).toEqual({ teacherId: 8 });
+    expect(identity.deleted).toEqual(['auth-30']);
+  });
+
+  it('aluno: apaga o usuário do Supabase', async () => {
+    const { app, prisma, identity } = setup();
+    prisma.student.findFirst.mockResolvedValue(makeStudent({ photoKey: null }));
+    prisma.user.findFirst.mockResolvedValue({ authUserId: 'auth-31' } as never);
+
+    const res = await request(app).delete('/api/students/10').set('Authorization', authHeader());
+
+    expect(res.status).toBe(204);
+    expect(identity.deleted).toEqual(['auth-31']);
+  });
+
+  it('sem login, não chama o Supabase', async () => {
+    const { app, prisma, identity } = setup();
+    prisma.teacher.findFirst.mockResolvedValue(teacher as never);
+    prisma.teachingAssignment.count.mockResolvedValue(0);
+    prisma.user.findFirst.mockResolvedValue(null);
+
+    await request(app).delete('/api/teachers/8').set('Authorization', authHeader());
+
+    expect(identity.deleted).toEqual([]);
+  });
+});

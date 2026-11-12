@@ -10,6 +10,7 @@ import type {
   CancellationReason,
   ClassGroup,
 } from '../api/types';
+import { JustificationsPanel } from '../components/JustificationsPanel';
 import { PageHeader } from '../components/PageHeader';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
@@ -18,12 +19,14 @@ import { CANCELLATION_LABELS, currentSchoolYear, dayMessage, formatMinute, today
 const TABS = [
   { id: 'chamada', label: 'Chamada do dia' },
   { id: 'frequencia', label: 'Frequência' },
+  { id: 'justificativas', label: 'Faltas justificadas' },
 ] as const;
 
 type TabId = (typeof TABS)[number]['id'];
 
 /** O que a marca mostra, o que ela quer dizer e o que o clique faz. */
 function describe(mark: AttendanceMark) {
+  if (mark.source === 'JUSTIFIED') return { text: 'J', state: 'falta justificada', action: 'Marcar presença', next: true };
   if (mark.source === 'MANUAL') {
     return {
       text: mark.present ? 'P' : 'F',
@@ -47,7 +50,7 @@ function Percent({ value, status }: { value: number | null; status: AttendanceSt
 /** Presença: chamada de qualquer aula (calculada pela catraca, com correção manual) e frequência da turma. */
 export function AttendancePage() {
   const toast = useToast();
-  // O professor vê só as turmas e aulas dele, e não a frequência da turma.
+  // O professor vê só as turmas, as aulas e as disciplinas dele; atestado é com a secretaria.
   const isTeacher = useAuth().user?.role === 'TEACHER';
   const [params] = useSearchParams();
   const [groups, setGroups] = useState<Pick<ClassGroup, 'id' | 'name'>[] | null>(null);
@@ -56,6 +59,8 @@ export function AttendancePage() {
   const [tab, setTab] = useState<TabId>('chamada');
   const [day, setDay] = useState<AttendanceDay | null>(null);
   const [summary, setSummary] = useState<AttendanceSummary | null>(null);
+  /** Bimestre da aba Frequência ('' = ano letivo). */
+  const [term, setTerm] = useState<number | ''>('');
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -84,8 +89,11 @@ export function AttendancePage() {
   useEffect(() => {
     if (tab !== 'frequencia' || classGroupId === null) return;
     setSummary(null);
-    attendanceApi.summary(classGroupId).then(setSummary).catch((err) => toast.error(errorMessage(err)));
-  }, [tab, classGroupId, toast]);
+    attendanceApi
+      .summary(classGroupId, term || undefined)
+      .then(setSummary)
+      .catch((err) => toast.error(errorMessage(err)));
+  }, [tab, classGroupId, term, toast]);
 
   /** Grava uma correção e recarrega a chamada. */
   async function save(action: () => Promise<void>) {
@@ -141,8 +149,8 @@ export function AttendancePage() {
         </p>
       ) : (
         <>
-          <div className="tabs" role="tablist" aria-label="Presença" hidden={isTeacher}>
-            {TABS.map(({ id, label }) => (
+          <div className="tabs" role="tablist" aria-label="Presença">
+            {TABS.filter(({ id }) => id !== 'justificativas' || !isTeacher).map(({ id, label }) => (
               <button
                 key={id}
                 type="button"
@@ -175,7 +183,8 @@ export function AttendancePage() {
               <section className="card">
                 <p className="hint roll-legend">
                   <span className="roll-mark present">P</span> presença · <span className="roll-mark absent">F</span> falta ·{' '}
-                  <span className="roll-mark present manual">P</span> corrigida à mão. Clique para corrigir; clique de novo numa
+                  <span className="roll-mark present manual">P</span> corrigida à mão ·{' '}
+                  <span className="roll-mark justified">J</span> falta justificada (não conta). Clique para corrigir; clique de novo numa
                   correção para voltar ao cálculo da catraca.
                 </p>
                 <div className="table-wrapper">
@@ -229,7 +238,7 @@ export function AttendancePage() {
                           </th>
                           {student.marks.map((mark) => {
                             const { text, state, action, next } = describe(mark);
-                            const tone = mark.present === null ? 'pending' : mark.present ? 'present' : 'absent';
+                            const tone = mark.source === 'JUSTIFIED' ? 'justified' : mark.present === null ? 'pending' : mark.present ? 'present' : 'absent';
                             return (
                               <td key={mark.startMinute} className="roll-cell">
                                 <button
@@ -274,9 +283,20 @@ export function AttendancePage() {
           <div role="tabpanel" id="panel-frequencia" aria-labelledby="tab-frequencia" hidden={tab !== 'frequencia'}>
             {summary && (
               <section className="card">
+                <label className="field field-inline">
+                  <span>Período</span>
+                  <select value={term} onChange={(event) => setTerm(event.target.value === '' ? '' : Number(event.target.value))}>
+                    <option value="">Ano letivo</option>
+                    {summary.terms.map((number) => (
+                      <option key={number} value={number}>
+                        {number}º bimestre
+                      </option>
+                    ))}
+                  </select>
+                </label>
                 <p className="hint roll-legend">
-                  <strong>Frequência mínima: {summary.minAttendance}%</strong> · do início do ano letivo até hoje. Em vermelho, quem
-                  está abaixo do mínimo; em laranja, quem está a menos de 5 pontos dele.
+                  <strong>Frequência mínima: {summary.minAttendance}%</strong> · até hoje. Em vermelho, quem está abaixo do mínimo; em
+                  laranja, quem está a menos de 5 pontos dele.
                 </p>
                 <div className="table-wrapper">
                   <table className="table">
@@ -324,6 +344,14 @@ export function AttendancePage() {
               </section>
             )}
           </div>
+
+          {!isTeacher && (
+            <div role="tabpanel" id="panel-justificativas" aria-labelledby="tab-justificativas" hidden={tab !== 'justificativas'}>
+              {tab === 'justificativas' && classGroupId !== null && (
+                <JustificationsPanel classGroupId={classGroupId} onChange={() => void loadDay()} />
+              )}
+            </div>
+          )}
         </>
       )}
     </>

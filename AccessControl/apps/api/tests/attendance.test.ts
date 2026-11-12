@@ -453,12 +453,28 @@ describe('Presença: professor', () => {
     expect(prisma.attendanceOverride.upsert).toHaveBeenCalledWith(expect.objectContaining({ create: expect.objectContaining({ userId: 7 }) }));
   });
 
-  it('não vê a frequência da turma', async () => {
+  it('vê a frequência da turma só nas disciplinas dele', async () => {
     const { app } = setup(teacherUser);
 
-    const res = await request(app).get('/api/attendance/summary?classGroupId=20').set('Authorization', authHeader());
+    const res = await request(app).get(`/api/attendance/summary?classGroupId=20&from=${MONDAY}&to=${MONDAY}`).set('Authorization', authHeader());
 
-    expect(res.status).toBe(403);
+    expect(res.status).toBe(200);
+    expect(res.body.subjects).toEqual([MATH]);
+    // Só a aula de Matemática conta: 1 aula dada, não 2.
+    expect(res.body.students[0]).toMatchObject({ given: 1, subjects: [{ subjectId: MATH.id, given: 1 }] });
+  });
+
+  it('não registra atestado nem vê os alertas da escola', async () => {
+    const { app } = setup(teacherUser);
+
+    const alerts = await request(app).get('/api/attendance/alerts').set('Authorization', authHeader());
+    const create = await request(app)
+      .post('/api/attendance/justifications')
+      .set('Authorization', authHeader())
+      .send({ studentId: 10, startDate: MONDAY, reason: 'Atestado' });
+
+    expect(alerts.status).toBe(403);
+    expect(create.status).toBe(403);
   });
 
   it('lista as aulas dele no dia, em todas as turmas', async () => {
@@ -497,5 +513,181 @@ describe('Presença: professor', () => {
 
     expect(res.status).toBe(403);
     expect(res.body.code).toBe('PASSWORD_CHANGE_REQUIRED');
+  });
+});
+
+describe('Faltas justificadas', () => {
+  const justify = (studentId: number, startDate = MONDAY, endDate = MONDAY) => ({
+    studentId,
+    startDate: dateOnly(startDate),
+    endDate: dateOnly(endDate),
+  });
+
+  it('falta da catraca em período com atestado não conta: nem presença nem falta', async () => {
+    const { app, prisma } = setup();
+    // Ana veio; Bruno não passou na catraca e tem atestado.
+    prisma.accessLog.findMany.mockResolvedValue([reading(10, MONDAY, '07:25')] as never);
+    prisma.absenceJustification.findMany.mockResolvedValue([justify(11)] as never);
+
+    const res = await day(app);
+    const summary = await request(app).get(`/api/attendance/summary?classGroupId=20&from=${MONDAY}&to=${MONDAY}`).set('Authorization', authHeader());
+
+    expect(res.body.students[0].marks[0]).toEqual({ startMinute: 450, present: true, source: 'AUTO' });
+    expect(res.body.students[1].marks).toEqual([
+      { startMinute: 450, present: null, source: 'JUSTIFIED' },
+      { startMinute: 500, present: null, source: 'JUSTIFIED' },
+    ]);
+    expect(summary.body.students[1]).toMatchObject({ name: 'Bruno Lima', given: 0, present: 0, percent: null, status: 'OK' });
+  });
+
+  it('atestado fora do dia não muda nada, e a correção manual continua valendo sobre ele', async () => {
+    const { app, prisma } = setup();
+    prisma.absenceJustification.findMany.mockResolvedValue([justify(10, '2026-03-10', '2026-03-12'), justify(11)] as never);
+    prisma.attendanceOverride.findMany.mockResolvedValue([
+      { classGroupId: 20, studentId: 11, date: dateOnly(MONDAY), startMinute: 450, present: false },
+    ] as never);
+
+    const res = await day(app);
+
+    expect(res.body.students[0].marks[0]).toEqual({ startMinute: 450, present: false, source: 'AUTO' });
+    expect(res.body.students[1].marks[0]).toEqual({ startMinute: 450, present: false, source: 'MANUAL' });
+    expect(res.body.students[1].marks[1]).toEqual({ startMinute: 500, present: null, source: 'JUSTIFIED' });
+  });
+
+  it('registra um atestado de vários dias', async () => {
+    const { app, prisma } = setup();
+    prisma.student.findFirst.mockResolvedValue({ id: 11 } as never);
+    prisma.absenceJustification.create.mockResolvedValue({ id: 3 } as never);
+
+    const res = await request(app)
+      .post('/api/attendance/justifications')
+      .set('Authorization', authHeader())
+      .send({ studentId: 11, startDate: '2026-03-09', endDate: '2026-03-11', reason: ' Atestado médico ' });
+
+    expect(res.status).toBe(201);
+    expect(prisma.student.findFirst.mock.calls[0][0]!.where).toEqual({ id: 11, schoolId: school.id });
+    expect(prisma.absenceJustification.create).toHaveBeenCalledWith({
+      data: { studentId: 11, startDate: dateOnly('2026-03-09'), endDate: dateOnly('2026-03-11'), reason: 'Atestado médico', userId: 1 },
+    });
+  });
+
+  it.each([
+    [{ studentId: 11, startDate: '2026-03-11', endDate: '2026-03-09', reason: 'Atestado' }, 400],
+    [{ studentId: 11, startDate: '2026-03-09', reason: '' }, 400],
+  ])('recusa %o', async (body, status) => {
+    const { app, prisma } = setup();
+
+    const res = await request(app).post('/api/attendance/justifications').set('Authorization', authHeader()).send(body);
+
+    expect(res.status).toBe(status);
+    expect(prisma.absenceJustification.create).not.toHaveBeenCalled();
+  });
+
+  it('aluno de outra escola é 404', async () => {
+    const { app, prisma } = setup();
+    prisma.student.findFirst.mockResolvedValue(null);
+
+    const res = await request(app)
+      .post('/api/attendance/justifications')
+      .set('Authorization', authHeader())
+      .send({ studentId: 99, startDate: MONDAY, reason: 'Atestado' });
+
+    expect(res.status).toBe(404);
+    expect(prisma.absenceJustification.create).not.toHaveBeenCalled();
+  });
+
+  it('exclui só atestado de aluno da própria escola', async () => {
+    const { app, prisma } = setup();
+    prisma.absenceJustification.deleteMany.mockResolvedValueOnce({ count: 1 }).mockResolvedValueOnce({ count: 0 });
+
+    const ok = await request(app).delete('/api/attendance/justifications/3').set('Authorization', authHeader());
+    const missing = await request(app).delete('/api/attendance/justifications/4').set('Authorization', authHeader());
+
+    expect(ok.status).toBe(204);
+    expect(missing.status).toBe(404);
+    expect(prisma.absenceJustification.deleteMany).toHaveBeenCalledWith({ where: { id: 3, student: { schoolId: school.id } } });
+  });
+});
+
+describe('Frequência por bimestre', () => {
+  it('usa as datas do bimestre e informa quais bimestres existem', async () => {
+    const { app } = setup();
+
+    const res = await request(app).get('/api/attendance/summary?classGroupId=20&term=1').set('Authorization', authHeader());
+
+    expect(res.status).toBe(200);
+    expect(res.body).toMatchObject({ from: '2026-02-02', term: 1, terms: [1] });
+    expect(res.body.to <= '2026-04-17').toBe(true);
+  });
+
+  it('bimestre ainda não definido é recusado', async () => {
+    const { app } = setup();
+
+    const res = await request(app).get('/api/attendance/summary?classGroupId=20&term=2').set('Authorization', authHeader());
+
+    expect(res.status).toBe(400);
+    expect(res.body.code).toBe('TERM_NOT_FOUND');
+  });
+});
+
+describe('Alertas da escola', () => {
+  it('lista quem está abaixo do mínimo e quem não passa na catraca há uma semana', async () => {
+    const { app, prisma } = setup();
+    prisma.classGroup.findMany.mockResolvedValue([{ id: 20, name: '2º DS A' }] as never);
+    // Ana tem todas as presenças corrigidas à mão; Bruno nunca passou na catraca.
+    prisma.accessLog.findMany.mockResolvedValue([]);
+    prisma.schoolTerm.findFirst.mockResolvedValue({ id: 1 } as never);
+    (prisma.accessLog.groupBy as unknown as jest.Mock).mockResolvedValue([{ studentId: 10, _max: { createdAt: new Date() } }]);
+
+    const res = await request(app).get('/api/attendance/alerts').set('Authorization', authHeader());
+
+    expect(res.status).toBe(200);
+    expect(res.body.minAttendance).toBe(75);
+    expect(res.body.attendance.map((item: { name: string; status: string }) => [item.name, item.status])).toEqual([
+      ['Ana Souza', 'BELOW'],
+      ['Bruno Lima', 'BELOW'],
+    ]);
+    expect(res.body.attendance[0].classGroup).toEqual({ id: 20, name: '2º DS A' });
+    // Ana passou hoje; Bruno nunca.
+    expect(res.body.absent).toEqual([{ id: 11, name: 'Bruno Lima', rm: '24011', classGroup: { id: 20, name: '2º DS A' }, lastSeen: null }]);
+  });
+
+  it('fora de bimestre (férias) ninguém é acusado de sumiço', async () => {
+    const { app, prisma } = setup();
+    prisma.classGroup.findMany.mockResolvedValue([{ id: 20, name: '2º DS A' }] as never);
+    prisma.schoolTerm.findFirst.mockResolvedValue(null);
+
+    const res = await request(app).get('/api/attendance/alerts').set('Authorization', authHeader());
+
+    expect(res.body.absent).toEqual([]);
+    expect(prisma.accessLog.groupBy).not.toHaveBeenCalled();
+  });
+});
+
+describe('Cálculo de presença: só o que foi pedido', () => {
+  const build = () => {
+    const ctx = setup();
+    const service = new AttendanceService(ctx.prisma, new ClassGroupsService(ctx.prisma), new CalendarService(ctx.prisma, ctx.holidays));
+    return { ...ctx, service };
+  };
+
+  it("'none' devolve as aulas sem ler matrículas nem leituras", async () => {
+    const { service, prisma } = build();
+
+    const { lessons, records } = await service.compute(school.id, 20, MONDAY, MONDAY, undefined, 'none');
+
+    expect(lessons).toHaveLength(2);
+    expect(records).toEqual([]);
+    expect(prisma.enrollment.findMany).not.toHaveBeenCalled();
+    expect(prisma.accessLog.findMany).not.toHaveBeenCalled();
+  });
+
+  it('com um aluno, consulta só a matrícula e as correções dele', async () => {
+    const { service, prisma } = build();
+
+    await service.compute(school.id, 20, MONDAY, MONDAY, undefined, 10);
+
+    expect(prisma.enrollment.findMany.mock.calls[0][0]!.where).toMatchObject({ classGroupId: 20, studentId: 10 });
+    expect(prisma.attendanceOverride.findMany.mock.calls[0][0]!.where).toMatchObject({ studentId: 10 });
   });
 });
