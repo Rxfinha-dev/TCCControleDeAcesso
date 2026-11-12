@@ -51,16 +51,33 @@ Professor e aluno trocam a senha inicial no primeiro acesso.
 
 - **Boletim em PDF pelo navegador.** O botão "Baixar boletim" abre a impressão do navegador (Salvar como PDF). Os dados vêm calculados da API, pelas mesmas regras das telas. A spec permitia servidor ou navegador; assim não entrou biblioteca de PDF.
 - **Código da escola nas Configurações**, e não no cadastro de escolas do super admin. O super admin chega lá pelo seletor de escola.
-- **Frequência por bimestre e semestre não entrou.** A frequência aparece no ano (do início do ano letivo até hoje), por disciplina e no total. As médias de nota têm bimestre, semestre e ano.
+- **Frequência por bimestre só na tela da turma** (aba Frequência da Presença). No painel do aluno e no boletim ela aparece no ano. As médias de nota têm bimestre, semestre e ano.
 - **Intervalos não aparecem na grade do aluno**, só as aulas.
-- **O professor não vê a aba Frequência da turma** nem cadastra disciplinas (a spec previa o cadastro de disciplinas pelo professor).
+- **O professor não cadastra disciplinas** (a spec previa). Ele vê a frequência da turma só nas disciplinas dele.
 - **"Esqueci minha senha" não funciona para professor e aluno**: a escola gera uma nova senha.
-- **Excluir professor ou aluno** apaga o login no banco, mas o usuário fica no Supabase Auth. Ele não consegue entrar (a API recusa com `LOGIN_DISABLED`).
 
 ## Limites conhecidos (marcados no código com `shortcut:`)
 
-- A presença é recalculada a cada consulta, sem cache. O boletim calcula a turma inteira do aluno no ano; em turmas grandes no fim do ano pode levar alguns segundos.
+- A presença é recalculada a cada consulta, sem cache. Os alertas do início calculam o ano de todas as turmas e ficam guardados por 5 minutos na memória da API.
 - O fuso de São Paulo é fixo em -03:00.
+
+## Entregue depois das 6 etapas (12/11/2026)
+
+- **Faltas justificadas (atestados):** na Presença, aba "Faltas justificadas". A falta da catraca no período deixa de contar (a aula não entra como dada nem como presença). A correção manual continua valendo sobre o atestado.
+- **Alertas no início da escola:** alunos abaixo ou perto do mínimo de frequência e quem não passa na catraca há 7 dias.
+- **Frequência por bimestre** na aba Frequência, e a aba liberada para o professor (só as disciplinas dele).
+- **Excluir professor ou aluno** apaga também o login no Supabase.
+- **Performance:** telas carregadas sob demanda (pacote inicial de 634 kB para 279 kB); boletim, painel e avaliações deixaram de calcular a presença da turma inteira.
+- **Segurança:**
+  - Gerar nova senha recria o usuário no Supabase, o que encerra as sessões abertas daquele login.
+  - `PUT /api/auth/password` vale só para professor e aluno; escola e super admin trocam a senha pelo código por e-mail.
+
+### Ainda em aberto
+
+- **Avisos aos responsáveis** (entrada, saída e falta): falta escolher o canal (e-mail, SMS ou WhatsApp), que tem provedor e custo.
+- **Mural dos alunos:** depende das decisões de moderação e alcance.
+- **`npm audit`:** 3 alertas altos em `deepmerge-ts`, dependência da CLI do Prisma (roda no build e nas migrations, não nas requisições). A correção exige o Prisma 7.
+- Quando o próprio professor ou aluno troca a senha, as outras sessões dele continuam abertas até expirar.
 
 ## Pendências fora do módulo
 
