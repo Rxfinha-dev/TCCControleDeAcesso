@@ -64,6 +64,9 @@ export type AttendanceSource = 'AUTO' | 'MANUAL' | 'COLLECTIVE' | 'JUSTIFIED';
 /** Dias sem leitura na catraca para o aluno entrar nos alertas. */
 export const ABSENT_ALERT_DAYS = 7;
 
+/** Por quanto tempo os alertas de uma escola valem sem recalcular. */
+export const ALERTS_TTL_MS = 5 * 60_000;
+
 const subjectSelect = { id: true, name: true, abbreviation: true, color: true } as const;
 
 interface Subject {
@@ -459,9 +462,20 @@ export class AttendanceService {
   /**
    * Alunos que pedem atenção no ano letivo atual: frequência abaixo ou perto do mínimo, e quem não passa
    * na catraca há ABSENT_ALERT_DAYS dias (só depois da primeira semana do bimestre, para as férias não acusarem todos).
-   * shortcut: calcula a frequência do ano de todas as turmas; guardar o resultado por dia se o início ficar lento.
+   * shortcut: calcula a frequência do ano de todas as turmas e guarda por ALERTS_TTL_MS na memória deste processo;
+   * com mais de uma instância da API, cada uma recalcula por conta própria.
    */
   async alerts(schoolId: number, now: Date = new Date()) {
+    const cached = this.alertsCache.get(schoolId);
+    if (cached && cached.until > now.getTime()) return cached.value;
+    const value = await this.computeAlerts(schoolId, now);
+    this.alertsCache.set(schoolId, { until: now.getTime() + ALERTS_TTL_MS, value });
+    return value;
+  }
+
+  private readonly alertsCache = new Map<number, { until: number; value: Awaited<ReturnType<AttendanceService['computeAlerts']>> }>();
+
+  private async computeAlerts(schoolId: number, now: Date) {
     const today = todayInSaoPaulo(now);
     const schoolYear = Number(today.slice(0, 4));
     const groups = await this.prisma.classGroup.findMany({

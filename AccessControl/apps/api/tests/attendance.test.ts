@@ -691,3 +691,22 @@ describe('Cálculo de presença: só o que foi pedido', () => {
     expect(prisma.attendanceOverride.findMany.mock.calls[0][0]!.where).toMatchObject({ studentId: 10 });
   });
 });
+
+describe('Alertas: resultado guardado', () => {
+  it('a segunda consulta em seguida não recalcula; depois de 5 minutos, sim', async () => {
+    const ctx = setup();
+    ctx.prisma.classGroup.findMany.mockResolvedValue([{ id: 20, name: '2º DS A' }] as never);
+    ctx.prisma.schoolTerm.findFirst.mockResolvedValue(null);
+    const service = new AttendanceService(ctx.prisma, new ClassGroupsService(ctx.prisma), new CalendarService(ctx.prisma, ctx.holidays));
+    const now = new Date('2026-03-11T12:00:00.000-03:00');
+
+    await service.alerts(school.id, now);
+    await service.alerts(school.id, new Date(now.getTime() + 60_000));
+    expect(ctx.prisma.classGroup.findMany).toHaveBeenCalledTimes(1);
+
+    await service.alerts(school.id, new Date(now.getTime() + 6 * 60_000));
+    expect(ctx.prisma.classGroup.findMany).toHaveBeenCalledTimes(2);
+    // Os feriados do ano são conferidos no banco uma vez só.
+    expect(ctx.prisma.nationalHoliday.count).toHaveBeenCalledTimes(1);
+  });
+});
