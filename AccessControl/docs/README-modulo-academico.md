@@ -1,114 +1,69 @@
 # Módulo acadêmico: andamento
 
-A especificação completa está em [`superpowers/specs/2026-11-08-modulo-academico-design.md`](superpowers/specs/2026-11-08-modulo-academico-design.md), que divide o módulo em 6 etapas (seção 10). Cada etapa vira uma branch e um PR para `develop`.
+A especificação completa está em [`superpowers/specs/2026-11-08-modulo-academico-design.md`](superpowers/specs/2026-11-08-modulo-academico-design.md), que divide o módulo em 6 etapas (seção 10). Cada etapa é uma branch e um PR.
 
 *Atualizado em 11/11/2026.*
 
 ## Resumo
 
-| Etapa | O que entrega | Situação |
-|---|---|---|
-| 1 | Turmas, disciplinas, professores (só cadastro) e grade de arrastar | ✅ Mergeada (PR #39) |
-| 2 | Calendário: feriados automáticos, dias sem aula, bimestres | 🟡 PR #41 aberto, aguardando merge |
-| 3 | Presença automática pela catraca e correção manual | 🟡 PR #42 aberto (depende do #41) |
-| 4 | Logins de professor e aluno, troca de senha, telas do professor | 🔧 **Em andamento** (branch `feat/academico-etapa4-logins`, sem commit) |
-| 5 | Avaliações, sistema de notas e médias | ⏳ Não começada |
-| 6 | Painel do aluno e boletim em PDF | ⏳ Não começada |
+O código das 6 etapas está pronto. Falta revisar e mergear os PRs, e testar os logins contra o Supabase real.
 
-Os PRs estão empilhados: o #42 tem como base a branch do #41. Quando o #41 for mergeado e a branch dele apagada, o GitHub muda a base do #42 para `develop` sozinho. A etapa 4 também nasce da etapa 3, então o PR dela vai depender do #42.
+| Etapa | O que entrega | PR | Situação |
+|---|---|---|---|
+| 1 | Turmas, disciplinas, professores e grade de arrastar | #39 | ✅ Mergeada |
+| 2 | Calendário: feriados automáticos, dias sem aula, bimestres | #41 | 🟡 Aberto |
+| 3 | Presença automática pela catraca e correção manual | #42 | 🟡 Aberto |
+| 4 | Logins de professor e aluno, troca de senha, telas do professor | #43 | 🟡 Aberto |
+| 5 | Avaliações, sistema de notas e médias | #44 | 🟡 Aberto |
+| 6 | Painel do aluno e boletim | #45 | 🟡 Aberto |
 
-Também está aberto o **PR #40** (develop → main). O merge em `main` dispara o deploy, que roda as migrations.
+## Ordem de merge
 
----
+Os PRs estão **empilhados**: cada um tem como base a branch do anterior, para o diff mostrar só a etapa dele.
 
-## Etapa 4: o ponto exato em que parei
+1. Mergeie na ordem: **#41 → #42 → #43 → #44 → #45**.
+2. Ao mergear, apague a branch. O GitHub então muda a base do PR seguinte para `develop` sozinho.
+3. Depois, o **PR #40** (develop → main) leva tudo para produção. O merge em `main` dispara o deploy, que roda as 4 migrations novas (`school_calendar`, `attendance`, `logins`, `assessments`; a etapa 6 não tem migration).
 
-### API: pronta
+## O que precisa ser configurado e testado no deploy
 
-Os 273 testes da API passam. O typecheck da API passa.
+- **`SUPABASE_SERVICE_ROLE_KEY` na API.** Sem ela, criar logins de professor e aluno responde `LOGINS_UNAVAILABLE`. O resto do sistema funciona.
+- **Ainda não testado contra o Supabase real** (os testes usam um Supabase simulado):
+  - Se o Supabase aceita os e-mails sintéticos `usuario@codigo.helpus.invalid`. Se recusar, troque o sufixo em `apps/api/src/lib/logins.ts` e em `apps/web/src/api/auth.ts` (os dois precisam ser iguais).
+  - Se a política de senha do projeto aceita senhas de 8 caracteres (as geradas pelo sistema têm 8, com letras e números).
+- **Primeiro uso por escola:**
+  1. Em Configurações, definir o **código da escola** (ex.: `etec-jau`) e o **sistema de notas**. O código trava depois do primeiro login criado; o sistema de notas trava depois da primeira nota.
+  2. No Calendário, definir os **4 bimestres**. Sem eles não há presença nem avaliação.
+  3. Montar turmas, atribuir professores e a grade.
+  4. Criar os logins: em Professores (um a um) e na aba Alunos de cada turma ("Gerar logins da turma").
 
-- **Migração** `20261113000000_logins`, conferida com `prisma migrate diff`:
-  - `schools.code`, o código curto e único da escola (ex.: `etec-jau`).
-  - `users.username`, `users.must_change_password`, `users.teacher_id` e `users.student_id`, ligando o login ao cadastro.
-- **Formato dos logins:**
-  - Professor: `nome.sobrenome@código`; se o nome se repetir, vira `nome.sobrenome2@código`.
-  - Aluno: `RM@código`.
-  - No Supabase o login vira um e-mail sintético, `usuario@codigo.helpus.invalid`. O domínio `.invalid` é reservado e nunca recebe e-mail.
-- **Rotas novas:**
-  - `PUT /api/logins/teachers/:id` e `PUT /api/logins/students/:id`: criam o login ou geram uma senha nova. Sem senha no corpo, o sistema gera uma de 8 caracteres.
-  - `POST /api/logins/class-groups/:id`: gera os logins da turma. Cada aluno é criado inteiro ou não é criado; a resposta lista os criados e os que falharam. Se o banco falhar, o usuário criado no Supabase é apagado.
-  - `PUT /api/auth/password`: troca de senha pelo próprio usuário. Até trocar, as outras rotas respondem `PASSWORD_CHANGE_REQUIRED`.
-  - `GET /api/attendance/my-lessons`: aulas do professor no dia.
-  - `PUT /api/settings` aceita `code`. O código fica travado depois que a escola cria logins.
-- **Permissões:**
-  - O professor usa as rotas de presença, mas só vê e corrige as aulas das disciplinas dele. Não vê a frequência da turma.
-  - Um login sintético sem usuário no banco não vira "escola nova" no primeiro acesso.
-  - O super admin não troca o perfil de professor nem de aluno.
-- OpenAPI atualizado.
+## O que cada perfil vê
 
-### Web: escrita, mas ainda não verificada
+| Perfil | Telas |
+|---|---|
+| Escola / super admin | Tudo de antes, mais Calendário, Presença, Avaliações, logins e o boletim de qualquer aluno (botão "Boletim" na aba Alunos da turma) |
+| Professor | Início (aulas de hoje), Chamada e Avaliações, só das disciplinas atribuídas a ele |
+| Aluno | Início (grade da semana com provas, próximas avaliações, frequência e notas) e Boletim |
 
-Telas e mudanças já escritas (o typecheck do web passa):
+Professor e aluno trocam a senha inicial no primeiro acesso.
 
-- Login aceita "E-mail ou usuário" e traduz o usuário para o e-mail sintético.
-- **Crie sua senha** (`ChangePasswordPage`): aparece antes de qualquer tela enquanto `mustChangePassword` for verdadeiro.
-- **Início do professor** (`TeacherHomePage`): aulas de hoje, com o botão "Abrir chamada".
-- O professor tem só dois itens no menu, Início e Chamada. As telas da escola mandam ele de volta ao início.
-- A **Presença** no modo professor usa só as turmas dele e esconde a aba Frequência. Ela aceita `?turma=` e `?dia=` na URL.
-- **Professores**: coluna "Login" e o bloco "Acesso ao sistema", com os botões Criar login / Gerar nova senha.
-- **Turma, aba Alunos**: botão "Gerar logins da turma", coluna "Login" e a ação "Nova senha" por aluno.
-- **Lista para imprimir** (`LoginSheet`): usuário e senha inicial, mostrados uma única vez, com CSS de impressão.
-- **Configurações**: card "Código da escola".
-- Correção de bug: ao voltar do login, a query string da URL se perdia. Agora é mantida.
+## Decisões que diferem da spec ou que ela deixava em aberto
 
-**Onde parei:**
+- **Boletim em PDF pelo navegador.** O botão "Baixar boletim" abre a impressão do navegador (Salvar como PDF). Os dados vêm calculados da API, pelas mesmas regras das telas. A spec permitia servidor ou navegador; assim não entrou biblioteca de PDF.
+- **Código da escola nas Configurações**, e não no cadastro de escolas do super admin. O super admin chega lá pelo seletor de escola.
+- **Frequência por bimestre e semestre não entrou.** A frequência aparece no ano (do início do ano letivo até hoje), por disciplina e no total. As médias de nota têm bimestre, semestre e ano.
+- **Intervalos não aparecem na grade do aluno**, só as aulas.
+- **O professor não vê a aba Frequência da turma** nem cadastra disciplinas (a spec previa o cadastro de disciplinas pelo professor).
+- **"Esqueci minha senha" não funciona para professor e aluno**: a escola gera uma nova senha.
+- **Excluir professor ou aluno** apaga o login no banco, mas o usuário fica no Supabase Auth. Ele não consegue entrar (a API recusa com `LOGIN_DISABLED`).
 
-- Na última execução da suíte web inteira, 59 testes falharam, incluindo testes antigos (Calendário, Turmas, Presença…).
-- O `Calendar.test.tsx` rodado sozinho passa (6 de 6). Ainda não sei se a causa é algo que mudei e que afeta todas as telas (o candidato mais provável é a reorganização das rotas em `App.tsx` ou o `AppLayout`) ou algo do ambiente de testes.
-- Esse é o próximo passo: rodar um arquivo que falha com a saída completa e achar a causa.
+## Limites conhecidos (marcados no código com `shortcut:`)
 
-### O que falta para fechar a etapa 4
+- A presença é recalculada a cada consulta, sem cache. O boletim calcula a turma inteira do aluno no ano; em turmas grandes no fim do ano pode levar alguns segundos.
+- O fuso de São Paulo é fixo em -03:00.
 
-1. Descobrir e corrigir as falhas da suíte web.
-2. Rodar `npm run typecheck`, `npm run lint`, `npm test` e `npm run build -w apps/web` na raiz `AccessControl/`, tudo verde.
-3. Olhar as telas novas no navegador (início do professor, troca de senha, lista para imprimir).
-4. Fazer um commit único da etapa (sem `Co-Authored-By`), dar push e abrir o PR para `develop`, avisando que ele depende do #42.
+## Pendências fora do módulo
 
-### O que precisa ser configurado no deploy (etapa 4)
-
-- **`SUPABASE_SERVICE_ROLE_KEY` na API.** Sem ela, criar logins responde `LOGINS_UNAVAILABLE`.
-- **Ainda não testado contra o Supabase real:**
-  - Se o Supabase aceita e-mails `.invalid`. Se recusar, basta trocar o sufixo em `apps/api/src/lib/logins.ts` e em `apps/web/src/api/auth.ts`.
-  - Se a política de senha do projeto Supabase aceita senhas de 8 caracteres.
-
----
-
-## Etapas que faltam
-
-### Etapa 5: avaliações, notas e médias
-- Avaliação (prova ou trabalho) com data, título, conteúdo e peso, por turma e disciplina.
-- Quem cria: o professor, nas turmas e disciplinas dele; a escola, em qualquer uma.
-- Sistema de notas da escola, numérico ou por conceito, nas Configurações.
-- Lançamento de notas em lista pelo professor. Aluno sem nota fica "sem nota" e não entra na média.
-- Médias bimestrais, semestrais e anual.
-- Selo "Prova" na grade.
-
-### Etapa 6: painel do aluno e boletim
-- Painel do aluno (hoje ele vê "Em breve"):
-  - grade da semana, com selo nas aulas com prova;
-  - próximas avaliações;
-  - frequência por disciplina, com destaque perto do limite;
-  - notas e médias.
-- Boletim em PDF gerado no servidor:
-  - cabeçalho com escola, aluno, RM, turma e ano;
-  - por disciplina: notas, médias, frequência e situação.
-  - Pode ser baixado pelo aluno (o próprio) e pela escola (qualquer aluno).
-
-### Pendências fora das etapas
-- **Dependabot:**
-  - Recomendação: mergear #26, #28, #29, #30, #31, #34, #36 e #37.
-  - Fechar #33 (Prisma 7), #35 (TypeScript 7) e #27 (Node 25), porque quebram o CI ou não são LTS.
-  - Ainda falta a sua confirmação.
-- **PR #40 (develop → main):** a decisão de mergear é sua.
+- **Dependabot:** recomendação de mergear #26, #28, #29, #30, #31, #34, #36 e #37, e fechar #33 (Prisma 7), #35 (TypeScript 7) e #27 (Node 25). Falta a sua confirmação.
 - **Senha do Gmail exposta antes:** precisa ser revogada por você.
-- **Design visual** das telas novas (painel do aluno e grade): a spec deixa para uma passada de design depois.
+- **Design visual** das telas novas: a spec deixa para uma passada de design depois. As telas usam os componentes e tokens que já existiam, mas não foram revisadas no navegador.

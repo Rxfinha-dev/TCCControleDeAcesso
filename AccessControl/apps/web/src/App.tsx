@@ -2,6 +2,7 @@ import { BrowserRouter, Link, Navigate, Outlet, Route, Routes, useLocation } fro
 import { AppLayout } from './components/AppLayout';
 import { Logo } from './components/Logo';
 import { RequireSchool } from './components/RequireSchool';
+import type { UserRole } from './api/types';
 import { AuthProvider, PANEL_ROLES, useAuth } from './contexts/AuthContext';
 import { SerialProvider } from './contexts/SerialContext';
 import { ToastProvider } from './contexts/ToastContext';
@@ -17,8 +18,10 @@ import { DashboardPage } from './pages/DashboardPage';
 import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
 import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
+import { ReportCardPage } from './pages/ReportCardPage';
 import { SchoolsPage } from './pages/SchoolsPage';
 import { SettingsPage } from './pages/SettingsPage';
+import { StudentHomePage } from './pages/StudentHomePage';
 import { StudentsPage } from './pages/StudentsPage';
 import { SubjectsPage } from './pages/SubjectsPage';
 import { TeacherHomePage } from './pages/TeacherHomePage';
@@ -27,7 +30,7 @@ import { UsersPage } from './pages/UsersPage';
 import { VerificationPage } from './pages/VerificationPage';
 import { VerifyEmailPage } from './pages/VerifyEmailPage';
 
-/** Perfis ainda sem painel (aluno, funcionário). */
+/** Perfis ainda sem painel (funcionário). */
 function ComingSoonPage() {
   const { logout } = useAuth();
   return (
@@ -58,15 +61,21 @@ function RequireAuth() {
   return <Outlet />;
 }
 
-/** Telas da escola: o professor só usa o início e a chamada. */
-function SchoolPanelRoute() {
+/** Libera as telas só para os perfis informados; os outros voltam para o início deles. */
+function RoleRoute({ roles }: { roles: UserRole[] }) {
   const { user } = useAuth();
-  return user?.role === 'TEACHER' ? <Navigate to="/" replace /> : <Outlet />;
+  return user && roles.includes(user.role) ? <Outlet /> : <Navigate to="/" replace />;
 }
+
+const SCHOOL_ROLES: UserRole[] = ['SUPER_ADMIN', 'SCHOOL'];
+/** Chamada e avaliações: a escola e o professor (limitado às aulas dele). */
+const STAFF_ROLES: UserRole[] = [...SCHOOL_ROLES, 'TEACHER'];
 
 function HomePage() {
   const { user } = useAuth();
-  return user?.role === 'TEACHER' ? <TeacherHomePage /> : <DashboardPage />;
+  if (user?.role === 'TEACHER') return <TeacherHomePage />;
+  if (user?.role === 'STUDENT') return <StudentHomePage />;
+  return <DashboardPage />;
 }
 
 /** Telas de gestão global: quem não é super admin volta para o início. */
@@ -97,6 +106,10 @@ export function AppRoutes() {
       <Route element={<RequireAuth />}>
         <Route element={<AppLayout />}>
           <Route index element={<HomePage />} />
+          <Route element={<RoleRoute roles={['STUDENT']} />}>
+            <Route path="/boletim" element={<ReportCardPage />} />
+          </Route>
+          <Route element={<RoleRoute roles={STAFF_ROLES} />}>
           <Route
             path="/presenca"
             element={
@@ -113,7 +126,16 @@ export function AppRoutes() {
               </RequireSchool>
             }
           />
-          <Route element={<SchoolPanelRoute />}>
+          </Route>
+          <Route element={<RoleRoute roles={SCHOOL_ROLES} />}>
+          <Route
+            path="/boletim/:studentId"
+            element={
+              <RequireSchool>
+                <ReportCardPage />
+              </RequireSchool>
+            }
+          />
           <Route
             path="/alunos"
             element={

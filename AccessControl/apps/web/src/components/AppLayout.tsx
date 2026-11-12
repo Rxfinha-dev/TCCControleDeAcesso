@@ -48,6 +48,12 @@ const TEACHER_NAV_ITEMS = [
   { to: '/avaliacoes', label: 'Avaliações', icon: GradeIcon, end: false },
 ];
 
+/** Aluno: o painel dele e o boletim. */
+const STUDENT_NAV_ITEMS = [
+  { to: '/', label: 'Início', icon: HomeIcon, end: true },
+  { to: '/boletim', label: 'Boletim', icon: GradeIcon, end: false },
+];
+
 /** Gestão global, só para o super admin. */
 const SUPER_ADMIN_NAV_ITEMS = [
   { to: '/escolas', label: 'Escolas', icon: BuildingIcon, end: false },
@@ -66,6 +72,9 @@ export function AppLayout() {
 function AppShell() {
   const { user, isSuperAdmin, logout } = useAuth();
   const isTeacher = user?.role === 'TEACHER';
+  const isStudent = user?.role === 'STUDENT';
+  // Professor e aluno não usam o leitor de digitais.
+  const hasReader = !isTeacher && !isStudent;
   const { selected } = useSchoolScope();
   const name = displayName(user);
   const { connected } = useSerial();
@@ -85,7 +94,7 @@ function AppShell() {
         </button>
         <Logo variant="light" className="mobile-logo" />
         <ThemeToggle />
-        {!isTeacher && (
+        {hasReader && (
           <span className={`status-dot ${connected ? 'on' : 'off'}`} title={connected ? 'Leitor conectado' : 'Leitor desconectado'} />
         )}
       </header>
@@ -96,7 +105,7 @@ function AppShell() {
           <ThemeToggle />
         </div>
         <nav className="sidebar-nav" onClick={() => setMenuOpen(false)}>
-          {(isTeacher ? TEACHER_NAV_ITEMS : [...NAV_ITEMS, ...(isSuperAdmin ? SUPER_ADMIN_NAV_ITEMS : [])]).map(({ to, label, icon: Icon, end }) => (
+          {(isStudent ? STUDENT_NAV_ITEMS : isTeacher ? TEACHER_NAV_ITEMS : [...NAV_ITEMS, ...(isSuperAdmin ? SUPER_ADMIN_NAV_ITEMS : [])]).map(({ to, label, icon: Icon, end }) => (
             <NavLink key={to} to={to} end={end} className="nav-item">
               <Icon />
               <span>{label}</span>
@@ -104,7 +113,7 @@ function AppShell() {
           ))}
         </nav>
 
-        {!isTeacher && (
+        {hasReader && (
         <Link to="/configuracoes" className={`reader-status ${connected ? 'on' : 'off'}`} onClick={() => setMenuOpen(false)}>
           <span className={`status-dot ${connected ? 'on' : 'off'}`} />
           <span>

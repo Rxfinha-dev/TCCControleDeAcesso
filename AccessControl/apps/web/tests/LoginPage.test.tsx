@@ -81,7 +81,7 @@ describe('Tela de login', () => {
       return { data: {}, error: null };
     });
     fetchMock.mockImplementation(async (url: string) =>
-      url.endsWith('/auth/me') ? jsonResponse(200, me({ name: 'Ana Aluna', role: 'STUDENT', school: null })) : jsonResponse(403, {}),
+      url.endsWith('/auth/me') ? jsonResponse(200, me({ name: 'Ana Funcionária', role: 'EMPLOYEE', school: null })) : jsonResponse(403, {}),
     );
 
     renderAt('/login');

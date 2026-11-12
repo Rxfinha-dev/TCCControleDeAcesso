@@ -14,8 +14,8 @@ interface AuthContextValue {
   logout: () => Promise<void>;
 }
 
-/** Perfis que já usam o painel. Os demais (aluno, por enquanto) veem o aviso de "em breve". */
-export const PANEL_ROLES: UserRole[] = ['SUPER_ADMIN', 'SCHOOL', 'TEACHER'];
+/** Perfis que já usam o painel. Os demais (funcionário) veem o aviso de "em breve". */
+export const PANEL_ROLES: UserRole[] = ['SUPER_ADMIN', 'SCHOOL', 'TEACHER', 'STUDENT'];
 
 /** Nome exibido no painel: o do super admin, ou o da escola para o login da escola. */
 export const displayName = (user: AuthUser | null) =>

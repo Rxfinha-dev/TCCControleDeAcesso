@@ -413,3 +413,52 @@ export interface GradesReport {
   subjects: Subject[];
   students: { id: number; name: string; rm: string; subjects: SubjectAverages[] }[];
 }
+
+/* Boletim e painel do aluno. */
+
+/** Boletim do ano letivo até a data de emissão. */
+export interface ReportCard {
+  school: { name: string };
+  student: { id: number; name: string; rm: string };
+  classGroup: { id: number; name: string } | null;
+  schoolYear: number;
+  /** 'YYYY-MM-DD' */
+  issuedOn: string;
+  minAttendance: number;
+  grading: Grading;
+  attendance: AttendanceTally;
+  subjects: (Omit<SubjectAverages, 'subjectId'> & {
+    subject: Subject;
+    attendance: AttendanceTally;
+    assessments: { id: number; kind: AssessmentKind; title: string; date: string; weight: number; term: number | null; grade: GradeCell }[];
+  })[];
+}
+
+/** Prova ou trabalho marcado, como o aluno vê. */
+export interface MarkedAssessment {
+  id: number;
+  kind: AssessmentKind;
+  title: string;
+  content: string | null;
+  note: string | null;
+  date: string;
+  startMinute: number | null;
+  subject: Subject;
+}
+
+export interface StudentPanel {
+  reportCard: ReportCard;
+  /** Segunda a sábado desta semana. */
+  week: {
+    date: string;
+    day: DayInfo;
+    lessons: {
+      startMinute: number;
+      endMinute: number;
+      subject: Subject;
+      cancellation: CancellationReason | null;
+      assessments: MarkedAssessment[];
+    }[];
+  }[];
+  upcoming: MarkedAssessment[];
+}
