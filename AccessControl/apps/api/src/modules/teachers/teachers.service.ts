@@ -1,6 +1,8 @@
 import type { PrismaClient, Teacher } from '@prisma/client';
 import { z } from 'zod';
 import { conflict, notFound } from '../../lib/errors';
+import { logger } from '../../lib/logger';
+import type { IdentityProvider } from '../../services/identity';
 
 export const teacherSchema = z.object({
   name: z.string().trim().min(2, 'Informe o nome do professor').max(100, 'O nome deve ter no máximo 100 caracteres'),
@@ -23,7 +25,10 @@ const toDto = (teacher: Teacher, assignmentsCount = 0, username: string | null =
 });
 
 export class TeachersService {
-  constructor(private readonly prisma: PrismaClient) {}
+  constructor(
+    private readonly prisma: PrismaClient,
+    private readonly identity: IdentityProvider,
+  ) {}
 
   async list(schoolId: number) {
     const teachers = await this.prisma.teacher.findMany({
@@ -54,7 +59,10 @@ export class TeachersService {
         'TEACHER_IN_USE',
       );
     }
+    const login = await this.prisma.user.findFirst({ where: { teacherId: id }, select: { authUserId: true } });
     await this.prisma.teacher.delete({ where: { id } });
+    // O usuário do banco some em cascata; o do Supabase precisa ser apagado à parte (se falhar, o login já não entra).
+    if (login) await this.identity.deleteUser(login.authUserId).catch((err) => logger.error({ err }, 'login órfão no Supabase'));
   }
 
   /** Professor da escola, ou 404. Usado também pelas atribuições das turmas. */
