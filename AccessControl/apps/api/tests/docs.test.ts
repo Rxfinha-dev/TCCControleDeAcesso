@@ -47,6 +47,8 @@ describe('Documentação da API', () => {
         '/api/attendance/override',
         '/api/attendance/cancellation',
         '/api/settings',
+        '/api/report-cards/{id}',
+        '/api/student/panel',
         '/api/assessments',
         '/api/assessments/{id}',
         '/api/assessments/{id}/grades',

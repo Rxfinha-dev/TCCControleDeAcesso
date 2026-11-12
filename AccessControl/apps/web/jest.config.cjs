@@ -27,4 +27,6 @@ module.exports = {
     '\\.(png|jpe?g|svg|webp)$': '<rootDir>/tests/mocks/file.ts',
   },
   clearMocks: true,
+  // Cada worker sobe um jsdom: com todos os núcleos a máquina engasga e os testes estouram o tempo.
+  maxWorkers: '50%',
 };

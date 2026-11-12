@@ -29,6 +29,8 @@ import { EnrollmentsService } from './modules/class-groups/enrollments.service';
 import { TimetableService } from './modules/class-groups/timetable.service';
 import { ClassGroupsService } from './modules/class-groups/class-groups.service';
 import { coursesRoutes } from './modules/courses/courses.routes';
+import { reportCardRoutes, studentRoutes } from './modules/report-card/report-card.routes';
+import { ReportCardService } from './modules/report-card/report-card.service';
 import { schoolsRoutes } from './modules/schools/schools.routes';
 import { SchoolsService } from './modules/schools/schools.service';
 import { CoursesService } from './modules/courses/courses.service';
@@ -153,7 +155,12 @@ export function createApp({ prisma, identity, storage, holidays = brasilApiHolid
   const teacherScoped = [apiRateLimit, requireAuth, requireAccess('SUPER_ADMIN', 'SCHOOL', 'TEACHER'), requireSchoolScope(prisma)];
   const attendance = new AttendanceService(prisma, classGroups, calendar);
   app.use('/api/attendance', ...teacherScoped, attendanceRoutes(attendance));
-  app.use('/api/assessments', ...teacherScoped, assessmentsRoutes(new AssessmentsService(prisma, classGroups, attendance)));
+  const assessments = new AssessmentsService(prisma, classGroups, attendance);
+  app.use('/api/assessments', ...teacherScoped, assessmentsRoutes(assessments));
+  const reportCards = new ReportCardService(prisma, attendance, assessments);
+  app.use('/api/report-cards', ...scoped, reportCardRoutes(reportCards));
+  // Aluno: só o próprio painel.
+  app.use('/api/student', apiRateLimit, requireAuth, requireAccess('STUDENT'), studentRoutes(reportCards));
   app.use('/api/logins', ...scoped, loginsRoutes(new LoginsService(prisma, identity, classGroups)));
   app.use('/api/settings', ...scoped, settingsRoutes(prisma));
   app.use('/api/access-logs', ...scopedOrAll, accessLogsRoutes(new AccessLogsService(prisma)));

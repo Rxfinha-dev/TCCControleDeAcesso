@@ -2698,3 +2698,94 @@ button.roll-mark:hover:not(:disabled) {
   min-height: 36px;
   padding: 0 8px;
 }
+
+/* ---------- Painel do aluno e boletim ---------- */
+.week-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.week-day {
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+
+.week-day.today {
+  border-color: var(--sky);
+}
+
+.week-day h3 {
+  margin: 0 0 8px;
+  font-size: 0.95rem;
+}
+
+.week-day ul {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.week-day li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Aula com prova: tinta de carimbo, a mesma da presença. */
+.exam-flag {
+  flex-basis: 100%;
+  padding: 6px 8px;
+  border: 2px solid var(--stamp);
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+}
+
+.exam-flag summary {
+  font-weight: 600;
+  color: var(--stamp);
+  cursor: pointer;
+}
+
+.exam-flag p {
+  margin: 6px 0 0;
+}
+
+.report-head {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin: 0 0 16px;
+}
+
+.report-head dt {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.report-head dd {
+  margin: 0;
+  font-weight: 600;
+}
+
+.report-table th[scope='row'] {
+  font-weight: 600;
+  text-align: left;
+}
+
+.grade-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.85rem;
+}
+
+@media print {
+  .report-table {
+    font-size: 0.75rem;
+  }
+}

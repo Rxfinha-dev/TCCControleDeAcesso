@@ -270,6 +270,9 @@ function StudentsTab({ classGroupId, onChange }: { classGroupId: number; onChang
                   <td className="muted">{formatDate(`${member.enrolledSince}T12:00:00`)}</td>
                   <td className="muted mono">{member.username ?? '—'}</td>
                   <td className="row-action">
+                    <Link className="btn btn-outline btn-small" to={`/boletim/${member.id}`} aria-label={`Boletim de ${member.name}`}>
+                      Boletim
+                    </Link>{' '}
                     {member.username && (
                       <button
                         type="button"

@@ -8,6 +8,8 @@ import type {
   AssessmentList,
   GradesReport,
   GradingInput,
+  ReportCard,
+  StudentPanel,
   AttendanceDay,
   AttendanceOverrideInput,
   AttendanceSummary,
@@ -143,6 +145,15 @@ export const assessmentsApi = {
   grades: (id: number) => requestJson<AssessmentGrades>(`/assessments/${id}/grades`),
   setGrades: (id: number, grades: { studentId: number; value: number | null }[]) =>
     requestJson<void>(`/assessments/${id}/grades`, { method: 'PUT', body: { grades } }),
+};
+
+export const reportCardsApi = {
+  get: (studentId: number) => requestJson<ReportCard>(`/report-cards/${studentId}`),
+};
+
+/** Painel do aluno logado. */
+export const studentApi = {
+  panel: () => requestJson<StudentPanel>('/student/panel'),
 };
 
 /** Sem senha, a API gera uma. A senha volta só nesta resposta. */
