@@ -2,12 +2,12 @@ import { AssessmentKind, type Assessment, type PrismaClient, type School } from 
 import { z } from 'zod';
 import { dateOnly, isoDate } from '../../lib/dates';
 import { badRequest, notFound } from '../../lib/errors';
-import { idSchema } from '../../lib/validation';
+import { idSchema, isoDaySchema } from '../../lib/validation';
 import type { AttendanceService } from '../attendance/attendance.service';
 import type { ClassGroupsService } from '../class-groups/class-groups.service';
 import { averages, DEFAULT_CONCEPTS, isValidGrade, termOf, type Concept, type Grading } from './grades.rules';
 
-const isoDay = z.iso.date('Data inválida');
+const isoDay = isoDaySchema;
 /** Texto opcional: vazio vira null. */
 const optionalText = (max: number) =>
   z.preprocess((value) => (typeof value === 'string' && value.trim() === '' ? null : value), z.string().trim().max(max).nullable().default(null));

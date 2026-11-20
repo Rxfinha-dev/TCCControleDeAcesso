@@ -4,8 +4,9 @@ import { dateOnly, isoDate, weekdayOf } from '../../lib/dates';
 import { notFound } from '../../lib/errors';
 import { logger } from '../../lib/logger';
 import type { HolidayProvider } from '../../services/holidays';
+import { isoDaySchema } from '../../lib/validation';
 
-const isoDay = z.iso.date('Data inválida');
+const isoDay = isoDaySchema;
 const DAY_MS = 24 * 60 * 60 * 1000;
 
 export const yearSchema = z.coerce.number().int().min(2000, 'Ano inválido').max(2100, 'Ano inválido');
