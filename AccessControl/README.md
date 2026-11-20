@@ -88,7 +88,7 @@ cp apps/web/.env.example apps/web/.env
 
 # 4. Tabelas + dados de demonstração
 npm run db:migrate
-npm run db:seed          # login: demo@helpus.app / helpus-demo-123 (exige SUPABASE_SERVICE_ROLE_KEY)
+npm run db:seed          # login: demo@helpus.app; senhas sorteadas e impressas no fim (exige SUPABASE_SERVICE_ROLE_KEY)
 
 # 5. API (http://localhost:3333) + frontend (http://localhost:5173)
 npm run dev

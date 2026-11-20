@@ -1,4 +1,6 @@
 import type { Course, Prisma, PrismaClient, Student } from '@prisma/client';
+import { logger } from '../../lib/logger';
+import type { IdentityProvider } from '../../services/identity';
 import { badRequest, conflict, notFound } from '../../lib/errors';
 import type { PhotoStorage, StoredPhoto } from '../../services/storage';
 import { MAX_FINGERPRINT_SLOTS, type ListStudentsQuery, type StudentInput } from './students.schemas';
@@ -29,6 +31,7 @@ export class StudentsService {
   constructor(
     private readonly prisma: PrismaClient,
     private readonly storage: PhotoStorage,
+    private readonly identity: IdentityProvider,
   ) {}
 
   async list(schoolId: number, query: ListStudentsQuery) {
@@ -90,7 +93,10 @@ export class StudentsService {
   async remove(schoolId: number, id: number) {
     const student = await this.findOwned(schoolId, id);
     if (student.photoKey) await this.storage.remove(id, student.photoKey);
+    const login = await this.prisma.user.findFirst({ where: { studentId: id }, select: { authUserId: true } });
     await this.prisma.student.delete({ where: { id } });
+    // O usuário do banco some em cascata; o do Supabase precisa ser apagado à parte (se falhar, o login já não entra).
+    if (login) await this.identity.deleteUser(login.authUserId).catch((err) => logger.error({ err }, 'login órfão no Supabase'));
   }
 
   async getPhoto(schoolId: number, id: number) {

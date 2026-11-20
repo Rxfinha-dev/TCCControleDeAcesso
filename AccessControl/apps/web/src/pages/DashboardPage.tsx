@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 import { statsApi } from '../api';
+import { AttendanceAlerts } from '../components/AttendanceAlerts';
 import { errorMessage } from '../api/client';
 import type { Stats } from '../api/types';
 import { FingerprintIcon } from '../components/Icons';
@@ -118,6 +119,8 @@ export function DashboardPage() {
         </section>
 
         <aside className="dash-side">
+          {/* Só com uma escola em uso: a frequência é calculada por escola. */}
+          {!allSchools && selected !== null && <AttendanceAlerts />}
           <section className="card">
             <h2 className="card-title">Pendências</h2>
             <Link to="/alunos" className="pending">

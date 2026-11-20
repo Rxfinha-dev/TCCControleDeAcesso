@@ -174,7 +174,7 @@ feature/*  ──PR──▶  develop  ──PR──▶  main  ──(deploy.ym
    SEED_PASSWORD="umaSenhaForte123" npm run prisma:seed
    ```
 
-   Com a secret key, o seed também cria o usuário `demo@helpus.app` (já confirmado) no Supabase Auth.
+   Com a secret key, o seed também cria no Supabase Auth o usuário `demo@helpus.app`, o super admin `admin@helpus.app` e logins de professores e alunos. As senhas que não vierem de `SEED_PASSWORD`, `SEED_ADMIN_PASSWORD`, `SEED_TEACHER_PASSWORD` e `SEED_STUDENT_PASSWORD` são sorteadas a cada execução e impressas só no fim do seed; guarde-as ou apague essas contas depois.
 
 ## 6. Leitor biométrico
 

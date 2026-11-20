@@ -267,7 +267,8 @@ export type DayInfo =
   | { kind: 'HOLIDAY' | 'NO_CLASS'; name: string };
 
 export type CancellationReason = 'TEACHER_ABSENT' | 'CANCELLED';
-export type AttendanceSource = 'AUTO' | 'MANUAL' | 'COLLECTIVE';
+/** JUSTIFIED = falta com atestado: `present` vem null e a aula não conta para o aluno. */
+export type AttendanceSource = 'AUTO' | 'MANUAL' | 'COLLECTIVE' | 'JUSTIFIED';
 export type AttendanceStatus = 'OK' | 'NEAR' | 'BELOW';
 
 export interface AttendanceLesson {
@@ -304,6 +305,10 @@ export interface AttendanceTally {
 export interface AttendanceSummary {
   from: string;
   to: string;
+  /** Bimestre pedido (null = ano letivo). */
+  term: number | null;
+  /** Bimestres definidos no ano. */
+  terms: number[];
   minAttendance: number;
   subjects: Subject[];
   students: (AttendanceTally & { id: number; name: string; rm: string; subjects: (AttendanceTally & { subjectId: number })[] })[];
@@ -461,4 +466,35 @@ export interface StudentPanel {
     }[];
   }[];
   upcoming: MarkedAssessment[];
+}
+
+/* Atestados e alertas de frequência. */
+
+export interface AbsenceJustification {
+  id: number;
+  student: { id: number; name: string; rm: string };
+  startDate: string;
+  endDate: string;
+  reason: string;
+}
+
+export interface JustificationInput {
+  studentId: number;
+  startDate: string;
+  endDate?: string;
+  reason: string;
+}
+
+interface AlertStudent {
+  id: number;
+  name: string;
+  rm: string;
+  classGroup: { id: number; name: string };
+}
+
+export interface AttendanceAlerts {
+  minAttendance: number;
+  attendance: (AlertStudent & { percent: number | null; status: AttendanceStatus })[];
+  /** `lastSeen: null` = nunca passou na catraca. */
+  absent: (AlertStudent & { lastSeen: string | null })[];
 }

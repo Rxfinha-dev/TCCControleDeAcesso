@@ -80,13 +80,14 @@ model User {
   createdAt          DateTime @default(now()) @map("created_at")
   updatedAt          DateTime @updatedAt @map("updated_at")
 
-  school              School?              @relation(fields: [schoolId], references: [id], onDelete: SetNull)
-  teacher             Teacher?             @relation(fields: [teacherId], references: [id], onDelete: Cascade)
-  student             Student?             @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  school              School?                @relation(fields: [schoolId], references: [id], onDelete: SetNull)
+  teacher             Teacher?               @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  student             Student?               @relation(fields: [studentId], references: [id], onDelete: Cascade)
   attendanceOverrides AttendanceOverride[]
   lessonCancellations LessonCancellation[]
   assessments         Assessment[]
   grades              Grade[]
+  justifications      AbsenceJustification[]
 
   @@index([schoolId])
   @@map("users")
@@ -161,11 +162,12 @@ model Student {
   createdAt             DateTime    @default(now()) @map("created_at")
   updatedAt             DateTime    @updatedAt @map("updated_at")
 
-  school              School               @relation(fields: [schoolId], references: [id], onDelete: Cascade)
-  course              Course?              @relation(fields: [courseId], references: [id], onDelete: Restrict)
+  school              School                 @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  course              Course?                @relation(fields: [courseId], references: [id], onDelete: Restrict)
   photo               StudentPhoto?
   user                User?
   grades              Grade[]
+  justifications      AbsenceJustification[]
   accessLogs          AccessLog[]
   enrollments         Enrollment[]
   attendanceOverrides AttendanceOverride[]
@@ -475,4 +477,22 @@ model Grade {
   @@id([assessmentId, studentId])
   @@index([studentId])
   @@map("grades")
+}
+
+/// Falta justificada (atestado): as faltas do aluno no período deixam de contar na frequência.
+model AbsenceJustification {
+  id        Int      @id @default(autoincrement())
+  studentId Int      @map("student_id")
+  startDate DateTime @map("start_date") @db.Date
+  endDate   DateTime @map("end_date") @db.Date
+  reason    String   @db.VarChar(200)
+  /// Quem registrou.
+  userId    Int?     @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  user    User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([studentId, startDate])
+  @@map("absence_justifications")
 }

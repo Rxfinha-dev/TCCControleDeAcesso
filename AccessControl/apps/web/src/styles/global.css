@@ -2789,3 +2789,23 @@ button.roll-mark:hover:not(:disabled) {
     font-size: 0.75rem;
   }
 }
+
+/* ---------- Atestados e alertas ---------- */
+.roll-mark.justified {
+  color: var(--warning);
+}
+
+.alert-list {
+  display: grid;
+  gap: 6px;
+  margin: 0 0 12px;
+  padding: 0;
+  list-style: none;
+}
+
+.alert-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: baseline;
+}

@@ -28,10 +28,6 @@ export class ReportCardService {
     private readonly assessments: AssessmentsService,
   ) {}
 
-  /**
-   * shortcut: a presença é calculada para a turma inteira de cada matrícula do aluno no ano (alguns segundos
-   * em turmas grandes no fim do ano); calcular só o aluno se o boletim ficar lento.
-   */
   async reportCard(schoolId: number, studentId: number, now: Date = new Date()) {
     const student = await this.prisma.student.findFirst({
       where: { id: studentId, schoolId },
@@ -66,7 +62,8 @@ export class ReportCardService {
         include: { subject: { select: subjectSelect }, grades: { where: { studentId } } },
         orderBy: [{ date: 'asc' }, { startMinute: 'asc' }],
       }),
-      Promise.all(groupIds.map((groupId) => this.attendance.compute(schoolId, groupId, `${schoolYear}-01-01`, to, now))),
+      // Só o aluno: a turma inteira não é lida.
+      Promise.all(groupIds.map((groupId) => this.attendance.compute(schoolId, groupId, `${schoolYear}-01-01`, to, now, studentId))),
     ]);
     const assessments = allAssessments.filter((assessment) => enrolledOn(assessment.classGroupId, isoDate(assessment.date)));
     const records: AttendanceRecord[] = computed.flatMap((item) => item.records.filter((record) => record.studentId === studentId));
@@ -124,7 +121,7 @@ export class ReportCardService {
     if (groupId === undefined) return { reportCard, week: [], upcoming: [] };
 
     const [{ lessons, calendar }, assessments] = await Promise.all([
-      this.attendance.compute(schoolId, groupId, monday, dates[5], now),
+      this.attendance.compute(schoolId, groupId, monday, dates[5], now, 'none'),
       this.prisma.assessment.findMany({
         where: { classGroupId: groupId, date: { gte: dateOnly(monday < today ? monday : today) } },
         include: { subject: { select: subjectSelect } },

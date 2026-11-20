@@ -29,7 +29,97 @@ export const attendanceTags = [
 
 export function attendancePaths({ ref, json, errorResponse, authErrors, validationError, notFound }: DocHelpers) {
   const lessonNotFound = errorResponse('Turma não encontrada ou sem aula nesse dia e horário (`LESSON_NOT_FOUND`)');
+  const studentRef = { id: { type: 'integer' }, name: { type: 'string' }, rm: { type: 'string' } };
+  const groupRef = { type: 'object', properties: { id: { type: 'integer' }, name: { type: 'string' } } };
   return {
+    '/api/attendance/alerts': {
+      get: {
+        tags: [TAG],
+        summary: 'Alunos que pedem atenção: frequência abaixo ou perto do mínimo e quem não passa na catraca há 7 dias',
+        description: 'Só escola e super admin. O sumiço só é avaliado depois da primeira semana do bimestre.',
+        responses: {
+          200: {
+            description: 'Alertas',
+            content: json({
+              type: 'object',
+              properties: {
+                minAttendance: { type: 'integer' },
+                attendance: {
+                  type: 'array',
+                  items: {
+                    type: 'object',
+                    properties: { ...studentRef, classGroup: groupRef, percent: { type: 'number', nullable: true }, status: { type: 'string', enum: ['NEAR', 'BELOW'] } },
+                  },
+                },
+                absent: {
+                  type: 'array',
+                  items: {
+                    type: 'object',
+                    properties: { ...studentRef, classGroup: groupRef, lastSeen: { type: 'string', format: 'date', nullable: true, description: '`null` = nunca passou' } },
+                  },
+                },
+              },
+            }),
+          },
+          ...authErrors,
+        },
+      },
+    },
+    '/api/attendance/justifications': {
+      get: {
+        tags: [TAG],
+        summary: 'Faltas justificadas (atestados) dos alunos da turma',
+        parameters: [classGroupQuery],
+        responses: {
+          200: {
+            description: 'Atestados',
+            content: json({
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  id: { type: 'integer' },
+                  student: { type: 'object', properties: studentRef },
+                  startDate: isoDay('2026-03-09'),
+                  endDate: isoDay('2026-03-11'),
+                  reason: { type: 'string', example: 'Atestado médico' },
+                },
+              },
+            }),
+          },
+          400: validationError,
+          404: notFound,
+          ...authErrors,
+        },
+      },
+      post: {
+        tags: [TAG],
+        summary: 'Registra um atestado: as faltas da catraca no período deixam de contar para o aluno',
+        description: 'A aula justificada não entra como dada nem como presença. A correção manual continua valendo sobre o atestado.',
+        requestBody: {
+          required: true,
+          content: json({
+            type: 'object',
+            required: ['studentId', 'startDate', 'reason'],
+            properties: {
+              studentId: { type: 'integer', example: 11 },
+              startDate: isoDay('2026-03-09'),
+              endDate: { ...isoDay('2026-03-11'), description: 'Padrão: o mesmo dia do início' },
+              reason: { type: 'string', maxLength: 200, example: 'Atestado médico' },
+            },
+          }),
+        },
+        responses: { 201: { description: 'Registrado' }, 400: validationError, 404: notFound, ...authErrors },
+      },
+    },
+    '/api/attendance/justifications/{id}': {
+      delete: {
+        tags: [TAG],
+        summary: 'Exclui um atestado',
+        parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'integer', minimum: 1 } }],
+        responses: { 204: { description: 'Excluído' }, 404: notFound, ...authErrors },
+      },
+    },
     '/api/attendance/my-lessons': {
       get: {
         tags: [TAG],
@@ -53,11 +143,12 @@ export function attendancePaths({ ref, json, errorResponse, authErrors, validati
     '/api/attendance/summary': {
       get: {
         tags: [TAG],
-        summary: 'Frequência dos alunos da turma, no total e por disciplina',
+        summary: 'Frequência dos alunos da turma, no total e por disciplina (professor: só as disciplinas dele)',
         parameters: [
           classGroupQuery,
           { name: 'from', in: 'query', schema: isoDay('2026-02-02'), description: 'Padrão: início do ano letivo da turma' },
           { name: 'to', in: 'query', schema: isoDay('2026-06-30'), description: 'Padrão: hoje' },
+          { name: 'term', in: 'query', schema: { type: 'integer', minimum: 1, maximum: 4 }, description: 'Bimestre: usa as datas dele (`TERM_NOT_FOUND` se não definido)' },
         ],
         responses: {
           200: { description: 'Frequência', content: json(ref('AttendanceSummary')) },
@@ -184,7 +275,7 @@ export function attendanceSchemas(ref: (name: string) => object) {
                   properties: {
                     startMinute: { type: 'integer', example: 450 },
                     present: { type: 'boolean', nullable: true },
-                    source: { type: 'string', enum: ['AUTO', 'MANUAL', 'COLLECTIVE'] },
+                    source: { type: 'string', enum: ['AUTO', 'MANUAL', 'COLLECTIVE', 'JUSTIFIED'], description: 'JUSTIFIED = falta com atestado (`present: null`, não conta)' },
                   },
                 },
               },
@@ -221,6 +312,8 @@ export function attendanceSchemas(ref: (name: string) => object) {
         from: isoDay('2026-02-02'),
         to: isoDay('2026-06-30'),
         minAttendance: { type: 'integer', example: 75 },
+        term: { type: 'integer', nullable: true, description: 'Bimestre pedido' },
+        terms: { type: 'array', items: { type: 'integer' }, description: 'Bimestres definidos no ano' },
         subjects: { type: 'array', items: ref('Subject') },
         students: {
           type: 'array',

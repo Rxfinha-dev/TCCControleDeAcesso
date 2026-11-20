@@ -65,6 +65,10 @@ export class AuthService {
   async changePassword(userId: number, password: string) {
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
     if (!user) throw notFound('Usuário não encontrado');
+    // Escola e super admin trocam a senha pelo Supabase (código por e-mail): aqui bastaria uma sessão aberta.
+    if (user.username === null) {
+      throw forbidden('Troque a sua senha em "Esqueci minha senha", na tela de login.', 'PASSWORD_CHANGE_NOT_ALLOWED');
+    }
     await this.identity.setPassword(user.authUserId, password);
     await this.prisma.user.update({ where: { id: userId }, data: { mustChangePassword: false } });
   }

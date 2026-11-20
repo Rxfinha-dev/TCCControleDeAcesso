@@ -40,6 +40,10 @@ export function errorHandler(err: unknown, req: Request, res: Response, _next: N
     return res.status(400).json({ code: 'INVALID_JSON', message: 'JSON inválido' });
   }
 
+  if (err instanceof Error && 'type' in err && err.type === 'entity.too.large') {
+    return res.status(413).json({ code: 'PAYLOAD_TOO_LARGE', message: 'Dados enviados grandes demais' });
+  }
+
   logger.error({ err, path: req.path }, 'Erro inesperado');
   return res.status(500).json({ code: 'INTERNAL_ERROR', message: 'Erro interno do servidor' });
 }

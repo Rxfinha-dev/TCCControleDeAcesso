@@ -83,7 +83,7 @@ describe('Professor', () => {
     expect(await screen.findByRole('heading', { name: 'Olá, Ana' })).toBeInTheDocument();
   });
 
-  it('chamada usa as turmas dele e não mostra a frequência', async () => {
+  it('chamada usa as turmas dele; vê a frequência, mas não os atestados', async () => {
     const fetchMock = mockApi((path) => {
       if (path.startsWith('/attendance/my-lessons')) return jsonResponse(200, LESSONS);
       if (path.startsWith('/attendance/day')) return jsonResponse(200, { date: '2026-03-09', day: { kind: 'SCHOOL_DAY' }, lessons: [], students: [] });
@@ -93,7 +93,8 @@ describe('Professor', () => {
 
     expect(await screen.findByText('Esta turma não tem aula neste dia.')).toBeInTheDocument();
     expect(fetchMock.mock.calls.some(([url]) => String(url).endsWith('/attendance/day?classGroupId=20&date=2026-03-09'))).toBe(true);
-    expect(screen.queryByRole('tab', { name: 'Frequência' })).not.toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: 'Frequência' })).toBeInTheDocument();
+    expect(screen.queryByRole('tab', { name: 'Faltas justificadas' })).not.toBeInTheDocument();
     expect(callsTo(fetchMock, '/class-groups')).toHaveLength(0);
   });
 });
