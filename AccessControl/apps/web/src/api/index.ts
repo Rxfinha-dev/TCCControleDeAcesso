@@ -1,7 +1,10 @@
 import { request, requestJson } from './client';
 import type {
   AccessLog,
+  AbsenceJustification,
   AccessLogFilters,
+  AttendanceAlerts,
+  JustificationInput,
   Assessment,
   AssessmentGrades,
   AssessmentInput,
@@ -125,7 +128,14 @@ export const calendarApi = {
 export const attendanceApi = {
   day: (classGroupId: number, date: string) => requestJson<AttendanceDay>(`/attendance/day${query({ classGroupId, date })}`),
   myLessons: (date?: string) => requestJson<TeacherLessons>(`/attendance/my-lessons${query({ date })}`),
-  summary: (classGroupId: number) => requestJson<AttendanceSummary>(`/attendance/summary${query({ classGroupId })}`),
+  summary: (classGroupId: number, term?: number) =>
+    requestJson<AttendanceSummary>(`/attendance/summary${query({ classGroupId, term })}`),
+  alerts: () => requestJson<AttendanceAlerts>('/attendance/alerts'),
+  justifications: (classGroupId: number) =>
+    requestJson<AbsenceJustification[]>(`/attendance/justifications${query({ classGroupId })}`),
+  createJustification: (input: JustificationInput) =>
+    requestJson<{ id: number }>('/attendance/justifications', { method: 'POST', body: { ...input } }),
+  removeJustification: (id: number) => requestJson<void>(`/attendance/justifications/${id}`, { method: 'DELETE' }),
   setOverride: (input: AttendanceOverrideInput) => requestJson<void>('/attendance/override', { method: 'PUT', body: { ...input } }),
   setCancellation: (input: LessonCancellationInput) =>
     requestJson<void>('/attendance/cancellation', { method: 'PUT', body: { ...input } }),

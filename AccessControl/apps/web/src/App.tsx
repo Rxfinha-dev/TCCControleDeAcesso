@@ -1,3 +1,4 @@
+import { lazy, Suspense, type ComponentType } from 'react';
 import { BrowserRouter, Link, Navigate, Outlet, Route, Routes, useLocation } from 'react-router';
 import { AppLayout } from './components/AppLayout';
 import { Logo } from './components/Logo';
@@ -6,29 +7,35 @@ import type { UserRole } from './api/types';
 import { AuthProvider, PANEL_ROLES, useAuth } from './contexts/AuthContext';
 import { SerialProvider } from './contexts/SerialContext';
 import { ToastProvider } from './contexts/ToastContext';
-import { AccessLogsPage } from './pages/AccessLogsPage';
-import { AssessmentsPage } from './pages/AssessmentsPage';
-import { AttendancePage } from './pages/AttendancePage';
-import { CalendarPage } from './pages/CalendarPage';
-import { ChangePasswordPage } from './pages/ChangePasswordPage';
-import { ClassGroupPage } from './pages/ClassGroupPage';
-import { ClassGroupsPage } from './pages/ClassGroupsPage';
-import { CoursesPage } from './pages/CoursesPage';
-import { DashboardPage } from './pages/DashboardPage';
-import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
 import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
-import { ReportCardPage } from './pages/ReportCardPage';
-import { SchoolsPage } from './pages/SchoolsPage';
-import { SettingsPage } from './pages/SettingsPage';
-import { StudentHomePage } from './pages/StudentHomePage';
-import { StudentsPage } from './pages/StudentsPage';
-import { SubjectsPage } from './pages/SubjectsPage';
-import { TeacherHomePage } from './pages/TeacherHomePage';
-import { TeachersPage } from './pages/TeachersPage';
-import { UsersPage } from './pages/UsersPage';
-import { VerificationPage } from './pages/VerificationPage';
-import { VerifyEmailPage } from './pages/VerifyEmailPage';
+
+/** Cada tela vira um arquivo à parte, baixado só quando é aberta (login e cadastro ficam no pacote inicial). */
+function page<K extends string>(load: () => Promise<Record<K, ComponentType>>, name: K) {
+  return lazy(() => load().then((module) => ({ default: module[name] })));
+}
+
+const AccessLogsPage = page(() => import('./pages/AccessLogsPage'), 'AccessLogsPage');
+const AssessmentsPage = page(() => import('./pages/AssessmentsPage'), 'AssessmentsPage');
+const AttendancePage = page(() => import('./pages/AttendancePage'), 'AttendancePage');
+const CalendarPage = page(() => import('./pages/CalendarPage'), 'CalendarPage');
+const ChangePasswordPage = page(() => import('./pages/ChangePasswordPage'), 'ChangePasswordPage');
+const ClassGroupPage = page(() => import('./pages/ClassGroupPage'), 'ClassGroupPage');
+const ClassGroupsPage = page(() => import('./pages/ClassGroupsPage'), 'ClassGroupsPage');
+const CoursesPage = page(() => import('./pages/CoursesPage'), 'CoursesPage');
+const DashboardPage = page(() => import('./pages/DashboardPage'), 'DashboardPage');
+const ForgotPasswordPage = page(() => import('./pages/ForgotPasswordPage'), 'ForgotPasswordPage');
+const ReportCardPage = page(() => import('./pages/ReportCardPage'), 'ReportCardPage');
+const SchoolsPage = page(() => import('./pages/SchoolsPage'), 'SchoolsPage');
+const SettingsPage = page(() => import('./pages/SettingsPage'), 'SettingsPage');
+const StudentHomePage = page(() => import('./pages/StudentHomePage'), 'StudentHomePage');
+const StudentsPage = page(() => import('./pages/StudentsPage'), 'StudentsPage');
+const SubjectsPage = page(() => import('./pages/SubjectsPage'), 'SubjectsPage');
+const TeacherHomePage = page(() => import('./pages/TeacherHomePage'), 'TeacherHomePage');
+const TeachersPage = page(() => import('./pages/TeachersPage'), 'TeachersPage');
+const UsersPage = page(() => import('./pages/UsersPage'), 'UsersPage');
+const VerificationPage = page(() => import('./pages/VerificationPage'), 'VerificationPage');
+const VerifyEmailPage = page(() => import('./pages/VerifyEmailPage'), 'VerifyEmailPage');
 
 /** Perfis ainda sem painel (funcionário). */
 function ComingSoonPage() {
@@ -98,6 +105,13 @@ function NotFoundPage() {
 
 export function AppRoutes() {
   return (
+    <Suspense
+      fallback={
+        <div className="splash">
+          <Logo variant="auto" />
+        </div>
+      }
+    >
     <Routes>
       <Route path="/login" element={<LoginPage />} />
       <Route path="/cadastro" element={<RegisterPage />} />
@@ -211,6 +225,7 @@ export function AppRoutes() {
       </Route>
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
+    </Suspense>
   );
 }
 

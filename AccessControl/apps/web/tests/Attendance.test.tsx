@@ -42,6 +42,8 @@ const tally = (given: number, present: number, percent: number | null, status: s
 const SUMMARY = {
   from: '2026-01-01',
   to: todayIso(),
+  term: null,
+  terms: [1, 2],
   minAttendance: 75,
   subjects: [MATH, PORT],
   students: [

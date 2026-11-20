@@ -133,9 +133,9 @@ export function createApp({ prisma, identity, storage, holidays = brasilApiHolid
   const scopedOrAll = [...panel, requireSchoolScope(prisma, { allowAll: true })];
 
   app.use('/api/courses', ...scoped, coursesRoutes(new CoursesService(prisma)));
-  app.use('/api/students', ...scoped, studentsRoutes(new StudentsService(prisma, storage)));
+  app.use('/api/students', ...scoped, studentsRoutes(new StudentsService(prisma, storage, identity)));
   const subjects = new SubjectsService(prisma);
-  const teachers = new TeachersService(prisma);
+  const teachers = new TeachersService(prisma, identity);
   app.use('/api/subjects', ...scoped, subjectsRoutes(subjects));
   app.use('/api/teachers', ...scoped, teachersRoutes(teachers));
   const classGroups = new ClassGroupsService(prisma);

@@ -4,8 +4,9 @@ import { dateOnly, isoDate, weekdayOf } from '../../lib/dates';
 import { notFound } from '../../lib/errors';
 import { logger } from '../../lib/logger';
 import type { HolidayProvider } from '../../services/holidays';
+import { isoDaySchema } from '../../lib/validation';
 
-const isoDay = z.iso.date('Data inválida');
+const isoDay = isoDaySchema;
 const DAY_MS = 24 * 60 * 60 * 1000;
 
 export const yearSchema = z.coerce.number().int().min(2000, 'Ano inválido').max(2100, 'Ano inválido');
@@ -161,11 +162,18 @@ export class CalendarService {
    * Carrega os feriados do ano na primeira vez que alguém o abre. Falha da BrasilAPI não quebra nada:
    * o calendário segue sem feriados e a próxima abertura tenta de novo.
    */
+  /** Anos cujos feriados já estão no banco: a tabela só cresce, então não é preciso conferir de novo a cada consulta. */
+  private readonly loadedYears = new Set<number>();
+
   private async ensureHolidays(year: number) {
+    if (this.loadedYears.has(year)) return true;
     const loaded = await this.prisma.nationalHoliday.count({
       where: { date: { gte: dateOnly(`${year}-01-01`), lte: dateOnly(`${year}-12-31`) } },
     });
-    if (loaded > 0) return true;
+    if (loaded > 0) {
+      this.loadedYears.add(year);
+      return true;
+    }
     try {
       const holidays = await this.holidays.fetch(year);
       if (holidays.length === 0) return false;
@@ -173,6 +181,7 @@ export class CalendarService {
         data: holidays.map((holiday) => ({ date: dateOnly(holiday.date), name: holiday.name })),
         skipDuplicates: true,
       });
+      this.loadedYears.add(year);
       return true;
     } catch (err) {
       logger.warn({ err, year }, 'calendário: não foi possível buscar os feriados nacionais');
