@@ -42,12 +42,22 @@ const SCHOOL_EMAIL = (process.env.SEED_EMAIL ?? 'demo@helpus.app').toLowerCase()
 const SCHOOL_CODE = 'etec-jau';
 // Sem senha fixa no código: quem leu o repositório não pode entrar num banco populado por este seed.
 const randomPassword = () => randomBytes(9).toString('base64url');
-const SCHOOL_PASSWORD = process.env.SEED_PASSWORD || randomPassword();
+/** Senha do seed: a da variável, se houver, ou uma sorteada. `shown` é o que vai para o terminal: nunca a da variável. */
+function seedPassword(envName: string) {
+  const random = randomPassword();
+  const fromEnv = process.env[envName];
+  return { value: fromEnv || random, shown: fromEnv ? `(a definida em ${envName})` : random };
+}
+const SCHOOL = seedPassword('SEED_PASSWORD');
+const SCHOOL_PASSWORD = SCHOOL.value;
 
 const SUPER_ADMIN_EMAIL = 'admin@helpus.app';
-const SUPER_ADMIN_PASSWORD = process.env.SEED_ADMIN_PASSWORD || randomPassword();
-const TEACHER_PASSWORD = process.env.SEED_TEACHER_PASSWORD || randomPassword();
-const STUDENT_PASSWORD = process.env.SEED_STUDENT_PASSWORD || randomPassword();
+const SUPER_ADMIN = seedPassword('SEED_ADMIN_PASSWORD');
+const SUPER_ADMIN_PASSWORD = SUPER_ADMIN.value;
+const TEACHER = seedPassword('SEED_TEACHER_PASSWORD');
+const TEACHER_PASSWORD = TEACHER.value;
+const STUDENT = seedPassword('SEED_STUDENT_PASSWORD');
+const STUDENT_PASSWORD = STUDENT.value;
 
 interface AuthAccount {
   email: string;
@@ -622,36 +632,36 @@ async function main() {
 
 1. ADMINISTRAÇÃO DA ESCOLA (Secretaria / Gestão)
    - Login: ${SCHOOL_EMAIL}
-   - Senha: ${SCHOOL_PASSWORD}
+   - Senha: ${SCHOOL.shown}
    - Código da Escola: ${SCHOOL_CODE}
    - Acesso: Cursos, Turmas, Disciplinas, Professores, Grade, Alunos, Calendário, Chamada
 
 2. SUPER ADMIN (Gestão Global)
    - Login: ${SUPER_ADMIN_EMAIL}
-   - Senha: ${SUPER_ADMIN_PASSWORD}
+   - Senha: ${SUPER_ADMIN.shown}
    - Acesso: Gestão de escolas e todos os usuários do sistema
 
 ${supabaseAdmin ? '' : 'ATENÇÃO: sem SUPABASE_SERVICE_ROLE_KEY, nenhum dos logins desta lista funciona.\n\n'}3. PROFESSORES
    - Prof. Carlos Alberto Souza (Web / BD):
      * Usuário: carlos.souza@${SCHOOL_CODE}
-     * Senha:   ${TEACHER_PASSWORD}
+     * Senha:   ${TEACHER.shown}
    - Profa. Ana Paula Prado (Matemática / Física):
      * Usuário: ana.prado@${SCHOOL_CODE}
-     * Senha:   ${TEACHER_PASSWORD}
+     * Senha:   ${TEACHER.shown}
    - Profa. Mariana Costa Silva (Português / Inglês) [Primeiro Acesso]:
      * Usuário: mariana.silva@${SCHOOL_CODE}
-     * Senha:   ${TEACHER_PASSWORD} (Pedirá nova senha na tela "Crie sua senha")
+     * Senha:   ${TEACHER.shown} (Pedirá nova senha na tela "Crie sua senha")
 
 4. ALUNOS
    - Lucas Oliveira Santos:
      * Usuário: 24001@${SCHOOL_CODE}
-     * Senha:   ${STUDENT_PASSWORD}
+     * Senha:   ${STUDENT.shown}
    - Beatriz Fernandes Lima:
      * Usuário: 24002@${SCHOOL_CODE}
-     * Senha:   ${STUDENT_PASSWORD}
+     * Senha:   ${STUDENT.shown}
    - Gabriel Souza Ribeiro [Primeiro Acesso]:
      * Usuário: 24003@${SCHOOL_CODE}
-     * Senha:   ${STUDENT_PASSWORD} (Pedirá nova senha na tela "Crie sua senha")
+     * Senha:   ${STUDENT.shown} (Pedirá nova senha na tela "Crie sua senha")
    - Thiago Alves Pereira (RM 24005):
      * SEM LOGIN ainda! Use a secretaria para testar "Gerar logins da turma".
      * Falta toda segunda (frequência perto do mínimo); o Gabriel falta segunda e sexta (abaixo do mínimo).
