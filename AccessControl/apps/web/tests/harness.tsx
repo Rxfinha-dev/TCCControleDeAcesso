@@ -10,12 +10,14 @@ import { ToastProvider } from '../src/contexts/ToastContext';
 export const jsonResponse = (status: number, body: unknown) =>
   ({ ok: status < 400, status, json: async () => body }) as Response;
 
+export const ALL_MODULES = ['ACCESS', 'ACADEMIC', 'ATTENDANCE', 'ASSESSMENTS'];
+
 export const SCHOOL_USER = {
   id: 1,
   name: 'ETEC Jaú',
   email: 'etec@jau.com',
   role: 'SCHOOL',
-  school: { id: 1, name: 'ETEC Jaú' },
+  school: { id: 1, name: 'ETEC Jaú', plan: 'ASSESSMENTS', modules: ALL_MODULES },
 };
 
 export const EMPTY_STATS = { students: 0, courses: 0, entriesToday: 0, pendingFingerprints: 0, recentEntries: [] };

@@ -8,14 +8,15 @@ import { LoginSheet, type LoginSheetRow } from '../components/LoginSheet';
 import { ArrowLeftIcon } from '../components/Icons';
 import { PageHeader } from '../components/PageHeader';
 import { TimetableEditor } from '../components/timetable/TimetableEditor';
+import { useSchoolScope } from '../contexts/SchoolScopeContext';
 import { useToast } from '../contexts/ToastContext';
 import { SHIFT_LABELS } from '../utils/academic';
 import { formatDate } from '../utils/format';
 
 const TABS = [
   { id: 'alunos', label: 'Alunos' },
-  { id: 'disciplinas', label: 'Disciplinas e professores' },
-  { id: 'grade', label: 'Grade' },
+  { id: 'disciplinas', label: 'Disciplinas e professores', module: 'ACADEMIC' },
+  { id: 'grade', label: 'Grade', module: 'ACADEMIC' },
 ] as const;
 
 type TabId = (typeof TABS)[number]['id'];
@@ -24,6 +25,7 @@ type TabId = (typeof TABS)[number]['id'];
 export function ClassGroupPage() {
   const id = Number(useParams().id);
   const toast = useToast();
+  const { hasModule } = useSchoolScope();
   const [group, setGroup] = useState<ClassGroupDetail | null>(null);
   const [tab, setTab] = useState<TabId>('alunos');
   const [notFound, setNotFound] = useState(false);
@@ -67,7 +69,7 @@ export function ClassGroupPage() {
       <PageHeader title={group?.name ?? 'Turma'} description={description} />
 
       <div className="tabs" role="tablist" aria-label="Seções da turma">
-        {TABS.map(({ id: tabId, label }) => (
+        {TABS.filter((item) => !('module' in item) || hasModule(item.module)).map(({ id: tabId, label }) => (
           <button
             key={tabId}
             type="button"
@@ -87,18 +89,24 @@ export function ClassGroupPage() {
       <div role="tabpanel" id="panel-alunos" aria-labelledby="tab-alunos" hidden={tab !== 'alunos'}>
         {group && <StudentsTab classGroupId={id} onChange={loadGroup} />}
       </div>
-      <div role="tabpanel" id="panel-disciplinas" aria-labelledby="tab-disciplinas" hidden={tab !== 'disciplinas'}>
-        {group && <AssignmentsTab group={group} onChange={loadGroup} />}
-      </div>
-      <div role="tabpanel" id="panel-grade" aria-labelledby="tab-grade" hidden={tab !== 'grade'}>
-        {group && <TimetableEditor classGroup={group} />}
-      </div>
+      {hasModule('ACADEMIC') && (
+        <>
+          <div role="tabpanel" id="panel-disciplinas" aria-labelledby="tab-disciplinas" hidden={tab !== 'disciplinas'}>
+            {group && <AssignmentsTab group={{ ...group, assignments: group.assignments ?? [] }} onChange={loadGroup} />}
+          </div>
+          <div role="tabpanel" id="panel-grade" aria-labelledby="tab-grade" hidden={tab !== 'grade'}>
+            {group && <TimetableEditor classGroup={group} />}
+          </div>
+        </>
+      )}
     </>
   );
 }
 
 function StudentsTab({ classGroupId, onChange }: { classGroupId: number; onChange: () => Promise<void> }) {
   const toast = useToast();
+  const { hasModule } = useSchoolScope();
+  const hasAssessments = hasModule('ASSESSMENTS');
   const [members, setMembers] = useState<ClassGroupStudent[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -244,11 +252,13 @@ function StudentsTab({ classGroupId, onChange }: { classGroupId: number; onChang
       </section>
 
       <section className="card">
-        <div className="form-actions">
-          <button type="button" className="btn btn-outline" disabled={generating || members.length === 0} onClick={handleGenerate}>
-            Gerar logins da turma
-          </button>
-        </div>
+        {hasAssessments && (
+          <div className="form-actions">
+            <button type="button" className="btn btn-outline" disabled={generating || members.length === 0} onClick={handleGenerate}>
+              Gerar logins da turma
+            </button>
+          </div>
+        )}
         <div className="table-wrapper">
           <table className="table">
             <thead>
@@ -256,7 +266,7 @@ function StudentsTab({ classGroupId, onChange }: { classGroupId: number; onChang
                 <th>Aluno</th>
                 <th className="numeric">RM</th>
                 <th>Na turma desde</th>
-                <th>Login</th>
+                {hasAssessments && <th>Login</th>}
                 <th>
                   <span className="sr-only">Ações</span>
                 </th>
@@ -268,11 +278,15 @@ function StudentsTab({ classGroupId, onChange }: { classGroupId: number; onChang
                   <td>{member.name}</td>
                   <td className="numeric">{member.rm}</td>
                   <td className="muted">{formatDate(`${member.enrolledSince}T12:00:00`)}</td>
-                  <td className="muted mono">{member.username ?? '—'}</td>
+                  {hasAssessments && <td className="muted mono">{member.username ?? '—'}</td>}
                   <td className="row-action">
-                    <Link className="btn btn-outline btn-small" to={`/boletim/${member.id}`} aria-label={`Boletim de ${member.name}`}>
-                      Boletim
-                    </Link>{' '}
+                    {hasAssessments && (
+                      <>
+                        <Link className="btn btn-outline btn-small" to={`/boletim/${member.id}`} aria-label={`Boletim de ${member.name}`}>
+                          Boletim
+                        </Link>{' '}
+                      </>
+                    )}
                     {member.username && (
                       <button
                         type="button"
@@ -291,7 +305,7 @@ function StudentsTab({ classGroupId, onChange }: { classGroupId: number; onChang
               ))}
               {!loading && members.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="empty">
+                  <td colSpan={hasAssessments ? 5 : 4} className="empty">
                     Nenhum aluno nesta turma ainda.
                   </td>
                 </tr>

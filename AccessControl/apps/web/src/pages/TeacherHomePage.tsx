@@ -4,7 +4,9 @@ import { attendanceApi } from '../api';
 import { errorMessage } from '../api/client';
 import type { TeacherLessons } from '../api/types';
 import { PageHeader } from '../components/PageHeader';
+import { PLAN_NOTICE } from '../components/RequireModule';
 import { useAuth } from '../contexts/AuthContext';
+import { useSchoolScope } from '../contexts/SchoolScopeContext';
 import { useToast } from '../contexts/ToastContext';
 import { CANCELLATION_LABELS, dayMessage, formatMinute } from '../utils/academic';
 import { firstName } from '../utils/format';
@@ -12,15 +14,18 @@ import { firstName } from '../utils/format';
 /** Início do professor: as aulas de hoje, cada uma com o atalho para a chamada. */
 export function TeacherHomePage() {
   const { user } = useAuth();
+  const { hasModule } = useSchoolScope();
+  const inPlan = hasModule('ATTENDANCE');
   const toast = useToast();
   const [data, setData] = useState<TeacherLessons | null>(null);
 
   useEffect(() => {
+    if (!inPlan) return;
     attendanceApi
       .myLessons()
       .then(setData)
       .catch((err) => toast.error(errorMessage(err)));
-  }, [toast]);
+  }, [toast, inPlan]);
 
   const message = data ? dayMessage(data.day) : null;
 
@@ -30,6 +35,8 @@ export function TeacherHomePage() {
         title={`Olá, ${firstName(user?.name ?? '')}`}
         description="Suas aulas de hoje. A catraca marca a presença; abra a chamada para corrigir as exceções."
       />
+
+      {!inPlan && <p className="banner">{PLAN_NOTICE}</p>}
 
       {data?.classGroups.length === 0 ? (
         <p className="banner">Você ainda não leciona em nenhuma turma deste ano. Fale com a secretaria da escola.</p>

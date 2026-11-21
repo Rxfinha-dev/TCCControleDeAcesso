@@ -2,6 +2,7 @@ import { lazy, Suspense, type ComponentType } from 'react';
 import { BrowserRouter, Link, Navigate, Outlet, Route, Routes, useLocation } from 'react-router';
 import { AppLayout } from './components/AppLayout';
 import { Logo } from './components/Logo';
+import { RequireModule } from './components/RequireModule';
 import { RequireSchool } from './components/RequireSchool';
 import type { UserRole } from './api/types';
 import { AuthProvider, PANEL_ROLES, useAuth } from './contexts/AuthContext';
@@ -121,14 +122,23 @@ export function AppRoutes() {
         <Route element={<AppLayout />}>
           <Route index element={<HomePage />} />
           <Route element={<RoleRoute roles={['STUDENT']} />}>
-            <Route path="/boletim" element={<ReportCardPage />} />
+            <Route
+              path="/boletim"
+              element={
+                <RequireModule module="ASSESSMENTS">
+                  <ReportCardPage />
+                </RequireModule>
+              }
+            />
           </Route>
           <Route element={<RoleRoute roles={STAFF_ROLES} />}>
           <Route
             path="/presenca"
             element={
               <RequireSchool>
-                <AttendancePage />
+                <RequireModule module="ATTENDANCE">
+                  <AttendancePage />
+                </RequireModule>
               </RequireSchool>
             }
           />
@@ -136,7 +146,9 @@ export function AppRoutes() {
             path="/avaliacoes"
             element={
               <RequireSchool>
-                <AssessmentsPage />
+                <RequireModule module="ASSESSMENTS">
+                  <AssessmentsPage />
+                </RequireModule>
               </RequireSchool>
             }
           />
@@ -146,7 +158,9 @@ export function AppRoutes() {
             path="/boletim/:studentId"
             element={
               <RequireSchool>
-                <ReportCardPage />
+                <RequireModule module="ASSESSMENTS">
+                  <ReportCardPage />
+                </RequireModule>
               </RequireSchool>
             }
           />
@@ -186,7 +200,9 @@ export function AppRoutes() {
             path="/disciplinas"
             element={
               <RequireSchool>
-                <SubjectsPage />
+                <RequireModule module="ACADEMIC">
+                  <SubjectsPage />
+                </RequireModule>
               </RequireSchool>
             }
           />
@@ -194,7 +210,9 @@ export function AppRoutes() {
             path="/professores"
             element={
               <RequireSchool>
-                <TeachersPage />
+                <RequireModule module="ACADEMIC">
+                  <TeachersPage />
+                </RequireModule>
               </RequireSchool>
             }
           />
@@ -202,7 +220,9 @@ export function AppRoutes() {
             path="/calendario"
             element={
               <RequireSchool>
-                <CalendarPage />
+                <RequireModule module="ACADEMIC">
+                  <CalendarPage />
+                </RequireModule>
               </RequireSchool>
             }
           />

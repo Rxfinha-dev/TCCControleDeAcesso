@@ -19,7 +19,7 @@ export function SettingsPage() {
   const { user } = useAuth();
   const [baudRate, setBaudRate] = useState(() => Number(localStorage.getItem(BAUD_KEY)) || 9600);
   const [busy, setBusy] = useState(false);
-  const { selected } = useSchoolScope();
+  const { selected, hasModule } = useSchoolScope();
   const hasSchool = selected !== 'all';
   const [minAttendance, setMinAttendance] = useState('');
   const [savingMin, setSavingMin] = useState(false);
@@ -32,9 +32,9 @@ export function SettingsPage() {
     settingsApi
       .get()
       .then((settings) => {
-        setMinAttendance(String(settings.minAttendance));
+        setMinAttendance(String(settings.minAttendance ?? ''));
         setCode(settings.code ?? '');
-        setGrading(settings.grading);
+        setGrading(settings.grading ?? null);
       })
       .catch((err) => toast.error(errorMessage(err)));
   }, [hasSchool, selected, toast]);
@@ -138,7 +138,7 @@ export function SettingsPage() {
           )}
         </section>
 
-        {hasSchool && (
+        {hasSchool && hasModule('ATTENDANCE') && (
           <form className="card form" onSubmit={saveMinAttendance} noValidate>
             <h2 className="card-title">Frequência</h2>
             <label className="field">
@@ -163,9 +163,9 @@ export function SettingsPage() {
           </form>
         )}
 
-        {hasSchool && grading && <GradingForm initial={grading} />}
+        {hasSchool && hasModule('ASSESSMENTS') && grading && <GradingForm initial={grading} />}
 
-        {hasSchool && (
+        {hasSchool && hasModule('ATTENDANCE') && (
           <form className="card form" onSubmit={saveCode} noValidate>
             <h2 className="card-title">Logins de professores e alunos</h2>
             <label className="field">
