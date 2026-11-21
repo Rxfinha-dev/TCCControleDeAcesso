@@ -2,7 +2,7 @@ import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { toLoginEmail } from '../src/api/auth';
 import { todayIso } from '../src/utils/academic';
-import { bodyOf, callsTo, jsonResponse, mockApi, renderAt, SCHOOL_USER } from './harness';
+import { bodyOf, callsTo, jsonResponse, mockApi, renderAt, SCHOOL_USER, ALL_MODULES } from './harness';
 import { setMockSession } from './mocks/supabase';
 
 const MATH = { id: 1, name: 'Matemática', abbreviation: 'MAT', color: '#2266aa' };
@@ -11,7 +11,7 @@ const TEACHER_USER = {
   name: 'Ana Prado',
   email: 'ana.prado@etec-jau.helpus.invalid',
   role: 'TEACHER',
-  school: { id: 1, name: 'ETEC Jaú' },
+  school: { id: 1, name: 'ETEC Jaú', plan: 'ASSESSMENTS', modules: ALL_MODULES },
   username: 'ana.prado@etec-jau',
   mustChangePassword: false,
 };

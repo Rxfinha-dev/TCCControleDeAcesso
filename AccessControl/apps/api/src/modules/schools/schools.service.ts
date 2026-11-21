@@ -1,7 +1,8 @@
-import { Prisma, UserRole, type PrismaClient } from '@prisma/client';
+import { Prisma, SchoolPlan, UserRole, type PrismaClient, type School } from '@prisma/client';
 import { z } from 'zod';
 import { conflict, notFound } from '../../lib/errors';
 import { logger } from '../../lib/logger';
+import { modulesOf } from '../../lib/plans';
 import type { PhotoStorage } from '../../services/storage';
 
 export const schoolSchema = z.object({
@@ -12,7 +13,13 @@ export const schoolSchema = z.object({
     .transform((email) => email.toLowerCase()),
 });
 
-export type SchoolInput = z.infer<typeof schoolSchema>;
+/** O plano só é escolhido na criação; depois, só pela troca de plano (o update ignora `plan`). */
+export const createSchoolSchema = schoolSchema.extend({ plan: z.enum(SchoolPlan).optional() });
+export const planSchema = z.object({ plan: z.enum(SchoolPlan) });
+
+export type SchoolInput = z.infer<typeof createSchoolSchema>;
+
+const withModules = <T extends School>(school: T) => ({ ...school, modules: modulesOf(school.plan) });
 
 const EMAIL_IN_USE = 'Esse e-mail já está vinculado a outra conta.';
 
@@ -39,6 +46,8 @@ export class SchoolsService {
       name: school.name,
       email: school.email,
       createdAt: school.createdAt,
+      plan: school.plan,
+      modules: modulesOf(school.plan),
       counts: _count,
       hasLogin: users.length > 0,
     }));
@@ -47,14 +56,23 @@ export class SchoolsService {
   /** A escola fica aguardando o cadastro com esse e-mail, que a vincula no primeiro login. */
   async create(input: SchoolInput) {
     await this.ensureEmailFree(input.email);
-    return this.save(() => this.prisma.school.create({ data: { name: input.name, email: input.email } }));
+    const data = { name: input.name, email: input.email, ...(input.plan && { plan: input.plan }) };
+    return withModules(await this.save(() => this.prisma.school.create({ data })));
   }
 
   /** O e-mail da escola é contato e chave do primeiro vínculo: mudá-lo não altera nenhum login. */
-  async update(id: number, input: SchoolInput) {
+  async update(id: number, input: Omit<SchoolInput, 'plan'>) {
     await this.findOrThrow(id);
     await this.ensureEmailFree(input.email, id);
-    return this.save(() => this.prisma.school.update({ where: { id }, data: { name: input.name, email: input.email } }));
+    return withModules(await this.save(() => this.prisma.school.update({ where: { id }, data: { name: input.name, email: input.email } })));
+  }
+
+  /** Rebaixar não apaga dado algum: só deixa de liberar os módulos. */
+  async setPlan(id: number, plan: SchoolPlan, actorUserId: number) {
+    const current = await this.findOrThrow(id);
+    const updated = await this.prisma.school.update({ where: { id }, data: { plan } });
+    logger.info({ schoolId: id, from: current.plan, to: plan, by: actorUserId }, 'plano da escola alterado');
+    return withModules(updated);
   }
 
   /**

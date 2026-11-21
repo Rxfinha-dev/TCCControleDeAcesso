@@ -327,7 +327,7 @@ export function StudentsPage() {
       <ConfirmDialog
         open={confirmDelete}
         title="Excluir aluno"
-        message={`Deseja excluir ${selected?.name}? O histórico de entradas será mantido.`}
+        message={`Deseja excluir ${selected?.name}? O histórico de entradas será mantido. Presenças, notas e atestados deste aluno também serão apagados.`}
         confirmLabel="Excluir"
         onConfirm={handleDelete}
         onCancel={() => setConfirmDelete(false)}

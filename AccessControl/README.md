@@ -42,6 +42,19 @@ Tudo o que existia no sistema legado, atualizado:
 
 O perfil fica só na tabela `users` do banco (nunca nos metadados do Supabase). O primeiro super admin é o e-mail de `SUPER_ADMIN_BOOTSTRAP_EMAIL`; os próximos são promovidos pela tela **Usuários**.
 
+### Planos e módulos
+
+Cada escola tem um plano que libera módulos (telas, menu e rotas da API). Os planos são cumulativos:
+
+| Plano | Libera |
+| --- | --- |
+| Básico | Controle de acesso, alunos e turmas |
+| Acadêmico | + disciplinas, professores, grade horária e calendário |
+| Frequência | + presença, atestados e logins de professores |
+| Avaliações | + notas, boletim, logins e painel do aluno |
+
+Escolas já existentes ficam no plano **Avaliações** (tudo liberado); escolas novas começam no **Básico**. O super admin troca o plano em **Escolas › Plano**. Módulo fora do plano responde 403 na API e some da interface.
+
 Melhorias de segurança em relação ao legado: credenciais apenas em variáveis de ambiente, senhas e códigos por e-mail gerenciados pelo Supabase Auth (a API não guarda senhas, valida os tokens pela JWKS do projeto e recusa tokens de sessões encerradas no logout ou na troca de senha), rate limit nas rotas da API, isolamento dos dados por instituição em todas as consultas, RLS habilitado e acesso da Data API (anon/authenticated) revogado no Supabase e validação de entrada com Zod.
 
 ## Estrutura

@@ -22,7 +22,7 @@ const SHORTCUTS = [
 
 /** Início: o cartão de ponto do dia, com cada leitura da catraca carimbada. */
 export function DashboardPage() {
-  const { selected, selectedName } = useSchoolScope();
+  const { selected, selectedName, hasModule } = useSchoolScope();
   const allSchools = selected === 'all';
   const { user } = useAuth();
   const serial = useSerial();
@@ -120,7 +120,7 @@ export function DashboardPage() {
 
         <aside className="dash-side">
           {/* Só com uma escola em uso: a frequência é calculada por escola. */}
-          {!allSchools && selected !== null && <AttendanceAlerts />}
+          {!allSchools && selected !== null && hasModule('ATTENDANCE') && <AttendanceAlerts />}
           <section className="card">
             <h2 className="card-title">Pendências</h2>
             <Link to="/alunos" className="pending">

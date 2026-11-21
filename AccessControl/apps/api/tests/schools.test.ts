@@ -32,6 +32,8 @@ describe('Escolas (super admin)', () => {
       name: school.name,
       email: school.email,
       createdAt: school.createdAt.toISOString(),
+      plan: 'ASSESSMENTS',
+      modules: ['ACCESS', 'ACADEMIC', 'ATTENDANCE', 'ASSESSMENTS'],
       counts: { students: 12, courses: 3, accessLogs: 40 },
       hasLogin: true,
     });
@@ -49,8 +51,20 @@ describe('Escolas (super admin)', () => {
       .send({ name: ' Escola Nova ', email: 'Nova@Escola.com' });
 
     expect(res.status).toBe(201);
-    expect(prisma.school.create).toHaveBeenCalledWith({ data: { name: 'Escola Nova', email: 'nova@escola.com' } });
+    expect(prisma.school.create).toHaveBeenCalledWith({ data: { name: 'Escola Nova', email: 'nova@escola.com' } }); // sem plan: o banco usa BASIC
     expect(res.body).toMatchObject({ id: 3, name: 'Escola Nova' });
+  });
+
+  it('cria escola com plano escolhido', async () => {
+    const { app, prisma } = buildTestApp({ user: superAdmin });
+    prisma.user.findUnique.mockResolvedValueOnce({ ...superAdmin, school } as never).mockResolvedValueOnce(null);
+    prisma.school.create.mockResolvedValue({ ...school, id: 3, plan: 'ACADEMIC' });
+
+    const res = await request(app).post('/api/schools').set('Authorization', authHeader()).send({ name: 'Nova', email: 'n@e.com', plan: 'ACADEMIC' });
+
+    expect(res.status).toBe(201);
+    expect(prisma.school.create).toHaveBeenCalledWith({ data: { name: 'Nova', email: 'n@e.com', plan: 'ACADEMIC' } });
+    expect(res.body.modules).toEqual(['ACCESS', 'ACADEMIC']);
   });
 
   it('recusa e-mail de outra escola', async () => {
@@ -107,6 +121,59 @@ describe('Escolas (super admin)', () => {
     expect(res.status).toBe(200);
     expect(prisma.user.update).not.toHaveBeenCalled();
     expect(prisma.user.updateMany).not.toHaveBeenCalled();
+  });
+
+  it('editar ignora o plano enviado', async () => {
+    const { app, prisma } = buildTestApp({ user: superAdmin });
+    prisma.user.findUnique.mockResolvedValueOnce({ ...superAdmin, school } as never).mockResolvedValueOnce(null);
+    prisma.school.findUnique.mockResolvedValue(school);
+    prisma.school.update.mockResolvedValue(school);
+
+    const res = await request(app).put(`/api/schools/${school.id}`).set('Authorization', authHeader()).send({ name: 'X', email: 'x@e.com', plan: 'BASIC' });
+
+    expect(res.status).toBe(200);
+    expect(prisma.school.update).toHaveBeenCalledWith({ where: { id: school.id }, data: { name: 'X', email: 'x@e.com' } });
+  });
+
+  describe('PUT /api/schools/:id/plan', () => {
+    it('super admin troca o plano', async () => {
+      const { app, prisma } = buildTestApp({ user: superAdmin });
+      prisma.school.findUnique.mockResolvedValue(school);
+      prisma.school.update.mockResolvedValue({ ...school, plan: 'ATTENDANCE' });
+
+      const res = await request(app).put(`/api/schools/${school.id}/plan`).set('Authorization', authHeader()).send({ plan: 'ATTENDANCE' });
+
+      expect(res.status).toBe(200);
+      expect(prisma.school.update).toHaveBeenCalledWith({ where: { id: school.id }, data: { plan: 'ATTENDANCE' } });
+      expect(res.body.modules).toEqual(['ACCESS', 'ACADEMIC', 'ATTENDANCE']);
+    });
+
+    it('escola não troca o próprio plano', async () => {
+      const { app, prisma } = buildTestApp();
+
+      const res = await request(app).put('/api/schools/1/plan').set('Authorization', authHeader()).send({ plan: 'ATTENDANCE' });
+
+      expect(res.status).toBe(403);
+      expect(prisma.school.update).not.toHaveBeenCalled();
+    });
+
+    it('recusa plano inválido', async () => {
+      const { app } = buildTestApp({ user: superAdmin });
+
+      const res = await request(app).put('/api/schools/1/plan').set('Authorization', authHeader()).send({ plan: 'GOLD' });
+
+      expect(res.status).toBe(400);
+    });
+
+    it('escola inexistente retorna 404', async () => {
+      const { app, prisma } = buildTestApp({ user: superAdmin });
+      prisma.school.findUnique.mockResolvedValue(null);
+
+      const res = await request(app).put('/api/schools/99/plan').set('Authorization', authHeader()).send({ plan: 'BASIC' });
+
+      expect(res.status).toBe(404);
+      expect(prisma.school.update).not.toHaveBeenCalled();
+    });
   });
 
   it('excluir remove fotos do storage e a escola', async () => {

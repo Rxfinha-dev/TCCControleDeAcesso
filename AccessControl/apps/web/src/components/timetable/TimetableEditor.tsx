@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useReducer, useRef, useState, type CSSProperties } from 'react';
 import { classGroupsApi } from '../../api';
 import { errorMessage } from '../../api/client';
-import type { ClassGroup, ClassGroupDetail, TeacherConflict, TimetableBlockInput } from '../../api/types';
+import type { ClassGroup, ClassGroupWithAssignments, TeacherConflict, TimetableBlockInput } from '../../api/types';
 import { useToast } from '../../contexts/ToastContext';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { WEEKDAY_LABELS, formatDay, formatEndField, formatMinute, parseEndField, parseMinute } from '../../utils/academic';
@@ -13,7 +13,7 @@ const conflictText = (conflict: TeacherConflict) =>
   `${formatMinute(conflict.startMinute)}–${formatMinute(conflict.endMinute)}`;
 
 /** Editor da grade semanal da turma: agenda livre de arrastar (ou clicar), salva como a versão de hoje. */
-export function TimetableEditor({ classGroup }: { classGroup: ClassGroupDetail }) {
+export function TimetableEditor({ classGroup }: { classGroup: ClassGroupWithAssignments }) {
   const toast = useToast();
   const readOnly = useMediaQuery('(max-width: 899px)');
   const [blocks, dispatch] = useReducer(timetableReducer, []);
