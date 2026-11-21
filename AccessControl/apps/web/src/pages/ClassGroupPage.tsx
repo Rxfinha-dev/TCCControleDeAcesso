@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState, type CSSProperties, type FormEvent } 
 import { Link, useParams } from 'react-router';
 import { classGroupsApi, loginsApi, studentsApi, subjectsApi, teachersApi } from '../api';
 import { ApiError, errorMessage } from '../api/client';
-import type { ClassGroupDetail, ClassGroupStudent, Student, Subject, Teacher } from '../api/types';
+import type { ClassGroupDetail, ClassGroupStudent, ClassGroupWithAssignments, Student, Subject, Teacher } from '../api/types';
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import { LoginSheet, type LoginSheetRow } from '../components/LoginSheet';
 import { ArrowLeftIcon } from '../components/Icons';
@@ -27,6 +27,7 @@ export function ClassGroupPage() {
   const toast = useToast();
   const { hasModule } = useSchoolScope();
   const [group, setGroup] = useState<ClassGroupDetail | null>(null);
+  const full = group && { ...group, assignments: group.assignments ?? [] };
   const [tab, setTab] = useState<TabId>('alunos');
   const [notFound, setNotFound] = useState(false);
 
@@ -92,10 +93,10 @@ export function ClassGroupPage() {
       {hasModule('ACADEMIC') && (
         <>
           <div role="tabpanel" id="panel-disciplinas" aria-labelledby="tab-disciplinas" hidden={tab !== 'disciplinas'}>
-            {group && <AssignmentsTab group={{ ...group, assignments: group.assignments ?? [] }} onChange={loadGroup} />}
+            {full && <AssignmentsTab group={full} onChange={loadGroup} />}
           </div>
           <div role="tabpanel" id="panel-grade" aria-labelledby="tab-grade" hidden={tab !== 'grade'}>
-            {group && <TimetableEditor classGroup={group} />}
+            {full && <TimetableEditor classGroup={full} />}
           </div>
         </>
       )}
@@ -336,7 +337,7 @@ function StudentsTab({ classGroupId, onChange }: { classGroupId: number; onChang
   );
 }
 
-function AssignmentsTab({ group, onChange }: { group: ClassGroupDetail; onChange: () => Promise<void> }) {
+function AssignmentsTab({ group, onChange }: { group: ClassGroupWithAssignments; onChange: () => Promise<void> }) {
   const toast = useToast();
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [teachers, setTeachers] = useState<Teacher[]>([]);

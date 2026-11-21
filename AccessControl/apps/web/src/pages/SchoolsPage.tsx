@@ -89,7 +89,7 @@ export function SchoolsPage() {
 
   const openEdit = (school: SchoolSummary) => {
     setEditing(school);
-    setForm({ name: school.name, email: school.email });
+    setForm({ ...EMPTY_FORM, name: school.name, email: school.email });
     setFormOpen(true);
   };
 

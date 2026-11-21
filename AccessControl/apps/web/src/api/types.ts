@@ -186,6 +186,9 @@ export interface ClassGroupDetail extends ClassGroup {
   assignments?: TeachingAssignment[];
 }
 
+/** Turma com as disciplinas já garantidas (módulo acadêmico ativo). */
+export type ClassGroupWithAssignments = ClassGroupDetail & { assignments: TeachingAssignment[] };
+
 export interface ClassGroupStudent {
   id: number;
   name: string;
