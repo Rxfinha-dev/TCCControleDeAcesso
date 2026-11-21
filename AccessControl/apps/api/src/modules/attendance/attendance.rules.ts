@@ -2,8 +2,11 @@
 
 const MINUTES_PER_DAY = 24 * 60;
 
-/** Leitura feita até 1 minuto depois da anterior é o mesmo toque repetido (dedo duas vezes, clique duplo). */
-export const DUPLICATE_WINDOW_MINUTES = 1;
+/**
+ * Leitura feita a menos de 10 minutos da anterior é repetição (dedo de novo, manual seguido da digital).
+ * O registro de entradas usa a mesma janela para não gravar a repetida.
+ */
+export const DUPLICATE_WINDOW_MINUTES = 10;
 
 /** Faixa em que o aviso de "perto do limite" aparece: a menos de 5 pontos percentuais do mínimo. */
 export const NEAR_LIMIT_POINTS = 5;
@@ -16,7 +19,10 @@ export type Interval = readonly [start: number, end: number];
  */
 export function insideIntervals(readings: number[]): Interval[] {
   const sorted = [...readings].sort((a, b) => a - b);
-  const kept = sorted.filter((minute, index) => index === 0 || minute - sorted[index - 1] > DUPLICATE_WINDOW_MINUTES);
+  const kept: number[] = [];
+  for (const minute of sorted) {
+    if (kept.length === 0 || minute - kept[kept.length - 1] >= DUPLICATE_WINDOW_MINUTES) kept.push(minute);
+  }
   const intervals: Interval[] = [];
   for (let index = 0; index < kept.length; index += 2) {
     intervals.push([kept[index], kept[index + 1] ?? MINUTES_PER_DAY]);
