@@ -17,8 +17,12 @@ export function authRoutes(service: AuthService, requireAuth: RequestHandler) {
   });
 
   router.put('/password', apiRateLimit, requireAuth, async (req, res) => {
-    const { password } = z.object({ password: passwordSchema }).parse(req.body);
-    await service.changePassword(currentUser(res).userId, password);
+    const { currentPassword, password } = z
+      .object({ currentPassword: z.string().min(1, 'Informe a senha atual').max(72), password: passwordSchema })
+      .parse(req.body);
+    // requireAuth já conferiu o cabeçalho "Bearer <token>".
+    const token = req.headers.authorization!.split(' ')[1];
+    await service.changePassword(currentUser(res).userId, token, currentPassword, password);
     res.status(204).end();
   });
 

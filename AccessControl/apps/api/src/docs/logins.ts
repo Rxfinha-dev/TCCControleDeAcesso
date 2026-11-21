@@ -92,9 +92,22 @@ export function loginsPaths({ ref, json, errorResponse, authErrors, validationEr
         summary: 'Professor ou aluno troca a própria senha',
         description:
           'Obrigatório no primeiro acesso: até lá as outras rotas respondem `PASSWORD_CHANGE_REQUIRED`. ' +
+          'Exige a senha atual (`INVALID_CURRENT_PASSWORD` se estiver errada) e encerra as outras sessões do usuário. ' +
           'Escola e super admin recebem 403 (`PASSWORD_CHANGE_NOT_ALLOWED`): trocam a senha pelo Supabase, com código por e-mail.',
-        requestBody: { required: true, content: json({ type: 'object', required: ['password'], properties: { password } }) },
-        responses: { 204: { description: 'Senha trocada' }, 400: validationError, ...authErrors },
+        requestBody: {
+          required: true,
+          content: json({
+            type: 'object',
+            required: ['currentPassword', 'password'],
+            properties: { currentPassword: { type: 'string', maxLength: 72 }, password },
+          }),
+        },
+        responses: {
+          204: { description: 'Senha trocada; as outras sessões foram encerradas' },
+          400: validationError,
+          503: unavailable,
+          ...authErrors,
+        },
       },
     },
   };

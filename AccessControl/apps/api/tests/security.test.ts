@@ -120,7 +120,7 @@ describe('Segurança: escalada de perfil', () => {
 
   it('login de escola não troca a senha só com a sessão aberta', async () => {
     const { app, identity } = buildTestApp();
-    const res = await request(app).put('/api/auth/password').set('Authorization', authHeader()).send({ password: 'novasenha123' });
+    const res = await request(app).put('/api/auth/password').set('Authorization', authHeader()).send({ currentPassword: 'senha-atual-1', password: 'novasenha123' });
     expect(res.status).toBe(403);
     expect(identity.passwords.size).toBe(0);
   });

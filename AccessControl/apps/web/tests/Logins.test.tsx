@@ -47,6 +47,7 @@ describe('Primeiro acesso', () => {
 
     expect(await screen.findByRole('heading', { name: 'Crie sua senha' })).toBeInTheDocument();
     expect(screen.getByText('ana.prado@etec-jau')).toBeInTheDocument();
+    await userEvent.type(screen.getByLabelText('Senha atual'), 'k7pmx3qa');
     await userEvent.type(screen.getByLabelText('Nova senha'), 'minhasenha1');
     await userEvent.type(screen.getByLabelText('Repita a nova senha'), 'outra');
     await userEvent.click(screen.getByRole('button', { name: 'Salvar senha' }));
@@ -57,7 +58,7 @@ describe('Primeiro acesso', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Salvar senha' }));
 
     expect(await screen.findByRole('heading', { name: 'Olá, Ana' })).toBeInTheDocument();
-    expect(bodyOf(callsTo(fetchMock, '/auth/password', 'PUT')[0])).toEqual({ password: 'minhasenha1' });
+    expect(bodyOf(callsTo(fetchMock, '/auth/password', 'PUT')[0])).toEqual({ currentPassword: 'k7pmx3qa', password: 'minhasenha1' });
   });
 });
 

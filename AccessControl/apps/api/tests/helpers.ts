@@ -45,6 +45,17 @@ export class FakeIdentity implements IdentityProvider {
   async deleteUser(authUserId: string) {
     this.deleted.push(authUserId);
   }
+  /** Senha atual aceita por verifyPassword e tokens cujas outras sessões foram encerradas. */
+  currentPassword = 'senha-atual-1';
+  checkedPasswords: { email: string; password: string }[] = [];
+  signedOutOthers: string[] = [];
+  async verifyPassword(email: string, password: string) {
+    this.checkedPasswords.push({ email, password });
+    return password === this.currentPassword;
+  }
+  async signOutOthers(token: string) {
+    this.signedOutOthers.push(token);
+  }
 }
 
 export class MemoryStorage implements PhotoStorage {

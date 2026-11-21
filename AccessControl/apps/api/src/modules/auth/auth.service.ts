@@ -1,6 +1,6 @@
 import { Prisma, UserRole, type SchoolPlan, type PrismaClient, type School, type User } from '@prisma/client';
 import { env } from '../../config/env';
-import { conflict, forbidden, notFound, unauthorized } from '../../lib/errors';
+import { badRequest, conflict, forbidden, notFound, unauthorized } from '../../lib/errors';
 import { isLoginEmail } from '../../lib/logins';
 import { modulesOf, type Module } from '../../lib/plans';
 import type { IdentityProvider } from '../../services/identity';
@@ -62,15 +62,22 @@ export class AuthService {
     };
   }
 
-  /** O próprio usuário troca a senha (obrigatório no primeiro acesso de professor e aluno). */
-  async changePassword(userId: number, password: string) {
+  /**
+   * O próprio usuário troca a senha (obrigatório no primeiro acesso de professor e aluno). Exige a senha atual
+   * (token roubado não basta) e derruba as outras sessões (quem entrou com a senha inicial não continua logado).
+   */
+  async changePassword(userId: number, token: string, currentPassword: string, password: string) {
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
     if (!user) throw notFound('Usuário não encontrado');
     // Escola e super admin trocam a senha pelo Supabase (código por e-mail): aqui bastaria uma sessão aberta.
     if (user.username === null) {
       throw forbidden('Troque a sua senha em "Esqueci minha senha", na tela de login.', 'PASSWORD_CHANGE_NOT_ALLOWED');
     }
+    if (!(await this.identity.verifyPassword(user.email, currentPassword))) {
+      throw badRequest('Senha atual incorreta.', 'INVALID_CURRENT_PASSWORD');
+    }
     await this.identity.setPassword(user.authUserId, password);
+    await this.identity.signOutOthers(token);
     await this.prisma.user.update({ where: { id: userId }, data: { mustChangePassword: false } });
   }
 
