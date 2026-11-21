@@ -6,6 +6,7 @@ import type { ClassGroup, Course, Shift } from '../api/types';
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import { PageHeader } from '../components/PageHeader';
 import { useToast } from '../contexts/ToastContext';
+import { useLatestRequest } from '../hooks/useLatestRequest';
 import { SHIFT_LABELS, currentSchoolYear } from '../utils/academic';
 import { SkeletonRows } from '../components/Skeleton';
 
@@ -30,16 +31,19 @@ export function ClassGroupsPage() {
   const [copying, setCopying] = useState(false);
   const [copyResult, setCopyResult] = useState<{ created: number; skipped: string[] } | null>(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const beginLoad = useLatestRequest();
 
   const load = useCallback(async () => {
+    const isCurrent = beginLoad();
     try {
-      setGroups(await classGroupsApi.list(year));
+      const result = await classGroupsApi.list(year);
+      if (isCurrent()) setGroups(result);
     } catch (err) {
-      toast.error(errorMessage(err));
+      if (isCurrent()) toast.error(errorMessage(err));
     } finally {
-      setLoading(false);
+      if (isCurrent()) setLoading(false);
     }
-  }, [toast, year]);
+  }, [toast, year, beginLoad]);
 
   useEffect(() => {
     void load();

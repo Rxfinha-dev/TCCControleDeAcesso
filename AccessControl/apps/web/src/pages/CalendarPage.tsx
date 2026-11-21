@@ -6,6 +6,7 @@ import { ConfirmDialog } from '../components/ConfirmDialog';
 import { PageHeader } from '../components/PageHeader';
 import { SkeletonRows } from '../components/Skeleton';
 import { useToast } from '../contexts/ToastContext';
+import { useLatestRequest } from '../hooks/useLatestRequest';
 import { currentSchoolYear, formatDay } from '../utils/academic';
 
 type TermDates = { startDate: string; endDate: string }[];
@@ -24,10 +25,13 @@ export function CalendarPage() {
   const [day, setDay] = useState(EMPTY_DAY);
   const [saving, setSaving] = useState(false);
   const [removing, setRemoving] = useState<NoClassDay | null>(null);
+  const beginLoad = useLatestRequest();
 
   const load = useCallback(async () => {
+    const isCurrent = beginLoad();
     try {
       const data = await calendarApi.get(year);
+      if (!isCurrent()) return;
       setCalendar(data);
       setTerms(
         EMPTY_TERMS.map((empty, index) => {
@@ -36,14 +40,19 @@ export function CalendarPage() {
         }),
       );
     } catch (err) {
+      if (!isCurrent()) return;
       setFailed(true);
       toast.error(errorMessage(err));
     }
-  }, [toast, year]);
+  }, [toast, year, beginLoad]);
 
   const loading = calendar === null && !failed;
 
+  // Troca de ano: limpa o ano anterior para não salvar as datas dele no ano novo.
   useEffect(() => {
+    setCalendar(null);
+    setFailed(false);
+    setTerms(EMPTY_TERMS);
     void load();
   }, [load]);
 

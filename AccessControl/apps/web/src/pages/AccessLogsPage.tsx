@@ -29,19 +29,24 @@ export function AccessLogsPage() {
   );
 
   useEffect(() => {
+    let active = true;
     const timer = setTimeout(async () => {
       setLoading(true);
       try {
         const result = await accessLogsApi.list({ ...filters(), page, pageSize: PAGE_SIZE });
+        if (!active) return;
         setLogs(result.items);
         setTotal(result.total);
       } catch (err) {
-        toast.error(errorMessage(err));
+        if (active) toast.error(errorMessage(err));
       } finally {
-        setLoading(false);
+        if (active) setLoading(false);
       }
     }, 250);
-    return () => clearTimeout(timer);
+    return () => {
+      active = false;
+      clearTimeout(timer);
+    };
   }, [filters, page, toast]);
 
   async function handleExport() {

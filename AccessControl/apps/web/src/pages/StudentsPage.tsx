@@ -10,6 +10,7 @@ import { ReaderSchoolBanner } from '../components/ReaderSchoolBanner';
 import { StudentPhoto } from '../components/StudentPhoto';
 import { useSerial } from '../contexts/SerialContext';
 import { useToast } from '../contexts/ToastContext';
+import { useLatestRequest } from '../hooks/useLatestRequest';
 import { useFingerprintEnrollment } from '../hooks/useFingerprintEnrollment';
 import { YEAR_OPTIONS, initials, yearLabel } from '../utils/format';
 import { SkeletonRows } from '../components/Skeleton';
@@ -44,16 +45,19 @@ export function StudentsPage() {
     toast.success(`Digital de ${student.name} cadastrada!`);
   });
 
+  const beginLoad = useLatestRequest();
   const load = useCallback(async (term = '') => {
+    const isCurrent = beginLoad();
     setLoading(true);
     try {
-      setStudents(await studentsApi.list(term));
+      const result = await studentsApi.list(term);
+      if (isCurrent()) setStudents(result);
     } catch (err) {
-      toast.error(errorMessage(err));
+      if (isCurrent()) toast.error(errorMessage(err));
     } finally {
-      setLoading(false);
+      if (isCurrent()) setLoading(false);
     }
-  }, [toast]);
+  }, [toast, beginLoad]);
 
   useEffect(() => {
     coursesApi.list().then(setCourses).catch((err) => toast.error(errorMessage(err)));

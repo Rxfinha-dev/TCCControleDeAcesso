@@ -6,6 +6,7 @@ import { ConfirmDialog } from '../components/ConfirmDialog';
 import { PageHeader } from '../components/PageHeader';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
+import { useLatestRequest } from '../hooks/useLatestRequest';
 import { SkeletonRows } from '../components/Skeleton';
 
 const ROLE_LABELS: Record<UserRole, string> = {
@@ -33,15 +34,18 @@ export function UsersPage() {
   const [role, setRole] = useState<UserRole | ''>('');
   const [pending, setPending] = useState<PendingChange | null>(null);
 
+  const beginLoad = useLatestRequest();
   const load = useCallback(async () => {
+    const isCurrent = beginLoad();
     try {
-      setUsers(await usersApi.list({ search: search.trim() || undefined, role: role || undefined }));
+      const result = await usersApi.list({ search: search.trim() || undefined, role: role || undefined });
+      if (isCurrent()) setUsers(result);
     } catch (err) {
-      toast.error(errorMessage(err));
+      if (isCurrent()) toast.error(errorMessage(err));
     } finally {
-      setLoading(false);
+      if (isCurrent()) setLoading(false);
     }
-  }, [search, role, toast]);
+  }, [search, role, toast, beginLoad]);
 
   useEffect(() => {
     // Pequena espera para não consultar a cada tecla digitada na busca.

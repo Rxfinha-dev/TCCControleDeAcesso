@@ -15,6 +15,7 @@ import { PageHeader } from '../components/PageHeader';
 import { SkeletonCard } from '../components/Skeleton';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
+import { useLatestRequest } from '../hooks/useLatestRequest';
 import { CANCELLATION_LABELS, currentSchoolYear, dayMessage, formatMinute, todayIso } from '../utils/academic';
 
 const TABS = [
@@ -66,6 +67,7 @@ export function AttendancePage() {
   const [dayFailed, setDayFailed] = useState(false);
   const [summaryFailed, setSummaryFailed] = useState(false);
   const [groupsLoaded, setGroupsLoaded] = useState(false);
+  const beginDayLoad = useLatestRequest();
 
   useEffect(() => {
     (isTeacher ? attendanceApi.myLessons().then((data) => data.classGroups) : classGroupsApi.list(currentSchoolYear()))
@@ -79,13 +81,16 @@ export function AttendancePage() {
 
   const loadDay = useCallback(async () => {
     if (classGroupId === null || !date) return;
+    const isCurrent = beginDayLoad();
     try {
-      setDay(await attendanceApi.day(classGroupId, date));
+      const result = await attendanceApi.day(classGroupId, date);
+      if (isCurrent()) setDay(result);
     } catch (err) {
+      if (!isCurrent()) return;
       setDayFailed(true);
       toast.error(errorMessage(err));
     }
-  }, [classGroupId, date, toast]);
+  }, [classGroupId, date, toast, beginDayLoad]);
 
   useEffect(() => {
     setDay(null);
@@ -97,13 +102,18 @@ export function AttendancePage() {
     if (tab !== 'frequencia' || classGroupId === null) return;
     setSummary(null);
     setSummaryFailed(false);
+    let active = true;
     attendanceApi
       .summary(classGroupId, term || undefined)
-      .then(setSummary)
+      .then((result) => active && setSummary(result))
       .catch((err) => {
+        if (!active) return;
         setSummaryFailed(true);
         toast.error(errorMessage(err));
       });
+    return () => {
+      active = false;
+    };
   }, [tab, classGroupId, term, toast]);
 
   /** Grava uma correção e recarrega a chamada. */

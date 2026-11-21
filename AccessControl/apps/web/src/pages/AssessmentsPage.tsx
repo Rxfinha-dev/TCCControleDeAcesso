@@ -18,6 +18,7 @@ import { PageHeader } from '../components/PageHeader';
 import { SkeletonCard } from '../components/Skeleton';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
+import { useLatestRequest } from '../hooks/useLatestRequest';
 import { currentSchoolYear, formatDay, formatMinute, KIND_LABELS, todayIso } from '../utils/academic';
 
 const TABS = [
@@ -73,6 +74,8 @@ export function AssessmentsPage() {
   const [invalidGrades, setInvalidGrades] = useState<number[]>([]);
   const [report, setReport] = useState<GradesReport | null>(null);
   const [reportSubjectId, setReportSubjectId] = useState<number | null>(null);
+  const beginLoad = useLatestRequest();
+  const beginGradesLoad = useLatestRequest();
 
   useEffect(() => {
     (isTeacher ? attendanceApi.myLessons().then((result) => result.classGroups) : classGroupsApi.list(currentSchoolYear()))
@@ -86,24 +89,28 @@ export function AssessmentsPage() {
 
   const load = useCallback(async () => {
     if (classGroupId === null) return;
+    const isCurrent = beginLoad();
     try {
       const result = await assessmentsApi.list(classGroupId);
+      if (!isCurrent()) return;
       setData(result);
       setForm((current) => (current.subjectId ? current : { ...current, subjectId: result.subjects[0]?.id ?? 0 }));
     } catch (err) {
+      if (!isCurrent()) return;
       setDataFailed(true);
       toast.error(errorMessage(err));
     }
-  }, [classGroupId, toast]);
+  }, [classGroupId, toast, beginLoad]);
 
   useEffect(() => {
     setData(null);
     setDataFailed(false);
     setSelected(null);
     setGrades(null);
+    beginGradesLoad(); // descarta as notas de outra turma ainda a caminho
     setForm(emptyForm());
     void load();
-  }, [load]);
+  }, [load, beginGradesLoad]);
 
   // Prova acontece numa aula: busca as aulas da disciplina no dia escolhido.
   useEffect(() => {
@@ -125,16 +132,22 @@ export function AssessmentsPage() {
     if (tab !== 'medias' || classGroupId === null) return;
     setReport(null);
     setReportFailed(false);
+    let active = true;
     assessmentsApi
       .report(classGroupId)
       .then((result) => {
+        if (!active) return;
         setReport(result);
         setReportSubjectId((current) => (result.subjects.some((subject) => subject.id === current) ? current : (result.subjects[0]?.id ?? null)));
       })
       .catch((err) => {
+        if (!active) return;
         setReportFailed(true);
         toast.error(errorMessage(err));
       });
+    return () => {
+      active = false;
+    };
   }, [tab, classGroupId, toast]);
 
   const clear = () => {
@@ -196,8 +209,10 @@ export function AssessmentsPage() {
   }
 
   async function openGrades(assessment: Assessment) {
+    const isCurrent = beginGradesLoad();
     try {
       const result = await assessmentsApi.grades(assessment.id);
+      if (!isCurrent()) return;
       setGrades(result);
       setInvalidGrades([]);
       setValues(Object.fromEntries(result.students.map((student) => [student.id, student.value === null ? '' : String(student.value)])));
