@@ -48,6 +48,7 @@ export function AssessmentsPage() {
   const toast = useToast();
   const isTeacher = useAuth().user?.role === 'TEACHER';
   const [groups, setGroups] = useState<Pick<ClassGroup, 'id' | 'name'>[] | null>(null);
+  const [groupsLoaded, setGroupsLoaded] = useState(false);
   const [classGroupId, setClassGroupId] = useState<number | null>(null);
   const [tab, setTab] = useState<TabId>('avaliacoes');
   const [data, setData] = useState<AssessmentList | null>(null);
@@ -69,7 +70,8 @@ export function AssessmentsPage() {
         setGroups(list);
         setClassGroupId((current) => current ?? list[0]?.id ?? null);
       })
-      .catch((err) => toast.error(errorMessage(err)));
+      .catch((err) => toast.error(errorMessage(err)))
+      .finally(() => setGroupsLoaded(true));
   }, [isTeacher, toast]);
 
   const load = useCallback(async () => {
@@ -266,7 +268,7 @@ export function AssessmentsPage() {
           </div>
 
           <div role="tabpanel" id="panel-avaliacoes" aria-labelledby="tab-avaliacoes" hidden={tab !== 'avaliacoes'}>
-            {classGroupId !== null && !data && !dataFailed && <SkeletonCard lines={4} />}
+            {((classGroupId === null && !groupsLoaded) || (classGroupId !== null && !data && !dataFailed)) && <SkeletonCard lines={4} />}
             {data?.subjects.length === 0 && (
               <p className="banner">
                 Esta turma ainda não tem disciplina com professor atribuído. Sem isso não dá para marcar avaliação.

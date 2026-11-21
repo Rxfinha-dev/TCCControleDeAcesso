@@ -65,6 +65,7 @@ export function AttendancePage() {
   const [saving, setSaving] = useState(false);
   const [dayFailed, setDayFailed] = useState(false);
   const [summaryFailed, setSummaryFailed] = useState(false);
+  const [groupsLoaded, setGroupsLoaded] = useState(false);
 
   useEffect(() => {
     (isTeacher ? attendanceApi.myLessons().then((data) => data.classGroups) : classGroupsApi.list(currentSchoolYear()))
@@ -72,7 +73,8 @@ export function AttendancePage() {
         setGroups(list);
         setClassGroupId((current) => current ?? list[0]?.id ?? null);
       })
-      .catch((err) => toast.error(errorMessage(err)));
+      .catch((err) => toast.error(errorMessage(err)))
+      .finally(() => setGroupsLoaded(true));
   }, [isTeacher, toast]);
 
   const loadDay = useCallback(async () => {
@@ -187,7 +189,7 @@ export function AttendancePage() {
                 )}
               </p>
             )}
-            {classGroupId !== null && !!date && !day && !dayFailed && <SkeletonCard lines={4} />}
+            {((classGroupId === null && !groupsLoaded) || (classGroupId !== null && !!date && !day && !dayFailed)) && <SkeletonCard lines={4} />}
             {day && !message && day.lessons.length === 0 && <p className="banner">Esta turma não tem aula neste dia.</p>}
             {day && day.lessons.length > 0 && (
               <section className="card">
