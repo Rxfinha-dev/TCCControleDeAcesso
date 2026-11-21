@@ -54,12 +54,26 @@ function ComingSoonPage() {
 }
 
 function RequireAuth() {
-  const { user, loading } = useAuth();
+  const { user, loading, loadFailed, retry, logout } = useAuth();
   const location = useLocation();
   if (loading) {
     return (
       <div className="splash">
         <Logo variant="auto" />
+      </div>
+    );
+  }
+  if (loadFailed) {
+    return (
+      <div className="splash">
+        <Logo variant="auto" />
+        <p role="alert">Não foi possível conectar ao servidor.</p>
+        <button type="button" className="btn btn-primary" onClick={() => void retry()}>
+          Tentar de novo
+        </button>
+        <button type="button" className="btn btn-outline" onClick={() => void logout()}>
+          Sair
+        </button>
       </div>
     );
   }
