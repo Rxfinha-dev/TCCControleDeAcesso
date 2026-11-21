@@ -98,6 +98,82 @@ describe('Alunos', () => {
     expect(res.body.code).toBe('PHOTO_REQUIRED');
   });
 
+  it('curso acima do limite de INT4 é 400, não erro do banco', async () => {
+    const { app, prisma } = buildTestApp();
+
+    const list = await request(app).get('/api/students?courseId=99999999999').set('Authorization', authHeader());
+    const create = await request(app)
+      .post('/api/students')
+      .set('Authorization', authHeader())
+      .field('name', 'Ana Souza')
+      .field('rm', '24001')
+      .field('age', '16')
+      .field('courseId', '2147483648');
+
+    expect(list.status).toBe(400);
+    expect(create.status).toBe(400);
+    expect(prisma.student.findMany).not.toHaveBeenCalled();
+    expect(prisma.student.create).not.toHaveBeenCalled();
+  });
+
+  it('mensagens de validação saem em português', async () => {
+    const { app } = buildTestApp();
+
+    const res = await request(app).get('/api/students?search=' + 'a'.repeat(101)).set('Authorization', authHeader());
+
+    expect(res.status).toBe(400);
+    expect(res.body.message).toMatch(/^Demasiado grande/);
+  });
+
+  it('recusa formulário com campos demais (multipart)', async () => {
+    const { app, prisma } = buildTestApp();
+    let req = request(app).post('/api/students').set('Authorization', authHeader());
+    for (let index = 0; index < 30; index += 1) req = req.field(`extra${index}`, 'x');
+
+    const res = await req;
+
+    expect(res.status).toBe(400);
+    expect(res.body.code).toBe('UPLOAD_ERROR');
+    expect(prisma.student.create).not.toHaveBeenCalled();
+  });
+
+  it('recusa campo de texto grande demais no multipart', async () => {
+    const { app } = buildTestApp();
+    const res = await request(app).post('/api/students').set('Authorization', authHeader()).field('name', 'a'.repeat(10_000));
+    expect(res.status).toBe(400);
+    expect(res.body.code).toBe('UPLOAD_ERROR');
+  });
+
+  it('recusa arquivo declarado como imagem cujo conteúdo não é imagem', async () => {
+    const { app, prisma, storage } = buildTestApp();
+    prisma.course.findFirst.mockResolvedValue(course);
+    prisma.student.findFirst.mockResolvedValue(null);
+
+    const res = await request(app)
+      .post('/api/students')
+      .set('Authorization', authHeader())
+      .field('name', 'Ana Souza')
+      .field('rm', '24001')
+      .field('age', '16')
+      .attach('photo', Buffer.from('<html><script>alert(1)</script></html>'), { filename: 'a.png', contentType: 'image/png' });
+
+    expect(res.status).toBe(400);
+    expect(res.body.code).toBe('INVALID_PHOTO');
+    expect(prisma.student.create).not.toHaveBeenCalled();
+    expect(storage.photos.size).toBe(0);
+  });
+
+  it('recusa JPEG declarado como PNG (o tipo servido depois seria errado)', async () => {
+    const { app } = buildTestApp();
+    const res = await request(app)
+      .post('/api/students')
+      .set('Authorization', authHeader())
+      .field('name', 'Ana Souza')
+      .attach('photo', Buffer.from('ffd8ffe000104a464946', 'hex'), { filename: 'a.png', contentType: 'image/png' });
+    expect(res.status).toBe(400);
+    expect(res.body.code).toBe('INVALID_PHOTO');
+  });
+
   it('recusa arquivo que não é imagem', async () => {
     const { app } = buildTestApp();
     const res = await request(app)

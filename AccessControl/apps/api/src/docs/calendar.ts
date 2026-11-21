@@ -76,7 +76,8 @@ export function calendarPaths({ ref, json, errorResponse, authErrors, validation
       put: {
         tags: [TAG],
         summary: 'Define os 4 bimestres do ano letivo (substitui os anteriores)',
-        description: 'Os bimestres precisam estar em ordem e não podem se sobrepor. Semestres são derivados (1º+2º e 3º+4º).',
+        description:
+          'Os bimestres precisam estar em ordem, dentro do ano letivo (TERM_OUT_OF_YEAR) e não podem se sobrepor. Semestres são derivados (1º+2º e 3º+4º).',
         parameters: [{ name: 'schoolYear', in: 'path', required: true, schema: { type: 'integer', example: 2026 } }],
         requestBody: {
           required: true,

@@ -11,6 +11,7 @@ import { firstName } from '../utils/format';
 export function ChangePasswordPage() {
   const { user, loadUser, logout } = useAuth();
   const toast = useToast();
+  const [currentPassword, setCurrentPassword] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -29,7 +30,7 @@ export function ChangePasswordPage() {
     }
     setSaving(true);
     try {
-      await authApi.changePassword(password);
+      await authApi.changePassword(currentPassword, password);
       toast.success('Senha criada! Use a nova senha nos próximos acessos.');
       await loadUser();
     } catch (err) {
@@ -49,6 +50,16 @@ export function ChangePasswordPage() {
             Seu usuário: <strong className="mono">{user.username}</strong>
           </p>
         )}
+        <label className="field">
+          <span>Senha atual</span>
+          <PasswordInput
+            autoComplete="current-password"
+            placeholder="A senha que a escola entregou"
+            value={currentPassword}
+            onChange={(event) => setCurrentPassword(event.target.value)}
+            required
+          />
+        </label>
         <label className="field">
           <span>Nova senha</span>
           <PasswordInput
@@ -70,7 +81,7 @@ export function ChangePasswordPage() {
           </p>
         )}
 
-        <button type="submit" className="btn btn-primary btn-block" disabled={saving || !password || !confirm}>
+        <button type="submit" className="btn btn-primary btn-block" disabled={saving || !currentPassword || !password || !confirm}>
           {saving ? 'Salvando...' : 'Salvar senha'}
         </button>
         <button type="button" className="btn btn-outline btn-block" onClick={() => void logout()}>

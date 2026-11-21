@@ -1,5 +1,5 @@
 import { addDays, minuteOfDayInSaoPaulo, saoPauloDayStart, weekdayOf } from '../src/lib/dates';
-import { attendanceStatus, insideIntervals, isPresent, percent } from '../src/modules/attendance/attendance.rules';
+import { attendanceStatus, attendanceStatusOf, insideIntervals, isPresent, percent } from '../src/modules/attendance/attendance.rules';
 import { classifyDay } from '../src/modules/calendar/calendar.service';
 
 const at = (hhmm: string) => {
@@ -19,12 +19,13 @@ describe('Regras da presença', () => {
     expect(insideIntervals([at('07:10')])).toEqual([[at('07:10'), 1440]]);
   });
 
-  it('ignora leitura repetida até 1 minuto depois da anterior', () => {
-    // 07:00, 07:00:40 (repetida) e 07:01:30 (repetida da repetida): sobra só a entrada.
-    expect(insideIntervals([420, 420 + 40 / 60, 420 + 90 / 60])).toEqual([[420, 1440]]);
-    // Exatamente 1 minuto ainda é repetida; passou disso, é saída.
-    expect(insideIntervals([420, 421])).toEqual([[420, 1440]]);
-    expect(insideIntervals([420, 421.5])).toEqual([[420, 421.5]]);
+  it('ignora leitura repetida a menos de 10 minutos da anterior considerada', () => {
+    // 07:00, 07:05 (repetida) e 07:09 (repetida): sobra só a entrada.
+    expect(insideIntervals([at('07:00'), at('07:05'), at('07:09')])).toEqual([[at('07:00'), 1440]]);
+    // A janela conta a partir da última leitura considerada: 07:08 é repetida, 07:12 já é saída.
+    expect(insideIntervals([at('07:00'), at('07:08'), at('07:12')])).toEqual([[at('07:00'), at('07:12')]]);
+    // Exatamente 10 minutos já é outra leitura (a API só deduplica abaixo disso).
+    expect(insideIntervals([at('07:00'), at('07:10')])).toEqual([[at('07:00'), at('07:10')]]);
   });
 
   it('ordena as leituras antes de parear', () => {
@@ -64,6 +65,11 @@ describe('Regras da presença', () => {
     expect(attendanceStatus(79.9, 75)).toBe('NEAR'); // a menos de 5 pontos do mínimo
     expect(attendanceStatus(75, 75)).toBe('NEAR');
     expect(attendanceStatus(74.9, 75)).toBe('BELOW');
+    // 377 de 503 = 74,95%: aparece como 75,0, mas está abaixo do mínimo (compara sem arredondar).
+    expect(percent(377, 503)).toBe(75);
+    expect(attendanceStatusOf(377, 503, 75)).toBe('BELOW');
+    expect(attendanceStatusOf(3, 4, 75)).toBe('NEAR');
+    expect(attendanceStatusOf(0, 0, 75)).toBe('OK');
   });
 });
 

@@ -129,6 +129,8 @@ export interface Stats {
 export interface EntryResult {
   log: AccessLog;
   student: Student;
+  /** true: o aluno já teve leitura há menos de 10 min; a API não gravou outra e `log` é a anterior. */
+  duplicate?: boolean;
 }
 
 /* Módulo acadêmico: disciplinas, professores, turmas e grade. */

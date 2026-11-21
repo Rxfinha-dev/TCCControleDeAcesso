@@ -18,11 +18,12 @@ const envSchema = z.object({
   SUPABASE_SERVICE_ROLE_KEY: z.string().optional(),
   SUPABASE_STORAGE_BUCKET: z.string().default('student-photos'),
 
-  // E-mail que nasce SUPER_ADMIN no primeiro login (bootstrap do primeiro super admin).
+  // Opcional: e-mail que nasce SUPER_ADMIN no primeiro login, só enquanto não existe nenhum super admin.
+  // Sem ela (ou vazia), não há bootstrap.
   SUPER_ADMIN_BOOTSTRAP_EMAIL: z
-    .email()
-    .default('rafaelhenriqueoliveira1234@gmail.com')
-    .transform((email) => email.toLowerCase()),
+    .union([z.literal(''), z.email()])
+    .optional()
+    .transform((email) => (email ? email.toLowerCase() : undefined)),
 });
 
 const parsed = envSchema.safeParse(process.env);

@@ -1,7 +1,8 @@
 import { Prisma, UserRole, type SchoolPlan, type PrismaClient, type School, type User } from '@prisma/client';
 import { env } from '../../config/env';
-import { conflict, forbidden, notFound, unauthorized } from '../../lib/errors';
+import { badRequest, conflict, forbidden, notFound, unauthorized } from '../../lib/errors';
 import { isLoginEmail } from '../../lib/logins';
+import { logger } from '../../lib/logger';
 import { modulesOf, type Module } from '../../lib/plans';
 import type { IdentityProvider } from '../../services/identity';
 
@@ -62,16 +63,28 @@ export class AuthService {
     };
   }
 
-  /** O próprio usuário troca a senha (obrigatório no primeiro acesso de professor e aluno). */
-  async changePassword(userId: number, password: string) {
+  /**
+   * O próprio usuário troca a senha (obrigatório no primeiro acesso de professor e aluno). Exige a senha atual
+   * (token roubado não basta) e derruba as outras sessões (quem entrou com a senha inicial não continua logado).
+   */
+  async changePassword(userId: number, token: string, currentPassword: string, password: string) {
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
     if (!user) throw notFound('Usuário não encontrado');
     // Escola e super admin trocam a senha pelo Supabase (código por e-mail): aqui bastaria uma sessão aberta.
     if (user.username === null) {
       throw forbidden('Troque a sua senha em "Esqueci minha senha", na tela de login.', 'PASSWORD_CHANGE_NOT_ALLOWED');
     }
+    if (!(await this.identity.verifyPassword(user.email, currentPassword))) {
+      throw badRequest('Senha atual incorreta.', 'INVALID_CURRENT_PASSWORD');
+    }
     await this.identity.setPassword(user.authUserId, password);
     await this.prisma.user.update({ where: { id: userId }, data: { mustChangePassword: false } });
+    // A senha já mudou: falhar aqui faria o usuário repetir a troca com uma "senha atual" que não vale mais.
+    try {
+      await this.identity.signOutOthers(token);
+    } catch (err) {
+      logger.warn({ err, userId }, 'troca de senha: não foi possível encerrar as outras sessões');
+    }
   }
 
   private findByAuthUserId(authUserId: string) {
@@ -81,7 +94,7 @@ export class AuthService {
   /**
    * Primeiro acesso do usuário: confirma no Supabase que o e-mail foi verificado e
    * vincula a escola já existente com esse e-mail (ex.: criada pelo super admin) ou
-   * cria uma escola nova (auto-cadastro). O e-mail de bootstrap nasce SUPER_ADMIN.
+   * cria uma escola nova (auto-cadastro). O e-mail de bootstrap nasce SUPER_ADMIN se ainda não houver nenhum.
    */
   private async provision(token: string): Promise<AuthenticatedUser> {
     const authUser = await this.identity.getUser(token);
@@ -93,7 +106,13 @@ export class AuthService {
     const email = authUser.email.toLowerCase();
     // Login de professor/aluno sem usuário no banco (cadastro excluído): não pode virar escola nova.
     if (isLoginEmail(email)) throw unauthorized('Este login foi desativado pela escola.', 'LOGIN_DISABLED');
-    const role = email === env.SUPER_ADMIN_BOOTSTRAP_EMAIL ? UserRole.SUPER_ADMIN : UserRole.SCHOOL;
+    // Bootstrap vale uma vez só: com um super admin já existente, o e-mail entra como escola comum
+    // (senão, um super admin rebaixado voltaria a ser promovido no próximo login).
+    const bootstrap =
+      env.SUPER_ADMIN_BOOTSTRAP_EMAIL !== undefined &&
+      email === env.SUPER_ADMIN_BOOTSTRAP_EMAIL &&
+      (await this.prisma.user.count({ where: { role: UserRole.SUPER_ADMIN } })) === 0;
+    const role = bootstrap ? UserRole.SUPER_ADMIN : UserRole.SCHOOL;
     const base = { authUserId: authUser.userId, email, name: (authUser.name ?? email).slice(0, 100), role };
 
     try {

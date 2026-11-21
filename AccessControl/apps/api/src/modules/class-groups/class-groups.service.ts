@@ -114,6 +114,8 @@ export class ClassGroupsService {
     const toCopy = sources.filter((source) => !taken.has(source.name.toLocaleLowerCase('pt-BR')));
     const skipped = sources.filter((source) => !toCopy.includes(source)).map((source) => source.name);
 
+    // Algumas idas ao banco por turma copiada: o timeout padrão de 5 s do Prisma não basta com o banco longe.
+    // shortcut: timeout maior em vez de consultas em lote; trocar por createManyAndReturn se a cópia crescer.
     await this.prisma.$transaction(async (tx) => {
       for (const source of toCopy) {
         const created = await tx.classGroup.create({
@@ -142,7 +144,7 @@ export class ClassGroupsService {
           }
         }
       }
-    });
+    }, { maxWait: 10_000, timeout: 30_000 });
     return { created: toCopy.length, skipped };
   }
 

@@ -3,3 +3,4 @@ process.env.DATABASE_URL = process.env.DATABASE_URL ?? 'postgresql://test:test@l
 process.env.SUPABASE_URL = 'https://test-project.supabase.co';
 process.env.SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_test';
 process.env.STORAGE_DRIVER = 'database';
+process.env.SUPER_ADMIN_BOOTSTRAP_EMAIL = 'dono@exemplo.com';

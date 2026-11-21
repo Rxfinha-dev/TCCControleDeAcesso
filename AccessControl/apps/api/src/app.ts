@@ -3,6 +3,7 @@ import express from 'express';
 import helmet from 'helmet';
 import { pinoHttp } from 'pino-http';
 import swaggerUi from 'swagger-ui-express';
+import { z } from 'zod';
 import type { PrismaClient } from '@prisma/client';
 import { corsOrigins, env } from './config/env';
 import { openApiSpec } from './docs/openapi';
@@ -47,6 +48,9 @@ import { StudentsService } from './modules/students/students.service';
 import { brasilApiHolidays, type HolidayProvider } from './services/holidays';
 import type { IdentityProvider } from './services/identity';
 import type { PhotoStorage } from './services/storage';
+
+// Mensagens de validação do Zod em português (as que o código não personaliza chegam ao usuário).
+z.config(z.locales.pt());
 
 export interface AppDependencies {
   prisma: PrismaClient;

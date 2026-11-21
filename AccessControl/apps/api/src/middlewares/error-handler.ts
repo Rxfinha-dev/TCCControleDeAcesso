@@ -5,6 +5,13 @@ import { ZodError } from 'zod';
 import { AppError } from '../lib/errors';
 import { logger } from '../lib/logger';
 
+const UPLOAD_MESSAGES: Partial<Record<MulterError['code'], string>> = {
+  LIMIT_FILE_SIZE: 'A foto deve ter no máximo 2 MB',
+  LIMIT_PART_COUNT: 'Formulário com campos demais',
+  LIMIT_FIELD_COUNT: 'Formulário com campos demais',
+  LIMIT_FIELD_VALUE: 'Campo do formulário grande demais',
+};
+
 export function notFoundHandler(_req: Request, res: Response) {
   res.status(404).json({ code: 'NOT_FOUND', message: 'Rota não encontrada' });
 }
@@ -23,13 +30,17 @@ export function errorHandler(err: unknown, req: Request, res: Response, _next: N
   }
 
   if (err instanceof MulterError) {
-    const message = err.code === 'LIMIT_FILE_SIZE' ? 'A foto deve ter no máximo 2 MB' : 'Falha no envio do arquivo';
+    const message = UPLOAD_MESSAGES[err.code] ?? 'Falha no envio do arquivo';
     return res.status(400).json({ code: 'UPLOAD_ERROR', message });
   }
 
   if (err instanceof Prisma.PrismaClientKnownRequestError) {
     if (err.code === 'P2002') {
       return res.status(409).json({ code: 'CONFLICT', message: 'Registro duplicado' });
+    }
+    // Chave estrangeira: o registro passou a ser usado (ou o vínculo sumiu) entre a checagem e a gravação.
+    if (err.code === 'P2003') {
+      return res.status(409).json({ code: 'IN_USE', message: 'Registro em uso por outros dados' });
     }
     if (err.code === 'P2025') {
       return res.status(404).json({ code: 'NOT_FOUND', message: 'Registro não encontrado' });

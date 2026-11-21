@@ -45,6 +45,20 @@ export class FakeIdentity implements IdentityProvider {
   async deleteUser(authUserId: string) {
     this.deleted.push(authUserId);
   }
+  /** Senha atual aceita por verifyPassword e tokens cujas outras sessões foram encerradas. */
+  currentPassword = 'senha-atual-1';
+  checkedPasswords: { email: string; password: string }[] = [];
+  signedOutOthers: string[] = [];
+  async verifyPassword(email: string, password: string) {
+    this.checkedPasswords.push({ email, password });
+    return password === this.currentPassword;
+  }
+  /** Simula falha do Supabase ao encerrar as outras sessões. */
+  failSignOutOthers = false;
+  async signOutOthers(token: string) {
+    if (this.failSignOutOthers) throw new Error('Supabase fora do ar');
+    this.signedOutOthers.push(token);
+  }
 }
 
 export class MemoryStorage implements PhotoStorage {
@@ -136,8 +150,8 @@ export const schoolUser: User = {
 export const superAdmin: User = {
   ...schoolUser,
   id: 2,
-  email: 'rafaelhenriqueoliveira1234@gmail.com',
-  name: 'Rafael',
+  email: 'dono@exemplo.com',
+  name: 'Dono',
   role: 'SUPER_ADMIN',
 };
 

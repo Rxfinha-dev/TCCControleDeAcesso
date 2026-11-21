@@ -13,7 +13,7 @@ import { badRequest, notFound } from '../../lib/errors';
 import { idSchema, isoDaySchema } from '../../lib/validation';
 import { classifyDay, type CalendarService } from '../calendar/calendar.service';
 import type { ClassGroupsService } from '../class-groups/class-groups.service';
-import { attendanceStatus, insideIntervals, isPresent, percent } from './attendance.rules';
+import { attendanceStatusOf, insideIntervals, isPresent, percent } from './attendance.rules';
 
 const isoDay = isoDaySchema;
 const startMinuteSchema = z.coerce.number().int().min(0).max(24 * 60);
@@ -348,11 +348,14 @@ export class AttendanceService {
     const term = range.term === undefined ? null : schoolTerms.find((item) => item.number === range.term);
     if (term === undefined) throw badRequest('Esse bimestre ainda não foi definido no Calendário', 'TERM_NOT_FOUND');
     const yearStart = `${group.schoolYear}-01-01`;
-    // Preso ao ano letivo da turma: um intervalo de séculos travaria o cálculo dia a dia.
-    const from = term ? isoDate(term.startDate) : range.from && range.from > yearStart ? range.from : yearStart;
-    const end = term ? isoDate(term.endDate) : (range.to ?? yearEnd);
+    // Preso ao ano letivo da turma (também o bimestre, que pode ter sido gravado fora dele): um intervalo de
+    // séculos travaria o cálculo dia a dia.
+    const start = term ? isoDate(term.startDate) : range.from;
+    const from = start && start > yearStart ? start : yearStart;
+    const requestedEnd = term ? isoDate(term.endDate) : (range.to ?? yearEnd);
+    const end = requestedEnd < yearEnd ? requestedEnd : yearEnd;
     // Nunca passa de hoje: aula futura não é aula dada.
-    const to = range.to && !term ? (range.to < yearEnd ? range.to : yearEnd) : end < today ? end : today;
+    const to = range.to && !term ? end : end < today ? end : today;
     const base = { from, to, term: term?.number ?? null, terms: schoolTerms.map((item) => item.number), minAttendance };
     if (to < from) return { ...base, subjects: [], students: [] };
 
@@ -374,8 +377,8 @@ export class AttendanceService {
       // Aula ainda não terminada não conta como dada.
       const counted = items.filter((record) => record.present !== null);
       const present = counted.filter((record) => record.present).length;
-      const value = percent(present, counted.length);
-      return { given: counted.length, present, percent: value, status: attendanceStatus(value, minAttendance) };
+      const given = counted.length;
+      return { given, present, percent: percent(present, given), status: attendanceStatusOf(present, given, minAttendance) };
     };
     return {
       ...base,

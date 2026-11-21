@@ -1,6 +1,7 @@
 import { AccessMethod, type Prisma, type PrismaClient } from '@prisma/client';
 import { z } from 'zod';
 import { notFound } from '../../lib/errors';
+import { DUPLICATE_WINDOW_MINUTES } from '../attendance/attendance.rules';
 import { MAX_FINGERPRINT_SLOTS } from '../students/students.schemas';
 import { toStudentDto } from '../students/students.service';
 
@@ -95,10 +96,16 @@ export class AccessLogsService {
     student: Parameters<typeof toStudentDto>[0],
     method: AccessMethod,
   ) {
+    // Repetição (dedo de novo, manual seguido da digital) inverteria entrada/saída: devolve a leitura existente.
+    const recent = await this.prisma.accessLog.findFirst({
+      where: { studentId: student.id, createdAt: { gt: new Date(Date.now() - DUPLICATE_WINDOW_MINUTES * 60_000) } },
+      orderBy: { createdAt: 'desc' },
+    });
+    if (recent) return { log: recent, student: toStudentDto(student), duplicate: true };
     const log = await this.prisma.accessLog.create({
       data: { schoolId, studentId: student.id, studentName: student.name, method },
     });
-    return { log, student: toStudentDto(student) };
+    return { log, student: toStudentDto(student), duplicate: false };
   }
 
   private buildWhere(schoolId: number | null, query: ListAccessLogsQuery): Prisma.AccessLogWhereInput {

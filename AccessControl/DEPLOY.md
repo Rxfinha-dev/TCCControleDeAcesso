@@ -106,7 +106,7 @@ As senhas antigas não são migradas (o Supabase Auth não importa os hashes do 
    | `SUPABASE_URL` | Project URL |
    | `SUPABASE_PUBLISHABLE_KEY` | Publishable key |
    | `SUPABASE_SERVICE_ROLE_KEY` | Secret key / service_role |
-   | `SUPER_ADMIN_BOOTSTRAP_EMAIL` | Opcional. E-mail que nasce super admin no primeiro login (padrão: e-mail do dono do projeto) |
+   | `SUPER_ADMIN_BOOTSTRAP_EMAIL` | Opcional. E-mail que nasce super admin no primeiro login, só enquanto não existe nenhum super admin. Sem ela, não há bootstrap |
 
    **helpus-web**
 
@@ -165,7 +165,8 @@ feature/*  ──PR──▶  develop  ──PR──▶  main  ──(deploy.ym
 
 1. Faça merge em `main` (ou rode **Actions → Deploy → Run workflow**).
 2. Acesse a URL do frontend, clique em **Cadastre-se → Sou uma escola**, informe o código recebido por e-mail e pronto.
-   - O e-mail de `SUPER_ADMIN_BOOTSTRAP_EMAIL` entra como **super admin** (a migration `users_roles` também promove esse e-mail se ele já tinha login).
+   - Se `SUPER_ADMIN_BOOTSTRAP_EMAIL` estiver definida e ainda não houver nenhum super admin, esse e-mail entra como **super admin**. Depois do primeiro, a variável não promove mais ninguém (pode ser removida).
+   - A confirmação de e-mail precisa estar ligada no Supabase (**Authentication → Sign In / Providers → Email → Confirm email**): o vínculo com a escola e o bootstrap confiam no e-mail confirmado.
    - Novos super admins são promovidos pela tela **Usuários**; escolas podem ser criadas pela tela **Escolas** e são vinculadas quando alguém se cadastra com o e-mail informado.
 3. Opcional: popular dados de demonstração a partir da sua máquina:
 

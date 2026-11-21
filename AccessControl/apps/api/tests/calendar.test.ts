@@ -88,6 +88,37 @@ describe('Calendário', () => {
     expect(prisma.nationalHoliday.createMany).not.toHaveBeenCalled();
   });
 
+  it('depois de uma falha da BrasilAPI, só tenta de novo 10 minutos depois', async () => {
+    jest.useFakeTimers({ doNotFake: ['nextTick', 'setImmediate'] });
+    try {
+      const { app, prisma, holidays } = setup();
+      prisma.nationalHoliday.count.mockResolvedValue(0);
+      prisma.nationalHoliday.findMany.mockResolvedValue([]);
+      holidays.fail = true;
+
+      await get(app, '?year=2027');
+      await get(app, '?year=2027');
+      expect(holidays.calls).toEqual([2027]);
+
+      jest.advanceTimersByTime(10 * 60_000 + 1);
+      await get(app, '?year=2027');
+      expect(holidays.calls).toEqual([2027, 2027]);
+    } finally {
+      jest.useRealTimers();
+    }
+  });
+
+  it('lista vazia da BrasilAPI também espera 10 minutos', async () => {
+    const { app, prisma, holidays } = setup();
+    prisma.nationalHoliday.count.mockResolvedValue(0);
+    prisma.nationalHoliday.findMany.mockResolvedValue([]);
+
+    await get(app, '?year=2027');
+    await get(app, '?year=2027');
+
+    expect(holidays.calls).toEqual([2027]);
+  });
+
   it('sem ano, usa o ano atual; ano absurdo é 400', async () => {
     const { app } = setup();
     expect((await get(app, '')).body.year).toBe(new Date().getFullYear());
@@ -195,6 +226,8 @@ describe('Calendário', () => {
     ['fim antes do início', TERMS.map((term) => (term.number === 4 ? { ...term, endDate: '2026-10-01' } : term))],
     ['faltando um bimestre', TERMS.slice(0, 3)],
     ['número repetido', TERMS.map((term) => (term.number === 4 ? { ...term, number: 3 } : term))],
+    ['bimestre que começa antes do ano letivo', TERMS.map((term) => (term.number === 1 ? { ...term, startDate: '2025-12-01' } : term))],
+    ['bimestre que termina depois do ano letivo', TERMS.map((term) => (term.number === 4 ? { ...term, endDate: '2027-01-15' } : term))],
   ])('recusa bimestres: %s', async (_case, terms) => {
     const { app, prisma } = setup();
 

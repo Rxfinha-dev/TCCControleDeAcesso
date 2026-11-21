@@ -2,7 +2,7 @@ import { Prisma, type User } from '@prisma/client';
 import request from 'supertest';
 import { dateOnly } from '../src/lib/dates';
 import { isLoginEmail, loginEmail, randomPassword, usernameBase } from '../src/lib/logins';
-import { authHeader, buildTestApp, classGroup, makeStudent, school, schoolUser } from './helpers';
+import { VALID_TOKEN, authHeader, buildTestApp, classGroup, makeStudent, school, schoolUser } from './helpers';
 
 const teacher = {
   id: 8,
@@ -212,21 +212,84 @@ describe('Logins de alunos', () => {
 });
 
 describe('Troca de senha', () => {
-  it('o próprio usuário troca a senha e libera o acesso', async () => {
+  it('o próprio usuário troca a senha, libera o acesso e derruba as outras sessões', async () => {
     const user = existingLogin({ mustChangePassword: true });
     const { app, prisma, identity } = setup(user);
 
-    const res = await request(app).put('/api/auth/password').set('Authorization', authHeader()).send({ password: 'nova-senha-1' });
+    const res = await request(app)
+      .put('/api/auth/password')
+      .set('Authorization', authHeader())
+      .send({ currentPassword: 'senha-atual-1', password: 'nova-senha-1' });
+
+    expect(res.status).toBe(204);
+    expect(identity.checkedPasswords).toEqual([{ email: user.email, password: 'senha-atual-1' }]);
+    expect(identity.passwords.get('auth-30')).toBe('nova-senha-1');
+    expect(identity.signedOutOthers).toEqual([VALID_TOKEN]);
+    expect(prisma.user.update).toHaveBeenCalledWith({ where: { id: 30 }, data: { mustChangePassword: false } });
+  });
+
+  it('falha ao derrubar as outras sessões não desfaz a troca já feita', async () => {
+    const { app, prisma, identity } = setup(existingLogin({ mustChangePassword: true }));
+    identity.failSignOutOthers = true;
+
+    const res = await request(app)
+      .put('/api/auth/password')
+      .set('Authorization', authHeader())
+      .send({ currentPassword: 'senha-atual-1', password: 'nova-senha-1' });
 
     expect(res.status).toBe(204);
     expect(identity.passwords.get('auth-30')).toBe('nova-senha-1');
     expect(prisma.user.update).toHaveBeenCalledWith({ where: { id: 30 }, data: { mustChangePassword: false } });
   });
 
+  it('limita as tentativas de troca por usuário (força bruta da senha atual)', async () => {
+    const { app, identity } = setup(existingLogin({ id: 77, authUserId: 'auth-77' }));
+    const attempt = () =>
+      request(app)
+        .put('/api/auth/password')
+        .set('Authorization', authHeader())
+        .send({ currentPassword: 'chute', password: 'nova-senha-1' });
+
+    for (let index = 0; index < 5; index += 1) expect((await attempt()).status).toBe(400);
+    const blocked = await attempt();
+
+    expect(blocked.status).toBe(429);
+    expect(blocked.body).toEqual({ code: 'TOO_MANY_ATTEMPTS', message: expect.stringMatching(/^Muitas tentativas/) });
+    expect(identity.checkedPasswords).toHaveLength(5);
+  });
+
+  it('senha atual errada não troca a senha', async () => {
+    const { app, prisma, identity } = setup(existingLogin());
+
+    const res = await request(app)
+      .put('/api/auth/password')
+      .set('Authorization', authHeader())
+      .send({ currentPassword: 'outra-senha', password: 'nova-senha-1' });
+
+    expect(res.status).toBe(400);
+    expect(res.body.code).toBe('INVALID_CURRENT_PASSWORD');
+    expect(identity.passwords.size).toBe(0);
+    expect(identity.signedOutOthers).toEqual([]);
+    expect(prisma.user.update).not.toHaveBeenCalled();
+  });
+
+  it('sem a senha atual a troca é recusada', async () => {
+    const { app, identity } = setup(existingLogin());
+
+    const res = await request(app).put('/api/auth/password').set('Authorization', authHeader()).send({ password: 'nova-senha-1' });
+
+    expect(res.status).toBe(400);
+    expect(identity.checkedPasswords).toEqual([]);
+    expect(identity.passwords.size).toBe(0);
+  });
+
   it('senha curta é recusada', async () => {
     const { app, identity } = setup(existingLogin({ mustChangePassword: true }));
 
-    const res = await request(app).put('/api/auth/password').set('Authorization', authHeader()).send({ password: 'curta' });
+    const res = await request(app)
+      .put('/api/auth/password')
+      .set('Authorization', authHeader())
+      .send({ currentPassword: 'senha-atual-1', password: 'curta' });
 
     expect(res.status).toBe(400);
     expect(identity.passwords.size).toBe(0);
@@ -235,7 +298,10 @@ describe('Troca de senha', () => {
   it('escola e super admin não trocam a senha por aqui (usam o código por e-mail)', async () => {
     const { app, identity } = setup();
 
-    const res = await request(app).put('/api/auth/password').set('Authorization', authHeader()).send({ password: 'nova-senha-1' });
+    const res = await request(app)
+      .put('/api/auth/password')
+      .set('Authorization', authHeader())
+      .send({ currentPassword: 'senha-atual-1', password: 'nova-senha-1' });
 
     expect(res.status).toBe(403);
     expect(res.body.code).toBe('PASSWORD_CHANGE_NOT_ALLOWED');

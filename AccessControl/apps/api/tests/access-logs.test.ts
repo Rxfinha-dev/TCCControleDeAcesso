@@ -20,6 +20,7 @@ describe('Entradas', () => {
     const res = await request(app).post('/api/access-logs/fingerprint').set('Authorization', authHeader()).send({ fingerprintId: 5 });
 
     expect(res.status).toBe(201);
+    expect(res.body.duplicate).toBe(false);
     expect(res.body.student).toMatchObject({ name: 'Ana Souza', rm: '24001', course: { name: 'Desenvolvimento de Sistemas' } });
     // Só digital com cadastro concluído: uma posição reservada e não confirmada ainda guarda o dedo do dono anterior no sensor.
     expect(prisma.student.findFirst).toHaveBeenCalledWith(
@@ -59,6 +60,28 @@ describe('Entradas', () => {
 
     expect(res.status).toBe(201);
     expect(prisma.accessLog.create).toHaveBeenCalledWith(expect.objectContaining({ data: expect.objectContaining({ method: 'MANUAL' }) }));
+  });
+
+  it('leitura repetida em menos de 10 minutos devolve a existente sem gravar outra (digital e manual)', async () => {
+    const { app, prisma } = buildTestApp();
+    prisma.student.findFirst.mockResolvedValue(makeStudent({ fingerprintId: 5 }) as never);
+    prisma.accessLog.findFirst.mockResolvedValue(log);
+    const before = Date.now();
+
+    const digital = await request(app).post('/api/access-logs/fingerprint').set('Authorization', authHeader()).send({ fingerprintId: 5 });
+    const manual = await request(app).post('/api/access-logs/manual').set('Authorization', authHeader()).send({ rm: '24001' });
+
+    expect(digital.status).toBe(201);
+    expect(digital.body.log.id).toBe(log.id);
+    expect(digital.body.duplicate).toBe(true);
+    expect(manual.body.duplicate).toBe(true);
+    expect(manual.status).toBe(201);
+    expect(manual.body.log.id).toBe(log.id);
+    expect(prisma.accessLog.create).not.toHaveBeenCalled();
+    const since = prisma.accessLog.findFirst.mock.calls[0][0]?.where?.createdAt as { gt: Date };
+    expect(prisma.accessLog.findFirst.mock.calls[0][0]?.where?.studentId).toBe(10);
+    // Janela de 10 minutos a partir do momento da leitura.
+    expect(Math.abs(before - 10 * 60_000 - since.gt.getTime())).toBeLessThan(5_000);
   });
 
   it('lista entradas paginadas e filtradas por período', async () => {
