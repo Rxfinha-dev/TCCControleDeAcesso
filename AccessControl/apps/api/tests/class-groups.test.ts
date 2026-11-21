@@ -239,6 +239,8 @@ describe('Copiar turmas do ano anterior', () => {
     });
     expect(prisma.enrollment.create).not.toHaveBeenCalled();
     expect(prisma.classGroup.findMany.mock.calls[0][0]!.where).toEqual({ schoolId: school.id, schoolYear: 2025 });
+    // Uma ida ao banco por turma copiada: o timeout padrão de 5 s do Prisma não basta com o banco longe.
+    expect(prisma.$transaction.mock.calls[0][1]).toEqual({ maxWait: 10_000, timeout: 30_000 });
   });
 
   it('recusa copiar um ano para ele mesmo', async () => {

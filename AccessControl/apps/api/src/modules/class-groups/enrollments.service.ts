@@ -34,30 +34,37 @@ export class EnrollmentsService {
     if (owned.length !== ids.length) throw badRequest('Aluno inválido', 'INVALID_STUDENT');
 
     const today = dateOnly(todayInSaoPaulo());
+    // Consultas em lote (não uma por aluno): com o banco longe, 500 alunos estourariam o timeout da transação.
     return this.prisma.$transaction(async (tx) => {
-      let added = 0;
-      let moved = 0;
+      const openEnrollments = await tx.enrollment.findMany({
+        where: { studentId: { in: ids }, schoolYear: group.schoolYear, endDate: null },
+      });
+      const openByStudent = new Map(openEnrollments.map((open) => [open.studentId, open]));
+      const toCreate: number[] = [];
+      const toCorrect: number[] = [];
+      const toClose: number[] = [];
       for (const studentId of ids) {
-        const open = await tx.enrollment.findFirst({
-          where: { studentId, schoolYear: group.schoolYear, endDate: null },
-        });
+        const open = openByStudent.get(studentId);
         if (open?.classGroupId === classGroupId) continue;
         if (!open) {
-          added += 1;
+          toCreate.push(studentId);
+        } else if (open.startDate.getTime() === today.getTime()) {
+          // Matriculado hoje em outra turma: é uma correção, não uma troca (evita histórico de duração zero).
+          toCorrect.push(open.id);
         } else {
-          moved += 1;
-          if (open.startDate.getTime() === today.getTime()) {
-            // Matriculado hoje em outra turma: é uma correção, não uma troca (evita histórico de duração zero).
-            await tx.enrollment.update({ where: { id: open.id }, data: { classGroupId } });
-            continue;
-          }
-          await tx.enrollment.update({ where: { id: open.id }, data: { endDate: today } });
+          toClose.push(open.id);
+          toCreate.push(studentId);
         }
-        await tx.enrollment.create({
-          data: { classGroupId, studentId, schoolYear: group.schoolYear, startDate: today },
+      }
+      if (toCorrect.length > 0) await tx.enrollment.updateMany({ where: { id: { in: toCorrect } }, data: { classGroupId } });
+      if (toClose.length > 0) await tx.enrollment.updateMany({ where: { id: { in: toClose } }, data: { endDate: today } });
+      if (toCreate.length > 0) {
+        await tx.enrollment.createMany({
+          data: toCreate.map((studentId) => ({ classGroupId, studentId, schoolYear: group.schoolYear, startDate: today })),
         });
       }
-      return { added, moved };
+      const moved = toCorrect.length + toClose.length;
+      return { added: toCreate.length - toClose.length, moved };
     });
   }
 
