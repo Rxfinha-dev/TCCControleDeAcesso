@@ -18,10 +18,9 @@ export function StudentPhoto({ studentId, hasPhoto, previewUrl, version, alt, cl
   const [url, setUrl] = useState<string | null>(null);
 
   useEffect(() => {
-    if (previewUrl || !studentId || !hasPhoto) {
-      setUrl(null);
-      return;
-    }
+    // Limpa já: sem isso a foto do aluno anterior fica na tela até a nova chegar.
+    setUrl(null);
+    if (previewUrl || !studentId || !hasPhoto) return;
     let objectUrl: string | null = null;
     let cancelled = false;
     studentsApi
