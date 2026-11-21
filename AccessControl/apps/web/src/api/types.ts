@@ -47,6 +47,8 @@ export interface SchoolSummary {
 export interface SchoolInput {
   name: string;
   email: string;
+  /** Só na criação; a troca de plano usa PUT /schools/:id/plan. */
+  plan?: SchoolPlan;
 }
 
 /** Usuário na gestão do super admin (GET /users). */

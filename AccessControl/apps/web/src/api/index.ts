@@ -32,6 +32,7 @@ import type {
   EntryResult,
   Paginated,
   SchoolInput,
+  SchoolPlan,
   SchoolSettings,
   SchoolSummary,
   Stats,
@@ -202,6 +203,8 @@ export const schoolsApi = {
   create: (input: SchoolInput) => requestJson<SchoolSummary>('/schools', { method: 'POST', body: { ...input } }),
   update: (id: number, input: SchoolInput) =>
     requestJson<SchoolSummary>(`/schools/${id}`, { method: 'PUT', body: { ...input } }),
+  setPlan: (id: number, plan: SchoolPlan) =>
+    requestJson<SchoolSummary>(`/schools/${id}/plan`, { method: 'PUT', body: { plan } }),
   remove: (id: number) => requestJson<void>(`/schools/${id}`, { method: 'DELETE' }),
 };
 

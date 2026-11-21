@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState, type FormEvent } from 'react';
 import { schoolsApi } from '../api';
 import { errorMessage } from '../api/client';
-import type { SchoolSummary } from '../api/types';
+import type { Module, SchoolPlan, SchoolSummary } from '../api/types';
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import { Drawer } from '../components/Drawer';
 import { PlusIcon } from '../components/Icons';
@@ -9,7 +9,42 @@ import { PageHeader } from '../components/PageHeader';
 import { useSchoolScope } from '../contexts/SchoolScopeContext';
 import { useToast } from '../contexts/ToastContext';
 
-const EMPTY_FORM = { name: '', email: '' };
+const EMPTY_FORM = { name: '', email: '', plan: 'BASIC' as SchoolPlan };
+
+export const PLAN_LABELS: Record<SchoolPlan, string> = {
+  BASIC: 'Básico',
+  ACADEMIC: 'Acadêmico',
+  ATTENDANCE: 'Frequência',
+  ASSESSMENTS: 'Avaliações',
+};
+
+const PLAN_DESCRIPTIONS: Record<SchoolPlan, string> = {
+  BASIC: 'Controle de acesso, alunos, turmas',
+  ACADEMIC: '+ disciplinas, professores, grade, calendário',
+  ATTENDANCE: '+ presença, atestados, login de professor',
+  ASSESSMENTS: '+ notas, boletim, painel do aluno',
+};
+
+const PLAN_ORDER: SchoolPlan[] = ['BASIC', 'ACADEMIC', 'ATTENDANCE', 'ASSESSMENTS'];
+
+const PLAN_MODULES: Record<SchoolPlan, Module[]> = {
+  BASIC: ['ACCESS'],
+  ACADEMIC: ['ACCESS', 'ACADEMIC'],
+  ATTENDANCE: ['ACCESS', 'ACADEMIC', 'ATTENDANCE'],
+  ASSESSMENTS: ['ACCESS', 'ACADEMIC', 'ATTENDANCE', 'ASSESSMENTS'],
+};
+
+const MODULE_SCREENS: Record<Module, string[]> = {
+  ACCESS: [],
+  ACADEMIC: ['Disciplinas', 'Professores', 'Grade horária', 'Calendário'],
+  ATTENDANCE: ['Presença', 'Atestados', 'Logins de professores'],
+  ASSESSMENTS: ['Avaliações', 'Boletim', 'Logins e painel do aluno'],
+};
+
+/** Telas que a escola perde ao trocar de plano (módulos atuais - módulos do novo plano). */
+function lostScreens(school: SchoolSummary, next: SchoolPlan): string[] {
+  return school.modules.filter((m) => !PLAN_MODULES[next].includes(m)).flatMap((m) => MODULE_SCREENS[m]);
+}
 
 /** Gestão das escolas pelo super admin. */
 export function SchoolsPage() {
@@ -21,6 +56,9 @@ export function SchoolsPage() {
   const [editing, setEditing] = useState<SchoolSummary | null>(null);
   const [form, setForm] = useState(EMPTY_FORM);
   const [saving, setSaving] = useState(false);
+  const [planFor, setPlanFor] = useState<SchoolSummary | null>(null);
+  const [nextPlan, setNextPlan] = useState<SchoolPlan>('BASIC');
+  const [confirmDowngrade, setConfirmDowngrade] = useState(false);
   const [deleting, setDeleting] = useState<SchoolSummary | null>(null);
   const [confirmName, setConfirmName] = useState('');
 
@@ -68,7 +106,7 @@ export function SchoolsPage() {
         await schoolsApi.update(editing.id, input);
         toast.success('Escola atualizada!');
       } else {
-        await schoolsApi.create(input);
+        await schoolsApi.create({ ...input, plan: form.plan });
         toast.success('Escola cadastrada! Ela será vinculada quando alguém se cadastrar com esse e-mail.');
       }
       setFormOpen(false);
@@ -79,6 +117,29 @@ export function SchoolsPage() {
       setSaving(false);
     }
   }
+
+  const openPlan = (school: SchoolSummary) => {
+    setPlanFor(school);
+    setNextPlan(school.plan);
+  };
+
+  async function savePlan() {
+    if (!planFor) return;
+    setConfirmDowngrade(false);
+    setSaving(true);
+    try {
+      await schoolsApi.setPlan(planFor.id, nextPlan);
+      toast.success(`Plano de "${planFor.name}" alterado para ${PLAN_LABELS[nextPlan]}.`);
+      setPlanFor(null);
+      await refresh();
+    } catch (err) {
+      toast.error(errorMessage(err));
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  const lost = planFor ? lostScreens(planFor, nextPlan) : [];
 
   const closeDelete = () => {
     setDeleting(null);
@@ -119,6 +180,7 @@ export function SchoolsPage() {
                 <th>E-mail</th>
                 <th className="numeric">Alunos</th>
                 <th className="numeric">Entradas</th>
+                <th>Plano</th>
                 <th>Login</th>
                 <th>
                   <span className="sr-only">Ações</span>
@@ -132,6 +194,7 @@ export function SchoolsPage() {
                   <td>{school.email}</td>
                   <td className="numeric">{school.counts.students}</td>
                   <td className="numeric">{school.counts.accessLogs}</td>
+                  <td>{PLAN_LABELS[school.plan]}</td>
                   <td>
                     <span className={`badge ${school.hasLogin ? 'badge-success' : 'badge-warning'}`}>
                       {school.hasLogin ? 'Vinculado' : 'Aguardando cadastro'}
@@ -139,6 +202,9 @@ export function SchoolsPage() {
                   </td>
                   <td>
                     <div className="row-actions">
+                      <button type="button" className="btn btn-outline btn-small" onClick={() => openPlan(school)}>
+                        Plano
+                      </button>
                       <button type="button" className="btn btn-outline btn-small" onClick={() => openEdit(school)}>
                         Editar
                       </button>
@@ -151,7 +217,7 @@ export function SchoolsPage() {
               ))}
               {!loading && schools.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="empty">
+                  <td colSpan={7} className="empty">
                     Nenhuma escola cadastrada ainda.
                   </td>
                 </tr>
@@ -180,6 +246,21 @@ export function SchoolsPage() {
               onChange={(event) => setForm((current) => ({ ...current, email: event.target.value }))}
             />
           </label>
+          {!editing && (
+            <label className="field">
+              <span>Plano</span>
+              <select
+                value={form.plan}
+                onChange={(event) => setForm((current) => ({ ...current, plan: event.target.value as SchoolPlan }))}
+              >
+                {PLAN_ORDER.map((plan) => (
+                  <option key={plan} value={plan}>
+                    {PLAN_LABELS[plan]}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
           <p className="hint">
             {editing
               ? 'O e-mail é só para contato: alterá-lo não muda o login de quem já acessa a escola.'
@@ -192,6 +273,50 @@ export function SchoolsPage() {
           </div>
         </form>
       </Drawer>
+
+      <Drawer open={planFor !== null} title="Plano da escola" onClose={() => setPlanFor(null)}>
+        {planFor && (
+          <form
+            className="form"
+            onSubmit={(event) => {
+              event.preventDefault();
+              if (nextPlan === planFor.plan) setPlanFor(null);
+              else if (lost.length > 0) setConfirmDowngrade(true);
+              else void savePlan();
+            }}
+          >
+            <p>
+              <strong>{planFor.name}</strong> — plano atual: {PLAN_LABELS[planFor.plan]}
+            </p>
+            {PLAN_ORDER.map((plan) => (
+              <label key={plan} className="field">
+                <span>
+                  <input type="radio" name="plan" checked={nextPlan === plan} onChange={() => setNextPlan(plan)} />{' '}
+                  {PLAN_LABELS[plan]}
+                </span>
+                <small className="hint">{PLAN_DESCRIPTIONS[plan]}</small>
+              </label>
+            ))}
+            <div className="form-actions">
+              <button type="button" className="btn btn-outline" onClick={() => setPlanFor(null)}>
+                Cancelar
+              </button>
+              <button type="submit" className="btn btn-primary" disabled={saving}>
+                Salvar plano
+              </button>
+            </div>
+          </form>
+        )}
+      </Drawer>
+
+      <ConfirmDialog
+        open={confirmDowngrade}
+        title="Rebaixar plano"
+        message={`A escola "${planFor?.name ?? ''}" deixa de acessar: ${lost.join(', ')}. Nenhum dado é apagado: se o plano subir de novo, tudo volta como estava.`}
+        confirmLabel="Rebaixar plano"
+        onConfirm={savePlan}
+        onCancel={() => setConfirmDowngrade(false)}
+      />
 
       <ConfirmDialog
         open={deleting !== null}
