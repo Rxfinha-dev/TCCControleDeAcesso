@@ -17,7 +17,7 @@ interface StudentPhotoProps {
 /** Carrega a foto pela API com o token de acesso (a rota é protegida). */
 export function StudentPhoto({ studentId, hasPhoto, previewUrl, version, alt, className }: StudentPhotoProps) {
   const [url, setUrl] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(() => !previewUrl && !!studentId && !!hasPhoto);
 
   useEffect(() => {
     // Limpa já: sem isso a foto do aluno anterior fica na tela até a nova chegar.

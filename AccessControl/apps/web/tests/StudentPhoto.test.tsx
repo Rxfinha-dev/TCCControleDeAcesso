@@ -1,3 +1,4 @@
+import { renderToStaticMarkup } from 'react-dom/server';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import { studentsApi } from '../src/api';
 import { StudentPhoto } from '../src/components/StudentPhoto';
@@ -39,5 +40,12 @@ describe('StudentPhoto', () => {
     const { container } = render(<StudentPhoto studentId={4} hasPhoto={false} alt="Foto" />);
     expect(container.querySelector('.skeleton')).not.toBeInTheDocument();
     expect(container.querySelector('svg')).toBeInTheDocument();
+  });
+
+  it('no primeiro render (antes de qualquer efeito), com a foto pendente, já é esqueleto: sem ícone nem imagem', () => {
+    const html = renderToStaticMarkup(<StudentPhoto studentId={5} hasPhoto alt="Foto" />);
+    expect(html).toContain('skeleton');
+    expect(html).not.toContain('<svg');
+    expect(html).not.toContain('<img');
   });
 });

@@ -85,4 +85,15 @@ describe('esqueleto nos cartões', () => {
     expect((await screen.findAllByText('–')).length).toBe(3);
     expect(skeletons()).toHaveLength(0);
   });
+
+  it('configurações: esqueleto no cartão de notas enquanto /settings pende, depois o formulário', async () => {
+    const release = holdApi('/settings');
+    renderAt('/configuracoes');
+    await waitFor(() => expect(skeletons().length).toBeGreaterThan(0));
+    expect(screen.queryByText('Sistema de notas')).not.toBeInTheDocument();
+    const grading = { kind: 'NUMERIC', max: 10, decimals: 1, passing: 6, concepts: [] };
+    await act(async () => release(jsonResponse(200, { minAttendance: 75, code: 'etec-jau', grading })));
+    expect(await screen.findByText('Sistema de notas')).toBeInTheDocument();
+    expect(skeletons()).toHaveLength(0);
+  });
 });
