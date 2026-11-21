@@ -446,6 +446,20 @@ export const openApiSpec = {
         },
       },
     },
+    '/api/schools/{id}/plan': {
+      parameters: [idParam],
+      put: {
+        tags: ['Escolas'],
+        summary: 'Troca o plano da escola (rebaixar não apaga dados)',
+        requestBody: { required: true, content: json({ type: 'object', required: ['plan'], properties: { plan: ref('SchoolPlan') } }) },
+        responses: {
+          200: { description: 'Escola com o novo plano', content: json(ref('School')) },
+          400: validationError,
+          404: schoolNotFound,
+          ...superAdminErrors,
+        },
+      },
+    },
     '/api/schools/{id}': {
       parameters: [idParam],
       put: {
@@ -561,12 +575,20 @@ export const openApiSpec = {
           timestamp: { type: 'string', format: 'date-time' },
         },
       },
+      SchoolPlan: { type: 'string', enum: ['BASIC', 'ACADEMIC', 'ATTENDANCE', 'ASSESSMENTS'] },
+      Module: {
+        type: 'string',
+        enum: ['ACCESS', 'ACADEMIC', 'ATTENDANCE', 'ASSESSMENTS'],
+        description: 'Rota fora do plano da escola: 403 `MODULE_NOT_IN_PLAN` ("Este recurso não está incluído no plano da escola.")',
+      },
       School: {
         type: 'object',
         properties: {
           id: { type: 'integer', example: 1 },
           name: { type: 'string', example: 'ETEC Exemplo' },
           email: { type: 'string', format: 'email', example: 'secretaria@exemplo.com' },
+          plan: ref('SchoolPlan'),
+          modules: { type: 'array', items: ref('Module') },
         },
       },
       SchoolInput: {
@@ -575,6 +597,7 @@ export const openApiSpec = {
         properties: {
           name: { type: 'string', maxLength: 100, example: 'ETEC Exemplo' },
           email: { type: 'string', format: 'email', maxLength: 120, example: 'secretaria@exemplo.com' },
+          plan: { ...ref('SchoolPlan'), description: 'Só na criação (padrão BASIC); depois, PUT /api/schools/{id}/plan' },
         },
       },
       SchoolSummary: {
@@ -584,6 +607,8 @@ export const openApiSpec = {
           name: { type: 'string', example: 'ETEC Exemplo' },
           email: { type: 'string', format: 'email' },
           createdAt: { type: 'string', format: 'date-time' },
+          plan: ref('SchoolPlan'),
+          modules: { type: 'array', items: ref('Module') },
           counts: {
             type: 'object',
             properties: { students: { type: 'integer' }, courses: { type: 'integer' }, accessLogs: { type: 'integer' } },
@@ -610,7 +635,11 @@ export const openApiSpec = {
           name: { type: 'string', example: 'ETEC Exemplo' },
           email: { type: 'string', format: 'email' },
           role: ref('UserRole'),
-          school: { type: 'object', nullable: true, properties: { id: { type: 'integer' }, name: { type: 'string' } } },
+          school: {
+            type: 'object',
+            nullable: true,
+            properties: { id: { type: 'integer' }, name: { type: 'string' }, plan: ref('SchoolPlan'), modules: { type: 'array', items: ref('Module') } },
+          },
           username: { type: 'string', nullable: true, example: 'ana.prado@etec-jau', description: 'Só para professor e aluno' },
           mustChangePassword: { type: 'boolean', description: 'Senha inicial ainda não trocada (PUT /api/auth/password)' },
         },

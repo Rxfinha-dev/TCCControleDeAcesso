@@ -1,7 +1,8 @@
-import { Prisma, UserRole, type PrismaClient, type School, type User } from '@prisma/client';
+import { Prisma, UserRole, type SchoolPlan, type PrismaClient, type School, type User } from '@prisma/client';
 import { env } from '../../config/env';
 import { conflict, forbidden, notFound, unauthorized } from '../../lib/errors';
 import { isLoginEmail } from '../../lib/logins';
+import { modulesOf, type Module } from '../../lib/plans';
 import type { IdentityProvider } from '../../services/identity';
 
 export type AuthenticatedUser = User & { school: School | null };
@@ -11,7 +12,7 @@ export interface MeDto {
   name: string;
   email: string;
   role: UserRole;
-  school: { id: number; name: string } | null;
+  school: { id: number; name: string; plan: SchoolPlan; modules: Module[] } | null;
   /** Usuário de professor/aluno ("joao.silva@etec-jau"); null para escola e super admin. */
   username: string | null;
   mustChangePassword: boolean;
@@ -55,7 +56,7 @@ export class AuthService {
       name: user.name,
       email: user.email,
       role: user.role,
-      school: user.school ? { id: user.school.id, name: user.school.name } : null,
+      school: user.school ? { id: user.school.id, name: user.school.name, plan: user.school.plan, modules: modulesOf(user.school.plan) } : null,
       username: user.username,
       mustChangePassword: user.mustChangePassword,
     };
