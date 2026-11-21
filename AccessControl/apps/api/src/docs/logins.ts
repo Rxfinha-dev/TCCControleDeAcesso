@@ -105,6 +105,7 @@ export function loginsPaths({ ref, json, errorResponse, authErrors, validationEr
         responses: {
           204: { description: 'Senha trocada; as outras sessões foram encerradas' },
           400: validationError,
+          429: { description: 'Muitas tentativas que falharam (5 a cada 15 min por usuário): `TOO_MANY_ATTEMPTS`' },
           503: unavailable,
           ...authErrors,
         },

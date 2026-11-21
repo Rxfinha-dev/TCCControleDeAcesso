@@ -2,7 +2,7 @@ import { Router, type RequestHandler } from 'express';
 import { z } from 'zod';
 import { passwordSchema } from '../../lib/logins';
 import { currentUser } from '../../middlewares/auth';
-import { apiRateLimit } from '../../middlewares/rate-limit';
+import { apiRateLimit, passwordChangeRateLimit } from '../../middlewares/rate-limit';
 import type { AuthService } from './auth.service';
 
 /**
@@ -16,7 +16,7 @@ export function authRoutes(service: AuthService, requireAuth: RequestHandler) {
     res.json(await service.me(currentUser(res).userId));
   });
 
-  router.put('/password', apiRateLimit, requireAuth, async (req, res) => {
+  router.put('/password', apiRateLimit, requireAuth, passwordChangeRateLimit, async (req, res) => {
     const { currentPassword, password } = z
       .object({ currentPassword: z.string().min(1, 'Informe a senha atual').max(72), password: passwordSchema })
       .parse(req.body);

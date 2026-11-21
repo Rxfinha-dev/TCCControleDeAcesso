@@ -242,6 +242,22 @@ describe('Troca de senha', () => {
     expect(prisma.user.update).toHaveBeenCalledWith({ where: { id: 30 }, data: { mustChangePassword: false } });
   });
 
+  it('limita as tentativas de troca por usuário (força bruta da senha atual)', async () => {
+    const { app, identity } = setup(existingLogin({ id: 77, authUserId: 'auth-77' }));
+    const attempt = () =>
+      request(app)
+        .put('/api/auth/password')
+        .set('Authorization', authHeader())
+        .send({ currentPassword: 'chute', password: 'nova-senha-1' });
+
+    for (let index = 0; index < 5; index += 1) expect((await attempt()).status).toBe(400);
+    const blocked = await attempt();
+
+    expect(blocked.status).toBe(429);
+    expect(blocked.body).toEqual({ code: 'TOO_MANY_ATTEMPTS', message: expect.stringMatching(/^Muitas tentativas/) });
+    expect(identity.checkedPasswords).toHaveLength(5);
+  });
+
   it('senha atual errada não troca a senha', async () => {
     const { app, prisma, identity } = setup(existingLogin());
 
