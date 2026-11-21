@@ -182,6 +182,14 @@ describe('Segurança: isolamento entre escolas', () => {
     expect(prisma.student.findFirst.mock.calls[0][0]?.where).toMatchObject({ schoolId: school.id });
   });
 
+  it('painel do aluno recusa cabeçalho com escola de outra', async () => {
+    const { app, prisma } = buildTestApp({ user: studentUser });
+    const res = await request(app).get('/api/student/panel').set('Authorization', authHeader()).set('X-School-Id', '7');
+    expect(res.status).toBe(403);
+    expect(res.body.code).toBe('SCHOOL_FORBIDDEN');
+    expect(prisma.student.findFirst).not.toHaveBeenCalled();
+  });
+
   it('painel do aluno usa o id do login, nunca um id enviado', async () => {
     const { app, prisma } = buildTestApp({ user: studentUser });
     prisma.student.findFirst.mockResolvedValue(null);
