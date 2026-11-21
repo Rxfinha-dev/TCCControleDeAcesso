@@ -116,7 +116,7 @@ export function DashboardPage() {
             </tbody>
           </table>
 
-          <footer className="timecard-foot" aria-busy={loading}>
+          <footer className="timecard-foot" aria-busy={loading || undefined}>
             {loading && <span className="sr-only">Carregando…</span>}
             <span>
               <strong>{loading ? <Skeleton width="2ch" /> : (stats?.entriesToday ?? '–')}</strong> leituras hoje

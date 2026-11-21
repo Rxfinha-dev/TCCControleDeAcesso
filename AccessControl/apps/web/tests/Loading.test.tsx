@@ -223,3 +223,20 @@ describe('esqueleto das telas de cartão', () => {
     expect(skeletons()).toHaveLength(0);
   });
 });
+
+describe('esqueleto das turmas do professor na presença', () => {
+  beforeEach(() => setMockSession({ access_token: 'jwt' }));
+  const teacher = {
+    id: 9, name: 'Ana Prado', email: 'a@b.c', role: 'TEACHER', mustChangePassword: false,
+    school: { id: 1, name: 'ETEC Jaú', plan: 'ASSESSMENTS', modules: ALL_MODULES },
+  };
+
+  it('pendente mostra esqueleto; liberada vazia mostra o aviso, sem esqueleto', async () => {
+    const release = holdApi('/attendance/my-lessons', undefined, teacher);
+    renderAt('/presenca');
+    await waitFor(() => expect(document.querySelectorAll('.skeleton').length).toBeGreaterThan(0));
+    await act(async () => release(jsonResponse(200, { date: todayIso(), day: { kind: 'SCHOOL_DAY' }, classGroups: [], lessons: [] })));
+    expect(await screen.findByText(/não leciona em nenhuma turma/i)).toBeInTheDocument();
+    expect(document.querySelectorAll('.skeleton')).toHaveLength(0);
+  });
+});
