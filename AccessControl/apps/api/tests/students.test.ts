@@ -1,4 +1,5 @@
 import request from 'supertest';
+import { matchesSignature } from '../src/middlewares/upload';
 import { authHeader, buildTestApp, makeStudent, school } from './helpers';
 
 const PNG = Buffer.from('89504e470d0a1a0a0000000d49484452', 'hex');
@@ -172,6 +173,23 @@ describe('Alunos', () => {
       .attach('photo', Buffer.from('ffd8ffe000104a464946', 'hex'), { filename: 'a.png', contentType: 'image/png' });
     expect(res.status).toBe(400);
     expect(res.body.code).toBe('INVALID_PHOTO');
+  });
+
+  it.each(['constructor', '__proto__', 'toString', 'hasOwnProperty'])('recusa tipo "%s" sem lançar erro', async (contentType) => {
+    const { app } = buildTestApp();
+    const res = await request(app)
+      .post('/api/students')
+      .set('Authorization', authHeader())
+      .field('name', 'Ana Souza')
+      .attach('photo', PNG, { filename: 'a.png', contentType });
+    expect(res.status).toBe(400);
+  });
+
+  it('matchesSignature rejeita tipos desconhecidos ou de protótipo', () => {
+    for (const tipo of ['constructor', '__proto__', 'toString', 'text/plain', '']) {
+      expect(matchesSignature(tipo, PNG)).toBe(false);
+    }
+    expect(matchesSignature('image/png', PNG)).toBe(true);
   });
 
   it('recusa arquivo que não é imagem', async () => {
