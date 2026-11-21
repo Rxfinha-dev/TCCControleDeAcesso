@@ -183,7 +183,7 @@ export function CalendarPage() {
             </div>
           </form>
           <div className="table-wrapper">
-            <table className="table" aria-busy={loading}>
+            <table className="table" aria-busy={loading || undefined}>
               <thead>
                 <tr>
                   <th>Nome</th>
@@ -226,7 +226,7 @@ export function CalendarPage() {
           <h2 className="card-title">Feriados nacionais</h2>
           <p className="hint">Desmarque um feriado se a escola tiver aula nesse dia (reposição, por exemplo).</p>
           <div className="table-wrapper">
-            <table className="table" aria-busy={loading}>
+            <table className="table" aria-busy={loading || undefined}>
               <thead>
                 <tr>
                   <th>Data</th>
@@ -235,7 +235,7 @@ export function CalendarPage() {
                 </tr>
               </thead>
               <tbody>
-                {loading && <SkeletonRows rows={4} cols={3} />}
+                {loading && <SkeletonRows rows={4} cols={3} announce={false} />}
                 {calendar?.holidays.map((holiday) => (
                   <tr key={holiday.date}>
                     <td className="nowrap">{formatDay(holiday.date)}</td>

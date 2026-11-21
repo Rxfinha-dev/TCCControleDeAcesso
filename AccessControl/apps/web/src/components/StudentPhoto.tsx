@@ -46,11 +46,14 @@ export function StudentPhoto({ studentId, hasPhoto, previewUrl, version, alt, cl
   const candidate = previewUrl ?? url;
   const src = candidate?.startsWith('blob:') ? candidate : null;
   return (
-    <div className={`student-photo ${className ?? ''}`}>
+    <div className={`student-photo ${className ?? ''}`} aria-busy={(!src && loading) || undefined}>
       {src ? (
         <img src={src} alt={alt} />
       ) : loading ? (
-        <Skeleton className="student-photo-skeleton" width="100%" height="100%" />
+        <>
+          <span className="sr-only">Carregando foto…</span>
+          <Skeleton className="student-photo-skeleton" width="100%" height="100%" />
+        </>
       ) : (
         <UserIcon width={56} height={56} />
       )}

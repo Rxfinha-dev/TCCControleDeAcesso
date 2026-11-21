@@ -29,15 +29,15 @@ export function SkeletonCard({ lines = 3 }: { lines?: number }) {
   );
 }
 
-/** Linhas de esqueleto para dentro de um <tbody>; o aviso oculto fica só na primeira. */
-export function SkeletonRows({ rows = 5, cols }: { rows?: number; cols: number }) {
+/** Linhas de esqueleto para dentro de um <tbody>; o aviso oculto fica só na primeira (e some com announce=false). */
+export function SkeletonRows({ rows = 5, cols, announce = true }: { rows?: number; cols: number; announce?: boolean }) {
   return (
     <>
       {Array.from({ length: rows }, (_, r) => (
         <tr key={r} className="skeleton-row">
           {Array.from({ length: cols }, (_, c) => (
             <td key={c}>
-              {r === 0 && c === 0 && <span className="sr-only">Carregando…</span>}
+              {announce && r === 0 && c === 0 && <span className="sr-only">Carregando…</span>}
               <Skeleton />
             </td>
           ))}

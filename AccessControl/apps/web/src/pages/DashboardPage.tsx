@@ -133,8 +133,7 @@ export function DashboardPage() {
           {!allSchools && selected !== null && hasModule('ATTENDANCE') && <AttendanceAlerts />}
           <section className="card">
             <h2 className="card-title">Pendências</h2>
-            <Link to="/alunos" className="pending" aria-busy={loading}>
-              {loading && <span className="sr-only">Carregando…</span>}
+            <Link to="/alunos" className="pending">
               <strong>{loading ? <Skeleton width="2ch" /> : (stats?.pendingFingerprints ?? '–')}</strong>
               <span>
                 {stats?.pendingFingerprints === 1 ? 'aluno sem digital cadastrada' : 'alunos sem digital cadastrada'}
