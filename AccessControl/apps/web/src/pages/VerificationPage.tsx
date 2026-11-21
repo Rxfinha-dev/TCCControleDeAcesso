@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { Link } from 'react-router';
 import { accessLogsApi } from '../api';
 import { errorMessage } from '../api/client';
@@ -22,10 +22,18 @@ export function VerificationPage() {
   const [rm, setRm] = useState('');
   const verifyingRef = useRef(false);
 
-  const showEntry = (entry: EntryResult) => {
-    setCurrent(entry);
-    setHistory((items) => [entry, ...items].slice(0, 8));
-  };
+  const showEntry = useCallback(
+    (entry: EntryResult) => {
+      setCurrent(entry);
+      if (entry.duplicate) {
+        // A API devolveu a leitura anterior: nada novo para o histórico.
+        toast.info('Leitura ignorada: o aluno já teve um registro há menos de 10 minutos.');
+        return;
+      }
+      setHistory((items) => [entry, ...items].slice(0, 8));
+    },
+    [toast],
+  );
 
   useEffect(
     () =>
@@ -37,7 +45,7 @@ export function VerificationPage() {
           toast.error(errorMessage(err));
         }
       }),
-    [serial, toast],
+    [serial, toast, showEntry],
   );
 
   // Ao sair da tela, para a verificação no Arduino (como o FormClosing do legado).

@@ -716,7 +716,14 @@ export const openApiSpec = {
       },
       EntryResult: {
         type: 'object',
-        properties: { log: ref('AccessLog'), student: ref('Student') },
+        properties: {
+          log: ref('AccessLog'),
+          student: ref('Student'),
+          duplicate: {
+            type: 'boolean',
+            description: 'true: o aluno já teve leitura há menos de 10 min; nada foi gravado e `log` é a leitura anterior',
+          },
+        },
       },
       Stats: {
         type: 'object',

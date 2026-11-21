@@ -101,11 +101,11 @@ export class AccessLogsService {
       where: { studentId: student.id, createdAt: { gt: new Date(Date.now() - DUPLICATE_WINDOW_MINUTES * 60_000) } },
       orderBy: { createdAt: 'desc' },
     });
-    if (recent) return { log: recent, student: toStudentDto(student) };
+    if (recent) return { log: recent, student: toStudentDto(student), duplicate: true };
     const log = await this.prisma.accessLog.create({
       data: { schoolId, studentId: student.id, studentName: student.name, method },
     });
-    return { log, student: toStudentDto(student) };
+    return { log, student: toStudentDto(student), duplicate: false };
   }
 
   private buildWhere(schoolId: number | null, query: ListAccessLogsQuery): Prisma.AccessLogWhereInput {

@@ -20,6 +20,7 @@ describe('Entradas', () => {
     const res = await request(app).post('/api/access-logs/fingerprint').set('Authorization', authHeader()).send({ fingerprintId: 5 });
 
     expect(res.status).toBe(201);
+    expect(res.body.duplicate).toBe(false);
     expect(res.body.student).toMatchObject({ name: 'Ana Souza', rm: '24001', course: { name: 'Desenvolvimento de Sistemas' } });
     // Só digital com cadastro concluído: uma posição reservada e não confirmada ainda guarda o dedo do dono anterior no sensor.
     expect(prisma.student.findFirst).toHaveBeenCalledWith(
@@ -72,6 +73,8 @@ describe('Entradas', () => {
 
     expect(digital.status).toBe(201);
     expect(digital.body.log.id).toBe(log.id);
+    expect(digital.body.duplicate).toBe(true);
+    expect(manual.body.duplicate).toBe(true);
     expect(manual.status).toBe(201);
     expect(manual.body.log.id).toBe(log.id);
     expect(prisma.accessLog.create).not.toHaveBeenCalled();
