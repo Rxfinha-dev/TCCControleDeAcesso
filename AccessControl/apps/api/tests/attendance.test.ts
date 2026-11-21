@@ -620,6 +620,19 @@ describe('Frequência por bimestre', () => {
     expect(res.body.to <= '2026-04-17').toBe(true);
   });
 
+  it('bimestre antigo gravado fora do ano letivo fica preso ao ano da turma', async () => {
+    const { app, prisma } = setup();
+    prisma.schoolTerm.findMany.mockResolvedValue([
+      { id: 1, schoolId: school.id, schoolYear: 2026, number: 1, startDate: dateOnly('2000-01-01'), endDate: dateOnly('2100-12-30') },
+    ]);
+
+    const res = await request(app).get('/api/attendance/summary?classGroupId=20&term=1').set('Authorization', authHeader());
+
+    expect(res.status).toBe(200);
+    expect(res.body.from).toBe('2026-01-01');
+    expect(res.body.to <= '2026-12-31').toBe(true);
+  });
+
   it('bimestre ainda não definido é recusado', async () => {
     const { app } = setup();
 

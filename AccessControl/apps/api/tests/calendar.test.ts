@@ -195,6 +195,8 @@ describe('Calendário', () => {
     ['fim antes do início', TERMS.map((term) => (term.number === 4 ? { ...term, endDate: '2026-10-01' } : term))],
     ['faltando um bimestre', TERMS.slice(0, 3)],
     ['número repetido', TERMS.map((term) => (term.number === 4 ? { ...term, number: 3 } : term))],
+    ['bimestre que começa antes do ano letivo', TERMS.map((term) => (term.number === 1 ? { ...term, startDate: '2025-12-01' } : term))],
+    ['bimestre que termina depois do ano letivo', TERMS.map((term) => (term.number === 4 ? { ...term, endDate: '2027-01-15' } : term))],
   ])('recusa bimestres: %s', async (_case, terms) => {
     const { app, prisma } = setup();
 
