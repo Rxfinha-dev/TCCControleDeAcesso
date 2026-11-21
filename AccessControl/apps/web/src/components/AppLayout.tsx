@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, NavLink, Outlet, useNavigate } from 'react-router';
+import type { Module } from '../api/types';
 import { displayName, useAuth } from '../contexts/AuthContext';
 import { SchoolScopeProvider, useSchoolScope } from '../contexts/SchoolScopeContext';
 import { useSerial } from '../contexts/SerialContext';
@@ -26,36 +27,45 @@ import { Logo } from './Logo';
 import { SchoolSelector } from './SchoolSelector';
 import { ThemeToggle } from './ThemeToggle';
 
-const NAV_ITEMS = [
+interface NavItem {
+  to: string;
+  label: string;
+  icon: typeof HomeIcon;
+  end?: boolean;
+  /** Item só aparece se o plano da escola incluir o módulo. */
+  module?: Module;
+}
+
+const NAV_ITEMS: NavItem[] = [
   { to: '/', label: 'Início', icon: HomeIcon, end: true },
   { to: '/alunos', label: 'Alunos', icon: StudentIcon },
   { to: '/cursos', label: 'Cursos', icon: BookIcon },
   { to: '/turmas', label: 'Turmas', icon: UsersIcon },
-  { to: '/disciplinas', label: 'Disciplinas', icon: TagIcon },
-  { to: '/professores', label: 'Professores', icon: TeacherIcon },
-  { to: '/calendario', label: 'Calendário', icon: CalendarIcon },
-  { to: '/presenca', label: 'Presença', icon: ChecklistIcon },
-  { to: '/avaliacoes', label: 'Avaliações', icon: GradeIcon },
+  { to: '/disciplinas', label: 'Disciplinas', icon: TagIcon, module: 'ACADEMIC' },
+  { to: '/professores', label: 'Professores', icon: TeacherIcon, module: 'ACADEMIC' },
+  { to: '/calendario', label: 'Calendário', icon: CalendarIcon, module: 'ACADEMIC' },
+  { to: '/presenca', label: 'Presença', icon: ChecklistIcon, module: 'ATTENDANCE' },
+  { to: '/avaliacoes', label: 'Avaliações', icon: GradeIcon, module: 'ASSESSMENTS' },
   { to: '/verificacao', label: 'Verificação', icon: FingerprintIcon },
   { to: '/entradas', label: 'Entradas', icon: ListIcon },
   { to: '/configuracoes', label: 'Configurações', icon: SettingsIcon },
 ];
 
 /** Professor: só as aulas dele. */
-const TEACHER_NAV_ITEMS = [
+const TEACHER_NAV_ITEMS: NavItem[] = [
   { to: '/', label: 'Início', icon: HomeIcon, end: true },
-  { to: '/presenca', label: 'Chamada', icon: ChecklistIcon, end: false },
-  { to: '/avaliacoes', label: 'Avaliações', icon: GradeIcon, end: false },
+  { to: '/presenca', label: 'Chamada', icon: ChecklistIcon, end: false, module: 'ATTENDANCE' },
+  { to: '/avaliacoes', label: 'Avaliações', icon: GradeIcon, end: false, module: 'ASSESSMENTS' },
 ];
 
 /** Aluno: o painel dele e o boletim. */
-const STUDENT_NAV_ITEMS = [
+const STUDENT_NAV_ITEMS: NavItem[] = [
   { to: '/', label: 'Início', icon: HomeIcon, end: true },
-  { to: '/boletim', label: 'Boletim', icon: GradeIcon, end: false },
+  { to: '/boletim', label: 'Boletim', icon: GradeIcon, end: false, module: 'ASSESSMENTS' },
 ];
 
 /** Gestão global, só para o super admin. */
-const SUPER_ADMIN_NAV_ITEMS = [
+const SUPER_ADMIN_NAV_ITEMS: NavItem[] = [
   { to: '/escolas', label: 'Escolas', icon: BuildingIcon, end: false },
   { to: '/usuarios', label: 'Usuários', icon: ShieldIcon, end: false },
 ];
@@ -75,7 +85,7 @@ function AppShell() {
   const isStudent = user?.role === 'STUDENT';
   // Professor e aluno não usam o leitor de digitais.
   const hasReader = !isTeacher && !isStudent;
-  const { selected } = useSchoolScope();
+  const { selected, hasModule } = useSchoolScope();
   const name = displayName(user);
   const { connected } = useSerial();
   const navigate = useNavigate();
@@ -105,7 +115,9 @@ function AppShell() {
           <ThemeToggle />
         </div>
         <nav className="sidebar-nav" onClick={() => setMenuOpen(false)}>
-          {(isStudent ? STUDENT_NAV_ITEMS : isTeacher ? TEACHER_NAV_ITEMS : [...NAV_ITEMS, ...(isSuperAdmin ? SUPER_ADMIN_NAV_ITEMS : [])]).map(({ to, label, icon: Icon, end }) => (
+          {(isStudent ? STUDENT_NAV_ITEMS : isTeacher ? TEACHER_NAV_ITEMS : [...NAV_ITEMS, ...(isSuperAdmin ? SUPER_ADMIN_NAV_ITEMS : [])])
+            .filter((item) => !item.module || hasModule(item.module))
+            .map(({ to, label, icon: Icon, end }) => (
             <NavLink key={to} to={to} end={end} className="nav-item">
               <Icon />
               <span>{label}</span>

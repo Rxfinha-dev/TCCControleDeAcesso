@@ -1,9 +1,10 @@
-import { Prisma, type PrismaClient } from '@prisma/client';
+import { Prisma, type PrismaClient, type SchoolPlan } from '@prisma/client';
 import { Router } from 'express';
 import { z } from 'zod';
 import { conflict } from '../../lib/errors';
 import { schoolCodeSchema } from '../../lib/logins';
-import { currentSchool } from '../../middlewares/school-scope';
+import { hasModule } from '../../lib/plans';
+import { currentPlan, currentSchool, moduleNotInPlan } from '../../middlewares/school-scope';
 import { gradingOf, gradingSelect } from '../assessments/assessments.service';
 
 const conceptSchema = z.object({
@@ -57,19 +58,26 @@ const select = { minAttendance: true, code: true, ...gradingSelect } as const;
 
 type Row = Prisma.SchoolGetPayload<{ select: typeof select }>;
 
-const toDto = (school: Row) => ({ minAttendance: school.minAttendance, code: school.code, grading: gradingOf(school) });
+/** Cada configuração só aparece se o módulo dela estiver no plano. */
+const toDto = (school: Row, plan: SchoolPlan | null) => ({
+  ...(hasModule(plan, 'ATTENDANCE') && { minAttendance: school.minAttendance, code: school.code }),
+  ...(hasModule(plan, 'ASSESSMENTS') && { grading: gradingOf(school) }),
+});
 
 /** Configurações acadêmicas da escola: frequência mínima, código dos logins e sistema de notas. */
 export function settingsRoutes(prisma: PrismaClient) {
   const router = Router();
 
   router.get('/', async (_req, res) => {
-    res.json(toDto(await prisma.school.findUniqueOrThrow({ where: { id: currentSchool(res).sub }, select })));
+    res.json(toDto(await prisma.school.findUniqueOrThrow({ where: { id: currentSchool(res).sub }, select }), currentPlan(res)));
   });
 
   router.put('/', async (req, res) => {
     const schoolId = currentSchool(res).sub;
     const { grading, ...data } = settingsSchema.parse(req.body);
+    const plan = currentPlan(res);
+    const touchesAttendance = data.minAttendance !== undefined || data.code !== undefined;
+    if ((touchesAttendance && !hasModule(plan, 'ATTENDANCE')) || (grading && !hasModule(plan, 'ASSESSMENTS'))) throw moduleNotInPlan();
     if (data.code !== undefined) {
       const current = await prisma.school.findUniqueOrThrow({ where: { id: schoolId }, select: { code: true } });
       // Os usuários já criados levam o código no nome: trocar quebraria o login deles.
@@ -97,7 +105,7 @@ export function settingsRoutes(prisma: PrismaClient) {
             gradeConcepts: [...grading.concepts].sort((a, b) => b.value - a.value),
           };
     try {
-      res.json(toDto(await prisma.school.update({ where: { id: schoolId }, data: { ...data, ...gradingData }, select })));
+      res.json(toDto(await prisma.school.update({ where: { id: schoolId }, data: { ...data, ...gradingData }, select }), plan));
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
         throw conflict('Esse código já é usado por outra escola.', 'SCHOOL_CODE_TAKEN');

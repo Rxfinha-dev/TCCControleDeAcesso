@@ -4,6 +4,7 @@ import type { Grading } from '../api/types';
 import { GradingForm } from '../components/GradingForm';
 import { errorMessage } from '../api/client';
 import { PageHeader } from '../components/PageHeader';
+import { SkeletonCard } from '../components/Skeleton';
 import { useAuth } from '../contexts/AuthContext';
 import { useSchoolScope } from '../contexts/SchoolScopeContext';
 import { useSerial } from '../contexts/SerialContext';
@@ -19,24 +20,28 @@ export function SettingsPage() {
   const { user } = useAuth();
   const [baudRate, setBaudRate] = useState(() => Number(localStorage.getItem(BAUD_KEY)) || 9600);
   const [busy, setBusy] = useState(false);
-  const { selected } = useSchoolScope();
+  const { selected, hasModule } = useSchoolScope();
   const hasSchool = selected !== 'all';
   const [minAttendance, setMinAttendance] = useState('');
   const [savingMin, setSavingMin] = useState(false);
   const [code, setCode] = useState('');
   const [grading, setGrading] = useState<Grading | null>(null);
+  // Terminou de buscar (com dado ou erro): distingue "carregando" de "sem sistema de notas".
+  const [settled, setSettled] = useState(false);
   const [savingCode, setSavingCode] = useState(false);
 
   useEffect(() => {
     if (!hasSchool) return;
+    setSettled(false);
     settingsApi
       .get()
       .then((settings) => {
-        setMinAttendance(String(settings.minAttendance));
+        setMinAttendance(String(settings.minAttendance ?? ''));
         setCode(settings.code ?? '');
-        setGrading(settings.grading);
+        setGrading(settings.grading ?? null);
       })
-      .catch((err) => toast.error(errorMessage(err)));
+      .catch((err) => toast.error(errorMessage(err)))
+      .finally(() => setSettled(true));
   }, [hasSchool, selected, toast]);
 
   async function saveCode(event: FormEvent) {
@@ -138,7 +143,7 @@ export function SettingsPage() {
           )}
         </section>
 
-        {hasSchool && (
+        {hasSchool && hasModule('ATTENDANCE') && (
           <form className="card form" onSubmit={saveMinAttendance} noValidate>
             <h2 className="card-title">Frequência</h2>
             <label className="field">
@@ -163,9 +168,10 @@ export function SettingsPage() {
           </form>
         )}
 
-        {hasSchool && grading && <GradingForm initial={grading} />}
+        {hasSchool && hasModule('ASSESSMENTS') && !settled && <SkeletonCard />}
+        {hasSchool && hasModule('ASSESSMENTS') && grading && <GradingForm initial={grading} />}
 
-        {hasSchool && (
+        {hasSchool && hasModule('ATTENDANCE') && (
           <form className="card form" onSubmit={saveCode} noValidate>
             <h2 className="card-title">Logins de professores e alunos</h2>
             <label className="field">

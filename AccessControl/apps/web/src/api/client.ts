@@ -20,6 +20,7 @@ async function accessToken() {
 
 let onUnauthorized: (() => void) | null = null;
 let onSchoolForbidden: (() => void) | null = null;
+let onModuleNotInPlan: (() => void) | null = null;
 /** Escola em uso enviada no cabeçalho X-School-Id (só o super admin define). */
 let schoolScope: number | 'all' | null = null;
 
@@ -31,6 +32,11 @@ export function setSchoolScope(value: number | 'all' | null) {
 /** Registra o que fazer quando a API recusar a escola enviada (perfil alterado em outra sessão). */
 export function setSchoolForbiddenHandler(handler: (() => void) | null) {
   onSchoolForbidden = handler;
+}
+
+/** Registra o que fazer quando a API recusar um módulo fora do plano (plano trocado em outra sessão). */
+export function setModuleNotInPlanHandler(handler: (() => void) | null) {
+  onModuleNotInPlan = handler;
 }
 
 /** Registra o que fazer quando a API responder 401 (sessão expirada). */
@@ -67,6 +73,7 @@ export async function request(path: string, options: { method?: string; body?: B
     const data = await response.json().catch(() => ({}));
     if (response.status === 401 && token) onUnauthorized?.();
     if (response.status === 403 && data.code === 'SCHOOL_FORBIDDEN' && sentSchool !== null) onSchoolForbidden?.();
+    if (response.status === 403 && data.code === 'MODULE_NOT_IN_PLAN') onModuleNotInPlan?.();
     throw new ApiError(response.status, data.message ?? 'Erro inesperado. Tente novamente.', data.code);
   }
   return response;

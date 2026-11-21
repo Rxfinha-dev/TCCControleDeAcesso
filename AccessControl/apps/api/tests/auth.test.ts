@@ -38,7 +38,7 @@ describe('Auth (Supabase)', () => {
         name: schoolUser.name,
         email: schoolUser.email,
         role: 'SCHOOL',
-        school: { id: school.id, name: school.name },
+        school: { id: school.id, name: school.name, plan: 'ASSESSMENTS', modules: ['ACCESS', 'ACADEMIC', 'ATTENDANCE', 'ASSESSMENTS'] },
         username: null,
         mustChangePassword: false,
       });

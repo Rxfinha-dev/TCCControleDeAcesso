@@ -15,6 +15,7 @@ import type {
 } from '../api/types';
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import { PageHeader } from '../components/PageHeader';
+import { SkeletonCard } from '../components/Skeleton';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
 import { currentSchoolYear, formatDay, formatMinute, KIND_LABELS, todayIso } from '../utils/academic';
@@ -47,6 +48,7 @@ export function AssessmentsPage() {
   const toast = useToast();
   const isTeacher = useAuth().user?.role === 'TEACHER';
   const [groups, setGroups] = useState<Pick<ClassGroup, 'id' | 'name'>[] | null>(null);
+  const [groupsLoaded, setGroupsLoaded] = useState(false);
   const [classGroupId, setClassGroupId] = useState<number | null>(null);
   const [tab, setTab] = useState<TabId>('avaliacoes');
   const [data, setData] = useState<AssessmentList | null>(null);
@@ -54,6 +56,8 @@ export function AssessmentsPage() {
   const [selected, setSelected] = useState<Assessment | null>(null);
   const [lessons, setLessons] = useState<AttendanceLesson[]>([]);
   const [saving, setSaving] = useState(false);
+  const [dataFailed, setDataFailed] = useState(false);
+  const [reportFailed, setReportFailed] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [grades, setGrades] = useState<AssessmentGrades | null>(null);
   const [values, setValues] = useState<Record<number, string>>({});
@@ -66,7 +70,8 @@ export function AssessmentsPage() {
         setGroups(list);
         setClassGroupId((current) => current ?? list[0]?.id ?? null);
       })
-      .catch((err) => toast.error(errorMessage(err)));
+      .catch((err) => toast.error(errorMessage(err)))
+      .finally(() => setGroupsLoaded(true));
   }, [isTeacher, toast]);
 
   const load = useCallback(async () => {
@@ -76,12 +81,14 @@ export function AssessmentsPage() {
       setData(result);
       setForm((current) => (current.subjectId ? current : { ...current, subjectId: result.subjects[0]?.id ?? 0 }));
     } catch (err) {
+      setDataFailed(true);
       toast.error(errorMessage(err));
     }
   }, [classGroupId, toast]);
 
   useEffect(() => {
     setData(null);
+    setDataFailed(false);
     setSelected(null);
     setGrades(null);
     setForm(emptyForm());
@@ -107,13 +114,17 @@ export function AssessmentsPage() {
   useEffect(() => {
     if (tab !== 'medias' || classGroupId === null) return;
     setReport(null);
+    setReportFailed(false);
     assessmentsApi
       .report(classGroupId)
       .then((result) => {
         setReport(result);
         setReportSubjectId((current) => (result.subjects.some((subject) => subject.id === current) ? current : (result.subjects[0]?.id ?? null)));
       })
-      .catch((err) => toast.error(errorMessage(err)));
+      .catch((err) => {
+        setReportFailed(true);
+        toast.error(errorMessage(err));
+      });
   }, [tab, classGroupId, toast]);
 
   const clear = () => {
@@ -257,6 +268,7 @@ export function AssessmentsPage() {
           </div>
 
           <div role="tabpanel" id="panel-avaliacoes" aria-labelledby="tab-avaliacoes" hidden={tab !== 'avaliacoes'}>
+            {((classGroupId === null && !groupsLoaded) || (classGroupId !== null && !data && !dataFailed)) && <SkeletonCard lines={4} />}
             {data?.subjects.length === 0 && (
               <p className="banner">
                 Esta turma ainda não tem disciplina com professor atribuído. Sem isso não dá para marcar avaliação.
@@ -506,6 +518,7 @@ export function AssessmentsPage() {
           </div>
 
           <div role="tabpanel" id="panel-medias" aria-labelledby="tab-medias" hidden={tab !== 'medias'}>
+            {tab === 'medias' && classGroupId !== null && !report && !reportFailed && <SkeletonCard lines={4} />}
             {report && report.subjects.length === 0 && <p className="banner">Ainda não há avaliações nesta turma.</p>}
             {report && report.subjects.length > 0 && (
               <section className="card">

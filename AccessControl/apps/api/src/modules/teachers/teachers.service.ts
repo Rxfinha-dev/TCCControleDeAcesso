@@ -30,13 +30,16 @@ export class TeachersService {
     private readonly identity: IdentityProvider,
   ) {}
 
-  async list(schoolId: number) {
+  async list(schoolId: number, opts: { logins: boolean }) {
     const teachers = await this.prisma.teacher.findMany({
       where: { schoolId },
       orderBy: { name: 'asc' },
       include: { _count: { select: { assignments: true } }, user: { select: { username: true } } },
     });
-    return teachers.map(({ _count, user, ...teacher }) => toDto(teacher, _count.assignments, user?.username ?? null));
+    return teachers.map(({ _count, user, ...teacher }) => {
+      const { username, ...dto } = toDto(teacher, _count.assignments, user?.username ?? null);
+      return opts.logins ? { ...dto, username } : dto;
+    });
   }
 
   async create(schoolId: number, input: TeacherInput) {

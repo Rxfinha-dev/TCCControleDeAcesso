@@ -4,6 +4,7 @@ import { errorMessage } from '../api/client';
 import type { Holiday, NoClassDay, SchoolCalendar } from '../api/types';
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import { PageHeader } from '../components/PageHeader';
+import { SkeletonRows } from '../components/Skeleton';
 import { useToast } from '../contexts/ToastContext';
 import { currentSchoolYear, formatDay } from '../utils/academic';
 
@@ -18,6 +19,7 @@ export function CalendarPage() {
   const thisYear = currentSchoolYear();
   const [year, setYear] = useState(thisYear);
   const [calendar, setCalendar] = useState<SchoolCalendar | null>(null);
+  const [failed, setFailed] = useState(false);
   const [terms, setTerms] = useState<TermDates>(EMPTY_TERMS);
   const [day, setDay] = useState(EMPTY_DAY);
   const [saving, setSaving] = useState(false);
@@ -34,9 +36,12 @@ export function CalendarPage() {
         }),
       );
     } catch (err) {
+      setFailed(true);
       toast.error(errorMessage(err));
     }
   }, [toast, year]);
+
+  const loading = calendar === null && !failed;
 
   useEffect(() => {
     void load();
@@ -178,7 +183,7 @@ export function CalendarPage() {
             </div>
           </form>
           <div className="table-wrapper">
-            <table className="table">
+            <table className="table" aria-busy={loading || undefined}>
               <thead>
                 <tr>
                   <th>Nome</th>
@@ -189,6 +194,7 @@ export function CalendarPage() {
                 </tr>
               </thead>
               <tbody>
+                {loading && <SkeletonRows rows={2} cols={3} />}
                 {calendar?.noClassDays.map((item) => (
                   <tr key={item.id}>
                     <td>{item.name}</td>
@@ -220,7 +226,7 @@ export function CalendarPage() {
           <h2 className="card-title">Feriados nacionais</h2>
           <p className="hint">Desmarque um feriado se a escola tiver aula nesse dia (reposição, por exemplo).</p>
           <div className="table-wrapper">
-            <table className="table">
+            <table className="table" aria-busy={loading || undefined}>
               <thead>
                 <tr>
                   <th>Data</th>
@@ -229,6 +235,7 @@ export function CalendarPage() {
                 </tr>
               </thead>
               <tbody>
+                {loading && <SkeletonRows rows={4} cols={3} announce={false} />}
                 {calendar?.holidays.map((holiday) => (
                   <tr key={holiday.date}>
                     <td className="nowrap">{formatDay(holiday.date)}</td>

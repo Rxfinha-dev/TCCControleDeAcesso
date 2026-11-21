@@ -53,7 +53,7 @@ describe('Escola em uso (X-School-Id)', () => {
       const res = await request(app).get('/api/courses').set('Authorization', authHeader()).set('X-School-Id', '7');
 
       expect(res.status).toBe(200);
-      expect(prisma.school.findUnique).toHaveBeenCalledWith({ where: { id: 7 }, select: { id: true } });
+      expect(prisma.school.findUnique).toHaveBeenCalledWith({ where: { id: 7 }, select: { id: true, plan: true } });
       expect(prisma.course.findMany.mock.calls[0][0]?.where).toEqual({ schoolId: 7 });
     });
 

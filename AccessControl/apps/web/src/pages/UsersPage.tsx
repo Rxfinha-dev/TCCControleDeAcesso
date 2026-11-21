@@ -6,6 +6,7 @@ import { ConfirmDialog } from '../components/ConfirmDialog';
 import { PageHeader } from '../components/PageHeader';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
+import { SkeletonRows } from '../components/Skeleton';
 
 const ROLE_LABELS: Record<UserRole, string> = {
   SUPER_ADMIN: 'Super admin',
@@ -87,7 +88,7 @@ export function UsersPage() {
         </div>
 
         <div className="table-wrapper">
-          <table className="table">
+          <table className="table" aria-busy={loading}>
             <thead>
               <tr>
                 <th>Nome</th>
@@ -100,6 +101,7 @@ export function UsersPage() {
               </tr>
             </thead>
             <tbody>
+              {loading && users.length === 0 && <SkeletonRows cols={5} />}
               {users.map((user) => (
                 <tr key={user.id}>
                   <td>{user.name}</td>

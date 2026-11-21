@@ -45,3 +45,17 @@ describe('Migration student_optional_course', () => {
     expect(sql).toMatch(/ALTER COLUMN "year" DROP NOT NULL/);
   });
 });
+
+const schoolPlans = readFileSync(
+  join(__dirname, '../prisma/migrations/20261120000000_school_plans/migration.sql'),
+  'utf-8',
+);
+
+describe('Migration school_plans', () => {
+  it('libera tudo às escolas existentes e faz as novas nascerem no Básico', () => {
+    const add = schoolPlans.indexOf(`ADD COLUMN "plan" "SchoolPlan" NOT NULL DEFAULT 'ASSESSMENTS'`);
+    const reset = schoolPlans.indexOf(`ALTER COLUMN "plan" SET DEFAULT 'BASIC'`);
+    expect(add).toBeGreaterThan(-1);
+    expect(reset).toBeGreaterThan(add);
+  });
+});

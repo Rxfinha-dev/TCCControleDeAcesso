@@ -4,8 +4,11 @@ import { studentApi } from '../api';
 import { errorMessage } from '../api/client';
 import type { StudentPanel } from '../api/types';
 import { PageHeader } from '../components/PageHeader';
+import { SkeletonCard } from '../components/Skeleton';
+import { PLAN_NOTICE } from '../components/RequireModule';
 import { ReportCardTable } from '../components/ReportCardTable';
 import { useAuth } from '../contexts/AuthContext';
+import { useSchoolScope } from '../contexts/SchoolScopeContext';
 import { useToast } from '../contexts/ToastContext';
 import { CANCELLATION_LABELS, formatDay, formatMinute, KIND_LABELS, todayIso, WEEKDAY_LABELS } from '../utils/academic';
 import { firstName } from '../utils/format';
@@ -21,16 +24,23 @@ function dayNote(day: StudentPanel['week'][number]['day']) {
 /** Painel do aluno: grade da semana com as provas marcadas, próximas avaliações, frequência e notas. */
 export function StudentHomePage() {
   const { user } = useAuth();
+  const { hasModule } = useSchoolScope();
+  const inPlan = hasModule('ASSESSMENTS');
   const toast = useToast();
   const [panel, setPanel] = useState<StudentPanel | null>(null);
+  const [failed, setFailed] = useState(false);
   const today = todayIso();
 
   useEffect(() => {
+    if (!inPlan) return;
     studentApi
       .panel()
       .then(setPanel)
-      .catch((err) => toast.error(errorMessage(err)));
-  }, [toast]);
+      .catch((err) => {
+        setFailed(true);
+        toast.error(errorMessage(err));
+      });
+  }, [toast, inPlan]);
 
   const card = panel?.reportCard;
 
@@ -40,11 +50,17 @@ export function StudentHomePage() {
         title={`Olá, ${firstName(user?.name ?? '')}`}
         description={card?.classGroup ? `Turma ${card.classGroup.name} · ano letivo ${card.schoolYear}` : 'Seu painel de aulas, frequência e notas.'}
         actions={
-          <Link to="/boletim" className="btn btn-primary">
-            Baixar boletim
-          </Link>
+          inPlan && (
+            <Link to="/boletim" className="btn btn-primary">
+              Baixar boletim
+            </Link>
+          )
         }
       />
+
+      {!inPlan && <p className="banner">{PLAN_NOTICE}</p>}
+
+      {inPlan && !panel && !failed && <SkeletonCard lines={4} />}
 
       {card && !card.classGroup && (
         <p className="banner">Você ainda não está em nenhuma turma neste ano letivo. Fale com a secretaria da escola.</p>
