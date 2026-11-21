@@ -43,9 +43,6 @@ export function installFakeSerial({ usbVendorId = 0x2341, usbProductId = 0x43 }:
     fail: () => arduino.error(new Error('falha de leitura')),
     /** O navegador avisa que o dispositivo foi removido. */
     unplug: (target: unknown = port) => listeners.forEach((listener) => listener({ target })),
-    uninstall: () => {
-      delete (navigator as { serial?: unknown }).serial;
-    },
   };
 }
 
