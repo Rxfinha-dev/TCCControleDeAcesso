@@ -48,6 +48,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = useCallback(async () => {
     setUser(null);
+    // Não depende do SIGNED_OUT: se o signOut falhar, "Sair" não pode ficar preso na tela de tentar de novo.
+    setLoadFailed(false);
     await authApi.logout().catch(() => undefined);
   }, []);
 

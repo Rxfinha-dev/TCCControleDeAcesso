@@ -217,7 +217,7 @@ export function AssessmentsPage() {
       setInvalidGrades([]);
       setValues(Object.fromEntries(result.students.map((student) => [student.id, student.value === null ? '' : String(student.value)])));
     } catch (err) {
-      toast.error(errorMessage(err));
+      if (isCurrent()) toast.error(errorMessage(err));
     }
   }
 

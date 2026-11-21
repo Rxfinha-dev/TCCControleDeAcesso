@@ -34,6 +34,15 @@ describe('Restauração da sessão', () => {
     expect(await screen.findByRole('heading', { name: 'Olá, ETEC!' })).toBeInTheDocument();
   });
 
+  it('"Sair" na tela de falha volta ao login mesmo sem o evento SIGNED_OUT', async () => {
+    mockApi((path) => (path.endsWith('/auth/me') ? jsonResponse(503, {}) : undefined));
+
+    renderAt('/');
+    await userEvent.click(await screen.findByRole('button', { name: 'Sair' }));
+    expect(await screen.findByRole('heading', { name: 'Entrar' })).toBeInTheDocument();
+    expect(supabase.auth.signOut).toHaveBeenCalled();
+  });
+
   it('erro 503 no /auth/me não desloga', async () => {
     mockApi((path) => (path.endsWith('/auth/me') ? jsonResponse(503, {}) : undefined));
 
