@@ -4,6 +4,7 @@ import { studentApi } from '../api';
 import { errorMessage } from '../api/client';
 import type { StudentPanel } from '../api/types';
 import { PageHeader } from '../components/PageHeader';
+import { SkeletonCard } from '../components/Skeleton';
 import { PLAN_NOTICE } from '../components/RequireModule';
 import { ReportCardTable } from '../components/ReportCardTable';
 import { useAuth } from '../contexts/AuthContext';
@@ -27,6 +28,7 @@ export function StudentHomePage() {
   const inPlan = hasModule('ASSESSMENTS');
   const toast = useToast();
   const [panel, setPanel] = useState<StudentPanel | null>(null);
+  const [failed, setFailed] = useState(false);
   const today = todayIso();
 
   useEffect(() => {
@@ -34,7 +36,10 @@ export function StudentHomePage() {
     studentApi
       .panel()
       .then(setPanel)
-      .catch((err) => toast.error(errorMessage(err)));
+      .catch((err) => {
+        setFailed(true);
+        toast.error(errorMessage(err));
+      });
   }, [toast, inPlan]);
 
   const card = panel?.reportCard;
@@ -54,6 +59,8 @@ export function StudentHomePage() {
       />
 
       {!inPlan && <p className="banner">{PLAN_NOTICE}</p>}
+
+      {inPlan && !panel && !failed && <SkeletonCard lines={4} />}
 
       {card && !card.classGroup && (
         <p className="banner">Você ainda não está em nenhuma turma neste ano letivo. Fale com a secretaria da escola.</p>

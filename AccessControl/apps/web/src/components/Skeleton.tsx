@@ -17,6 +17,18 @@ export function Skeleton({
   );
 }
 
+/** Cartão de esqueleto para telas cujo conteúdo (cartão) ainda não chegou da API. */
+export function SkeletonCard({ lines = 3 }: { lines?: number }) {
+  return (
+    <section className="card skeleton-card" aria-busy="true">
+      <span className="sr-only">Carregando…</span>
+      {Array.from({ length: lines }, (_, i) => (
+        <Skeleton key={i} height="1.4em" />
+      ))}
+    </section>
+  );
+}
+
 /** Linhas de esqueleto para dentro de um <tbody>; o aviso oculto fica só na primeira. */
 export function SkeletonRows({ rows = 5, cols }: { rows?: number; cols: number }) {
   return (

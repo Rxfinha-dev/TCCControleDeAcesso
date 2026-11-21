@@ -6,6 +6,7 @@ import { errorMessage } from '../api/client';
 import type { Stats } from '../api/types';
 import { FingerprintIcon } from '../components/Icons';
 import { PageHeader } from '../components/PageHeader';
+import { Skeleton } from '../components/Skeleton';
 import { displayName, useAuth } from '../contexts/AuthContext';
 import { useSchoolScope } from '../contexts/SchoolScopeContext';
 import { useSerial } from '../contexts/SerialContext';
@@ -28,14 +29,22 @@ export function DashboardPage() {
   const serial = useSerial();
   const toast = useToast();
   const [stats, setStats] = useState<Stats | null>(null);
+  const [failed, setFailed] = useState(false);
 
   useEffect(() => {
-    statsApi.get().then(setStats).catch((err) => toast.error(errorMessage(err)));
+    statsApi
+      .get()
+      .then(setStats)
+      .catch((err) => {
+        setFailed(true);
+        toast.error(errorMessage(err));
+      });
   }, [toast]);
 
   const now = new Date();
   const startOfDay = new Date(now).setHours(0, 0, 0, 0);
   const todayEntries = stats?.recentEntries.filter((entry) => new Date(entry.createdAt).getTime() >= startOfDay) ?? [];
+  const loading = stats === null && !failed;
   const schoolName = selectedName || user?.school?.name || '';
 
   return (
@@ -107,12 +116,13 @@ export function DashboardPage() {
             </tbody>
           </table>
 
-          <footer className="timecard-foot">
+          <footer className="timecard-foot" aria-busy={loading}>
+            {loading && <span className="sr-only">Carregando…</span>}
             <span>
-              <strong>{stats?.entriesToday ?? '–'}</strong> leituras hoje
+              <strong>{loading ? <Skeleton width="2ch" /> : (stats?.entriesToday ?? '–')}</strong> leituras hoje
             </span>
             <span>
-              <strong>{stats?.students ?? '–'}</strong> alunos
+              <strong>{loading ? <Skeleton width="2ch" /> : (stats?.students ?? '–')}</strong> alunos
             </span>
             <Link to="/entradas">Ver todas as entradas</Link>
           </footer>
@@ -123,8 +133,9 @@ export function DashboardPage() {
           {!allSchools && selected !== null && hasModule('ATTENDANCE') && <AttendanceAlerts />}
           <section className="card">
             <h2 className="card-title">Pendências</h2>
-            <Link to="/alunos" className="pending">
-              <strong>{stats?.pendingFingerprints ?? '–'}</strong>
+            <Link to="/alunos" className="pending" aria-busy={loading}>
+              {loading && <span className="sr-only">Carregando…</span>}
+              <strong>{loading ? <Skeleton width="2ch" /> : (stats?.pendingFingerprints ?? '–')}</strong>
               <span>
                 {stats?.pendingFingerprints === 1 ? 'aluno sem digital cadastrada' : 'alunos sem digital cadastrada'}
               </span>

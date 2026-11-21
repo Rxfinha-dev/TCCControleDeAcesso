@@ -62,3 +62,27 @@ describe('esqueleto nas tabelas', () => {
     await waitFor(() => expect(rows().length).toBeGreaterThan(0));
   });
 });
+
+describe('esqueleto nos cartões', () => {
+  beforeEach(() => setMockSession({ access_token: 'jwt' }));
+
+  const skeletons = () => document.querySelectorAll('.skeleton');
+  const stats = { students: 42, entriesToday: 7, pendingFingerprints: 3, recentEntries: [] };
+
+  it('início: números em esqueleto enquanto /stats pende, depois os valores', async () => {
+    const release = holdApi('/stats');
+    renderAt('/');
+    await waitFor(() => expect(skeletons()).toHaveLength(3));
+    expect(screen.queryByText('–')).not.toBeInTheDocument();
+    await act(async () => release(jsonResponse(200, stats)));
+    expect(await screen.findByText('42')).toBeInTheDocument();
+    expect(skeletons()).toHaveLength(0);
+  });
+
+  it('início: erro em /stats não deixa esqueleto para sempre', async () => {
+    mockApi((path) => (path.startsWith('/stats') ? jsonResponse(500, { message: 'falhou' }) : undefined));
+    renderAt('/');
+    expect((await screen.findAllByText('–')).length).toBe(3);
+    expect(skeletons()).toHaveLength(0);
+  });
+});

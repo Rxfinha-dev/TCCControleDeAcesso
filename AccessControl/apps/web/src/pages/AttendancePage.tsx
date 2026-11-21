@@ -12,6 +12,7 @@ import type {
 } from '../api/types';
 import { JustificationsPanel } from '../components/JustificationsPanel';
 import { PageHeader } from '../components/PageHeader';
+import { SkeletonCard } from '../components/Skeleton';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
 import { CANCELLATION_LABELS, currentSchoolYear, dayMessage, formatMinute, todayIso } from '../utils/academic';
@@ -62,6 +63,8 @@ export function AttendancePage() {
   /** Bimestre da aba Frequência ('' = ano letivo). */
   const [term, setTerm] = useState<number | ''>('');
   const [saving, setSaving] = useState(false);
+  const [dayFailed, setDayFailed] = useState(false);
+  const [summaryFailed, setSummaryFailed] = useState(false);
 
   useEffect(() => {
     (isTeacher ? attendanceApi.myLessons().then((data) => data.classGroups) : classGroupsApi.list(currentSchoolYear()))
@@ -77,22 +80,28 @@ export function AttendancePage() {
     try {
       setDay(await attendanceApi.day(classGroupId, date));
     } catch (err) {
+      setDayFailed(true);
       toast.error(errorMessage(err));
     }
   }, [classGroupId, date, toast]);
 
   useEffect(() => {
     setDay(null);
+    setDayFailed(false);
     void loadDay();
   }, [loadDay]);
 
   useEffect(() => {
     if (tab !== 'frequencia' || classGroupId === null) return;
     setSummary(null);
+    setSummaryFailed(false);
     attendanceApi
       .summary(classGroupId, term || undefined)
       .then(setSummary)
-      .catch((err) => toast.error(errorMessage(err)));
+      .catch((err) => {
+        setSummaryFailed(true);
+        toast.error(errorMessage(err));
+      });
   }, [tab, classGroupId, term, toast]);
 
   /** Grava uma correção e recarrega a chamada. */
@@ -178,6 +187,7 @@ export function AttendancePage() {
                 )}
               </p>
             )}
+            {classGroupId !== null && !day && !dayFailed && <SkeletonCard lines={4} />}
             {day && !message && day.lessons.length === 0 && <p className="banner">Esta turma não tem aula neste dia.</p>}
             {day && day.lessons.length > 0 && (
               <section className="card">
@@ -281,6 +291,7 @@ export function AttendancePage() {
           </div>
 
           <div role="tabpanel" id="panel-frequencia" aria-labelledby="tab-frequencia" hidden={tab !== 'frequencia'}>
+            {tab === 'frequencia' && classGroupId !== null && !summary && !summaryFailed && <SkeletonCard lines={4} />}
             {summary && (
               <section className="card">
                 <label className="field field-inline">

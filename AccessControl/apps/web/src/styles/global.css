@@ -218,6 +218,15 @@ html {
   animation: skeleton-pulse 1.4s ease-in-out infinite;
 }
 
+.skeleton-card {
+  display: grid;
+  gap: 10px;
+}
+
+.student-photo .student-photo-skeleton {
+  border-radius: 0;
+}
+
 @keyframes skeleton-pulse {
   0%,
   100% {
