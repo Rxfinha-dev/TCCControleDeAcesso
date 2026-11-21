@@ -82,9 +82,22 @@ describe('Planos', () => {
   });
 
   it('403 MODULE_NOT_IN_PLAN numa tela aberta mostra o aviso do plano', async () => {
-    mockApi((path) => (path.startsWith('/class-groups') ? jsonResponse(403, { code: 'MODULE_NOT_IN_PLAN', message: PLAN_NOTICE }) : undefined), userWith(ALL_MODULES));
+    // Plano rebaixado em outra sessão: a API recusa e o /auth/me seguinte já vem sem presença.
+    let downgraded = false;
+    mockApi((path) => {
+      if (path.startsWith('/class-groups')) {
+        downgraded = true;
+        return jsonResponse(403, { code: 'MODULE_NOT_IN_PLAN', message: PLAN_NOTICE });
+      }
+      if (path.endsWith('/auth/me') && downgraded) return jsonResponse(200, userWith(BASIC));
+      return undefined;
+    }, userWith(ALL_MODULES));
     renderAt('/presenca');
-    expect(await screen.findByText(PLAN_NOTICE)).toBeInTheDocument();
+
+    // O aviso fica no corpo da página (no lugar da tela), não só no toast.
+    await waitFor(() => expect(within(screen.getByRole('main')).getByText(PLAN_NOTICE)).toBeInTheDocument());
+    expect(screen.queryByLabelText('Turma')).not.toBeInTheDocument();
+    expect(sidebar().queryByText('Presença')).not.toBeInTheDocument();
   });
 
   it('professor de escola sem presença vê o aviso e só o Início no menu', async () => {

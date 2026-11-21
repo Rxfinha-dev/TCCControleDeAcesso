@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { schoolsApi } from '../api';
-import { errorMessage, setSchoolForbiddenHandler, setSchoolScope } from '../api/client';
+import { errorMessage, setModuleNotInPlanHandler, setSchoolForbiddenHandler, setSchoolScope } from '../api/client';
 import type { Module, SchoolSummary } from '../api/types';
 import { useAuth } from './AuthContext';
 import { useSerial } from './SerialContext';
@@ -119,6 +119,15 @@ export function SchoolScopeProvider({ children }: { children: ReactNode }) {
     setSchoolForbiddenHandler(() => void loadUser().catch(() => undefined));
     return () => setSchoolForbiddenHandler(null);
   }, [loadUser]);
+
+  // Plano trocado em outra sessão: atualiza usuário e escolas; o menu e o RequireModule trocam a tela pelo aviso.
+  useEffect(() => {
+    setModuleNotInPlanHandler(() => {
+      void loadUser().catch(() => undefined);
+      if (isSuperAdmin) void reloadSchools().catch(() => undefined);
+    });
+    return () => setModuleNotInPlanHandler(null);
+  }, [loadUser, reloadSchools, isSuperAdmin]);
 
   // Ao sair do painel, as próximas requisições não levam mais a escola escolhida.
   useEffect(() => () => setSchoolScope(null), []);
