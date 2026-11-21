@@ -8,6 +8,7 @@ import { PlusIcon } from '../components/Icons';
 import { PageHeader } from '../components/PageHeader';
 import { useSchoolScope } from '../contexts/SchoolScopeContext';
 import { useToast } from '../contexts/ToastContext';
+import { SkeletonRows } from '../components/Skeleton';
 
 const EMPTY_FORM = { name: '', email: '', plan: 'BASIC' as SchoolPlan };
 
@@ -173,7 +174,7 @@ export function SchoolsPage() {
 
       <section className="card">
         <div className="table-wrapper">
-          <table className="table">
+          <table className="table" aria-busy={loading}>
             <thead>
               <tr>
                 <th>Nome</th>
@@ -188,6 +189,7 @@ export function SchoolsPage() {
               </tr>
             </thead>
             <tbody>
+              {loading && schools.length === 0 && <SkeletonRows cols={7} />}
               {schools.map((school) => (
                 <tr key={school.id}>
                   <td>{school.name}</td>

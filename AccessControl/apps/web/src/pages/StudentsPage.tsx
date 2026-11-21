@@ -12,6 +12,7 @@ import { useSerial } from '../contexts/SerialContext';
 import { useToast } from '../contexts/ToastContext';
 import { useFingerprintEnrollment } from '../hooks/useFingerprintEnrollment';
 import { YEAR_OPTIONS, initials, yearLabel } from '../utils/format';
+import { SkeletonRows } from '../components/Skeleton';
 
 const EMPTY_FORM: StudentInput = { name: '', rm: '', age: '', year: '', courseId: '', photo: null };
 
@@ -274,7 +275,7 @@ export function StudentsPage() {
           <span className="muted">{students.length === 1 ? '1 aluno' : `${students.length} alunos`}</span>
         </div>
         <div className="table-wrapper">
-          <table className="table selectable">
+          <table className="table selectable" aria-busy={loading}>
             <thead>
               <tr>
                 <th>Aluno</th>
@@ -284,6 +285,7 @@ export function StudentsPage() {
               </tr>
             </thead>
             <tbody>
+              {loading && students.length === 0 && <SkeletonRows cols={4} />}
               {students.map((student) => (
                 <tr
                   key={student.id}
