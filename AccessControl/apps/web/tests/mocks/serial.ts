@@ -1,10 +1,5 @@
-import { ReadableStream, TextDecoderStream, WritableStream } from 'node:stream/web';
-
 /** Leitor de digital simulado: uma porta Web Serial em memória, com o que o Arduino "envia" e o que recebeu. */
 export function installFakeSerial({ usbVendorId = 0x2341, usbProductId = 0x43 }: { usbVendorId?: number; usbProductId?: number } = {}) {
-  // O jsdom não expõe as Web Streams: usa as do Node.
-  Object.assign(globalThis, { ReadableStream, WritableStream, TextDecoderStream });
-
   let arduino!: ReadableStreamDefaultController<Uint8Array>;
   const written: string[] = [];
   const decoder = new TextDecoder();
