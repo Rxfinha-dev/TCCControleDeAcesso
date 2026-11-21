@@ -28,9 +28,11 @@ describe('esqueleto nas tabelas', () => {
     renderAt('/alunos');
     await waitFor(() => expect(rows().length).toBeGreaterThan(0));
     expect(document.querySelector('table')).toHaveAttribute('aria-busy', 'true');
+    expect(screen.queryByText(/\d+ alunos?$/)).not.toBeInTheDocument();
     await act(async () => release(jsonResponse(200, [aluno])));
     expect(await screen.findByText('Ana Souza')).toBeInTheDocument();
     expect(rows()).toHaveLength(0);
+    expect(screen.getByText('1 aluno')).toBeInTheDocument();
   });
 
   it('alunos: lista vazia mostra o texto de vazio, sem esqueleto', async () => {

@@ -187,7 +187,7 @@ export function AttendancePage() {
                 )}
               </p>
             )}
-            {classGroupId !== null && !day && !dayFailed && <SkeletonCard lines={4} />}
+            {classGroupId !== null && !!date && !day && !dayFailed && <SkeletonCard lines={4} />}
             {day && !message && day.lessons.length === 0 && <p className="banner">Esta turma não tem aula neste dia.</p>}
             {day && day.lessons.length > 0 && (
               <section className="card">
