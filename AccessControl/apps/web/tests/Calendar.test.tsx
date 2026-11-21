@@ -105,6 +105,19 @@ describe('Calendário', () => {
     });
   });
 
+  it('bimestres digitados e ainda não salvos sobrevivem a outra ação na tela', async () => {
+    const fetchMock = setup();
+    renderAt('/calendario');
+
+    const toggle = await screen.findByRole('checkbox', { name: 'Tiradentes: sem aula' });
+    fireEvent.change(screen.getByLabelText('Início do 1º bimestre'), { target: { value: `${YEAR}-02-02` } });
+    await userEvent.click(toggle);
+
+    await waitFor(() => expect(callsTo(fetchMock, '/calendar')).toHaveLength(2));
+    await screen.findByText('Tiradentes agora é dia letivo.');
+    expect(screen.getByLabelText('Início do 1º bimestre')).toHaveValue(`${YEAR}-02-02`);
+  });
+
   it('não envia bimestres incompletos', async () => {
     const fetchMock = setup();
     renderAt('/calendario');

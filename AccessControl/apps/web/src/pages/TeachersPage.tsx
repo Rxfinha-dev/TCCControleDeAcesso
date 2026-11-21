@@ -165,6 +165,12 @@ export function TeachersPage() {
                   placeholder="Em branco: o sistema gera uma"
                   value={loginPassword}
                   onChange={(event) => setLoginPassword(event.target.value)}
+                  // O campo fica dentro do formulário do professor: Enter aqui cria o login em vez de salvar a ficha.
+                  onKeyDown={(event) => {
+                    if (event.key !== 'Enter') return;
+                    event.preventDefault();
+                    if (!savingLogin) void handleLogin();
+                  }}
                 />
               </label>
               <div className="form-actions">

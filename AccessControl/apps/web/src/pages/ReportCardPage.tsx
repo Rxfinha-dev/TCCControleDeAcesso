@@ -20,12 +20,17 @@ export function ReportCardPage() {
   const [failed, setFailed] = useState(false);
 
   useEffect(() => {
+    let active = true;
     (studentId ? reportCardsApi.get(Number(studentId)) : studentApi.panel().then((panel) => panel.reportCard))
-      .then(setCard)
+      .then((result) => active && setCard(result))
       .catch((err) => {
+        if (!active) return;
         setFailed(true);
         toast.error(errorMessage(err));
       });
+    return () => {
+      active = false;
+    };
   }, [studentId, toast]);
 
   return (

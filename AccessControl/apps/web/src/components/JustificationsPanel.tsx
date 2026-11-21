@@ -3,6 +3,7 @@ import { attendanceApi, classGroupsApi } from '../api';
 import { errorMessage } from '../api/client';
 import type { AbsenceJustification, ClassGroupStudent } from '../api/types';
 import { useToast } from '../contexts/ToastContext';
+import { useLatestRequest } from '../hooks/useLatestRequest';
 import { formatDay, todayIso } from '../utils/academic';
 import { ConfirmDialog } from './ConfirmDialog';
 
@@ -16,23 +17,30 @@ export function JustificationsPanel({ classGroupId, onChange }: { classGroupId: 
   const [form, setForm] = useState(emptyForm);
   const [saving, setSaving] = useState(false);
   const [removing, setRemoving] = useState<AbsenceJustification | null>(null);
+  const beginLoad = useLatestRequest();
 
   const load = useCallback(async () => {
+    const isCurrent = beginLoad();
     try {
-      setItems(await attendanceApi.justifications(classGroupId));
+      const result = await attendanceApi.justifications(classGroupId);
+      if (isCurrent()) setItems(result);
     } catch (err) {
-      toast.error(errorMessage(err));
+      if (isCurrent()) toast.error(errorMessage(err));
     }
-  }, [classGroupId, toast]);
+  }, [classGroupId, toast, beginLoad]);
 
   useEffect(() => {
     setItems(null);
     setForm(emptyForm());
     void load();
+    let active = true;
     classGroupsApi
       .students(classGroupId)
-      .then(setStudents)
-      .catch((err) => toast.error(errorMessage(err)));
+      .then((result) => active && setStudents(result))
+      .catch((err) => active && toast.error(errorMessage(err)));
+    return () => {
+      active = false;
+    };
   }, [classGroupId, load, toast]);
 
   async function handleSubmit(event: FormEvent) {

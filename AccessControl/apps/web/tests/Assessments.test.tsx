@@ -141,6 +141,31 @@ describe('Avaliações', () => {
     });
   });
 
+  it.each(['8,5x', 'abc', '11', '-1', '8,5,5'])('nota inválida (%s) não é enviada e não apaga a nota', async (typed) => {
+    const fetchMock = setup();
+    renderAt('/avaliacoes');
+
+    await userEvent.click(await screen.findByRole('button', { name: 'Lançar notas de Prova 1' }));
+    const ana = await screen.findByLabelText('Nota de Ana Souza');
+    await userEvent.clear(ana);
+    await userEvent.type(ana, typed);
+    await userEvent.click(screen.getByRole('button', { name: 'Salvar notas' }));
+
+    expect(await screen.findByText('Nota inválida para Ana Souza: use um número de 0 a 10.')).toBeInTheDocument();
+    expect(ana).toHaveAttribute('aria-invalid', 'true');
+    expect(ana).toHaveAccessibleDescription('Use um número de 0 a 10');
+    expect(screen.getByLabelText('Nota de Bruno Lima')).not.toHaveAttribute('aria-invalid');
+    expect(callsTo(fetchMock, '/assessments/40/grades', 'PUT')).toHaveLength(0);
+
+    // Corrigir o campo tira o aviso e libera o envio.
+    await userEvent.clear(ana);
+    await userEvent.type(ana, '10');
+    expect(ana).not.toHaveAttribute('aria-invalid');
+    await userEvent.click(screen.getByRole('button', { name: 'Salvar notas' }));
+    await waitFor(() => expect(callsTo(fetchMock, '/assessments/40/grades', 'PUT')).toHaveLength(1));
+    expect(bodyOf(callsTo(fetchMock, '/assessments/40/grades', 'PUT')[0]).grades[0]).toEqual({ studentId: 10, value: 10 });
+  });
+
   it('em escola de conceitos, a nota é escolhida numa lista', async () => {
     const fetchMock = setup(CONCEPT);
     renderAt('/avaliacoes');

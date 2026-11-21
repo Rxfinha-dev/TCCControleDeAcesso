@@ -118,6 +118,22 @@ describe('Logins criados pela escola', () => {
     expect(bodyOf(callsTo(fetchMock, '/logins/teachers/8', 'PUT')[0])).toEqual({ password: 'senha1234' });
   });
 
+  it('Enter na senha do login cria o login, sem salvar a ficha do professor', async () => {
+    const fetchMock = mockApi((path, method) => {
+      if (path === '/teachers') return jsonResponse(200, [{ id: 8, name: 'Ana Prado', contactEmail: null, assignmentsCount: 1, username: null }]);
+      if (path === '/logins/teachers/8' && method === 'PUT') return jsonResponse(200, { username: 'ana.prado@etec-jau', password: 'senha1234' });
+      return undefined;
+    });
+    renderAt('/professores');
+
+    await userEvent.click(await screen.findByText('Ana Prado'));
+    await userEvent.type(screen.getByLabelText('Senha inicial'), 'senha1234{Enter}');
+
+    expect(await screen.findByRole('region', { name: 'Login de Ana Prado' })).toBeInTheDocument();
+    expect(callsTo(fetchMock, '/logins/teachers/8', 'PUT')).toHaveLength(1);
+    expect(callsTo(fetchMock, '/teachers/8', 'PUT')).toHaveLength(0);
+  });
+
   it('gera os logins da turma e lista quem falhou', async () => {
     mockApi((path, method) => {
       if (path === '/class-groups/3' && method === 'GET') {

@@ -18,6 +18,7 @@ import { PageHeader } from '../components/PageHeader';
 import { SkeletonCard } from '../components/Skeleton';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
+import { useLatestRequest } from '../hooks/useLatestRequest';
 import { currentSchoolYear, formatDay, formatMinute, KIND_LABELS, todayIso } from '../utils/academic';
 
 const TABS = [
@@ -37,6 +38,15 @@ const emptyForm = (subjectId = 0): Omit<AssessmentInput, 'classGroupId'> => ({
   note: '',
   weight: 1,
 });
+
+/** Nota digitada: null = campo vazio (apaga a nota de propósito); undefined = inválida (não enviar). */
+function parseGrade(raw: string, max: number): number | null | undefined {
+  const text = raw.trim().replace(',', '.');
+  if (text === '') return null;
+  if (!/^\d+(\.\d+)?$/.test(text)) return undefined;
+  const value = Number(text);
+  return value <= max ? value : undefined;
+}
 
 function Average({ cell }: { cell: GradeCell }) {
   if (cell.label === null) return <span className="muted">—</span>;
@@ -61,8 +71,11 @@ export function AssessmentsPage() {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [grades, setGrades] = useState<AssessmentGrades | null>(null);
   const [values, setValues] = useState<Record<number, string>>({});
+  const [invalidGrades, setInvalidGrades] = useState<number[]>([]);
   const [report, setReport] = useState<GradesReport | null>(null);
   const [reportSubjectId, setReportSubjectId] = useState<number | null>(null);
+  const beginLoad = useLatestRequest();
+  const beginGradesLoad = useLatestRequest();
 
   useEffect(() => {
     (isTeacher ? attendanceApi.myLessons().then((result) => result.classGroups) : classGroupsApi.list(currentSchoolYear()))
@@ -76,24 +89,28 @@ export function AssessmentsPage() {
 
   const load = useCallback(async () => {
     if (classGroupId === null) return;
+    const isCurrent = beginLoad();
     try {
       const result = await assessmentsApi.list(classGroupId);
+      if (!isCurrent()) return;
       setData(result);
       setForm((current) => (current.subjectId ? current : { ...current, subjectId: result.subjects[0]?.id ?? 0 }));
     } catch (err) {
+      if (!isCurrent()) return;
       setDataFailed(true);
       toast.error(errorMessage(err));
     }
-  }, [classGroupId, toast]);
+  }, [classGroupId, toast, beginLoad]);
 
   useEffect(() => {
     setData(null);
     setDataFailed(false);
     setSelected(null);
     setGrades(null);
+    beginGradesLoad(); // descarta as notas de outra turma ainda a caminho
     setForm(emptyForm());
     void load();
-  }, [load]);
+  }, [load, beginGradesLoad]);
 
   // Prova acontece numa aula: busca as aulas da disciplina no dia escolhido.
   useEffect(() => {
@@ -115,16 +132,22 @@ export function AssessmentsPage() {
     if (tab !== 'medias' || classGroupId === null) return;
     setReport(null);
     setReportFailed(false);
+    let active = true;
     assessmentsApi
       .report(classGroupId)
       .then((result) => {
+        if (!active) return;
         setReport(result);
         setReportSubjectId((current) => (result.subjects.some((subject) => subject.id === current) ? current : (result.subjects[0]?.id ?? null)));
       })
       .catch((err) => {
+        if (!active) return;
         setReportFailed(true);
         toast.error(errorMessage(err));
       });
+    return () => {
+      active = false;
+    };
   }, [tab, classGroupId, toast]);
 
   const clear = () => {
@@ -186,27 +209,33 @@ export function AssessmentsPage() {
   }
 
   async function openGrades(assessment: Assessment) {
+    const isCurrent = beginGradesLoad();
     try {
       const result = await assessmentsApi.grades(assessment.id);
+      if (!isCurrent()) return;
       setGrades(result);
+      setInvalidGrades([]);
       setValues(Object.fromEntries(result.students.map((student) => [student.id, student.value === null ? '' : String(student.value)])));
     } catch (err) {
-      toast.error(errorMessage(err));
+      if (isCurrent()) toast.error(errorMessage(err));
     }
   }
 
   async function saveGrades(event: FormEvent) {
     event.preventDefault();
     if (!grades) return;
+    // Conceitos vêm da lista (sempre válidos); notas numéricas vão de 0 ao máximo da escola.
+    const max = grades.grading.kind === 'NUMERIC' ? grades.grading.max : Infinity;
+    const parsed = grades.students.map((student) => ({ studentId: student.id, value: parseGrade(values[student.id] ?? '', max) }));
+    const invalid = grades.students.filter((_, index) => parsed[index].value === undefined);
+    setInvalidGrades(invalid.map((student) => student.id));
+    if (invalid.length > 0) {
+      toast.error(`Nota inválida para ${invalid[0].name}: use um número de 0 a ${max}.`);
+      return;
+    }
     setSaving(true);
     try {
-      await assessmentsApi.setGrades(
-        grades.assessment.id,
-        grades.students.map((student) => {
-          const raw = (values[student.id] ?? '').trim().replace(',', '.');
-          return { studentId: student.id, value: raw === '' ? null : Number(raw) };
-        }),
-      );
+      await assessmentsApi.setGrades(grades.assessment.id, parsed as { studentId: number; value: number | null }[]);
       toast.success('Notas salvas.');
       setGrades(null);
       await load();
@@ -301,13 +330,25 @@ export function AssessmentsPage() {
                           <td className="numeric">{student.rm}</td>
                           <td>
                             {grades.grading.kind === 'NUMERIC' ? (
-                              <input
-                                className="grade-input"
-                                inputMode="decimal"
-                                aria-label={`Nota de ${student.name}`}
-                                value={values[student.id] ?? ''}
-                                onChange={(event) => setValues({ ...values, [student.id]: event.target.value })}
-                              />
+                              <>
+                                <input
+                                  className="grade-input"
+                                  inputMode="decimal"
+                                  aria-label={`Nota de ${student.name}`}
+                                  aria-invalid={invalidGrades.includes(student.id) || undefined}
+                                  aria-describedby={invalidGrades.includes(student.id) ? `grade-error-${student.id}` : undefined}
+                                  value={values[student.id] ?? ''}
+                                  onChange={(event) => {
+                                    setValues({ ...values, [student.id]: event.target.value });
+                                    setInvalidGrades((current) => current.filter((id) => id !== student.id));
+                                  }}
+                                />
+                                {invalidGrades.includes(student.id) && (
+                                  <small id={`grade-error-${student.id}`} className="grade-error">
+                                    Use um número de 0 a {grades.grading.max}
+                                  </small>
+                                )}
+                              </>
                             ) : (
                               <select
                                 className="grade-input"
