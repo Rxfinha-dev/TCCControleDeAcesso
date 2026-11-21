@@ -38,6 +38,9 @@ services:
         sync: false
       - key: SUPABASE_STORAGE_BUCKET
         value: student-photos
+      # Opcional: e-mail do primeiro super admin (só vale enquanto não existe nenhum).
+      - key: SUPER_ADMIN_BOOTSTRAP_EMAIL
+        sync: false
 
   - type: web
     name: helpus-web

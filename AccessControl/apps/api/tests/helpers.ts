@@ -147,8 +147,8 @@ export const schoolUser: User = {
 export const superAdmin: User = {
   ...schoolUser,
   id: 2,
-  email: 'rafaelhenriqueoliveira1234@gmail.com',
-  name: 'Rafael',
+  email: 'dono@exemplo.com',
+  name: 'Dono',
   role: 'SUPER_ADMIN',
 };
 
