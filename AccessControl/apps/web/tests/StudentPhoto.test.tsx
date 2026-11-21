@@ -36,6 +36,19 @@ describe('StudentPhoto', () => {
     expect(container.querySelector('.skeleton')).not.toBeInTheDocument();
   });
 
+  it('foto pendente: aria-busy e aviso oculto; carregada, sem os dois', async () => {
+    let resolve: (blob: Blob) => void = () => {};
+    photo.mockReturnValueOnce(new Promise<Blob>((r) => (resolve = r)));
+    const { container } = render(<StudentPhoto studentId={6} hasPhoto alt="Foto" />);
+    const box = container.querySelector('.student-photo')!;
+    await waitFor(() => expect(box).toHaveAttribute('aria-busy', 'true'));
+    expect(screen.getByText('Carregando foto…')).toHaveClass('sr-only');
+    await act(async () => resolve(new Blob(['x'])));
+    await screen.findByRole('img', { name: 'Foto' });
+    expect(box).not.toHaveAttribute('aria-busy');
+    expect(screen.queryByText('Carregando foto…')).not.toBeInTheDocument();
+  });
+
   it('sem foto mostra o ícone, sem esqueleto', () => {
     const { container } = render(<StudentPhoto studentId={4} hasPhoto={false} alt="Foto" />);
     expect(container.querySelector('.skeleton')).not.toBeInTheDocument();
