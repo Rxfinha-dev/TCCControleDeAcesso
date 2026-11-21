@@ -13,6 +13,7 @@ jest.mock('@supabase/supabase-js', () => ({
 }));
 
 import { AuthRetryableFetchError } from '@supabase/supabase-js';
+import { logger } from '../src/lib/logger';
 import { SESSION_CHECK_TTL_MS, SupabaseIdentityProvider } from '../src/services/identity';
 
 const SESSION = 'session-1';
@@ -133,5 +134,24 @@ describe('SupabaseIdentityProvider', () => {
     expect(adminSignOut).toHaveBeenCalledWith('t', 'others');
     await provider.isSessionActive('outro-token', 'outra-sessao');
     expect(getUser).toHaveBeenCalledTimes(2);
+  });
+
+  it('429 devolvido pelo getClaims responde 503, não 401', async () => {
+    getClaims.mockResolvedValue({
+      data: null,
+      error: { name: 'AuthApiError', status: 429, code: 'over_request_rate_limit', message: 'Too many requests' },
+    });
+    await expect(new SupabaseIdentityProvider().verifyToken('t')).rejects.toMatchObject({ statusCode: 503, code: 'AUTH_UNAVAILABLE' });
+  });
+
+  it('falha ao encerrar a sessão de teste vira aviso no log, sem mudar o resultado', async () => {
+    const warn = jest.spyOn(logger, 'warn').mockImplementation(() => undefined as never);
+    signInWithPassword.mockResolvedValue({ data: { session: { access_token: 'tmp' } }, error: null });
+    signOut.mockResolvedValue({ error: { name: 'AuthApiError', status: 500, message: 'erro' } });
+
+    await expect(new SupabaseIdentityProvider().verifyPassword('ana@x.helpus', 'senha-atual-1')).resolves.toBe(true);
+
+    expect(warn).toHaveBeenCalled();
+    warn.mockRestore();
   });
 });

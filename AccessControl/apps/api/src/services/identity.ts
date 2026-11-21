@@ -1,6 +1,7 @@
 import { createClient, isAuthRetryableFetchError, type AuthError } from '@supabase/supabase-js';
 import { env } from '../config/env';
 import { badRequest, conflict, serviceUnavailable } from '../lib/errors';
+import { logger } from '../lib/logger';
 
 /** Por quanto tempo uma sessão confirmada no Supabase Auth dispensa nova consulta. */
 export const SESSION_CHECK_TTL_MS = 30_000;
@@ -50,6 +51,10 @@ const clientOptions = { auth: { persistSession: false, autoRefreshToken: false, 
 const loginsUnavailable = () =>
   serviceUnavailable('Criação de logins indisponível: configure SUPABASE_SERVICE_ROLE_KEY na API.', 'LOGINS_UNAVAILABLE');
 
+/** Falha do servidor de login (rede, limite de requisições, 5xx): não diz nada sobre o token ou a senha. */
+const isUnavailable = (error: AuthError) =>
+  isAuthRetryableFetchError(error) || error.status === 429 || (error.status ?? 0) >= 500;
+
 const authUnavailable = () =>
   serviceUnavailable('Não foi possível validar o login agora. Tente novamente em instantes.', 'AUTH_UNAVAILABLE');
 
@@ -83,6 +88,7 @@ export class SupabaseIdentityProvider implements IdentityProvider {
       return null;
     }
     const { data, error } = result;
+    if (error && isUnavailable(error)) throw authUnavailable();
     const claims = data?.claims;
     if (error || !claims?.sub || !claims.email || !claims.session_id || claims.role !== 'authenticated' || claims.is_anonymous) {
       return null;
@@ -100,9 +106,7 @@ export class SupabaseIdentityProvider implements IdentityProvider {
 
     const { data, error } = await this.client.auth.getUser(token);
     // 429 (limite do Supabase num pico de acessos) não quer dizer sessão encerrada: deslogar só pioraria o pico.
-    if (error && (isAuthRetryableFetchError(error) || error.status === 429 || (error.status ?? 0) >= 500)) {
-      throw authUnavailable();
-    }
+    if (error && isUnavailable(error)) throw authUnavailable();
     if (error || !data.user) {
       this.activeSessions.delete(sessionId);
       return false;
@@ -143,11 +147,11 @@ export class SupabaseIdentityProvider implements IdentityProvider {
     // Cliente próprio, sem persistência: a sessão de teste não se mistura com as outras e é encerrada logo.
     const client = createClient(env.SUPABASE_URL, env.SUPABASE_PUBLISHABLE_KEY, clientOptions);
     const { data, error } = await client.auth.signInWithPassword({ email, password });
-    if (error && (isAuthRetryableFetchError(error) || error.status === 429 || (error.status ?? 0) >= 500)) {
-      throw authUnavailable();
-    }
+    if (error && isUnavailable(error)) throw authUnavailable();
     if (error || !data.session) return false;
-    await client.auth.signOut({ scope: 'local' });
+    // A senha confere mesmo se o encerramento falhar; a sessão de teste só ficaria aberta até expirar.
+    const signOut = await client.auth.signOut({ scope: 'local' }).catch((err: unknown) => ({ error: err }));
+    if (signOut.error) logger.warn({ err: signOut.error }, 'identidade: não foi possível encerrar a sessão de teste da senha');
     return true;
   }
 
