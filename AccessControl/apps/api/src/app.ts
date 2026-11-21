@@ -9,7 +9,7 @@ import { openApiSpec } from './docs/openapi';
 import { logger } from './lib/logger';
 import { createRequireAuth, requireRole } from './middlewares/auth';
 import { errorHandler, notFoundHandler } from './middlewares/error-handler';
-import { requireAccess, requirePanelAccess, requireSchoolScope } from './middlewares/school-scope';
+import { requireAccess, requireModule, requirePanelAccess, requireSchoolScope } from './middlewares/school-scope';
 import { apiRateLimit } from './middlewares/rate-limit';
 import { accessLogsRoutes } from './modules/access-logs/access-logs.routes';
 import { AccessLogsService } from './modules/access-logs/access-logs.service';
@@ -136,8 +136,8 @@ export function createApp({ prisma, identity, storage, holidays = brasilApiHolid
   app.use('/api/students', ...scoped, studentsRoutes(new StudentsService(prisma, storage, identity)));
   const subjects = new SubjectsService(prisma);
   const teachers = new TeachersService(prisma, identity);
-  app.use('/api/subjects', ...scoped, subjectsRoutes(subjects));
-  app.use('/api/teachers', ...scoped, teachersRoutes(teachers));
+  app.use('/api/subjects', ...scoped, requireModule('ACADEMIC'), subjectsRoutes(subjects));
+  app.use('/api/teachers', ...scoped, requireModule('ACADEMIC'), teachersRoutes(teachers));
   const classGroups = new ClassGroupsService(prisma);
   app.use(
     '/api/class-groups',
@@ -150,17 +150,17 @@ export function createApp({ prisma, identity, storage, holidays = brasilApiHolid
     }),
   );
   const calendar = new CalendarService(prisma, holidays);
-  app.use('/api/calendar', ...scoped, calendarRoutes(calendar));
+  app.use('/api/calendar', ...scoped, requireModule('ACADEMIC'), calendarRoutes(calendar));
   // Presença: o professor também usa, limitado às aulas atribuídas a ele.
   const teacherScoped = [apiRateLimit, requireAuth, requireAccess('SUPER_ADMIN', 'SCHOOL', 'TEACHER'), requireSchoolScope(prisma)];
   const attendance = new AttendanceService(prisma, classGroups, calendar);
-  app.use('/api/attendance', ...teacherScoped, attendanceRoutes(attendance));
+  app.use('/api/attendance', ...teacherScoped, requireModule('ATTENDANCE'), attendanceRoutes(attendance));
   const assessments = new AssessmentsService(prisma, classGroups, attendance);
-  app.use('/api/assessments', ...teacherScoped, assessmentsRoutes(assessments));
+  app.use('/api/assessments', ...teacherScoped, requireModule('ASSESSMENTS'), assessmentsRoutes(assessments));
   const reportCards = new ReportCardService(prisma, attendance, assessments);
-  app.use('/api/report-cards', ...scoped, reportCardRoutes(reportCards));
+  app.use('/api/report-cards', ...scoped, requireModule('ASSESSMENTS'), reportCardRoutes(reportCards));
   // Aluno: só o próprio painel.
-  app.use('/api/student', apiRateLimit, requireAuth, requireAccess('STUDENT'), studentRoutes(reportCards));
+  app.use('/api/student', apiRateLimit, requireAuth, requireAccess('STUDENT'), requireSchoolScope(prisma), requireModule('ASSESSMENTS'), studentRoutes(reportCards));
   app.use('/api/logins', ...scoped, loginsRoutes(new LoginsService(prisma, identity, classGroups)));
   app.use('/api/settings', ...scoped, settingsRoutes(prisma));
   app.use('/api/access-logs', ...scopedOrAll, accessLogsRoutes(new AccessLogsService(prisma)));

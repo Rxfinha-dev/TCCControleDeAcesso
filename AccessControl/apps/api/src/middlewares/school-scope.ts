@@ -1,7 +1,8 @@
-import { UserRole, type PrismaClient } from '@prisma/client';
+import { UserRole, type PrismaClient, type SchoolPlan } from '@prisma/client';
 import type { NextFunction, Request, RequestHandler, Response } from 'express';
 import { z } from 'zod';
 import { badRequest, forbidden, notFound } from '../lib/errors';
+import { hasModule, type Module } from '../lib/plans';
 import { currentUser } from './auth';
 
 /** Cabeçalho com a escola em uso: id da escola ou "all" (todas, só super admin e só leitura). */
@@ -59,23 +60,27 @@ export function requireSchoolScope(prisma: PrismaClient, opts: { allowAll?: bool
       }
       if (user.homeSchoolId === null) throw schoolRequired();
       res.locals.schoolScope = user.homeSchoolId;
+      res.locals.schoolPlan = user.homeSchoolPlan;
       return next();
     }
 
     if (requested === 'all') {
       if (!opts.allowAll) throw schoolRequired();
       res.locals.schoolScope = null;
+      res.locals.schoolPlan = null;
       return next();
     }
     if (requested === undefined) {
       if (user.homeSchoolId === null) throw schoolRequired();
       res.locals.schoolScope = user.homeSchoolId;
+      res.locals.schoolPlan = user.homeSchoolPlan;
       return next();
     }
 
-    const school = await prisma.school.findUnique({ where: { id: requested }, select: { id: true } });
+    const school = await prisma.school.findUnique({ where: { id: requested }, select: { id: true, plan: true } });
     if (!school) throw notFound('Escola não encontrada.', 'SCHOOL_NOT_FOUND');
     res.locals.schoolScope = school.id;
+    res.locals.schoolPlan = school.plan;
     next();
   };
 }
@@ -90,4 +95,19 @@ export function currentSchool(res: Response): { sub: number } {
 /** Escola em uso, ou null quando o super admin pediu todas as escolas. */
 export function currentSchoolOrAll(res: Response): { sub: number | null } {
   return { sub: (res.locals.schoolScope as number | null | undefined) ?? null };
+}
+
+/** Plano da escola em uso, ou null quando o super admin pediu todas as escolas. */
+export function currentPlan(res: Response): SchoolPlan | null {
+  return (res.locals.schoolPlan as SchoolPlan | null | undefined) ?? null;
+}
+
+/** Recusa a rota quando o módulo não está no plano da escola em uso. O módulo ACCESS sempre passa. */
+export function requireModule(module: Module): RequestHandler {
+  return (_req, res, next) => {
+    if (module !== 'ACCESS' && !hasModule(currentPlan(res), module)) {
+      throw forbidden('Este recurso não está incluído no plano da escola.', 'MODULE_NOT_IN_PLAN');
+    }
+    next();
+  };
 }

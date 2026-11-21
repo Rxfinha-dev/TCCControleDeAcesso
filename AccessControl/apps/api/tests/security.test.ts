@@ -185,7 +185,7 @@ describe('Segurança: isolamento entre escolas', () => {
   it('painel do aluno usa o id do login, nunca um id enviado', async () => {
     const { app, prisma } = buildTestApp({ user: studentUser });
     prisma.student.findFirst.mockResolvedValue(null);
-    await request(app).get('/api/student/panel?studentId=99').set('Authorization', authHeader()).set('X-School-Id', '7');
+    await request(app).get('/api/student/panel?studentId=99').set('Authorization', authHeader());
     expect(prisma.student.findFirst.mock.calls[0][0]?.where).toMatchObject({ id: 10, schoolId: school.id });
   });
 });
