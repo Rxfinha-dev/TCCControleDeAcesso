@@ -11,7 +11,7 @@ const ACADEMIC = ['ACCESS', 'ACADEMIC'];
 const userWith = (modules: string[], extra: object = {}) => ({
   ...SCHOOL_USER,
   ...extra,
-  school: { id: 1, name: 'ETEC Jaú', plan: 'X', modules },
+  school: { id: 1, name: 'ETEC Jaú', plan: modules.includes('ATTENDANCE') ? 'ATTENDANCE' : modules.includes('ACADEMIC') ? 'ACADEMIC' : 'BASIC', modules },
 });
 const SUPER_ADMIN = { ...SCHOOL_USER, id: 2, role: 'SUPER_ADMIN', name: 'Rafael Oliveira' };
 const summary = (id: number, name: string, modules: string[]) => ({
@@ -21,7 +21,7 @@ const summary = (id: number, name: string, modules: string[]) => ({
   createdAt: '2026-01-01T00:00:00Z',
   counts: { students: 0, courses: 0, accessLogs: 0 },
   hasLogin: true,
-  plan: 'X',
+  plan: modules.length === 1 ? 'BASIC' : 'ASSESSMENTS',
   modules,
 });
 const GROUP = { id: 3, name: '1º A', schoolYear: 2026, shift: 'MORNING', course: null, studentsCount: 1 };
@@ -60,8 +60,37 @@ describe('Planos', () => {
     expect(screen.queryByRole('button', { name: 'Gerar logins da turma' })).not.toBeInTheDocument();
   });
 
+  it('plano que perde o módulo acadêmico com a aba Grade aberta volta a mostrar Alunos', async () => {
+    // O 403 da grade dispara a releitura do usuário; a resposta (plano BASIC) fica retida até a aba Grade estar aberta.
+    let downgraded = false;
+    let release = () => {};
+    const gate = new Promise<void>((resolve) => (release = resolve));
+    const base = mockApi((path) => {
+      if (path === '/class-groups/3') return jsonResponse(200, GROUP);
+      if (path === '/class-groups/3/students') return jsonResponse(200, []);
+      if (path === '/class-groups/3/timetable') {
+        downgraded = true;
+        return jsonResponse(403, { code: 'MODULE_NOT_IN_PLAN', message: PLAN_NOTICE });
+      }
+      return undefined;
+    }, userWith(ACADEMIC));
+    globalThis.fetch = (async (url: string, init?: RequestInit) => {
+      if (downgraded && String(url).endsWith('/auth/me')) {
+        await gate;
+        return jsonResponse(200, userWith(BASIC));
+      }
+      return base(url, init);
+    }) as never;
+    renderAt('/turmas/3');
+
+    await userEvent.click(await screen.findByRole('tab', { name: 'Grade' }));
+    release();
+    await waitFor(() => expect(screen.getAllByRole('tab')).toHaveLength(1));
+    expect(screen.getByRole('tabpanel', { name: 'Alunos' })).toBeVisible();
+  });
+
   it('configurações com presença mostram Frequência e não a avaliação', async () => {
-    mockApi((path) => (path === '/settings' ? jsonResponse(200, { minAttendance: 75, code: 'etec' }) : undefined), userWith(ATTENDANCE));
+    mockApi((path) => (path === '/settings' ? jsonResponse(200, { minAttendance: 75, code: 'etec', grading: { kind: 'NUMERIC', max: 10, decimals: 1, passing: 6, concepts: [] } }) : undefined), userWith(ATTENDANCE));
     renderAt('/configuracoes');
 
     expect(await screen.findByRole('heading', { name: 'Frequência' })).toBeInTheDocument();
@@ -122,7 +151,7 @@ describe('Planos', () => {
     const turmas = renderAt('/turmas');
     await userEvent.click(await screen.findByText('1º A'));
     await userEvent.click(await screen.findByRole('button', { name: 'Excluir' }));
-    expect(await screen.findByText(/A grade, as presenças e as avaliações desta turma também serão apagadas\./)).toBeInTheDocument();
+    expect(await screen.findByText(/nunca teve alunos; professores, grade, presenças e avaliações desta turma também serão apagados\./)).toBeInTheDocument();
     turmas.unmount();
 
     renderAt('/alunos');

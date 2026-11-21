@@ -45,9 +45,11 @@ export function StudentHomePage() {
         title={`Olá, ${firstName(user?.name ?? '')}`}
         description={card?.classGroup ? `Turma ${card.classGroup.name} · ano letivo ${card.schoolYear}` : 'Seu painel de aulas, frequência e notas.'}
         actions={
-          <Link to="/boletim" className="btn btn-primary">
-            Baixar boletim
-          </Link>
+          inPlan && (
+            <Link to="/boletim" className="btn btn-primary">
+              Baixar boletim
+            </Link>
+          )
         }
       />
 

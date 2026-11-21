@@ -247,7 +247,7 @@ export function ClassGroupsPage() {
       <ConfirmDialog
         open={confirmDelete}
         title="Excluir turma"
-        message={`Deseja excluir a turma "${selected?.name}"? Só dá para excluir turma que nunca teve alunos; A grade, as presenças e as avaliações desta turma também serão apagadas.`}
+        message={`Deseja excluir a turma "${selected?.name}"? Só dá para excluir turma que nunca teve alunos; professores, grade, presenças e avaliações desta turma também serão apagados.`}
         confirmLabel="Excluir"
         onConfirm={handleDelete}
         onCancel={() => setConfirmDelete(false)}

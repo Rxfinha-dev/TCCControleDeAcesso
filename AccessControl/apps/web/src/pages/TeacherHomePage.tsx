@@ -33,7 +33,7 @@ export function TeacherHomePage() {
     <>
       <PageHeader
         title={`Olá, ${firstName(user?.name ?? '')}`}
-        description="Suas aulas de hoje. A catraca marca a presença; abra a chamada para corrigir as exceções."
+        description={inPlan ? 'Suas aulas de hoje. A catraca marca a presença; abra a chamada para corrigir as exceções.' : 'Seu painel de aulas.'}
       />
 
       {!inPlan && <p className="banner">{PLAN_NOTICE}</p>}

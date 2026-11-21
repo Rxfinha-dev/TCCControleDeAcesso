@@ -30,6 +30,8 @@ export function ClassGroupPage() {
   const full = group && { ...group, assignments: group.assignments ?? [] };
   const [tab, setTab] = useState<TabId>('alunos');
   const [notFound, setNotFound] = useState(false);
+  // Plano que perde o módulo com outra aba aberta: volta para Alunos, a única que sempre existe.
+  const activeTab = hasModule('ACADEMIC') ? tab : 'alunos';
 
   const loadGroup = useCallback(async () => {
     try {
@@ -76,7 +78,7 @@ export function ClassGroupPage() {
             type="button"
             role="tab"
             id={`tab-${tabId}`}
-            aria-selected={tab === tabId}
+            aria-selected={activeTab === tabId}
             aria-controls={`panel-${tabId}`}
             className="tab"
             onClick={() => setTab(tabId)}
@@ -87,15 +89,15 @@ export function ClassGroupPage() {
       </div>
 
       {/* As abas ficam montadas (só escondidas) para a grade em edição não se perder ao trocar de aba. */}
-      <div role="tabpanel" id="panel-alunos" aria-labelledby="tab-alunos" hidden={tab !== 'alunos'}>
+      <div role="tabpanel" id="panel-alunos" aria-labelledby="tab-alunos" hidden={activeTab !== 'alunos'}>
         {group && <StudentsTab classGroupId={id} onChange={loadGroup} />}
       </div>
       {hasModule('ACADEMIC') && (
         <>
-          <div role="tabpanel" id="panel-disciplinas" aria-labelledby="tab-disciplinas" hidden={tab !== 'disciplinas'}>
+          <div role="tabpanel" id="panel-disciplinas" aria-labelledby="tab-disciplinas" hidden={activeTab !== 'disciplinas'}>
             {full && <AssignmentsTab group={full} onChange={loadGroup} />}
           </div>
-          <div role="tabpanel" id="panel-grade" aria-labelledby="tab-grade" hidden={tab !== 'grade'}>
+          <div role="tabpanel" id="panel-grade" aria-labelledby="tab-grade" hidden={activeTab !== 'grade'}>
             {full && <TimetableEditor classGroup={full} />}
           </div>
         </>
