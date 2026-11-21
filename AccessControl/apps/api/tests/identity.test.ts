@@ -64,4 +64,25 @@ describe('SupabaseIdentityProvider', () => {
       code: 'AUTH_UNAVAILABLE',
     });
   });
+
+  it('token malformado que faz o getClaims lançar erro é só token inválido', async () => {
+    getClaims.mockRejectedValue(new TypeError('Invalid UTF-8 sequence'));
+    await expect(new SupabaseIdentityProvider().verifyToken('abc.def.ghi')).resolves.toBeNull();
+  });
+
+  it('falha de rede no getClaims responde 503, não 401', async () => {
+    getClaims.mockRejectedValue(new AuthRetryableFetchError('fetch failed', 0));
+    await expect(new SupabaseIdentityProvider().verifyToken('t')).rejects.toMatchObject({ statusCode: 503, code: 'AUTH_UNAVAILABLE' });
+  });
+
+  it('limite de requisições do Supabase (429) responde 503, sem deslogar', async () => {
+    getUser.mockResolvedValue({
+      data: { user: null },
+      error: { name: 'AuthApiError', status: 429, code: 'over_request_rate_limit', message: 'Too many requests' },
+    });
+    await expect(new SupabaseIdentityProvider().isSessionActive('t', SESSION)).rejects.toMatchObject({
+      statusCode: 503,
+      code: 'AUTH_UNAVAILABLE',
+    });
+  });
 });

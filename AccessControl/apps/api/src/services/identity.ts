@@ -24,7 +24,7 @@ export interface AuthUser extends AuthIdentity {
 
 /** Valida os tokens emitidos pelo provedor de login. */
 export interface IdentityProvider {
-  /** Confere assinatura e validade do token. Retorna null se for inválido. */
+  /** Confere assinatura e validade do token. Retorna null se for inválido; lança 503 se o servidor não responder. */
   verifyToken(token: string): Promise<TokenIdentity | null>;
   /**
    * Confere no servidor de autenticação se a sessão do token ainda existe
@@ -43,6 +43,9 @@ export interface IdentityProvider {
 
 const loginsUnavailable = () =>
   serviceUnavailable('Criação de logins indisponível: configure SUPABASE_SERVICE_ROLE_KEY na API.', 'LOGINS_UNAVAILABLE');
+
+const authUnavailable = () =>
+  serviceUnavailable('Não foi possível validar o login agora. Tente novamente em instantes.', 'AUTH_UNAVAILABLE');
 
 /** Traduz os erros da API de administração do Supabase Auth. */
 function adminError(error: AuthError) {
@@ -67,7 +70,15 @@ export class SupabaseIdentityProvider implements IdentityProvider {
   private activeSessions = new Map<string, number>();
 
   async verifyToken(token: string) {
-    const { data, error } = await this.client.auth.getClaims(token);
+    let result: Awaited<ReturnType<typeof this.client.auth.getClaims>>;
+    try {
+      result = await this.client.auth.getClaims(token);
+    } catch (error) {
+      if (isAuthRetryableFetchError(error)) throw authUnavailable();
+      // Token malformado (base64/UTF-8 inválido) faz o getClaims lançar: é só um token inválido.
+      return null;
+    }
+    const { data, error } = result;
     const claims = data?.claims;
     if (error || !claims?.sub || !claims.email || !claims.session_id || claims.role !== 'authenticated' || claims.is_anonymous) {
       return null;
@@ -84,8 +95,9 @@ export class SupabaseIdentityProvider implements IdentityProvider {
     if ((this.activeSessions.get(sessionId) ?? 0) > now) return true;
 
     const { data, error } = await this.client.auth.getUser(token);
-    if (error && (isAuthRetryableFetchError(error) || (error.status ?? 0) >= 500)) {
-      throw serviceUnavailable('Não foi possível validar o login agora. Tente novamente em instantes.', 'AUTH_UNAVAILABLE');
+    // 429 (limite do Supabase num pico de acessos) não quer dizer sessão encerrada: deslogar só pioraria o pico.
+    if (error && (isAuthRetryableFetchError(error) || error.status === 429 || (error.status ?? 0) >= 500)) {
+      throw authUnavailable();
     }
     if (error || !data.user) {
       this.activeSessions.delete(sessionId);
