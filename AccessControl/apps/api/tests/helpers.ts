@@ -53,7 +53,10 @@ export class FakeIdentity implements IdentityProvider {
     this.checkedPasswords.push({ email, password });
     return password === this.currentPassword;
   }
+  /** Simula falha do Supabase ao encerrar as outras sessões. */
+  failSignOutOthers = false;
   async signOutOthers(token: string) {
+    if (this.failSignOutOthers) throw new Error('Supabase fora do ar');
     this.signedOutOthers.push(token);
   }
 }

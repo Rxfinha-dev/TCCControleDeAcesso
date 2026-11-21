@@ -228,6 +228,20 @@ describe('Troca de senha', () => {
     expect(prisma.user.update).toHaveBeenCalledWith({ where: { id: 30 }, data: { mustChangePassword: false } });
   });
 
+  it('falha ao derrubar as outras sessões não desfaz a troca já feita', async () => {
+    const { app, prisma, identity } = setup(existingLogin({ mustChangePassword: true }));
+    identity.failSignOutOthers = true;
+
+    const res = await request(app)
+      .put('/api/auth/password')
+      .set('Authorization', authHeader())
+      .send({ currentPassword: 'senha-atual-1', password: 'nova-senha-1' });
+
+    expect(res.status).toBe(204);
+    expect(identity.passwords.get('auth-30')).toBe('nova-senha-1');
+    expect(prisma.user.update).toHaveBeenCalledWith({ where: { id: 30 }, data: { mustChangePassword: false } });
+  });
+
   it('senha atual errada não troca a senha', async () => {
     const { app, prisma, identity } = setup(existingLogin());
 

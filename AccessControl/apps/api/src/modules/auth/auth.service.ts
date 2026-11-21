@@ -2,6 +2,7 @@ import { Prisma, UserRole, type SchoolPlan, type PrismaClient, type School, type
 import { env } from '../../config/env';
 import { badRequest, conflict, forbidden, notFound, unauthorized } from '../../lib/errors';
 import { isLoginEmail } from '../../lib/logins';
+import { logger } from '../../lib/logger';
 import { modulesOf, type Module } from '../../lib/plans';
 import type { IdentityProvider } from '../../services/identity';
 
@@ -77,8 +78,13 @@ export class AuthService {
       throw badRequest('Senha atual incorreta.', 'INVALID_CURRENT_PASSWORD');
     }
     await this.identity.setPassword(user.authUserId, password);
-    await this.identity.signOutOthers(token);
     await this.prisma.user.update({ where: { id: userId }, data: { mustChangePassword: false } });
+    // A senha já mudou: falhar aqui faria o usuário repetir a troca com uma "senha atual" que não vale mais.
+    try {
+      await this.identity.signOutOthers(token);
+    } catch (err) {
+      logger.warn({ err, userId }, 'troca de senha: não foi possível encerrar as outras sessões');
+    }
   }
 
   private findByAuthUserId(authUserId: string) {
