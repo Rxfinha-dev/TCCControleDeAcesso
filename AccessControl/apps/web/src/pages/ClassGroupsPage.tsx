@@ -7,6 +7,7 @@ import { ConfirmDialog } from '../components/ConfirmDialog';
 import { PageHeader } from '../components/PageHeader';
 import { useToast } from '../contexts/ToastContext';
 import { SHIFT_LABELS, currentSchoolYear } from '../utils/academic';
+import { SkeletonRows } from '../components/Skeleton';
 
 interface FormState {
   name: string;
@@ -199,7 +200,7 @@ export function ClassGroupsPage() {
 
         <section className="card">
           <div className="table-wrapper">
-            <table className="table selectable">
+            <table className="table selectable" aria-busy={loading}>
               <thead>
                 <tr>
                   <th>Turma</th>
@@ -212,6 +213,7 @@ export function ClassGroupsPage() {
                 </tr>
               </thead>
               <tbody>
+                {loading && groups.length === 0 && <SkeletonRows cols={5} />}
                 {groups.map((group) => (
                   <tr
                     key={group.id}

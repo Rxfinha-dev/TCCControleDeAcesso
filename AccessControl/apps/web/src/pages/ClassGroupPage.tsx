@@ -12,6 +12,7 @@ import { useSchoolScope } from '../contexts/SchoolScopeContext';
 import { useToast } from '../contexts/ToastContext';
 import { SHIFT_LABELS } from '../utils/academic';
 import { formatDate } from '../utils/format';
+import { SkeletonRows } from '../components/Skeleton';
 
 const TABS = [
   { id: 'alunos', label: 'Alunos' },
@@ -263,7 +264,7 @@ function StudentsTab({ classGroupId, onChange }: { classGroupId: number; onChang
           </div>
         )}
         <div className="table-wrapper">
-          <table className="table">
+          <table className="table" aria-busy={loading}>
             <thead>
               <tr>
                 <th>Aluno</th>
@@ -276,6 +277,7 @@ function StudentsTab({ classGroupId, onChange }: { classGroupId: number; onChang
               </tr>
             </thead>
             <tbody>
+              {loading && members.length === 0 && <SkeletonRows cols={hasAssessments ? 5 : 4} />}
               {members.map((member) => (
                 <tr key={member.id}>
                   <td>{member.name}</td>

@@ -5,6 +5,7 @@ import type { Course } from '../api/types';
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import { PageHeader } from '../components/PageHeader';
 import { useToast } from '../contexts/ToastContext';
+import { SkeletonRows } from '../components/Skeleton';
 
 export function CoursesPage() {
   const toast = useToast();
@@ -99,7 +100,7 @@ export function CoursesPage() {
 
         <section className="card">
           <div className="table-wrapper">
-            <table className="table selectable">
+            <table className="table selectable" aria-busy={loading}>
               <thead>
                 <tr>
                   <th>Nome</th>
@@ -107,6 +108,7 @@ export function CoursesPage() {
                 </tr>
               </thead>
               <tbody>
+                {loading && courses.length === 0 && <SkeletonRows cols={2} />}
                 {courses.map((course) => (
                   <tr
                     key={course.id}

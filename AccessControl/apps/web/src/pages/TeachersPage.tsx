@@ -8,6 +8,7 @@ import { PageHeader } from '../components/PageHeader';
 import { PasswordInput } from '../components/PasswordInput';
 import { useSchoolScope } from '../contexts/SchoolScopeContext';
 import { useToast } from '../contexts/ToastContext';
+import { SkeletonRows } from '../components/Skeleton';
 
 const EMPTY: TeacherInput = { name: '', contactEmail: '' };
 
@@ -177,7 +178,7 @@ export function TeachersPage() {
 
         <section className="card">
           <div className="table-wrapper">
-            <table className="table selectable">
+            <table className="table selectable" aria-busy={loading}>
               <thead>
                 <tr>
                   <th>Nome</th>
@@ -187,6 +188,7 @@ export function TeachersPage() {
                 </tr>
               </thead>
               <tbody>
+                {loading && teachers.length === 0 && <SkeletonRows cols={hasModule('ATTENDANCE') ? 4 : 3} />}
                 {teachers.map((teacher) => (
                   <tr
                     key={teacher.id}

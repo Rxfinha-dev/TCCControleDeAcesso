@@ -136,6 +136,17 @@ describe('Presença', () => {
     expect(screen.queryByRole('table')).not.toBeInTheDocument();
   });
 
+  it('limpar a data não deixa esqueleto para sempre', async () => {
+    setup();
+    renderAt('/presenca');
+    await screen.findByText('Ana Souza');
+
+    fireEvent.change(screen.getByLabelText('Dia'), { target: { value: '' } });
+
+    await waitFor(() => expect(screen.queryByText('Ana Souza')).not.toBeInTheDocument());
+    expect(document.querySelector('.skeleton')).toBeNull();
+  });
+
   it('dia letivo sem aula na grade avisa', async () => {
     setup({ ...DAY, lessons: [], students: [] });
     renderAt('/presenca');

@@ -4,6 +4,7 @@ import { attendanceApi } from '../api';
 import { errorMessage } from '../api/client';
 import type { TeacherLessons } from '../api/types';
 import { PageHeader } from '../components/PageHeader';
+import { SkeletonCard } from '../components/Skeleton';
 import { PLAN_NOTICE } from '../components/RequireModule';
 import { useAuth } from '../contexts/AuthContext';
 import { useSchoolScope } from '../contexts/SchoolScopeContext';
@@ -18,13 +19,17 @@ export function TeacherHomePage() {
   const inPlan = hasModule('ATTENDANCE');
   const toast = useToast();
   const [data, setData] = useState<TeacherLessons | null>(null);
+  const [failed, setFailed] = useState(false);
 
   useEffect(() => {
     if (!inPlan) return;
     attendanceApi
       .myLessons()
       .then(setData)
-      .catch((err) => toast.error(errorMessage(err)));
+      .catch((err) => {
+        setFailed(true);
+        toast.error(errorMessage(err));
+      });
   }, [toast, inPlan]);
 
   const message = data ? dayMessage(data.day) : null;
@@ -37,6 +42,8 @@ export function TeacherHomePage() {
       />
 
       {!inPlan && <p className="banner">{PLAN_NOTICE}</p>}
+
+      {inPlan && !data && !failed && <SkeletonCard />}
 
       {data?.classGroups.length === 0 ? (
         <p className="banner">Você ainda não leciona em nenhuma turma deste ano. Fale com a secretaria da escola.</p>

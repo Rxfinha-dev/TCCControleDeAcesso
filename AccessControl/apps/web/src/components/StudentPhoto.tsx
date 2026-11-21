@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { studentsApi } from '../api';
 import { UserIcon } from './Icons';
+import { Skeleton } from './Skeleton';
 
 interface StudentPhotoProps {
   studentId?: number | null;
@@ -16,12 +17,14 @@ interface StudentPhotoProps {
 /** Carrega a foto pela API com o token de acesso (a rota é protegida). */
 export function StudentPhoto({ studentId, hasPhoto, previewUrl, version, alt, className }: StudentPhotoProps) {
   const [url, setUrl] = useState<string | null>(null);
+  const [loading, setLoading] = useState(() => !previewUrl && !!studentId && !!hasPhoto);
 
   useEffect(() => {
-    if (previewUrl || !studentId || !hasPhoto) {
-      setUrl(null);
-      return;
-    }
+    // Limpa já: sem isso a foto do aluno anterior fica na tela até a nova chegar.
+    setUrl(null);
+    setLoading(false);
+    if (previewUrl || !studentId || !hasPhoto) return;
+    setLoading(true);
     let objectUrl: string | null = null;
     let cancelled = false;
     studentsApi
@@ -31,7 +34,8 @@ export function StudentPhoto({ studentId, hasPhoto, previewUrl, version, alt, cl
         objectUrl = URL.createObjectURL(blob);
         setUrl(objectUrl);
       })
-      .catch(() => setUrl(null));
+      .catch(() => setUrl(null))
+      .finally(() => !cancelled && setLoading(false));
     return () => {
       cancelled = true;
       if (objectUrl) URL.revokeObjectURL(objectUrl);
@@ -43,7 +47,13 @@ export function StudentPhoto({ studentId, hasPhoto, previewUrl, version, alt, cl
   const src = candidate?.startsWith('blob:') ? candidate : null;
   return (
     <div className={`student-photo ${className ?? ''}`}>
-      {src ? <img src={src} alt={alt} /> : <UserIcon width={56} height={56} />}
+      {src ? (
+        <img src={src} alt={alt} />
+      ) : loading ? (
+        <Skeleton className="student-photo-skeleton" width="100%" height="100%" />
+      ) : (
+        <UserIcon width={56} height={56} />
+      )}
     </div>
   );
 }

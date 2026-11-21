@@ -4,6 +4,7 @@ import type { Grading } from '../api/types';
 import { GradingForm } from '../components/GradingForm';
 import { errorMessage } from '../api/client';
 import { PageHeader } from '../components/PageHeader';
+import { SkeletonCard } from '../components/Skeleton';
 import { useAuth } from '../contexts/AuthContext';
 import { useSchoolScope } from '../contexts/SchoolScopeContext';
 import { useSerial } from '../contexts/SerialContext';
@@ -25,10 +26,13 @@ export function SettingsPage() {
   const [savingMin, setSavingMin] = useState(false);
   const [code, setCode] = useState('');
   const [grading, setGrading] = useState<Grading | null>(null);
+  // Terminou de buscar (com dado ou erro): distingue "carregando" de "sem sistema de notas".
+  const [settled, setSettled] = useState(false);
   const [savingCode, setSavingCode] = useState(false);
 
   useEffect(() => {
     if (!hasSchool) return;
+    setSettled(false);
     settingsApi
       .get()
       .then((settings) => {
@@ -36,7 +40,8 @@ export function SettingsPage() {
         setCode(settings.code ?? '');
         setGrading(settings.grading ?? null);
       })
-      .catch((err) => toast.error(errorMessage(err)));
+      .catch((err) => toast.error(errorMessage(err)))
+      .finally(() => setSettled(true));
   }, [hasSchool, selected, toast]);
 
   async function saveCode(event: FormEvent) {
@@ -163,6 +168,7 @@ export function SettingsPage() {
           </form>
         )}
 
+        {hasSchool && hasModule('ASSESSMENTS') && !settled && <SkeletonCard />}
         {hasSchool && hasModule('ASSESSMENTS') && grading && <GradingForm initial={grading} />}
 
         {hasSchool && hasModule('ATTENDANCE') && (
