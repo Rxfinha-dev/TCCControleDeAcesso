@@ -73,11 +73,19 @@ export function StudentsPage() {
     if (preview) URL.revokeObjectURL(preview);
   }, [preview]);
 
+  /** Abandona o cadastro da digital; se estava em andamento, avisa (a confirmação do sensor deixa de ser gravada). */
+  const cancelEnrollment = () => {
+    if (enrollment.status === 'running') {
+      toast.info(`Cadastro da digital de ${enrollment.student?.name} cancelado. Cadastre de novo pela ficha do aluno.`);
+    }
+    enrollment.reset();
+  };
+
   const clearForm = () => {
     setForm(EMPTY_FORM);
     setSelected(null);
     setPreview(null);
-    enrollment.reset();
+    cancelEnrollment();
   };
 
   const openNew = () => {
@@ -93,7 +101,8 @@ export function StudentsPage() {
   const selectStudent = (student: Student) => {
     setSelected(student);
     setPreview(null);
-    enrollment.reset();
+    // Salvar a ficha do mesmo aluno não interrompe o cadastro da digital dele.
+    if (enrollment.status !== 'running' || enrollment.student?.id !== student.id) cancelEnrollment();
     setForm({
       name: student.name,
       rm: student.rm,

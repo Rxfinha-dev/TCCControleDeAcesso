@@ -27,12 +27,14 @@ export function CalendarPage() {
   const [removing, setRemoving] = useState<NoClassDay | null>(null);
   const beginLoad = useLatestRequest();
 
-  const load = useCallback(async () => {
+  /** `withTerms` = false nas recargas depois de uma gravação: não apaga os bimestres digitados e ainda não salvos. */
+  const load = useCallback(async (withTerms = true) => {
     const isCurrent = beginLoad();
     try {
       const data = await calendarApi.get(year);
       if (!isCurrent()) return;
       setCalendar(data);
+      if (!withTerms) return;
       setTerms(
         EMPTY_TERMS.map((empty, index) => {
           const term = data.terms.find((item) => item.number === index + 1);
@@ -62,7 +64,7 @@ export function CalendarPage() {
     try {
       await action();
       toast.success(success);
-      await load();
+      await load(false);
     } catch (err) {
       toast.error(errorMessage(err));
     } finally {
