@@ -13,7 +13,7 @@ export class EnrollmentsService {
     private readonly classGroups: ClassGroupsService,
   ) {}
 
-  async list(schoolId: number, classGroupId: number) {
+  async list(schoolId: number, classGroupId: number, opts: { logins: boolean }) {
     await this.classGroups.findOwned(schoolId, classGroupId);
     const enrollments = await this.prisma.enrollment.findMany({
       where: { classGroupId, endDate: null },
@@ -23,7 +23,7 @@ export class EnrollmentsService {
     return enrollments.map(({ student: { user, ...student }, startDate }) => ({
       ...student,
       enrolledSince: isoDate(startDate),
-      username: user?.username ?? null,
+      ...(opts.logins && { username: user?.username ?? null }),
     }));
   }
 

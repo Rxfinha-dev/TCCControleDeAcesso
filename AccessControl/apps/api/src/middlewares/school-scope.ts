@@ -102,11 +102,15 @@ export function currentPlan(res: Response): SchoolPlan | null {
   return (res.locals.schoolPlan as SchoolPlan | null | undefined) ?? null;
 }
 
+/** Erro 403 de recurso fora do plano da escola. */
+export const moduleNotInPlan = () =>
+  forbidden('Este recurso não está incluído no plano da escola.', 'MODULE_NOT_IN_PLAN');
+
 /** Recusa a rota quando o módulo não está no plano da escola em uso. O módulo ACCESS sempre passa. */
 export function requireModule(module: Module): RequestHandler {
   return (_req, res, next) => {
     if (module !== 'ACCESS' && !hasModule(currentPlan(res), module)) {
-      throw forbidden('Este recurso não está incluído no plano da escola.', 'MODULE_NOT_IN_PLAN');
+      throw moduleNotInPlan();
     }
     next();
   };

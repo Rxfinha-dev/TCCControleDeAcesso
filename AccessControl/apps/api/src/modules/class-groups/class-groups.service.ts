@@ -21,7 +21,6 @@ const detailInclude = {
 } satisfies Prisma.ClassGroupInclude;
 
 type ClassGroupSummary = Prisma.ClassGroupGetPayload<{ include: typeof summaryInclude }>;
-type ClassGroupDetail = Prisma.ClassGroupGetPayload<{ include: typeof detailInclude }>;
 
 const toSummary = (group: ClassGroupSummary) => ({
   id: group.id,
@@ -32,7 +31,6 @@ const toSummary = (group: ClassGroupSummary) => ({
   studentsCount: group._count?.enrollments ?? 0,
 });
 
-const toDetail = (group: ClassGroupDetail) => ({ ...toSummary(group), assignments: group.assignments });
 
 export class ClassGroupsService {
   constructor(private readonly prisma: PrismaClient) {}
@@ -46,10 +44,11 @@ export class ClassGroupsService {
     return groups.map(toSummary);
   }
 
-  async get(schoolId: number, id: number) {
+  /** Sem o módulo ACADEMIC, a turma não mostra professores por disciplina. */
+  async get(schoolId: number, id: number, opts: { academic: boolean }) {
     const group = await this.prisma.classGroup.findFirst({ where: { id, schoolId }, include: detailInclude });
     if (!group) throw notFound('Turma não encontrada');
-    return toDetail(group);
+    return opts.academic ? { ...toSummary(group), assignments: group.assignments } : toSummary(group);
   }
 
   async create(schoolId: number, input: ClassGroupInput) {
@@ -91,7 +90,7 @@ export class ClassGroupsService {
    * Cria no ano novo as turmas do ano anterior (nome, turno, curso, professores e a grade vigente), sem alunos.
    * Turmas com nome já existente no ano novo são puladas e listadas em `skipped`.
    */
-  async copyYear(schoolId: number, fromYear: number, toYear: number) {
+  async copyYear(schoolId: number, fromYear: number, toYear: number, opts: { academic: boolean }) {
     if (fromYear === toYear) throw badRequest('Escolha anos letivos diferentes', 'INVALID_YEAR');
     const today = dateOnly(todayInSaoPaulo());
     const sources = await this.prisma.classGroup.findMany({
@@ -120,13 +119,14 @@ export class ClassGroupsService {
         const created = await tx.classGroup.create({
           data: { schoolId, schoolYear: toYear, name: source.name, shift: source.shift, courseId: source.courseId },
         });
-        if (source.assignments.length > 0) {
+        // Professores e grade são do módulo ACADEMIC: sem ele, só a turma é copiada.
+        if (opts.academic && source.assignments.length > 0) {
           await tx.teachingAssignment.createMany({
             data: source.assignments.map(({ subjectId, teacherId }) => ({ classGroupId: created.id, subjectId, teacherId })),
           });
         }
         const version = source.timetableVersions[0];
-        if (version) {
+        if (opts.academic && version) {
           const copy = await tx.timetableVersion.create({ data: { classGroupId: created.id, validFrom: today } });
           if (version.slots.length > 0) {
             await tx.timetableSlot.createMany({
