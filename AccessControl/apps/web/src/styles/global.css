@@ -2701,6 +2701,16 @@ button.roll-mark:hover:not(:disabled) {
   font-family: var(--font-mono);
 }
 
+.grade-input[aria-invalid='true'] {
+  border-color: var(--danger);
+}
+
+.grade-error {
+  display: block;
+  margin-top: 4px;
+  color: var(--danger);
+}
+
 .concept-list {
   display: grid;
   gap: 8px;
