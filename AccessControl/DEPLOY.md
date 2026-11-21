@@ -116,6 +116,8 @@ As senhas antigas não são migradas (o Supabase Auth não importa os hashes do 
    | `VITE_SUPABASE_URL` | Project URL |
    | `VITE_SUPABASE_PUBLISHABLE_KEY` | Publishable key |
 
+   O `render.yaml` envia uma Content-Security-Policy que só libera a API em `https://helpus-api.onrender.com`. Se a URL da API for outra, troque-a no `connect-src` do `render.yaml`, senão o navegador bloqueia as chamadas.
+
 4. Em cada serviço, abra **Settings → Deploy Hook** e copie a URL (será usada no GitHub).
 
 > No plano gratuito a API "dorme" após 15 minutos sem uso e leva ~1 minuto para acordar. O Supabase gratuito pausa projetos após 7 dias sem atividade.
