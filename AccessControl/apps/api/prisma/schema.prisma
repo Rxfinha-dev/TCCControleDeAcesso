@@ -14,6 +14,14 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+/// Plano contratado pela escola; libera módulos (ver src/lib/plans.ts).
+enum SchoolPlan {
+  BASIC
+  ACADEMIC
+  ATTENDANCE
+  ASSESSMENTS
+}
+
 enum SchoolYear {
   FIRST
   SECOND
@@ -107,6 +115,7 @@ model School {
   minAttendance Int         @default(75) @map("min_attendance")
   /// Sistema de notas. Numérico: nota máxima, casas decimais e mínimo para aprovar.
   gradingKind   GradingKind @default(NUMERIC) @map("grading_kind")
+  plan          SchoolPlan  @default(BASIC)
   gradeMax      Int         @default(10) @map("grade_max")
   gradeDecimals Int         @default(1) @map("grade_decimals")
   /// Menor nota (ou valor de conceito) que aprova.

@@ -105,6 +105,7 @@ export const school: School = {
   name: 'ETEC Joaquim Ferreira do Amaral',
   email: 'etec@escola.com',
   code: 'etec-jau',
+  plan: 'ASSESSMENTS',
   minAttendance: 75,
   gradingKind: 'NUMERIC',
   gradeMax: 10,
