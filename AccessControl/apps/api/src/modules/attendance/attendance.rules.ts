@@ -48,3 +48,7 @@ export function attendanceStatus(value: number | null, minimum: number): Attenda
   if (value === null || value >= minimum + NEAR_LIMIT_POINTS) return 'OK';
   return value < minimum ? 'BELOW' : 'NEAR';
 }
+
+/** Situação pela razão crua: 74,95% aparece como 75,0, mas está abaixo de 75. Arredondar é só para exibir. */
+export const attendanceStatusOf = (present: number, given: number, minimum: number) =>
+  attendanceStatus(given === 0 ? null : (present / given) * 100, minimum);

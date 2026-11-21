@@ -13,7 +13,7 @@ import { badRequest, notFound } from '../../lib/errors';
 import { idSchema, isoDaySchema } from '../../lib/validation';
 import { classifyDay, type CalendarService } from '../calendar/calendar.service';
 import type { ClassGroupsService } from '../class-groups/class-groups.service';
-import { attendanceStatus, insideIntervals, isPresent, percent } from './attendance.rules';
+import { attendanceStatusOf, insideIntervals, isPresent, percent } from './attendance.rules';
 
 const isoDay = isoDaySchema;
 const startMinuteSchema = z.coerce.number().int().min(0).max(24 * 60);
@@ -377,8 +377,8 @@ export class AttendanceService {
       // Aula ainda não terminada não conta como dada.
       const counted = items.filter((record) => record.present !== null);
       const present = counted.filter((record) => record.present).length;
-      const value = percent(present, counted.length);
-      return { given: counted.length, present, percent: value, status: attendanceStatus(value, minAttendance) };
+      const given = counted.length;
+      return { given, present, percent: percent(present, given), status: attendanceStatusOf(present, given, minAttendance) };
     };
     return {
       ...base,

@@ -1,5 +1,5 @@
 import request from 'supertest';
-import type { Course } from '@prisma/client';
+import { Prisma, type Course } from '@prisma/client';
 import { authHeader, buildTestApp, school } from './helpers';
 
 const course: Course = {
@@ -73,6 +73,18 @@ describe('Cursos', () => {
 
     expect(res.status).toBe(204);
     expect(prisma.course.delete).toHaveBeenCalledWith({ where: { id: 3 } });
+  });
+
+  it('curso que passou a ser usado entre a contagem e a exclusão (P2003) responde 409 em português', async () => {
+    const { app, prisma } = buildTestApp();
+    prisma.course.findFirst.mockResolvedValue(course);
+    prisma.student.count.mockResolvedValue(0);
+    prisma.course.delete.mockRejectedValue(new Prisma.PrismaClientKnownRequestError('fk', { code: 'P2003', clientVersion: 'x' }));
+
+    const res = await request(app).delete('/api/courses/3').set('Authorization', authHeader());
+
+    expect(res.status).toBe(409);
+    expect(res.body).toEqual({ code: 'IN_USE', message: 'Registro em uso por outros dados' });
   });
 
   it('retorna 404 para curso de outra instituição', async () => {

@@ -1,5 +1,5 @@
 import { addDays, minuteOfDayInSaoPaulo, saoPauloDayStart, weekdayOf } from '../src/lib/dates';
-import { attendanceStatus, insideIntervals, isPresent, percent } from '../src/modules/attendance/attendance.rules';
+import { attendanceStatus, attendanceStatusOf, insideIntervals, isPresent, percent } from '../src/modules/attendance/attendance.rules';
 import { classifyDay } from '../src/modules/calendar/calendar.service';
 
 const at = (hhmm: string) => {
@@ -65,6 +65,11 @@ describe('Regras da presença', () => {
     expect(attendanceStatus(79.9, 75)).toBe('NEAR'); // a menos de 5 pontos do mínimo
     expect(attendanceStatus(75, 75)).toBe('NEAR');
     expect(attendanceStatus(74.9, 75)).toBe('BELOW');
+    // 377 de 503 = 74,95%: aparece como 75,0, mas está abaixo do mínimo (compara sem arredondar).
+    expect(percent(377, 503)).toBe(75);
+    expect(attendanceStatusOf(377, 503, 75)).toBe('BELOW');
+    expect(attendanceStatusOf(3, 4, 75)).toBe('NEAR');
+    expect(attendanceStatusOf(0, 0, 75)).toBe('OK');
   });
 });
 
