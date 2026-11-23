@@ -48,7 +48,7 @@ jobs:
         run: echo "name=ghcr.io/${GITHUB_REPOSITORY,,}/api" >> "$GITHUB_OUTPUT"
 
       - name: Publicar imagem da API no GHCR
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: AccessControl
           file: AccessControl/apps/api/Dockerfile
