@@ -69,7 +69,7 @@ jobs:
       - run: npm run test:coverage --workspace apps/api
       - run: npm run build --workspace apps/api
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: api-coverage
@@ -94,7 +94,7 @@ jobs:
       - run: npm run test:coverage --workspace apps/web
       - run: npm run build --workspace apps/web
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: web-dist
           path: AccessControl/apps/web/dist
