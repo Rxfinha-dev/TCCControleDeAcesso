@@ -62,6 +62,7 @@ const studentForm = (input: StudentInput) => {
   form.set('year', input.year);
   form.set('courseId', input.courseId);
   if (input.photo) form.set('photo', input.photo);
+  if (input.fingerprintId) form.set('fingerprintId', String(input.fingerprintId));
   return form;
 };
 
@@ -173,6 +174,7 @@ export const studentsApi = {
   photo: async (id: number) => (await request(`/students/${id}/photo`)).blob(),
   reserveFingerprint: (id: number) =>
     requestJson<{ fingerprintId: number }>(`/students/${id}/fingerprint`, { method: 'POST' }),
+  freeFingerprint: () => requestJson<{ fingerprintId: number }>('/students/fingerprint'),
   confirmFingerprint: (id: number) => requestJson<Student>(`/students/${id}/fingerprint/confirm`, { method: 'POST' }),
   clearFingerprint: (id: number) => requestJson<Student>(`/students/${id}/fingerprint`, { method: 'DELETE' }),
 };

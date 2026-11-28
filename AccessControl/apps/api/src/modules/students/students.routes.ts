@@ -16,6 +16,10 @@ export function studentsRoutes(service: StudentsService) {
     res.json(await service.list(currentSchool(res).sub, listStudentsQuerySchema.parse(req.query)));
   });
 
+  router.get('/fingerprint', async (_req, res) => {
+    res.json(await service.freeFingerprint(currentSchool(res).sub));
+  });
+
   router.get('/:id', async (req, res) => {
     const { id } = idParamSchema.parse(req.params);
     res.json(await service.get(currentSchool(res).sub, id));

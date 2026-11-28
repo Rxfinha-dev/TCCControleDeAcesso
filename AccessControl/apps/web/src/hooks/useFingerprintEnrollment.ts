@@ -11,6 +11,7 @@ interface EnrollmentState {
   status: EnrollmentStatus;
   message: string;
   student: Student | null;
+  slot?: number;
 }
 
 const IDLE: EnrollmentState = { status: 'idle', message: 'N/A', student: null };
@@ -22,7 +23,7 @@ const IDLE: EnrollmentState = { status: 'idle', message: 'N/A', student: null };
 export function useFingerprintEnrollment(onEnrolled: (student: Student) => void) {
   const serial = useSerial();
   const [state, setState] = useState<EnrollmentState>(IDLE);
-  const active = useRef<{ student: Student; slot: number } | null>(null);
+  const active = useRef<{ student: Student | null; slot: number } | null>(null);
   const onEnrolledRef = useRef(onEnrolled);
   onEnrolledRef.current = onEnrolled;
 
@@ -42,6 +43,10 @@ export function useFingerprintEnrollment(onEnrolled: (student: Student) => void)
 
         if (event.type === 'enrolled') {
           active.current = null;
+          if (!current.student) {
+            setState({ status: 'done', message: 'Digital lida. Salve o aluno', student: null, slot: current.slot });
+            return;
+          }
           try {
             const student = await studentsApi.confirmFingerprint(current.student.id);
             setState({ status: 'done', message: message ?? 'Digital cadastrada', student });
@@ -55,14 +60,14 @@ export function useFingerprintEnrollment(onEnrolled: (student: Student) => void)
   );
 
   const start = useCallback(
-    async (student: Student) => {
+    async (student: Student | null) => {
       if (!serial.connected) {
         setState({ status: 'error', message: 'Arduino não conectado. Conecte-o em Configurações.', student });
         return;
       }
       try {
         setState({ status: 'running', message: 'Preparando o sensor...', student });
-        const { fingerprintId } = await studentsApi.reserveFingerprint(student.id);
+        const { fingerprintId } = await (student ? studentsApi.reserveFingerprint(student.id) : studentsApi.freeFingerprint());
         active.current = { student, slot: fingerprintId };
         await serial.send(SerialCommands.enroll(fingerprintId));
         setState({ status: 'running', message: 'Coloque o dedo no sensor', student });

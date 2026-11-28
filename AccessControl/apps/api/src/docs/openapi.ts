@@ -73,6 +73,7 @@ const studentFields = {
     year: { allOf: [ref('SchoolYear')], nullable: true, description: 'Opcional (vazio = sem série)' },
     courseId: { type: 'integer', minimum: 1, nullable: true, example: 1, description: 'Opcional (vazio = sem curso)' },
     photo: { type: 'string', format: 'binary', description: 'Foto do aluno (JPEG, PNG, WebP ou BMP, até 2 MB)' },
+    fingerprintId: { type: 'integer', minimum: 1, maximum: 127, nullable: true, description: 'Só no cadastro: digital lida antes de salvar' },
   },
 };
 
@@ -86,6 +87,7 @@ const studentBadRequest = {
 };
 
 const rmInUse = errorResponse('Já existe um aluno com esse RM (`RM_IN_USE`)');
+const sensorFull = errorResponse('Todas as posições do sensor estão ocupadas (`FINGERPRINT_FULL`)');
 const courseExists = errorResponse('Já existe um curso com esse nome (`COURSE_EXISTS`)');
 
 const accessLogsFilters = [
@@ -237,6 +239,18 @@ export const openApiSpec = {
         },
       },
     },
+    '/api/students/fingerprint': {
+      get: {
+        tags: ['Alunos'],
+        summary: 'Posição livre no sensor, sem reservar',
+        description: 'Para ler a digital antes de salvar: a posição vai como `fingerprintId` no cadastro do aluno.',
+        responses: {
+          200: { description: 'Posição livre', content: json(ref('FingerprintSlot')) },
+          409: sensorFull,
+          ...authErrors,
+        },
+      },
+    },
     '/api/students/{id}': {
       parameters: [idParam],
       get: {
@@ -303,7 +317,7 @@ export const openApiSpec = {
         responses: {
           200: { description: 'Posição reservada', content: json(ref('FingerprintSlot')) },
           404: notFound,
-          409: errorResponse('Todas as posições do sensor estão ocupadas (`FINGERPRINT_FULL`)'),
+          409: sensorFull,
           ...authErrors,
         },
       },

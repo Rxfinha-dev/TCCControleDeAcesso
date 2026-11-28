@@ -56,7 +56,8 @@ export class StudentsService {
     await this.ensureCourse(schoolId, input.courseId);
     await this.ensureUniqueRm(schoolId, input.rm);
 
-    const student = await this.prisma.student.create({ data: { ...input, schoolId }, include: withCourse });
+    const fingerprintEnrolledAt = input.fingerprintId ? new Date() : null;
+    const student = await this.prisma.student.create({ data: { ...input, schoolId, fingerprintEnrolledAt }, include: withCourse });
     let photoKey: string;
     try {
       photoKey = await this.storage.save(student.id, schoolId, photo);
@@ -77,7 +78,7 @@ export class StudentsService {
     const photoKey = photo ? await this.storage.save(id, schoolId, photo) : current.photoKey;
     const updated = await this.prisma.student.update({
       where: { id },
-      data: { ...input, photoKey },
+      data: { ...input, fingerprintId: current.fingerprintId, photoKey },
       include: withCourse,
     });
     // A foto antiga só sai depois que o cadastro aponta para a nova.
@@ -110,6 +111,12 @@ export class StudentsService {
       return { fingerprintId: student.fingerprintId };
     }
 
+    const { fingerprintId } = await this.freeFingerprint(schoolId);
+    await this.prisma.student.update({ where: { id }, data: { fingerprintId, fingerprintEnrolledAt: null } });
+    return { fingerprintId };
+  }
+
+  async freeFingerprint(schoolId: number) {
     const used = await this.prisma.student.findMany({
       where: { schoolId, fingerprintId: { not: null } },
       select: { fingerprintId: true },
@@ -120,8 +127,6 @@ export class StudentsService {
     if (slot > MAX_FINGERPRINT_SLOTS) {
       throw conflict('O sensor biométrico não possui mais posições livres', 'FINGERPRINT_FULL');
     }
-
-    await this.prisma.student.update({ where: { id }, data: { fingerprintId: slot, fingerprintEnrolledAt: null } });
     return { fingerprintId: slot };
   }
 

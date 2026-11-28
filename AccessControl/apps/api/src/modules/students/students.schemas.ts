@@ -17,6 +17,8 @@ export const studentSchema = z.object({
   // Curso e série são opcionais (escola de ensino regular): campo vazio do formulário vira null.
   year: z.preprocess(emptyToNull, z.enum(SchoolYear, 'Série inválida').nullable()).default(null),
   courseId: z.preprocess(emptyToNull, z.coerce.number().int().positive('Curso inválido').nullable()).default(null),
+  // Só no cadastro: posição de GET /students/fingerprint, quando a digital foi lida antes de salvar.
+  fingerprintId: z.preprocess(emptyToNull, z.coerce.number().int().min(1).max(MAX_FINGERPRINT_SLOTS).nullable()).default(null),
 });
 
 export const listStudentsQuerySchema = z.object({

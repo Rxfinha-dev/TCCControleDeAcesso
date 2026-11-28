@@ -82,6 +82,7 @@ export interface StudentInput {
   year: SchoolYear | '';
   courseId: string;
   photo?: File | null;
+  fingerprintId?: number | null;
 }
 
 export interface AccessLog {

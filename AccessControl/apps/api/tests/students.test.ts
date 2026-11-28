@@ -39,8 +39,28 @@ describe('Alunos', () => {
     expect(res.status).toBe(201);
     expect(storage.photos.get('mem:10')?.mimeType).toBe('image/png');
     expect(prisma.student.create).toHaveBeenCalledWith(
-      expect.objectContaining({ data: { name: 'Ana Souza', rm: '24001', age: 16, year: 'FIRST', courseId: 3, schoolId: school.id } }),
+      expect.objectContaining({ data: { name: 'Ana Souza', rm: '24001', age: 16, year: 'FIRST', courseId: 3, schoolId: school.id, fingerprintId: null, fingerprintEnrolledAt: null } }),
     );
+  });
+
+  it('cadastra aluno com a digital lida antes de salvar', async () => {
+    const { app, prisma } = buildTestApp();
+    prisma.student.findFirst.mockResolvedValue(null);
+    prisma.student.create.mockResolvedValue(makeStudent({ photoKey: null, fingerprintId: 5 }) as never);
+    prisma.student.update.mockResolvedValue(makeStudent({ fingerprintId: 5, fingerprintEnrolledAt: new Date() }) as never);
+
+    const res = await request(app)
+      .post('/api/students')
+      .set('Authorization', authHeader())
+      .field('name', 'Ana Souza')
+      .field('rm', '24001')
+      .field('age', '16')
+      .field('fingerprintId', '5')
+      .attach('photo', PNG, { filename: 'ana.png', contentType: 'image/png' });
+
+    expect(res.status).toBe(201);
+    const data = prisma.student.create.mock.calls[0][0]!.data;
+    expect(data).toMatchObject({ fingerprintId: 5, fingerprintEnrolledAt: expect.any(Date) });
   });
 
   it('cadastra aluno sem curso e sem série (escola de ensino regular)', async () => {
@@ -188,6 +208,22 @@ describe('Alunos', () => {
     expect(storage.photos.has('antiga')).toBe(true);
   });
 
+  it('editar o aluno não apaga nem troca a digital dele', async () => {
+    const { app, prisma } = buildTestApp();
+    prisma.student.findFirst.mockResolvedValueOnce(makeStudent({ fingerprintId: 7 }) as never).mockResolvedValueOnce(null);
+    prisma.student.update.mockResolvedValue(makeStudent({ fingerprintId: 7 }) as never);
+
+    await request(app)
+      .put('/api/students/10')
+      .set('Authorization', authHeader())
+      .field('name', 'Ana Souza')
+      .field('rm', '24001')
+      .field('age', '16')
+      .field('fingerprintId', '9');
+
+    expect(prisma.student.update.mock.calls[0][0]!.data).toMatchObject({ fingerprintId: 7 });
+  });
+
   it('retorna a foto do aluno', async () => {
     const { app, prisma, storage } = buildTestApp();
     storage.photos.set('mem:10', { data: PNG, mimeType: 'image/png' });
@@ -225,6 +261,18 @@ describe('Alunos', () => {
         where: { id: 10 },
         data: { fingerprintId: 3, fingerprintEnrolledAt: null },
       });
+    });
+
+    it('informa a posição livre para um aluno ainda não salvo, sem reservar', async () => {
+      const { app, prisma } = buildTestApp();
+      prisma.student.findMany.mockResolvedValue([{ fingerprintId: 1 }, { fingerprintId: 3 }] as never);
+
+      const res = await request(app).get('/api/students/fingerprint').set('Authorization', authHeader());
+
+      expect(res.status).toBe(200);
+      expect(res.body).toEqual({ fingerprintId: 2 });
+      expect(prisma.student.findMany.mock.calls[0][0]!.where!.schoolId).toBe(school.id);
+      expect(prisma.student.update).not.toHaveBeenCalled();
     });
 
     it('reaproveita a posição já reservada do aluno', async () => {

@@ -19,6 +19,7 @@ describe('Documentação da API', () => {
         '/api/students',
         '/api/students/{id}',
         '/api/students/{id}/photo',
+        '/api/students/fingerprint',
         '/api/students/{id}/fingerprint',
         '/api/students/{id}/fingerprint/confirm',
         '/api/access-logs',

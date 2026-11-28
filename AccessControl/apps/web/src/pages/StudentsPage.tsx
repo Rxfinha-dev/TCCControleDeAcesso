@@ -122,10 +122,11 @@ export function StudentsPage() {
         selectStudent(student);
         toast.success('Aluno atualizado!');
       } else {
-        const student = await studentsApi.create(form);
+        const student = await studentsApi.create({ ...form, fingerprintId: enrollment.slot });
         upsertStudent(student);
         selectStudent(student);
         toast.success('Aluno cadastrado!');
+        if (student.fingerprintEnrolled) return;
         // Como no legado: após salvar, já inicia o cadastro da digital se o Arduino estiver conectado.
         if (serial.connected) void enrollment.start(student);
         else toast.info('Conecte o Arduino em Configurações para cadastrar a digital.');
@@ -221,6 +222,29 @@ export function StudentsPage() {
           </div>
           {courses.length === 0 && <p className="hint">Curso e série são opcionais: escolas sem curso técnico organizam os alunos por turma.</p>}
 
+          <div className={`enroll-panel status-${enrollment.status}`}>
+            <div>
+              <strong>
+                <FingerprintIcon /> Digital
+              </strong>
+              <p aria-live="polite">
+                {enrollment.status === 'idle'
+                  ? selected?.fingerprintEnrolled
+                    ? `Cadastrada (ID ${selected.fingerprintId})`
+                    : 'Não cadastrada'
+                  : enrollment.message}
+              </p>
+            </div>
+            <button
+              type="button"
+              className="btn btn-outline btn-small"
+              disabled={enrollment.status === 'running'}
+              onClick={() => enrollment.start(selected)}
+            >
+              {selected?.fingerprintEnrolled ? 'Recadastrar' : 'Cadastrar digital'}
+            </button>
+          </div>
+
           <div className="form-actions">
             <button type="submit" className="btn btn-primary" disabled={saving}>
               {saving ? 'Salvando...' : 'Salvar'}
@@ -231,31 +255,6 @@ export function StudentsPage() {
               </button>
             )}
           </div>
-
-          {selected && (
-            <div className={`enroll-panel status-${enrollment.status}`}>
-              <div>
-                <strong>
-                  <FingerprintIcon /> Digital
-                </strong>
-                <p aria-live="polite">
-                  {enrollment.status === 'idle'
-                    ? selected.fingerprintEnrolled
-                      ? `Cadastrada (ID ${selected.fingerprintId})`
-                      : 'Não cadastrada'
-                    : enrollment.message}
-                </p>
-              </div>
-              <button
-                type="button"
-                className="btn btn-outline btn-small"
-                disabled={enrollment.status === 'running'}
-                onClick={() => enrollment.start(selected)}
-              >
-                {selected.fingerprintEnrolled ? 'Recadastrar' : 'Cadastrar digital'}
-              </button>
-            </div>
-          )}
         </form>
       </Drawer>
 
