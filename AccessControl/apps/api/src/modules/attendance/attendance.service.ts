@@ -56,8 +56,8 @@ export type OverrideInput = z.infer<typeof overrideSchema>;
 export type CancellationInput = z.infer<typeof cancellationSchema>;
 
 /**
- * De onde veio a presença: catraca, correção manual, presença coletiva (professor faltou / aula cancelada)
- * ou falta justificada (não conta como aula dada para o aluno: `present` fica null).
+ * De onde veio a presença: catraca, correção manual, aula não dada (professor faltou / aula cancelada) ou
+ * falta justificada. Nos dois últimos `present` fica null: não conta como aula dada para o aluno.
  */
 export type AttendanceSource = 'AUTO' | 'MANUAL' | 'COLLECTIVE' | 'JUSTIFIED';
 
@@ -224,12 +224,12 @@ export class AttendanceService {
         for (const lesson of dayLessons) {
           const corrected = manual.get(`${enrollment.studentId}|${date}|${lesson.startMinute}`);
           const auto = lesson.finished ? isPresent(inside, lesson.startMinute, lesson.endMinute) : null;
-          // Prioridade: correção manual > presença coletiva > catraca. Falta da catraca em período justificado não conta.
+          // Prioridade: correção manual > aula não dada > catraca. Falta da catraca em período justificado não conta.
           const [present, source]: [boolean | null, AttendanceSource] =
             corrected !== undefined
               ? [corrected, 'MANUAL']
               : lesson.cancellation
-                ? [true, 'COLLECTIVE']
+                ? [null, 'COLLECTIVE']
                 : auto === false && excused
                   ? [null, 'JUSTIFIED']
                   : [auto, 'AUTO'];
@@ -311,7 +311,7 @@ export class AttendanceService {
     }
   }
 
-  /** Falta do professor ou aula cancelada: todos os alunos da turma recebem presença nessa aula. */
+  /** Falta do professor ou aula cancelada: a aula não conta como dada, salvo correção manual de um aluno. */
   async setCancellation(schoolId: number, userId: number, input: CancellationInput, teacherId: number | null = null) {
     await this.findLesson(schoolId, input, teacherId);
     const key = { classGroupId: input.classGroupId, date: dateOnly(input.date), startMinute: input.startMinute };
@@ -374,7 +374,7 @@ export class AttendanceService {
       a.name.localeCompare(b.name, 'pt-BR'),
     );
     const tally = (items: AttendanceRecord[]) => {
-      // Aula ainda não terminada não conta como dada.
+      // present null (aula não terminada, não dada ou falta justificada) não conta como dada.
       const counted = items.filter((record) => record.present !== null);
       const present = counted.filter((record) => record.present).length;
       const given = counted.length;
