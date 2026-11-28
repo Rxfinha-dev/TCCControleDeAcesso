@@ -116,7 +116,8 @@ function AppShell() {
         </div>
         <nav className="sidebar-nav" onClick={() => setMenuOpen(false)}>
           {(isStudent ? STUDENT_NAV_ITEMS : isTeacher ? TEACHER_NAV_ITEMS : [...NAV_ITEMS, ...(isSuperAdmin ? SUPER_ADMIN_NAV_ITEMS : [])])
-            .filter((item) => !item.module || hasModule(item.module))
+            // O super admin vê todos os módulos; os fora do plano abrem bloqueados (RequireModule).
+            .filter((item) => !item.module || isSuperAdmin || hasModule(item.module))
             .map(({ to, label, icon: Icon, end }) => (
             <NavLink key={to} to={to} end={end} className="nav-item">
               <Icon />
