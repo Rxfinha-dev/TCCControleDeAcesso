@@ -64,6 +64,71 @@ describe('Editor da grade', () => {
     });
   });
 
+  it('a aula inserida já fica selecionada, com o foco no Início', async () => {
+    setup();
+    await openGrade();
+
+    await userEvent.click(await screen.findByRole('button', { name: /^MAT Matemática/ }));
+    await userEvent.click(screen.getByRole('button', { name: 'Colocar em Seg' }));
+
+    expect(screen.getByText('Bloco selecionado')).toBeInTheDocument();
+    expect(screen.getByLabelText('Início')).toHaveFocus();
+    expect(screen.getByLabelText('Início')).toHaveValue('07:00');
+  });
+
+  it('clicar numa aula existente seleciona sem mover o foco para o Início', async () => {
+    setup({ validFrom: '2026-02-01', blocks: [lesson(1, 450, 500)], warnings: [] });
+    await openGrade();
+
+    await userEvent.click(await screen.findByRole('button', { name: /^Matemática, Seg/ }));
+
+    expect(screen.getByText('Bloco selecionado')).toBeInTheDocument();
+    expect(screen.getByLabelText('Início')).not.toHaveFocus();
+  });
+
+  it('Delete remove o bloco selecionado', async () => {
+    const fetchMock = setup({ validFrom: '2026-02-01', blocks: [lesson(1, 450, 500)], warnings: [] });
+    await openGrade();
+    await userEvent.click(await screen.findByRole('button', { name: /^Matemática, Seg/ }));
+    await userEvent.keyboard('{Delete}');
+    expect(screen.queryByRole('button', { name: /^Matemática, Seg/ })).not.toBeInTheDocument();
+    expect(screen.queryByText('Bloco selecionado')).not.toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: 'Salvar grade' }));
+    await waitFor(() => expect(callsTo(fetchMock, '/class-groups/3/timetable', 'PUT')).toHaveLength(1));
+    expect(bodyOf(callsTo(fetchMock, '/class-groups/3/timetable', 'PUT')[0]).blocks).toEqual([]);
+  });
+
+  it('Backspace dentro do campo Início não remove o bloco', async () => {
+    setup({ validFrom: '2026-02-01', blocks: [lesson(1, 450, 500)], warnings: [] });
+    await openGrade();
+    await userEvent.click(await screen.findByRole('button', { name: /^Matemática, Seg/ }));
+    screen.getByLabelText('Início').focus();
+    await userEvent.keyboard('{Backspace}');
+    expect(screen.getByRole('button', { name: /^Matemática, Seg/ })).toBeInTheDocument();
+  });
+
+  it('soltar um bloco na coluna de disciplinas remove o bloco', async () => {
+    const fetchMock = setup({ validFrom: '2026-02-01', blocks: [lesson(1, 450, 500)], warnings: [] });
+    await openGrade();
+    const store = new Map<string, string>();
+    const dataTransfer = {
+      setData: (type: string, value: string) => void store.set(type, value),
+      getData: (type: string) => store.get(type) ?? '',
+      get types() {
+        return [...store.keys()];
+      },
+    };
+    const block = await screen.findByRole('button', { name: /^Matemática, Seg/ });
+    fireEvent.dragStart(block, { dataTransfer });
+    const palette = screen.getByRole('heading', { name: 'Disciplinas' }).closest('aside')!;
+    fireEvent.dragOver(palette, { dataTransfer });
+    fireEvent.drop(palette, { dataTransfer });
+    expect(screen.queryByRole('button', { name: /^Matemática, Seg/ })).not.toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: 'Salvar grade' }));
+    await waitFor(() => expect(callsTo(fetchMock, '/class-groups/3/timetable', 'PUT')).toHaveLength(1));
+    expect(bodyOf(callsTo(fetchMock, '/class-groups/3/timetable', 'PUT')[0]).blocks).toEqual([]);
+  });
+
   it('pelo teclado, a aula entra depois da última aula do dia (não em 00:00)', async () => {
     const fetchMock = setup({ validFrom: '2026-02-01', blocks: [lesson(1, 450, 500)], warnings: [] });
     await openGrade();

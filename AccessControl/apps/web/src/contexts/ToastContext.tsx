@@ -1,4 +1,5 @@
-import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 import { CloseIcon } from '../components/Icons';
 
 type ToastType = 'success' | 'error' | 'info';
@@ -22,7 +23,13 @@ let nextId = 1;
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [toasts, setToasts] = useState<Toast[]>([]);
 
-  const dismiss = useCallback((id: number) => setToasts((current) => current.filter((toast) => toast.id !== id)), []);
+  // Toasts que já terminaram de entrar: ao trocar de container (abrir/fechar aba) não repetem a animação.
+  const shown = useRef(new Set<number>());
+
+  const dismiss = useCallback((id: number) => {
+    shown.current.delete(id);
+    setToasts((current) => current.filter((toast) => toast.id !== id));
+  }, []);
 
   const push = useCallback(
     (type: ToastType, message: string) => {
@@ -33,6 +40,19 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     [dismiss],
   );
 
+  // <dialog> modal fica na top layer e torna o resto inerte: os toasts precisam morar dentro dele para aparecer na frente.
+  const [modalHost, setModalHost] = useState<Element | null>(null);
+  useEffect(() => {
+    const update = () => {
+      const modals = Array.from(document.querySelectorAll('dialog[open]')).filter((dialog) => dialog.matches(':modal'));
+      setModalHost(modals.at(-1) ?? null);
+    };
+    const observer = new MutationObserver(update);
+    observer.observe(document.body, { subtree: true, childList: true, attributes: true, attributeFilter: ['open'] });
+    update();
+    return () => observer.disconnect();
+  }, []);
+
   const value = useMemo(
     () => ({
       success: (message: string) => push('success', message),
@@ -42,19 +62,28 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     [push],
   );
 
-  return (
-    <ToastContext.Provider value={value}>
-      {children}
-      <div className="toasts" aria-live="polite">
+  const list = (
+    <div className="toasts" aria-live="polite">
         {toasts.map((toast) => (
-          <div key={toast.id} className={`toast toast-${toast.type}`} role={toast.type === 'error' ? 'alert' : 'status'}>
+          <div
+            key={toast.id}
+            className={`toast toast-${toast.type}${shown.current.has(toast.id) ? ' toast-shown' : ''}`}
+            role={toast.type === 'error' ? 'alert' : 'status'}
+            onAnimationEnd={() => shown.current.add(toast.id)}
+          >
             <span>{toast.message}</span>
             <button type="button" aria-label="Fechar" onClick={() => dismiss(toast.id)}>
               <CloseIcon width={16} height={16} />
             </button>
           </div>
         ))}
-      </div>
+    </div>
+  );
+
+  return (
+    <ToastContext.Provider value={value}>
+      {children}
+      {modalHost ? createPortal(list, modalHost) : list}
     </ToastContext.Provider>
   );
 }

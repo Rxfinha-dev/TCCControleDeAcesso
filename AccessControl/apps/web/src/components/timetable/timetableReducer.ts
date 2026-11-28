@@ -16,7 +16,7 @@ export interface EditorBlock {
 }
 
 export type TimetableAction =
-  | { type: 'place'; kind: TimetableSlotKind; subjectId: number | null; weekday: number; minute: number }
+  | { type: 'place'; key: string; kind: TimetableSlotKind; subjectId: number | null; weekday: number; minute: number }
   | { type: 'move'; key: string; weekday: number; minute: number }
   | { type: 'resize'; key: string; edge: 'start' | 'end'; minute: number }
   | { type: 'setTimes'; key: string; startMinute: number; endMinute: number }
@@ -46,7 +46,7 @@ export function timetableReducer(state: EditorBlock[], action: TimetableAction):
       return [
         ...state,
         {
-          key: newKey(),
+          key: action.key,
           kind: action.kind,
           subjectId: action.kind === 'LESSON' ? action.subjectId : null,
           weekday: action.weekday,

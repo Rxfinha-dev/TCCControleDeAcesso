@@ -18,14 +18,14 @@ const block = (over: Partial<EditorBlock> = {}): EditorBlock => ({
 
 describe('timetableReducer', () => {
   it('place: aula solta em 07:32 vira 07:30–08:20 (50 min); intervalo tem 20 min', () => {
-    const [lesson] = timetableReducer([], { type: 'place', kind: 'LESSON', subjectId: 1, weekday: 2, minute: 452 });
+    const [lesson] = timetableReducer([], { type: 'place', key: 'b-teste', kind: 'LESSON', subjectId: 1, weekday: 2, minute: 452 });
     expect(lesson).toMatchObject({ kind: 'LESSON', subjectId: 1, weekday: 2, startMinute: 450, endMinute: 500 });
-    const [pause] = timetableReducer([], { type: 'place', kind: 'BREAK', subjectId: null, weekday: 1, minute: 600 });
+    const [pause] = timetableReducer([], { type: 'place', key: 'b-teste', kind: 'BREAK', subjectId: null, weekday: 1, minute: 600 });
     expect(pause).toMatchObject({ kind: 'BREAK', subjectId: null, startMinute: 600, endMinute: 620 });
   });
 
   it('place perto da meia-noite não passa de 24:00', () => {
-    const [lesson] = timetableReducer([], { type: 'place', kind: 'LESSON', subjectId: 1, weekday: 1, minute: 1430 });
+    const [lesson] = timetableReducer([], { type: 'place', key: 'b-teste', kind: 'LESSON', subjectId: 1, weekday: 1, minute: 1430 });
     expect(lesson).toMatchObject({ startMinute: 1390, endMinute: 1440 });
   });
 
