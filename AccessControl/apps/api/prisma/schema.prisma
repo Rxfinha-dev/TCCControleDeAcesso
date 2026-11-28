@@ -424,7 +424,7 @@ model AttendanceOverride {
   @@map("attendance_overrides")
 }
 
-/// Aula em que o professor faltou ou que foi cancelada: a turma inteira recebe presença.
+/// Aula em que o professor faltou ou que foi cancelada: não conta como dada, salvo correção manual de um aluno.
 model LessonCancellation {
   id           Int                @id @default(autoincrement())
   classGroupId Int                @map("class_group_id")

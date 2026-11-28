@@ -70,7 +70,7 @@ export class ReportCardService {
     const lessonSubjects: Subject[] = computed.flatMap((item) => item.lessons.map((lesson) => lesson.subject));
 
     const tally = (items: AttendanceRecord[]) => {
-      // Aula ainda não terminada não conta como dada.
+      // present null (aula não terminada, não dada ou falta justificada) não conta como dada.
       const counted = items.filter((record) => record.present !== null);
       const present = counted.filter((record) => record.present).length;
       const given = counted.length;

@@ -111,9 +111,9 @@ O motivo: a chamada manual é trabalhosa e imprecisa, e a catraca já tem o dado
 - Correção manual **nunca** é sobrescrita pelo cálculo automático; registra quem corrigiu e quando.
 
 ### Falta do professor e aula cancelada
-- Decisão do usuário: se o professor faltou ou a aula foi cancelada, a **presença é coletiva** — todos os alunos da turma recebem presença naquela aula, independentemente da catraca.
+- Decisão do usuário (revista em 2026-11-27, vale também para o passado): se o professor faltou ou a aula foi cancelada, a aula **não conta como dada** — aparece "—" na chamada e fica fora da frequência, independentemente da catraca.
 - A marcação é por aula (turma + bloco + data), com o motivo "Falta do professor" ou "Aula cancelada". *Minha call:* a escola marca qualquer aula; o professor marca as suas. Registra quem marcou.
-- Uma correção manual individual feita depois para um aluno nessa aula continua valendo sobre a presença coletiva. *Minha call.*
+- Uma correção manual individual feita depois para um aluno nessa aula faz a aula contar para ele (presença ou falta). *Minha call.*
 
 ### Quando calcula
 - O professor deve ver a chamada da aula logo depois que ela termina, e leituras atrasadas no fim do dia precisam ser consideradas.
