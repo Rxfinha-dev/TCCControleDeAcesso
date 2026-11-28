@@ -1,5 +1,6 @@
 import request from 'supertest';
 import { Prisma, type User } from '@prisma/client';
+import { env } from '../src/config/env';
 import { AUTH_USER_ID, SESSION_ID, authHeader, buildTestApp, school, schoolUser, superAdmin } from './helpers';
 
 describe('Auth (Supabase)', () => {
@@ -38,7 +39,7 @@ describe('Auth (Supabase)', () => {
         name: schoolUser.name,
         email: schoolUser.email,
         role: 'SCHOOL',
-        school: { id: school.id, name: school.name },
+        school: { id: school.id, name: school.name, plan: 'ASSESSMENTS', modules: ['ACCESS', 'ACADEMIC', 'ATTENDANCE', 'ASSESSMENTS'] },
         username: null,
         mustChangePassword: false,
       });
@@ -102,21 +103,52 @@ describe('Auth (Supabase)', () => {
       expect(prisma.user.create).not.toHaveBeenCalled();
     });
 
-    it('e-mail de bootstrap nasce SUPER_ADMIN', async () => {
-      const { app, prisma, identity } = buildTestApp();
-      identity.user = { ...identity.user, email: 'RafaelHenriqueOliveira1234@gmail.com', name: 'Rafael' };
-      prisma.user.findUnique.mockResolvedValueOnce(null);
-      prisma.school.findUnique.mockResolvedValueOnce(null);
-      prisma.user.create.mockResolvedValue({ ...superAdmin, school } as never);
+    const bootstrapLogin = () => {
+      const ctx = buildTestApp();
+      ctx.identity.user = { ...ctx.identity.user, email: 'Dono@Exemplo.com', name: 'Dono' };
+      ctx.prisma.user.findUnique.mockResolvedValueOnce(null);
+      ctx.prisma.school.findUnique.mockResolvedValueOnce(null);
+      ctx.prisma.user.create.mockResolvedValue({ ...superAdmin, school } as never);
+      return ctx;
+    };
+
+    it('e-mail de bootstrap nasce SUPER_ADMIN quando ainda não há nenhum', async () => {
+      const { app, prisma } = bootstrapLogin();
+      prisma.user.count.mockResolvedValue(0);
 
       const res = await request(app).get('/api/auth/me').set('Authorization', authHeader());
 
       expect(res.status).toBe(200);
+      expect(prisma.user.count).toHaveBeenCalledWith({ where: { role: 'SUPER_ADMIN' } });
       expect(prisma.user.create.mock.calls[0][0].data).toMatchObject({
-        email: 'rafaelhenriqueoliveira1234@gmail.com',
+        email: 'dono@exemplo.com',
         role: 'SUPER_ADMIN',
-        school: { create: { name: 'Rafael', email: 'rafaelhenriqueoliveira1234@gmail.com' } },
+        school: { create: { name: 'Dono', email: 'dono@exemplo.com' } },
       });
+    });
+
+    it('e-mail de bootstrap vira escola comum se já existe super admin', async () => {
+      const { app, prisma } = bootstrapLogin();
+      prisma.user.count.mockResolvedValue(1);
+
+      await request(app).get('/api/auth/me').set('Authorization', authHeader());
+
+      expect(prisma.user.create.mock.calls[0][0].data).toMatchObject({ email: 'dono@exemplo.com', role: 'SCHOOL' });
+    });
+
+    it('sem SUPER_ADMIN_BOOTSTRAP_EMAIL não há bootstrap', async () => {
+      const original = env.SUPER_ADMIN_BOOTSTRAP_EMAIL;
+      env.SUPER_ADMIN_BOOTSTRAP_EMAIL = undefined;
+      try {
+        const { app, prisma } = bootstrapLogin();
+        prisma.user.count.mockResolvedValue(0);
+
+        await request(app).get('/api/auth/me').set('Authorization', authHeader());
+
+        expect(prisma.user.create.mock.calls[0][0].data).toMatchObject({ role: 'SCHOOL' });
+      } finally {
+        env.SUPER_ADMIN_BOOTSTRAP_EMAIL = original;
+      }
     });
 
     it('exige e-mail confirmado no Supabase', async () => {

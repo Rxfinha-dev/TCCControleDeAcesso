@@ -202,8 +202,38 @@ html {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .stamp-in {
+  .stamp-in,
+  .skeleton {
     animation: none;
+  }
+}
+
+/* Esqueleto de carregamento (usa --neutral-soft, que já tem versão no tema escuro). */
+.skeleton {
+  display: inline-block;
+  width: 100%;
+  height: 0.9em;
+  border-radius: 6px;
+  background: var(--neutral-soft);
+  animation: skeleton-pulse 1.4s ease-in-out infinite;
+}
+
+.skeleton-card {
+  display: grid;
+  gap: 10px;
+}
+
+.student-photo .student-photo-skeleton {
+  border-radius: 0;
+}
+
+@keyframes skeleton-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
   }
 }
 
@@ -370,6 +400,20 @@ select {
   font: inherit;
   color: var(--ink);
   transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+/* Seletores nativos de data/hora (Safari iOS em especial) têm largura mínima própria e vazam do card. */
+input[type='date'],
+input[type='time'] {
+  min-width: 0;
+  max-width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+input[type='date']::-webkit-date-and-time-value,
+input[type='time']::-webkit-date-and-time-value {
+  text-align: left;
 }
 
 input:hover:not(:disabled),
@@ -1714,6 +1758,10 @@ select:disabled {
   animation: slide-in 0.2s ease-out;
 }
 
+.toast.toast-shown {
+  animation: none;
+}
+
 .toast::before {
   content: '';
   width: 10px;
@@ -2290,6 +2338,11 @@ select:disabled {
   font-size: 0.95rem;
 }
 
+/* Coluna lateral de 230px não comporta dois seletores de hora lado a lado sem cortar o texto. */
+.tt-selected .field-row {
+  grid-template-columns: 1fr;
+}
+
 .tt-selected .btn {
   align-self: flex-start;
 }
@@ -2669,6 +2722,16 @@ button.roll-mark:hover:not(:disabled) {
   min-height: 36px;
   padding: 0 8px;
   font-family: var(--font-mono);
+}
+
+.grade-input[aria-invalid='true'] {
+  border-color: var(--danger);
+}
+
+.grade-error {
+  display: block;
+  margin-top: 4px;
+  color: var(--danger);
 }
 
 .concept-list {

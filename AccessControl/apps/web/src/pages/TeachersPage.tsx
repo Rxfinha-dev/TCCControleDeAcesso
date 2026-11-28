@@ -6,12 +6,15 @@ import { ConfirmDialog } from '../components/ConfirmDialog';
 import { LoginSheet, type LoginSheetRow } from '../components/LoginSheet';
 import { PageHeader } from '../components/PageHeader';
 import { PasswordInput } from '../components/PasswordInput';
+import { useSchoolScope } from '../contexts/SchoolScopeContext';
 import { useToast } from '../contexts/ToastContext';
+import { SkeletonRows } from '../components/Skeleton';
 
 const EMPTY: TeacherInput = { name: '', contactEmail: '' };
 
 export function TeachersPage() {
   const toast = useToast();
+  const { hasModule } = useSchoolScope();
   const [teachers, setTeachers] = useState<Teacher[]>([]);
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState<TeacherInput>(EMPTY);
@@ -143,7 +146,7 @@ export function TeachersPage() {
             )}
           </div>
 
-          {selected && (
+          {selected && hasModule('ATTENDANCE') && (
             <>
               <h2 className="card-title">Acesso ao sistema</h2>
               <p className="hint">
@@ -162,6 +165,12 @@ export function TeachersPage() {
                   placeholder="Em branco: o sistema gera uma"
                   value={loginPassword}
                   onChange={(event) => setLoginPassword(event.target.value)}
+                  // O campo fica dentro do formulário do professor: Enter aqui cria o login em vez de salvar a ficha.
+                  onKeyDown={(event) => {
+                    if (event.key !== 'Enter') return;
+                    event.preventDefault();
+                    if (!savingLogin) void handleLogin();
+                  }}
                 />
               </label>
               <div className="form-actions">
@@ -175,16 +184,17 @@ export function TeachersPage() {
 
         <section className="card">
           <div className="table-wrapper">
-            <table className="table selectable">
+            <table className="table selectable" aria-busy={loading}>
               <thead>
                 <tr>
                   <th>Nome</th>
                   <th>E-mail</th>
                   <th className="numeric">Disciplinas</th>
-                  <th>Login</th>
+                  {hasModule('ATTENDANCE') && <th>Login</th>}
                 </tr>
               </thead>
               <tbody>
+                {loading && teachers.length === 0 && <SkeletonRows cols={hasModule('ATTENDANCE') ? 4 : 3} />}
                 {teachers.map((teacher) => (
                   <tr
                     key={teacher.id}
@@ -196,12 +206,12 @@ export function TeachersPage() {
                     <td>{teacher.name}</td>
                     <td className="muted">{teacher.contactEmail ?? '—'}</td>
                     <td className="numeric">{teacher.assignmentsCount}</td>
-                    <td className="muted mono">{teacher.username ?? '—'}</td>
+                    {hasModule('ATTENDANCE') && <td className="muted mono">{teacher.username ?? '—'}</td>}
                   </tr>
                 ))}
                 {!loading && teachers.length === 0 && (
                   <tr>
-                    <td colSpan={4} className="empty">
+                    <td colSpan={hasModule('ATTENDANCE') ? 4 : 3} className="empty">
                       Nenhum professor cadastrado ainda.
                     </td>
                   </tr>

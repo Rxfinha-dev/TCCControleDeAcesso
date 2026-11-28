@@ -4,7 +4,7 @@ import { notFound } from '../../lib/errors';
 import { classifyDay } from '../calendar/calendar.service';
 import { studentGrades, type AssessmentsService } from '../assessments/assessments.service';
 import { averages, gradeCell, termOf } from '../assessments/grades.rules';
-import { attendanceStatus, percent } from '../attendance/attendance.rules';
+import { attendanceStatusOf, percent } from '../attendance/attendance.rules';
 import type { AttendanceRecord, AttendanceService, Lesson } from '../attendance/attendance.service';
 
 const subjectSelect = { id: true, name: true, abbreviation: true, color: true } as const;
@@ -70,11 +70,16 @@ export class ReportCardService {
     const lessonSubjects: Subject[] = computed.flatMap((item) => item.lessons.map((lesson) => lesson.subject));
 
     const tally = (items: AttendanceRecord[]) => {
-      // Aula ainda não terminada não conta como dada.
+      // present null (aula não terminada, não dada ou falta justificada) não conta como dada.
       const counted = items.filter((record) => record.present !== null);
       const present = counted.filter((record) => record.present).length;
-      const value = percent(present, counted.length);
-      return { given: counted.length, present, percent: value, status: attendanceStatus(value, student.school.minAttendance) };
+      const given = counted.length;
+      return {
+        given,
+        present,
+        percent: percent(present, given),
+        status: attendanceStatusOf(present, given, student.school.minAttendance),
+      };
     };
     const subjects = [
       ...new Map([...lessonSubjects, ...assessments.map((assessment) => assessment.subject)].map((subject) => [subject.id, subject])).values(),

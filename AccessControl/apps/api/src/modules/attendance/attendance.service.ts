@@ -13,7 +13,7 @@ import { badRequest, notFound } from '../../lib/errors';
 import { idSchema, isoDaySchema } from '../../lib/validation';
 import { classifyDay, type CalendarService } from '../calendar/calendar.service';
 import type { ClassGroupsService } from '../class-groups/class-groups.service';
-import { attendanceStatus, insideIntervals, isPresent, percent } from './attendance.rules';
+import { attendanceStatusOf, insideIntervals, isPresent, percent } from './attendance.rules';
 
 const isoDay = isoDaySchema;
 const startMinuteSchema = z.coerce.number().int().min(0).max(24 * 60);
@@ -56,8 +56,8 @@ export type OverrideInput = z.infer<typeof overrideSchema>;
 export type CancellationInput = z.infer<typeof cancellationSchema>;
 
 /**
- * De onde veio a presença: catraca, correção manual, presença coletiva (professor faltou / aula cancelada)
- * ou falta justificada (não conta como aula dada para o aluno: `present` fica null).
+ * De onde veio a presença: catraca, correção manual, aula não dada (professor faltou / aula cancelada) ou
+ * falta justificada. Nos dois últimos `present` fica null: não conta como aula dada para o aluno.
  */
 export type AttendanceSource = 'AUTO' | 'MANUAL' | 'COLLECTIVE' | 'JUSTIFIED';
 
@@ -224,12 +224,12 @@ export class AttendanceService {
         for (const lesson of dayLessons) {
           const corrected = manual.get(`${enrollment.studentId}|${date}|${lesson.startMinute}`);
           const auto = lesson.finished ? isPresent(inside, lesson.startMinute, lesson.endMinute) : null;
-          // Prioridade: correção manual > presença coletiva > catraca. Falta da catraca em período justificado não conta.
+          // Prioridade: correção manual > aula não dada > catraca. Falta da catraca em período justificado não conta.
           const [present, source]: [boolean | null, AttendanceSource] =
             corrected !== undefined
               ? [corrected, 'MANUAL']
               : lesson.cancellation
-                ? [true, 'COLLECTIVE']
+                ? [null, 'COLLECTIVE']
                 : auto === false && excused
                   ? [null, 'JUSTIFIED']
                   : [auto, 'AUTO'];
@@ -311,7 +311,7 @@ export class AttendanceService {
     }
   }
 
-  /** Falta do professor ou aula cancelada: todos os alunos da turma recebem presença nessa aula. */
+  /** Falta do professor ou aula cancelada: a aula não conta como dada, salvo correção manual de um aluno. */
   async setCancellation(schoolId: number, userId: number, input: CancellationInput, teacherId: number | null = null) {
     await this.findLesson(schoolId, input, teacherId);
     const key = { classGroupId: input.classGroupId, date: dateOnly(input.date), startMinute: input.startMinute };
@@ -348,11 +348,14 @@ export class AttendanceService {
     const term = range.term === undefined ? null : schoolTerms.find((item) => item.number === range.term);
     if (term === undefined) throw badRequest('Esse bimestre ainda não foi definido no Calendário', 'TERM_NOT_FOUND');
     const yearStart = `${group.schoolYear}-01-01`;
-    // Preso ao ano letivo da turma: um intervalo de séculos travaria o cálculo dia a dia.
-    const from = term ? isoDate(term.startDate) : range.from && range.from > yearStart ? range.from : yearStart;
-    const end = term ? isoDate(term.endDate) : (range.to ?? yearEnd);
+    // Preso ao ano letivo da turma (também o bimestre, que pode ter sido gravado fora dele): um intervalo de
+    // séculos travaria o cálculo dia a dia.
+    const start = term ? isoDate(term.startDate) : range.from;
+    const from = start && start > yearStart ? start : yearStart;
+    const requestedEnd = term ? isoDate(term.endDate) : (range.to ?? yearEnd);
+    const end = requestedEnd < yearEnd ? requestedEnd : yearEnd;
     // Nunca passa de hoje: aula futura não é aula dada.
-    const to = range.to && !term ? (range.to < yearEnd ? range.to : yearEnd) : end < today ? end : today;
+    const to = range.to && !term ? end : end < today ? end : today;
     const base = { from, to, term: term?.number ?? null, terms: schoolTerms.map((item) => item.number), minAttendance };
     if (to < from) return { ...base, subjects: [], students: [] };
 
@@ -371,11 +374,11 @@ export class AttendanceService {
       a.name.localeCompare(b.name, 'pt-BR'),
     );
     const tally = (items: AttendanceRecord[]) => {
-      // Aula ainda não terminada não conta como dada.
+      // present null (aula não terminada, não dada ou falta justificada) não conta como dada.
       const counted = items.filter((record) => record.present !== null);
       const present = counted.filter((record) => record.present).length;
-      const value = percent(present, counted.length);
-      return { given: counted.length, present, percent: value, status: attendanceStatus(value, minAttendance) };
+      const given = counted.length;
+      return { given, present, percent: percent(present, given), status: attendanceStatusOf(present, given, minAttendance) };
     };
     return {
       ...base,

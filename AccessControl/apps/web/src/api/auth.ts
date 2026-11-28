@@ -113,6 +113,7 @@ export const authApi = {
   /** Usuário logado com perfil e escola (a API cria ou vincula no primeiro acesso). */
   me: () => requestJson<AuthUser>('/auth/me'),
 
-  /** Troca da senha inicial (professor e aluno). */
-  changePassword: (password: string) => requestJson<void>('/auth/password', { method: 'PUT', body: { password } }),
+  /** Troca da senha (professor e aluno): a API confere a senha atual e encerra as outras sessões. */
+  changePassword: (currentPassword: string, password: string) =>
+    requestJson<void>('/auth/password', { method: 'PUT', body: { currentPassword, password } }),
 };

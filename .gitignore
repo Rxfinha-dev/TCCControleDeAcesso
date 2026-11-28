@@ -366,3 +366,10 @@ FodyWeavers.xsd
 /TCCControleDeAcesso/Views/frmListaAlunos.cs
 /TCCControleDeAcesso/Views/frmListaAlunos.resx
 .nuget/
+
+# Ferramentas locais (assistentes, auditorias, navegador)
+.superpowers/
+CLAUDE-SECURITY-*/
+.claude/
+.playwright-mcp/
+.impeccable/

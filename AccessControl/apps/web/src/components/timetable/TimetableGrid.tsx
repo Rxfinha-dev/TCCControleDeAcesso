@@ -7,7 +7,7 @@ import type { EditorBlock } from './timetableReducer';
 export const PX_PER_MINUTE = 1.2;
 
 export const PALETTE_MIME = 'application/x-helpus-palette';
-const BLOCK_MIME = 'application/x-helpus-block';
+export const BLOCK_MIME = 'application/x-helpus-block';
 
 export interface PaletteItem {
   kind: TimetableSlotKind;

@@ -170,7 +170,7 @@ describe('Presença', () => {
     ]);
   });
 
-  it('aula cancelada dá presença à turma inteira; correção individual continua valendo', async () => {
+  it('aula cancelada não conta como dada (present null); correção individual continua valendo', async () => {
     const { app, prisma } = setup();
     prisma.lessonCancellation.findMany.mockResolvedValue([
       { classGroupId: 20, date: dateOnly(MONDAY), startMinute: 450, reason: 'TEACHER_ABSENT' },
@@ -182,7 +182,7 @@ describe('Presença', () => {
     const res = await day(app);
 
     expect(res.body.lessons[0].cancellation).toBe('TEACHER_ABSENT');
-    expect(res.body.students[0].marks[0]).toEqual({ startMinute: 450, present: true, source: 'COLLECTIVE' });
+    expect(res.body.students[0].marks[0]).toEqual({ startMinute: 450, present: null, source: 'COLLECTIVE' });
     expect(res.body.students[1].marks[0]).toEqual({ startMinute: 450, present: false, source: 'MANUAL' });
     expect(res.body.students[0].marks[1]).toEqual({ startMinute: 500, present: false, source: 'AUTO' });
   });
@@ -351,6 +351,25 @@ describe('Presença', () => {
         ],
       },
     ]);
+  });
+
+  it('aula cancelada fica fora da frequência, salvo para quem teve a marca corrigida à mão', async () => {
+    const { app, prisma } = setup();
+    prisma.accessLog.findMany.mockResolvedValue([reading(10, '2026-03-09', '07:25'), reading(11, '2026-03-09', '07:25')] as never);
+    prisma.lessonCancellation.findMany.mockResolvedValue([
+      { classGroupId: 20, date: dateOnly('2026-03-09'), startMinute: 450, reason: 'CANCELLED' },
+    ] as never);
+    prisma.attendanceOverride.findMany.mockResolvedValue([
+      { classGroupId: 20, studentId: 11, date: dateOnly('2026-03-09'), startMinute: 450, present: false },
+    ] as never);
+
+    const res = await request(app)
+      .get('/api/attendance/summary?classGroupId=20&from=2026-03-09&to=2026-03-09')
+      .set('Authorization', authHeader());
+
+    // Ana: só a 2ª aula conta. Bruno: a correção manual faz a aula cancelada contar como falta.
+    expect(res.body.students[0]).toMatchObject({ name: 'Ana Souza', given: 1, present: 1 });
+    expect(res.body.students[1]).toMatchObject({ name: 'Bruno Lima', given: 2, present: 1 });
   });
 
   it('frequência recusa intervalo invertido', async () => {
@@ -618,6 +637,19 @@ describe('Frequência por bimestre', () => {
     expect(res.status).toBe(200);
     expect(res.body).toMatchObject({ from: '2026-02-02', term: 1, terms: [1] });
     expect(res.body.to <= '2026-04-17').toBe(true);
+  });
+
+  it('bimestre antigo gravado fora do ano letivo fica preso ao ano da turma', async () => {
+    const { app, prisma } = setup();
+    prisma.schoolTerm.findMany.mockResolvedValue([
+      { id: 1, schoolId: school.id, schoolYear: 2026, number: 1, startDate: dateOnly('2000-01-01'), endDate: dateOnly('2100-12-30') },
+    ]);
+
+    const res = await request(app).get('/api/attendance/summary?classGroupId=20&term=1').set('Authorization', authHeader());
+
+    expect(res.status).toBe(200);
+    expect(res.body.from).toBe('2026-01-01');
+    expect(res.body.to <= '2026-12-31').toBe(true);
   });
 
   it('bimestre ainda não definido é recusado', async () => {

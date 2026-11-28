@@ -1,5 +1,6 @@
 import { SchoolYear } from '@prisma/client';
 import { z } from 'zod';
+import { idSchema } from '../../lib/validation';
 
 export const MAX_FINGERPRINT_SLOTS = 127;
 
@@ -16,12 +17,12 @@ export const studentSchema = z.object({
   age: z.coerce.number().int('Idade inválida').min(1, 'Idade inválida').max(120, 'Idade inválida'),
   // Curso e série são opcionais (escola de ensino regular): campo vazio do formulário vira null.
   year: z.preprocess(emptyToNull, z.enum(SchoolYear, 'Série inválida').nullable()).default(null),
-  courseId: z.preprocess(emptyToNull, z.coerce.number().int().positive('Curso inválido').nullable()).default(null),
+  courseId: z.preprocess(emptyToNull, idSchema.nullable()).default(null),
 });
 
 export const listStudentsQuerySchema = z.object({
   search: z.string().trim().max(100).optional(),
-  courseId: z.coerce.number().int().positive().optional(),
+  courseId: idSchema.optional(),
 });
 
 export type StudentInput = z.infer<typeof studentSchema>;

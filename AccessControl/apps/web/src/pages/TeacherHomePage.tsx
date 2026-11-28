@@ -4,7 +4,10 @@ import { attendanceApi } from '../api';
 import { errorMessage } from '../api/client';
 import type { TeacherLessons } from '../api/types';
 import { PageHeader } from '../components/PageHeader';
+import { SkeletonCard } from '../components/Skeleton';
+import { PLAN_NOTICE } from '../components/RequireModule';
 import { useAuth } from '../contexts/AuthContext';
+import { useSchoolScope } from '../contexts/SchoolScopeContext';
 import { useToast } from '../contexts/ToastContext';
 import { CANCELLATION_LABELS, dayMessage, formatMinute } from '../utils/academic';
 import { firstName } from '../utils/format';
@@ -12,15 +15,22 @@ import { firstName } from '../utils/format';
 /** Início do professor: as aulas de hoje, cada uma com o atalho para a chamada. */
 export function TeacherHomePage() {
   const { user } = useAuth();
+  const { hasModule } = useSchoolScope();
+  const inPlan = hasModule('ATTENDANCE');
   const toast = useToast();
   const [data, setData] = useState<TeacherLessons | null>(null);
+  const [failed, setFailed] = useState(false);
 
   useEffect(() => {
+    if (!inPlan) return;
     attendanceApi
       .myLessons()
       .then(setData)
-      .catch((err) => toast.error(errorMessage(err)));
-  }, [toast]);
+      .catch((err) => {
+        setFailed(true);
+        toast.error(errorMessage(err));
+      });
+  }, [toast, inPlan]);
 
   const message = data ? dayMessage(data.day) : null;
 
@@ -28,8 +38,12 @@ export function TeacherHomePage() {
     <>
       <PageHeader
         title={`Olá, ${firstName(user?.name ?? '')}`}
-        description="Suas aulas de hoje. A catraca marca a presença; abra a chamada para corrigir as exceções."
+        description={inPlan ? 'Suas aulas de hoje. A catraca marca a presença; abra a chamada para corrigir as exceções.' : 'Seu painel de aulas.'}
       />
+
+      {!inPlan && <p className="banner">{PLAN_NOTICE}</p>}
+
+      {inPlan && !data && !failed && <SkeletonCard />}
 
       {data?.classGroups.length === 0 ? (
         <p className="banner">Você ainda não leciona em nenhuma turma deste ano. Fale com a secretaria da escola.</p>

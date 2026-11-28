@@ -38,6 +38,9 @@ services:
         sync: false
       - key: SUPABASE_STORAGE_BUCKET
         value: student-photos
+      # Opcional: e-mail do primeiro super admin (só vale enquanto não existe nenhum).
+      - key: SUPER_ADMIN_BOOTSTRAP_EMAIL
+        sync: false
 
   - type: web
     name: helpus-web
@@ -70,6 +73,15 @@ services:
       - path: /*
         name: Referrer-Policy
         value: strict-origin-when-cross-origin
+      # Só scripts e estilos do próprio site (o tema inicial fica em /theme.js, sem script inline).
+      # connect-src: a API (VITE_API_URL) e o Supabase Auth. Se a URL da API mudar, atualize aqui também.
+      - path: /*
+        name: Content-Security-Policy
+        value: "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' blob: data:; connect-src 'self' https://helpus-api.onrender.com https://*.supabase.co wss://*.supabase.co; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
+      # Web Serial para o leitor de digital; nada de câmera, microfone ou localização.
+      - path: /*
+        name: Permissions-Policy
+        value: serial=(self), camera=(), microphone=(), geolocation=()
       - path: /assets/*
         name: Cache-Control
         value: public, max-age=31536000, immutable

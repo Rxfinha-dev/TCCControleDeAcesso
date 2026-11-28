@@ -5,6 +5,7 @@ import type { Subject, SubjectInput } from '../api/types';
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import { PageHeader } from '../components/PageHeader';
 import { useToast } from '../contexts/ToastContext';
+import { SkeletonRows } from '../components/Skeleton';
 
 const EMPTY: SubjectInput = { name: '', abbreviation: '', color: '#34bcfb' };
 
@@ -126,7 +127,7 @@ export function SubjectsPage() {
 
         <section className="card">
           <div className="table-wrapper">
-            <table className="table selectable">
+            <table className="table selectable" aria-busy={loading}>
               <thead>
                 <tr>
                   <th>Nome</th>
@@ -134,6 +135,7 @@ export function SubjectsPage() {
                 </tr>
               </thead>
               <tbody>
+                {loading && subjects.length === 0 && <SkeletonRows cols={2} />}
                 {subjects.map((subject) => (
                   <tr
                     key={subject.id}

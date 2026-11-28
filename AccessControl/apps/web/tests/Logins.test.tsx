@@ -2,7 +2,7 @@ import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { toLoginEmail } from '../src/api/auth';
 import { todayIso } from '../src/utils/academic';
-import { bodyOf, callsTo, jsonResponse, mockApi, renderAt, SCHOOL_USER } from './harness';
+import { bodyOf, callsTo, jsonResponse, mockApi, renderAt, SCHOOL_USER, ALL_MODULES } from './harness';
 import { setMockSession } from './mocks/supabase';
 
 const MATH = { id: 1, name: 'Matemática', abbreviation: 'MAT', color: '#2266aa' };
@@ -11,7 +11,7 @@ const TEACHER_USER = {
   name: 'Ana Prado',
   email: 'ana.prado@etec-jau.helpus.invalid',
   role: 'TEACHER',
-  school: { id: 1, name: 'ETEC Jaú' },
+  school: { id: 1, name: 'ETEC Jaú', plan: 'ASSESSMENTS', modules: ALL_MODULES },
   username: 'ana.prado@etec-jau',
   mustChangePassword: false,
 };
@@ -47,6 +47,7 @@ describe('Primeiro acesso', () => {
 
     expect(await screen.findByRole('heading', { name: 'Crie sua senha' })).toBeInTheDocument();
     expect(screen.getByText('ana.prado@etec-jau')).toBeInTheDocument();
+    await userEvent.type(screen.getByLabelText('Senha atual'), 'k7pmx3qa');
     await userEvent.type(screen.getByLabelText('Nova senha'), 'minhasenha1');
     await userEvent.type(screen.getByLabelText('Repita a nova senha'), 'outra');
     await userEvent.click(screen.getByRole('button', { name: 'Salvar senha' }));
@@ -57,7 +58,7 @@ describe('Primeiro acesso', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Salvar senha' }));
 
     expect(await screen.findByRole('heading', { name: 'Olá, Ana' })).toBeInTheDocument();
-    expect(bodyOf(callsTo(fetchMock, '/auth/password', 'PUT')[0])).toEqual({ password: 'minhasenha1' });
+    expect(bodyOf(callsTo(fetchMock, '/auth/password', 'PUT')[0])).toEqual({ currentPassword: 'k7pmx3qa', password: 'minhasenha1' });
   });
 });
 
@@ -116,6 +117,22 @@ describe('Logins criados pela escola', () => {
     expect(within(sheet).getByText('ana.prado@etec-jau')).toBeInTheDocument();
     expect(within(sheet).getByText('senha1234')).toBeInTheDocument();
     expect(bodyOf(callsTo(fetchMock, '/logins/teachers/8', 'PUT')[0])).toEqual({ password: 'senha1234' });
+  });
+
+  it('Enter na senha do login cria o login, sem salvar a ficha do professor', async () => {
+    const fetchMock = mockApi((path, method) => {
+      if (path === '/teachers') return jsonResponse(200, [{ id: 8, name: 'Ana Prado', contactEmail: null, assignmentsCount: 1, username: null }]);
+      if (path === '/logins/teachers/8' && method === 'PUT') return jsonResponse(200, { username: 'ana.prado@etec-jau', password: 'senha1234' });
+      return undefined;
+    });
+    renderAt('/professores');
+
+    await userEvent.click(await screen.findByText('Ana Prado'));
+    await userEvent.type(screen.getByLabelText('Senha inicial'), 'senha1234{Enter}');
+
+    expect(await screen.findByRole('region', { name: 'Login de Ana Prado' })).toBeInTheDocument();
+    expect(callsTo(fetchMock, '/logins/teachers/8', 'PUT')).toHaveLength(1);
+    expect(callsTo(fetchMock, '/teachers/8', 'PUT')).toHaveLength(0);
   });
 
   it('gera os logins da turma e lista quem falhou', async () => {

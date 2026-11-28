@@ -1,13 +1,14 @@
 import { Router } from 'express';
 import { idParamSchema } from '../../lib/validation';
-import { currentSchool } from '../../middlewares/school-scope';
+import { hasModule } from '../../lib/plans';
+import { currentPlan, currentSchool } from '../../middlewares/school-scope';
 import { teacherSchema, type TeachersService } from './teachers.service';
 
 export function teachersRoutes(service: TeachersService) {
   const router = Router();
 
   router.get('/', async (_req, res) => {
-    res.json(await service.list(currentSchool(res).sub));
+    res.json(await service.list(currentSchool(res).sub, { logins: hasModule(currentPlan(res), 'ATTENDANCE') }));
   });
 
   router.post('/', async (req, res) => {

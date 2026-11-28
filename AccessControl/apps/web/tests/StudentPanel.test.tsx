@@ -1,7 +1,7 @@
 import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { todayIso } from '../src/utils/academic';
-import { callsTo, jsonResponse, mockApi, renderAt } from './harness';
+import { ALL_MODULES, callsTo, jsonResponse, mockApi, renderAt } from './harness';
 import { setMockSession } from './mocks/supabase';
 
 const addDaysIso = (iso: string, days: number) => new Date(Date.parse(`${iso}T12:00:00Z`) + days * 86_400_000).toISOString().slice(0, 10);
@@ -12,7 +12,7 @@ const STUDENT_USER = {
   name: 'Ana Souza',
   email: '24010@etec-jau.helpus.invalid',
   role: 'STUDENT',
-  school: { id: 1, name: 'ETEC Jaú' },
+  school: { id: 1, name: 'ETEC Jaú', plan: 'ASSESSMENTS', modules: ALL_MODULES },
   username: '24010@etec-jau',
   mustChangePassword: false,
 };

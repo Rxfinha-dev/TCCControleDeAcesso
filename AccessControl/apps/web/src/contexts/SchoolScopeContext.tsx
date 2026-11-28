@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { schoolsApi } from '../api';
-import { errorMessage, setSchoolForbiddenHandler, setSchoolScope } from '../api/client';
-import type { SchoolSummary } from '../api/types';
+import { errorMessage, setModuleNotInPlanHandler, setSchoolForbiddenHandler, setSchoolScope } from '../api/client';
+import type { Module, SchoolSummary } from '../api/types';
 import { useAuth } from './AuthContext';
 import { useSerial } from './SerialContext';
 import { useToast } from './ToastContext';
@@ -16,6 +16,8 @@ interface SchoolScopeValue {
   select: (value: number | 'all') => void;
   selectedName: string;
   reloadSchools: () => Promise<void>;
+  /** A escola em uso tem o módulo no plano? (super admin em "todas": só ACCESS.) */
+  hasModule: (module: Module) => boolean;
 }
 
 const STORAGE_KEY = 'helpus.schoolScope';
@@ -118,6 +120,15 @@ export function SchoolScopeProvider({ children }: { children: ReactNode }) {
     return () => setSchoolForbiddenHandler(null);
   }, [loadUser]);
 
+  // Plano trocado em outra sessão: atualiza usuário e escolas; o menu e o RequireModule trocam a tela pelo aviso.
+  useEffect(() => {
+    setModuleNotInPlanHandler(() => {
+      void loadUser().catch(() => undefined);
+      if (isSuperAdmin) void reloadSchools().catch(() => undefined);
+    });
+    return () => setModuleNotInPlanHandler(null);
+  }, [loadUser, reloadSchools, isSuperAdmin]);
+
   // Ao sair do painel, as próximas requisições não levam mais a escola escolhida.
   useEffect(() => () => setSchoolScope(null), []);
 
@@ -134,10 +145,14 @@ export function SchoolScopeProvider({ children }: { children: ReactNode }) {
   const selectedName =
     selected === 'all' ? ALL_SCHOOLS_LABEL : (schools.find((school) => school.id === selected)?.name ?? user?.school?.name ?? '');
 
-  const value = useMemo(
-    () => ({ selected, schools, select, selectedName, reloadSchools }),
-    [selected, schools, select, selectedName, reloadSchools],
-  );
+  const value = useMemo(() => {
+    const modules: Module[] = isSuperAdmin
+      ? typeof selected === 'number'
+        ? (schools.find((school) => school.id === selected)?.modules ?? ['ACCESS'])
+        : ['ACCESS']
+      : (user?.school?.modules ?? []);
+    return { selected, schools, select, selectedName, reloadSchools, hasModule: (module: Module) => modules.includes(module) };
+  }, [isSuperAdmin, selected, schools, select, selectedName, reloadSchools, user?.school?.modules]);
 
   return <SchoolScopeContext.Provider value={value}>{ready ? children : null}</SchoolScopeContext.Provider>;
 }

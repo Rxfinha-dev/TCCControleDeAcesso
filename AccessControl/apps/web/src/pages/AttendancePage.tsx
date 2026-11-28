@@ -12,8 +12,10 @@ import type {
 } from '../api/types';
 import { JustificationsPanel } from '../components/JustificationsPanel';
 import { PageHeader } from '../components/PageHeader';
+import { SkeletonCard } from '../components/Skeleton';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
+import { useLatestRequest } from '../hooks/useLatestRequest';
 import { CANCELLATION_LABELS, currentSchoolYear, dayMessage, formatMinute, todayIso } from '../utils/academic';
 
 const TABS = [
@@ -25,8 +27,15 @@ const TABS = [
 type TabId = (typeof TABS)[number]['id'];
 
 /** O que a marca mostra, o que ela quer dizer e o que o clique faz. */
-function describe(mark: AttendanceMark) {
+function describe(mark: AttendanceMark, cancelled: boolean) {
   if (mark.source === 'JUSTIFIED') return { text: 'J', state: 'falta justificada', action: 'Marcar presença', next: true };
+  if (mark.source === 'COLLECTIVE') return { text: '—', state: 'aula não dada, não conta', action: 'Marcar presença', next: true };
+  // Em aula não dada o ciclo é — → P → F → —, para dar para chegar à falta.
+  if (mark.source === 'MANUAL' && cancelled) {
+    return mark.present
+      ? { text: 'P', state: 'presença corrigida à mão', action: 'Marcar falta', next: false }
+      : { text: 'F', state: 'falta corrigida à mão', action: 'Voltar para aula não dada', next: null };
+  }
   if (mark.source === 'MANUAL') {
     return {
       text: mark.present ? 'P' : 'F',
@@ -36,8 +45,7 @@ function describe(mark: AttendanceMark) {
     };
   }
   if (mark.present === null) return { text: '…', state: 'aula em andamento', action: 'Marcar presença', next: true };
-  const origin = mark.source === 'COLLECTIVE' ? 'presença coletiva' : `${mark.present ? 'presença' : 'falta'} pela catraca`;
-  return { text: mark.present ? 'P' : 'F', state: origin, action: mark.present ? 'Marcar falta' : 'Marcar presença', next: !mark.present };
+  return { text: mark.present ? 'P' : 'F', state: `${mark.present ? 'presença' : 'falta'} pela catraca`, action: mark.present ? 'Marcar falta' : 'Marcar presença', next: !mark.present };
 }
 
 const FREQ_CLASS: Record<AttendanceStatus, string> = { OK: '', NEAR: 'freq-near', BELOW: 'freq-below' };
@@ -62,6 +70,10 @@ export function AttendancePage() {
   /** Bimestre da aba Frequência ('' = ano letivo). */
   const [term, setTerm] = useState<number | ''>('');
   const [saving, setSaving] = useState(false);
+  const [dayFailed, setDayFailed] = useState(false);
+  const [summaryFailed, setSummaryFailed] = useState(false);
+  const [groupsLoaded, setGroupsLoaded] = useState(false);
+  const beginDayLoad = useLatestRequest();
 
   useEffect(() => {
     (isTeacher ? attendanceApi.myLessons().then((data) => data.classGroups) : classGroupsApi.list(currentSchoolYear()))
@@ -69,30 +81,45 @@ export function AttendancePage() {
         setGroups(list);
         setClassGroupId((current) => current ?? list[0]?.id ?? null);
       })
-      .catch((err) => toast.error(errorMessage(err)));
+      .catch((err) => toast.error(errorMessage(err)))
+      .finally(() => setGroupsLoaded(true));
   }, [isTeacher, toast]);
 
   const loadDay = useCallback(async () => {
     if (classGroupId === null || !date) return;
+    const isCurrent = beginDayLoad();
     try {
-      setDay(await attendanceApi.day(classGroupId, date));
+      const result = await attendanceApi.day(classGroupId, date);
+      if (isCurrent()) setDay(result);
     } catch (err) {
+      if (!isCurrent()) return;
+      setDayFailed(true);
       toast.error(errorMessage(err));
     }
-  }, [classGroupId, date, toast]);
+  }, [classGroupId, date, toast, beginDayLoad]);
 
   useEffect(() => {
     setDay(null);
+    setDayFailed(false);
     void loadDay();
   }, [loadDay]);
 
   useEffect(() => {
     if (tab !== 'frequencia' || classGroupId === null) return;
     setSummary(null);
+    setSummaryFailed(false);
+    let active = true;
     attendanceApi
       .summary(classGroupId, term || undefined)
-      .then(setSummary)
-      .catch((err) => toast.error(errorMessage(err)));
+      .then((result) => active && setSummary(result))
+      .catch((err) => {
+        if (!active) return;
+        setSummaryFailed(true);
+        toast.error(errorMessage(err));
+      });
+    return () => {
+      active = false;
+    };
   }, [tab, classGroupId, term, toast]);
 
   /** Grava uma correção e recarrega a chamada. */
@@ -178,13 +205,15 @@ export function AttendancePage() {
                 )}
               </p>
             )}
+            {((classGroupId === null && !groupsLoaded) || (classGroupId !== null && !!date && !day && !dayFailed)) && <SkeletonCard lines={4} />}
             {day && !message && day.lessons.length === 0 && <p className="banner">Esta turma não tem aula neste dia.</p>}
             {day && day.lessons.length > 0 && (
               <section className="card">
                 <p className="hint roll-legend">
                   <span className="roll-mark present">P</span> presença · <span className="roll-mark absent">F</span> falta ·{' '}
                   <span className="roll-mark present manual">P</span> corrigida à mão ·{' '}
-                  <span className="roll-mark justified">J</span> falta justificada (não conta). Clique para corrigir; clique de novo numa
+                  <span className="roll-mark justified">J</span> falta justificada (não conta) ·{' '}
+                  <span className="roll-mark pending">—</span> aula não dada (não conta). Clique para corrigir; clique de novo numa
                   correção para voltar ao cálculo da catraca.
                 </p>
                 <div className="table-wrapper">
@@ -237,7 +266,8 @@ export function AttendancePage() {
                             <small className="muted">RM {student.rm}</small>
                           </th>
                           {student.marks.map((mark) => {
-                            const { text, state, action, next } = describe(mark);
+                            const cancelled = day.lessons.some((lesson) => lesson.startMinute === mark.startMinute && lesson.cancellation);
+                            const { text, state, action, next } = describe(mark, cancelled);
                             const tone = mark.source === 'JUSTIFIED' ? 'justified' : mark.present === null ? 'pending' : mark.present ? 'present' : 'absent';
                             return (
                               <td key={mark.startMinute} className="roll-cell">
@@ -281,6 +311,7 @@ export function AttendancePage() {
           </div>
 
           <div role="tabpanel" id="panel-frequencia" aria-labelledby="tab-frequencia" hidden={tab !== 'frequencia'}>
+            {tab === 'frequencia' && classGroupId !== null && !summary && !summaryFailed && <SkeletonCard lines={4} />}
             {summary && (
               <section className="card">
                 <label className="field field-inline">

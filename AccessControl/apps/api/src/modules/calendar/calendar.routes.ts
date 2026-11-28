@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { z } from 'zod';
 import { currentSchoolYear } from '../../lib/dates';
+import { badRequest } from '../../lib/errors';
 import { idParamSchema } from '../../lib/validation';
 import { currentSchool } from '../../middlewares/school-scope';
 import {
@@ -48,6 +49,10 @@ export function calendarRoutes(service: CalendarService) {
   router.put('/terms/:schoolYear', async (req, res) => {
     const { schoolYear } = termsParamsSchema.parse(req.params);
     const { terms } = termsSchema.parse(req.body);
+    const inYear = (date: string) => date.startsWith(`${schoolYear}-`);
+    if (terms.some((term) => !inYear(term.startDate) || !inYear(term.endDate))) {
+      throw badRequest(`Os bimestres precisam estar dentro do ano letivo de ${schoolYear}`, 'TERM_OUT_OF_YEAR');
+    }
     res.json(await service.setTerms(currentSchool(res).sub, schoolYear, terms));
   });
 

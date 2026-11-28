@@ -110,6 +110,32 @@ describe('Presença', () => {
     });
   });
 
+  it('aula não dada mostra — e o clique cicla — → P → F → —', async () => {
+    const cancelledDay = {
+      ...DAY,
+      lessons: [{ ...DAY.lessons[0], cancellation: 'CANCELLED' }, DAY.lessons[1]],
+      students: [
+        { ...DAY.students[0], marks: [{ startMinute: 450, present: null, source: 'COLLECTIVE' }, DAY.students[0].marks[1]] },
+        {
+          ...DAY.students[1],
+          marks: [{ startMinute: 450, present: true, source: 'MANUAL' }, DAY.students[1].marks[1]],
+        },
+      ],
+    };
+    const fetchMock = setup(cancelledDay);
+    renderAt('/presenca');
+
+    const notGiven = await screen.findByRole('button', { name: 'Ana Souza, aula das 07:30: aula não dada, não conta. Marcar presença' });
+    expect(notGiven).toHaveTextContent('—');
+    await userEvent.click(notGiven);
+    await waitFor(() => expect(callsTo(fetchMock, '/attendance/override', 'PUT')).toHaveLength(1));
+    expect(bodyOf(callsTo(fetchMock, '/attendance/override', 'PUT')[0])).toMatchObject({ studentId: 10, present: true });
+
+    await userEvent.click(screen.getByRole('button', { name: 'Bruno Lima, aula das 07:30: presença corrigida à mão. Marcar falta' }));
+    await waitFor(() => expect(callsTo(fetchMock, '/attendance/override', 'PUT')).toHaveLength(2));
+    expect(bodyOf(callsTo(fetchMock, '/attendance/override', 'PUT')[1])).toMatchObject({ studentId: 11, present: false });
+  });
+
   it('troca de turma e de dia', async () => {
     const fetchMock = setup();
     renderAt('/presenca');
@@ -134,6 +160,17 @@ describe('Presença', () => {
 
     expect(await screen.findByText(message)).toBeInTheDocument();
     expect(screen.queryByRole('table')).not.toBeInTheDocument();
+  });
+
+  it('limpar a data não deixa esqueleto para sempre', async () => {
+    setup();
+    renderAt('/presenca');
+    await screen.findByText('Ana Souza');
+
+    fireEvent.change(screen.getByLabelText('Dia'), { target: { value: '' } });
+
+    await waitFor(() => expect(screen.queryByText('Ana Souza')).not.toBeInTheDocument());
+    expect(document.querySelector('.skeleton')).toBeNull();
   });
 
   it('dia letivo sem aula na grade avisa', async () => {

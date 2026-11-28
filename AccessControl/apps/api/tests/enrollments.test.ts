@@ -36,7 +36,7 @@ describe('Alunos na turma', () => {
     const { app, prisma } = buildTestApp();
     prisma.classGroup.findFirst.mockResolvedValue(classGroup);
     prisma.student.findMany.mockResolvedValue([{ id: 10 }, { id: 11 }] as never);
-    prisma.enrollment.findFirst.mockResolvedValue(null);
+    prisma.enrollment.findMany.mockResolvedValue([]);
 
     const res = await request(app)
       .post('/api/class-groups/20/students')
@@ -45,17 +45,45 @@ describe('Alunos na turma', () => {
 
     expect(res.status).toBe(200);
     expect(res.body).toEqual({ added: 2, moved: 0 });
-    expect(prisma.enrollment.create).toHaveBeenCalledWith({
-      data: { classGroupId: 20, studentId: 10, schoolYear: 2026, startDate: today },
+    expect(prisma.enrollment.createMany).toHaveBeenCalledWith({
+      data: [
+        { classGroupId: 20, studentId: 10, schoolYear: 2026, startDate: today },
+        { classGroupId: 20, studentId: 11, schoolYear: 2026, startDate: today },
+      ],
     });
     expect(prisma.student.findMany.mock.calls[0][0]!.where).toEqual({ id: { in: [10, 11] }, schoolId: school.id });
+  });
+
+  it('busca as matrículas abertas de todos os alunos numa consulta só, não uma por aluno', async () => {
+    const { app, prisma } = buildTestApp();
+    const ids = Array.from({ length: 40 }, (_, index) => 100 + index);
+    prisma.classGroup.findFirst.mockResolvedValue(classGroup);
+    prisma.student.findMany.mockResolvedValue(ids.map((id) => ({ id })) as never);
+    prisma.enrollment.findMany.mockResolvedValue([
+      enrollment({ id: 7, studentId: 100, classGroupId: 21 }),
+      enrollment({ id: 8, studentId: 101, classGroupId: 21, startDate: today }),
+      enrollment({ id: 9, studentId: 102 }),
+    ]);
+
+    const res = await request(app)
+      .post('/api/class-groups/20/students')
+      .set('Authorization', authHeader())
+      .send({ studentIds: ids });
+
+    expect(res.body).toEqual({ added: 37, moved: 2 });
+    expect(prisma.enrollment.findMany).toHaveBeenCalledTimes(1);
+    expect(prisma.enrollment.findMany.mock.calls[0][0]!.where).toEqual({ studentId: { in: ids }, schoolYear: 2026, endDate: null });
+    expect(prisma.enrollment.findFirst).not.toHaveBeenCalled();
+    expect(prisma.enrollment.create).not.toHaveBeenCalled();
+    expect(prisma.enrollment.createMany).toHaveBeenCalledTimes(1);
+    expect((prisma.enrollment.createMany.mock.calls[0][0]!.data as unknown[]).length).toBe(38);
   });
 
   it('transfere aluno que estava em outra turma desde ontem: fecha a antiga e abre a nova', async () => {
     const { app, prisma } = buildTestApp();
     prisma.classGroup.findFirst.mockResolvedValue(classGroup);
     prisma.student.findMany.mockResolvedValue([{ id: 10 }] as never);
-    prisma.enrollment.findFirst.mockResolvedValue(enrollment({ id: 7, classGroupId: 21 }));
+    prisma.enrollment.findMany.mockResolvedValue([enrollment({ id: 7, classGroupId: 21 })]);
 
     const res = await request(app)
       .post('/api/class-groups/20/students')
@@ -63,9 +91,9 @@ describe('Alunos na turma', () => {
       .send({ studentIds: [10] });
 
     expect(res.body).toEqual({ added: 0, moved: 1 });
-    expect(prisma.enrollment.update).toHaveBeenCalledWith({ where: { id: 7 }, data: { endDate: today } });
-    expect(prisma.enrollment.create).toHaveBeenCalledWith({
-      data: { classGroupId: 20, studentId: 10, schoolYear: 2026, startDate: today },
+    expect(prisma.enrollment.updateMany).toHaveBeenCalledWith({ where: { id: { in: [7] } }, data: { endDate: today } });
+    expect(prisma.enrollment.createMany).toHaveBeenCalledWith({
+      data: [{ classGroupId: 20, studentId: 10, schoolYear: 2026, startDate: today }],
     });
   });
 
@@ -73,7 +101,7 @@ describe('Alunos na turma', () => {
     const { app, prisma } = buildTestApp();
     prisma.classGroup.findFirst.mockResolvedValue(classGroup);
     prisma.student.findMany.mockResolvedValue([{ id: 10 }] as never);
-    prisma.enrollment.findFirst.mockResolvedValue(enrollment({ id: 7, classGroupId: 21, startDate: today }));
+    prisma.enrollment.findMany.mockResolvedValue([enrollment({ id: 7, classGroupId: 21, startDate: today })]);
 
     const res = await request(app)
       .post('/api/class-groups/20/students')
@@ -81,15 +109,15 @@ describe('Alunos na turma', () => {
       .send({ studentIds: [10] });
 
     expect(res.body).toEqual({ added: 0, moved: 1 });
-    expect(prisma.enrollment.update).toHaveBeenCalledWith({ where: { id: 7 }, data: { classGroupId: 20 } });
-    expect(prisma.enrollment.create).not.toHaveBeenCalled();
+    expect(prisma.enrollment.updateMany).toHaveBeenCalledWith({ where: { id: { in: [7] } }, data: { classGroupId: 20 } });
+    expect(prisma.enrollment.createMany).not.toHaveBeenCalled();
   });
 
   it('ignora aluno que já está nesta turma', async () => {
     const { app, prisma } = buildTestApp();
     prisma.classGroup.findFirst.mockResolvedValue(classGroup);
     prisma.student.findMany.mockResolvedValue([{ id: 10 }] as never);
-    prisma.enrollment.findFirst.mockResolvedValue(enrollment());
+    prisma.enrollment.findMany.mockResolvedValue([enrollment()]);
 
     const res = await request(app)
       .post('/api/class-groups/20/students')
@@ -97,8 +125,8 @@ describe('Alunos na turma', () => {
       .send({ studentIds: [10] });
 
     expect(res.body).toEqual({ added: 0, moved: 0 });
-    expect(prisma.enrollment.update).not.toHaveBeenCalled();
-    expect(prisma.enrollment.create).not.toHaveBeenCalled();
+    expect(prisma.enrollment.updateMany).not.toHaveBeenCalled();
+    expect(prisma.enrollment.createMany).not.toHaveBeenCalled();
   });
 
   it('recusa aluno de outra escola sem gravar nada', async () => {
@@ -113,7 +141,7 @@ describe('Alunos na turma', () => {
 
     expect(res.status).toBe(400);
     expect(res.body.code).toBe('INVALID_STUDENT');
-    expect(prisma.enrollment.create).not.toHaveBeenCalled();
+    expect(prisma.enrollment.createMany).not.toHaveBeenCalled();
   });
 
   it('exige ao menos um aluno', async () => {

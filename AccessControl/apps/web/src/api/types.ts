@@ -16,13 +16,16 @@ export interface SchoolRef {
   name: string;
 }
 
+export type Module = 'ACCESS' | 'ACADEMIC' | 'ATTENDANCE' | 'ASSESSMENTS';
+export type SchoolPlan = 'BASIC' | 'ACADEMIC' | 'ATTENDANCE' | 'ASSESSMENTS';
+
 /** Usuário logado (GET /auth/me). */
 export interface AuthUser {
   id: number;
   name: string;
   email: string;
   role: UserRole;
-  school: SchoolRef | null;
+  school: (SchoolRef & { plan: SchoolPlan; modules: Module[] }) | null;
   /** Login de professor/aluno ("joao.silva@etec-jau"). */
   username: string | null;
   /** Senha inicial ainda não trocada. */
@@ -37,11 +40,15 @@ export interface SchoolSummary {
   createdAt: string;
   counts: { students: number; courses: number; accessLogs: number };
   hasLogin: boolean;
+  plan: SchoolPlan;
+  modules: Module[];
 }
 
 export interface SchoolInput {
   name: string;
   email: string;
+  /** Só na criação; a troca de plano usa PUT /schools/:id/plan. */
+  plan?: SchoolPlan;
 }
 
 /** Usuário na gestão do super admin (GET /users). */
@@ -122,6 +129,8 @@ export interface Stats {
 export interface EntryResult {
   log: AccessLog;
   student: Student;
+  /** true: o aluno já teve leitura há menos de 10 min; a API não gravou outra e `log` é a anterior. */
+  duplicate?: boolean;
 }
 
 /* Módulo acadêmico: disciplinas, professores, turmas e grade. */
@@ -142,7 +151,8 @@ export interface Teacher {
   name: string;
   contactEmail: string | null;
   assignmentsCount: number;
-  username: string | null;
+  /** Só vem com o módulo de presença no plano. */
+  username?: string | null;
 }
 
 export interface TeacherInput {
@@ -174,8 +184,12 @@ export interface TeachingAssignment {
 }
 
 export interface ClassGroupDetail extends ClassGroup {
-  assignments: TeachingAssignment[];
+  /** Só vem com o módulo acadêmico no plano. */
+  assignments?: TeachingAssignment[];
 }
+
+/** Turma com as disciplinas já garantidas (módulo acadêmico ativo). */
+export type ClassGroupWithAssignments = ClassGroupDetail & { assignments: TeachingAssignment[] };
 
 export interface ClassGroupStudent {
   id: number;
@@ -183,7 +197,8 @@ export interface ClassGroupStudent {
   rm: string;
   /** 'YYYY-MM-DD' */
   enrolledSince: string;
-  username: string | null;
+  /** Só vem com o módulo de avaliações no plano. */
+  username?: string | null;
 }
 
 export type TimetableSlotKind = 'LESSON' | 'BREAK';
@@ -321,10 +336,11 @@ interface LessonKey {
 }
 
 export interface SchoolSettings {
-  minAttendance: number;
+  /** minAttendance e code só vêm com presença; grading só com avaliações. */
+  minAttendance?: number;
   /** Sufixo dos logins ("etec-jau"). */
-  code: string | null;
-  grading: Grading;
+  code?: string | null;
+  grading?: Grading;
 }
 
 export type AttendanceOverrideInput = LessonKey & { studentId: number; present: boolean | null };

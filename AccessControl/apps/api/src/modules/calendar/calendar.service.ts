@@ -8,6 +8,8 @@ import { isoDaySchema } from '../../lib/validation';
 
 const isoDay = isoDaySchema;
 const DAY_MS = 24 * 60 * 60 * 1000;
+/** Depois de uma falha da BrasilAPI (erro ou lista vazia), o ano fica sem feriados por 10 min antes de tentar de novo. */
+const HOLIDAYS_RETRY_MS = 10 * 60_000;
 
 export const yearSchema = z.coerce.number().int().min(2000, 'Ano inválido').max(2100, 'Ano inválido');
 
@@ -158,15 +160,18 @@ export class CalendarService {
     };
   }
 
-  /**
-   * Carrega os feriados do ano na primeira vez que alguém o abre. Falha da BrasilAPI não quebra nada:
-   * o calendário segue sem feriados e a próxima abertura tenta de novo.
-   */
   /** Anos cujos feriados já estão no banco: a tabela só cresce, então não é preciso conferir de novo a cada consulta. */
   private readonly loadedYears = new Set<number>();
+  /** Ano -> até quando não tentar a BrasilAPI de novo, depois de uma falha (cada tentativa pode esperar 5 s). */
+  private readonly failedUntil = new Map<number, number>();
 
+  /**
+   * Carrega os feriados do ano na primeira vez que alguém o abre. Falha da BrasilAPI não quebra nada:
+   * o calendário segue sem feriados e só tenta de novo depois de HOLIDAYS_RETRY_MS.
+   */
   private async ensureHolidays(year: number) {
     if (this.loadedYears.has(year)) return true;
+    if ((this.failedUntil.get(year) ?? 0) > Date.now()) return false;
     const loaded = await this.prisma.nationalHoliday.count({
       where: { date: { gte: dateOnly(`${year}-01-01`), lte: dateOnly(`${year}-12-31`) } },
     });
@@ -176,7 +181,10 @@ export class CalendarService {
     }
     try {
       const holidays = await this.holidays.fetch(year);
-      if (holidays.length === 0) return false;
+      if (holidays.length === 0) {
+        this.failedUntil.set(year, Date.now() + HOLIDAYS_RETRY_MS);
+        return false;
+      }
       await this.prisma.nationalHoliday.createMany({
         data: holidays.map((holiday) => ({ date: dateOnly(holiday.date), name: holiday.name })),
         skipDuplicates: true,
@@ -185,6 +193,7 @@ export class CalendarService {
       return true;
     } catch (err) {
       logger.warn({ err, year }, 'calendário: não foi possível buscar os feriados nacionais');
+      this.failedUntil.set(year, Date.now() + HOLIDAYS_RETRY_MS);
       return false;
     }
   }

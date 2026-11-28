@@ -10,8 +10,10 @@ import { ReaderSchoolBanner } from '../components/ReaderSchoolBanner';
 import { StudentPhoto } from '../components/StudentPhoto';
 import { useSerial } from '../contexts/SerialContext';
 import { useToast } from '../contexts/ToastContext';
+import { useLatestRequest } from '../hooks/useLatestRequest';
 import { useFingerprintEnrollment } from '../hooks/useFingerprintEnrollment';
 import { YEAR_OPTIONS, initials, yearLabel } from '../utils/format';
+import { SkeletonRows } from '../components/Skeleton';
 
 const EMPTY_FORM: StudentInput = { name: '', rm: '', age: '', year: '', courseId: '', photo: null };
 
@@ -43,16 +45,19 @@ export function StudentsPage() {
     toast.success(`Digital de ${student.name} cadastrada!`);
   });
 
+  const beginLoad = useLatestRequest();
   const load = useCallback(async (term = '') => {
+    const isCurrent = beginLoad();
     setLoading(true);
     try {
-      setStudents(await studentsApi.list(term));
+      const result = await studentsApi.list(term);
+      if (isCurrent()) setStudents(result);
     } catch (err) {
-      toast.error(errorMessage(err));
+      if (isCurrent()) toast.error(errorMessage(err));
     } finally {
-      setLoading(false);
+      if (isCurrent()) setLoading(false);
     }
-  }, [toast]);
+  }, [toast, beginLoad]);
 
   useEffect(() => {
     coursesApi.list().then(setCourses).catch((err) => toast.error(errorMessage(err)));
@@ -68,11 +73,19 @@ export function StudentsPage() {
     if (preview) URL.revokeObjectURL(preview);
   }, [preview]);
 
+  /** Abandona o cadastro da digital; se estava em andamento, avisa (a confirmação do sensor deixa de ser gravada). */
+  const cancelEnrollment = () => {
+    if (enrollment.status === 'running') {
+      toast.info(`Cadastro da digital de ${enrollment.student?.name} cancelado. Cadastre de novo pela ficha do aluno.`);
+    }
+    enrollment.reset();
+  };
+
   const clearForm = () => {
     setForm(EMPTY_FORM);
     setSelected(null);
     setPreview(null);
-    enrollment.reset();
+    cancelEnrollment();
   };
 
   const openNew = () => {
@@ -88,7 +101,8 @@ export function StudentsPage() {
   const selectStudent = (student: Student) => {
     setSelected(student);
     setPreview(null);
-    enrollment.reset();
+    // Salvar a ficha do mesmo aluno não interrompe o cadastro da digital dele.
+    if (enrollment.status !== 'running' || enrollment.student?.id !== student.id) cancelEnrollment();
     setForm({
       name: student.name,
       rm: student.rm,
@@ -271,10 +285,10 @@ export function StudentsPage() {
               aria-label="Buscar alunos"
             />
           </div>
-          <span className="muted">{students.length === 1 ? '1 aluno' : `${students.length} alunos`}</span>
+          {!(loading && students.length === 0) && <span className="muted">{students.length === 1 ? '1 aluno' : `${students.length} alunos`}</span>}
         </div>
         <div className="table-wrapper">
-          <table className="table selectable">
+          <table className="table selectable" aria-busy={loading}>
             <thead>
               <tr>
                 <th>Aluno</th>
@@ -284,6 +298,7 @@ export function StudentsPage() {
               </tr>
             </thead>
             <tbody>
+              {loading && students.length === 0 && <SkeletonRows cols={4} />}
               {students.map((student) => (
                 <tr
                   key={student.id}
@@ -327,7 +342,7 @@ export function StudentsPage() {
       <ConfirmDialog
         open={confirmDelete}
         title="Excluir aluno"
-        message={`Deseja excluir ${selected?.name}? O histórico de entradas será mantido.`}
+        message={`Deseja excluir ${selected?.name}? O histórico de entradas será mantido. Presenças, notas e atestados deste aluno também serão apagados.`}
         confirmLabel="Excluir"
         onConfirm={handleDelete}
         onCancel={() => setConfirmDelete(false)}

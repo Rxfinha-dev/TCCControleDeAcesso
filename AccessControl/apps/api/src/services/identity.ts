@@ -1,6 +1,7 @@
 import { createClient, isAuthRetryableFetchError, type AuthError } from '@supabase/supabase-js';
 import { env } from '../config/env';
 import { badRequest, conflict, serviceUnavailable } from '../lib/errors';
+import { logger } from '../lib/logger';
 
 /** Por quanto tempo uma sessão confirmada no Supabase Auth dispensa nova consulta. */
 export const SESSION_CHECK_TTL_MS = 30_000;
@@ -24,7 +25,7 @@ export interface AuthUser extends AuthIdentity {
 
 /** Valida os tokens emitidos pelo provedor de login. */
 export interface IdentityProvider {
-  /** Confere assinatura e validade do token. Retorna null se for inválido. */
+  /** Confere assinatura e validade do token. Retorna null se for inválido; lança 503 se o servidor não responder. */
   verifyToken(token: string): Promise<TokenIdentity | null>;
   /**
    * Confere no servidor de autenticação se a sessão do token ainda existe
@@ -39,10 +40,23 @@ export interface IdentityProvider {
   setPassword(authUserId: string, password: string): Promise<void>;
   /** Apaga o login (desfaz uma criação que não terminou). */
   deleteUser(authUserId: string): Promise<void>;
+  /** Confere a senha atual do login sem deixar sessão aberta. Lança 503 se o servidor não responder. */
+  verifyPassword(email: string, password: string): Promise<boolean>;
+  /** Encerra as outras sessões do dono do token (a do próprio token continua). */
+  signOutOthers(token: string): Promise<void>;
 }
+
+const clientOptions = { auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false } };
 
 const loginsUnavailable = () =>
   serviceUnavailable('Criação de logins indisponível: configure SUPABASE_SERVICE_ROLE_KEY na API.', 'LOGINS_UNAVAILABLE');
+
+/** Falha do servidor de login (rede, limite de requisições, 5xx): não diz nada sobre o token ou a senha. */
+const isUnavailable = (error: AuthError) =>
+  isAuthRetryableFetchError(error) || error.status === 429 || (error.status ?? 0) >= 500;
+
+const authUnavailable = () =>
+  serviceUnavailable('Não foi possível validar o login agora. Tente novamente em instantes.', 'AUTH_UNAVAILABLE');
 
 /** Traduz os erros da API de administração do Supabase Auth. */
 function adminError(error: AuthError) {
@@ -60,14 +74,21 @@ function adminError(error: AuthError) {
  * localmente (com a JWKS em cache); com a chave legada (HS256), consulta o Auth.
  */
 export class SupabaseIdentityProvider implements IdentityProvider {
-  private client = createClient(env.SUPABASE_URL, env.SUPABASE_PUBLISHABLE_KEY, {
-    auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
-  });
+  private client = createClient(env.SUPABASE_URL, env.SUPABASE_PUBLISHABLE_KEY, clientOptions);
   /** session_id -> até quando a sessão vale como ativa sem consultar o Supabase. */
   private activeSessions = new Map<string, number>();
 
   async verifyToken(token: string) {
-    const { data, error } = await this.client.auth.getClaims(token);
+    let result: Awaited<ReturnType<typeof this.client.auth.getClaims>>;
+    try {
+      result = await this.client.auth.getClaims(token);
+    } catch (error) {
+      if (isAuthRetryableFetchError(error)) throw authUnavailable();
+      // Token malformado (base64/UTF-8 inválido) faz o getClaims lançar: é só um token inválido.
+      return null;
+    }
+    const { data, error } = result;
+    if (error && isUnavailable(error)) throw authUnavailable();
     const claims = data?.claims;
     if (error || !claims?.sub || !claims.email || !claims.session_id || claims.role !== 'authenticated' || claims.is_anonymous) {
       return null;
@@ -84,9 +105,8 @@ export class SupabaseIdentityProvider implements IdentityProvider {
     if ((this.activeSessions.get(sessionId) ?? 0) > now) return true;
 
     const { data, error } = await this.client.auth.getUser(token);
-    if (error && (isAuthRetryableFetchError(error) || (error.status ?? 0) >= 500)) {
-      throw serviceUnavailable('Não foi possível validar o login agora. Tente novamente em instantes.', 'AUTH_UNAVAILABLE');
-    }
+    // 429 (limite do Supabase num pico de acessos) não quer dizer sessão encerrada: deslogar só pioraria o pico.
+    if (error && isUnavailable(error)) throw authUnavailable();
     if (error || !data.user) {
       this.activeSessions.delete(sessionId);
       return false;
@@ -102,9 +122,7 @@ export class SupabaseIdentityProvider implements IdentityProvider {
   /** Cliente com a chave de serviço, só para criar logins e trocar senhas. */
   private admin() {
     if (!env.SUPABASE_SERVICE_ROLE_KEY) throw loginsUnavailable();
-    this.adminClient ??= createClient(env.SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY, {
-      auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
-    });
+    this.adminClient ??= createClient(env.SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY, clientOptions);
     return this.adminClient.auth.admin;
   }
   private adminClient: ReturnType<typeof createClient> | undefined;
@@ -123,6 +141,26 @@ export class SupabaseIdentityProvider implements IdentityProvider {
   async deleteUser(authUserId: string) {
     const { error } = await this.admin().deleteUser(authUserId);
     if (error) throw adminError(error);
+  }
+
+  async verifyPassword(email: string, password: string) {
+    // Cliente próprio, sem persistência: a sessão de teste não se mistura com as outras e é encerrada logo.
+    const client = createClient(env.SUPABASE_URL, env.SUPABASE_PUBLISHABLE_KEY, clientOptions);
+    const { data, error } = await client.auth.signInWithPassword({ email, password });
+    if (error && isUnavailable(error)) throw authUnavailable();
+    if (error || !data.session) return false;
+    // A senha confere mesmo se o encerramento falhar; a sessão de teste só ficaria aberta até expirar.
+    const signOut = await client.auth.signOut({ scope: 'local' }).catch((err: unknown) => ({ error: err }));
+    if (signOut.error) logger.warn({ err: signOut.error }, 'identidade: não foi possível encerrar a sessão de teste da senha');
+    return true;
+  }
+
+  async signOutOthers(token: string) {
+    // O /logout do Supabase aceita o token do próprio usuário: não precisa da chave de serviço.
+    const { error } = await this.client.auth.admin.signOut(token, 'others');
+    if (error) throw authUnavailable();
+    // As outras sessões em cache valeriam até 30 s; sem saber quais são, esquece todas (só custa uma nova consulta).
+    this.activeSessions.clear();
   }
 
   async getUser(token: string) {

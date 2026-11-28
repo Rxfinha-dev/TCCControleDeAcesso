@@ -7,6 +7,7 @@ import { PageHeader } from '../components/PageHeader';
 import { useSchoolScope } from '../contexts/SchoolScopeContext';
 import { useToast } from '../contexts/ToastContext';
 import { dayBoundary, downloadBlob, formatDate, formatTimeSeconds } from '../utils/format';
+import { SkeletonRows } from '../components/Skeleton';
 
 const PAGE_SIZE = 20;
 
@@ -28,19 +29,24 @@ export function AccessLogsPage() {
   );
 
   useEffect(() => {
+    let active = true;
     const timer = setTimeout(async () => {
       setLoading(true);
       try {
         const result = await accessLogsApi.list({ ...filters(), page, pageSize: PAGE_SIZE });
+        if (!active) return;
         setLogs(result.items);
         setTotal(result.total);
       } catch (err) {
-        toast.error(errorMessage(err));
+        if (active) toast.error(errorMessage(err));
       } finally {
-        setLoading(false);
+        if (active) setLoading(false);
       }
     }, 250);
-    return () => clearTimeout(timer);
+    return () => {
+      active = false;
+      clearTimeout(timer);
+    };
   }, [filters, page, toast]);
 
   async function handleExport() {
@@ -87,7 +93,7 @@ export function AccessLogsPage() {
         </div>
 
         <div className="table-wrapper">
-          <table className="table">
+          <table className="table" aria-busy={loading}>
             <thead>
               <tr>
                 {allSchools && <th>Escola</th>}
@@ -97,6 +103,7 @@ export function AccessLogsPage() {
               </tr>
             </thead>
             <tbody>
+              {loading && logs.length === 0 && <SkeletonRows cols={allSchools ? 4 : 3} />}
               {logs.map((log) => (
                 <tr key={log.id}>
                   {allSchools && <td>{log.school?.name ?? '—'}</td>}

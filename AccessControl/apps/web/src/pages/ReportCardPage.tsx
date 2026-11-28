@@ -4,6 +4,7 @@ import { reportCardsApi, studentApi } from '../api';
 import { errorMessage } from '../api/client';
 import type { ReportCard } from '../api/types';
 import { PageHeader } from '../components/PageHeader';
+import { SkeletonCard } from '../components/Skeleton';
 import { ReportCardTable } from '../components/ReportCardTable';
 import { useToast } from '../contexts/ToastContext';
 import { formatDay } from '../utils/academic';
@@ -16,11 +17,20 @@ export function ReportCardPage() {
   const { studentId } = useParams();
   const toast = useToast();
   const [card, setCard] = useState<ReportCard | null>(null);
+  const [failed, setFailed] = useState(false);
 
   useEffect(() => {
+    let active = true;
     (studentId ? reportCardsApi.get(Number(studentId)) : studentApi.panel().then((panel) => panel.reportCard))
-      .then(setCard)
-      .catch((err) => toast.error(errorMessage(err)));
+      .then((result) => active && setCard(result))
+      .catch((err) => {
+        if (!active) return;
+        setFailed(true);
+        toast.error(errorMessage(err));
+      });
+    return () => {
+      active = false;
+    };
   }, [studentId, toast]);
 
   return (
@@ -34,6 +44,8 @@ export function ReportCardPage() {
           </button>
         }
       />
+
+      {!card && !failed && <SkeletonCard lines={4} />}
 
       {card && (
         <section className="card print-sheet" aria-label="Boletim">

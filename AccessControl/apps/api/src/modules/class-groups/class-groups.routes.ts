@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { idParamSchema } from '../../lib/validation';
-import { currentSchool } from '../../middlewares/school-scope';
+import { hasModule } from '../../lib/plans';
+import { currentPlan, currentSchool, requireModule } from '../../middlewares/school-scope';
 import type { AssignmentsService } from './assignments.service';
 import {
   addStudentsSchema,
@@ -37,12 +38,12 @@ export function classGroupsRoutes({ classGroups, enrollments, assignments, timet
 
   router.post('/copy', async (req, res) => {
     const { fromYear, toYear } = copyYearSchema.parse(req.body);
-    res.json(await classGroups.copyYear(currentSchool(res).sub, fromYear, toYear));
+    res.json(await classGroups.copyYear(currentSchool(res).sub, fromYear, toYear, { academic: hasModule(currentPlan(res), 'ACADEMIC') }));
   });
 
   router.get('/:id', async (req, res) => {
     const { id } = idParamSchema.parse(req.params);
-    res.json(await classGroups.get(currentSchool(res).sub, id));
+    res.json(await classGroups.get(currentSchool(res).sub, id, { academic: hasModule(currentPlan(res), 'ACADEMIC') }));
   });
 
   router.put('/:id', async (req, res) => {
@@ -58,7 +59,7 @@ export function classGroupsRoutes({ classGroups, enrollments, assignments, timet
 
   router.get('/:id/students', async (req, res) => {
     const { id } = idParamSchema.parse(req.params);
-    res.json(await enrollments.list(currentSchool(res).sub, id));
+    res.json(await enrollments.list(currentSchool(res).sub, id, { logins: hasModule(currentPlan(res), 'ASSESSMENTS') }));
   });
 
   router.post('/:id/students', async (req, res) => {
@@ -73,24 +74,24 @@ export function classGroupsRoutes({ classGroups, enrollments, assignments, timet
     res.status(204).end();
   });
 
-  router.put('/:id/assignments/:subjectId', async (req, res) => {
+  router.put('/:id/assignments/:subjectId', requireModule('ACADEMIC'), async (req, res) => {
     const { id, subjectId } = subjectParamsSchema.parse(req.params);
     const { teacherId } = assignmentSchema.parse(req.body);
     res.json(await assignments.set(currentSchool(res).sub, id, subjectId, teacherId));
   });
 
-  router.delete('/:id/assignments/:subjectId', async (req, res) => {
+  router.delete('/:id/assignments/:subjectId', requireModule('ACADEMIC'), async (req, res) => {
     const { id, subjectId } = subjectParamsSchema.parse(req.params);
     await assignments.remove(currentSchool(res).sub, id, subjectId);
     res.status(204).end();
   });
 
-  router.get('/:id/timetable', async (req, res) => {
+  router.get('/:id/timetable', requireModule('ACADEMIC'), async (req, res) => {
     const { id } = idParamSchema.parse(req.params);
     res.json(await timetable.current(currentSchool(res).sub, id));
   });
 
-  router.put('/:id/timetable', async (req, res) => {
+  router.put('/:id/timetable', requireModule('ACADEMIC'), async (req, res) => {
     const { id } = idParamSchema.parse(req.params);
     const { blocks } = timetableSchema.parse(req.body);
     res.json(await timetable.save(currentSchool(res).sub, id, blocks));

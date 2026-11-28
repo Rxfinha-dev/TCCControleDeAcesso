@@ -28,6 +28,7 @@ describe('Documentação da API', () => {
         '/api/stats',
         '/api/schools',
         '/api/schools/{id}',
+        '/api/schools/{id}/plan',
         '/api/users',
         '/api/users/{id}',
         '/api/subjects',

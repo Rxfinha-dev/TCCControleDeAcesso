@@ -1,4 +1,4 @@
-import { useEffect, useRef, type ReactNode } from 'react';
+import { useEffect, useId, useRef, type ReactNode } from 'react';
 import { CloseIcon } from './Icons';
 
 interface DrawerProps {
@@ -11,6 +11,7 @@ interface DrawerProps {
 /** Painel lateral para formulários: abre por cima da lista, sem tirar espaço dela. */
 export function Drawer({ open, title, onClose, children }: DrawerProps) {
   const ref = useRef<HTMLDialogElement>(null);
+  const titleId = useId();
 
   useEffect(() => {
     const dialog = ref.current;
@@ -23,7 +24,7 @@ export function Drawer({ open, title, onClose, children }: DrawerProps) {
     <dialog
       ref={ref}
       className="drawer"
-      aria-labelledby="drawer-title"
+      aria-labelledby={titleId}
       onCancel={(event) => {
         event.preventDefault();
         onClose();
@@ -33,7 +34,7 @@ export function Drawer({ open, title, onClose, children }: DrawerProps) {
     >
       <div className="drawer-panel">
         <header className="drawer-header">
-          <h2 id="drawer-title">{title}</h2>
+          <h2 id={titleId}>{title}</h2>
           <button type="button" className="icon-button" aria-label="Fechar" onClick={onClose}>
             <CloseIcon />
           </button>

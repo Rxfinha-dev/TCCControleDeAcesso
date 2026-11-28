@@ -1,19 +1,19 @@
 import { useEffect, useMemo, useReducer, useRef, useState, type CSSProperties } from 'react';
 import { classGroupsApi } from '../../api';
 import { errorMessage } from '../../api/client';
-import type { ClassGroup, ClassGroupDetail, TeacherConflict, TimetableBlockInput } from '../../api/types';
+import type { ClassGroup, ClassGroupWithAssignments, TeacherConflict, TimetableBlockInput } from '../../api/types';
 import { useToast } from '../../contexts/ToastContext';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { WEEKDAY_LABELS, formatDay, formatEndField, formatMinute, parseEndField, parseMinute } from '../../utils/academic';
-import { PALETTE_MIME, TimetableGrid, type PaletteItem, type SubjectInfo } from './TimetableGrid';
-import { fromTimetable, overlappingKeys, timetableReducer, visibleRange } from './timetableReducer';
+import { BLOCK_MIME, PALETTE_MIME, TimetableGrid, type PaletteItem, type SubjectInfo } from './TimetableGrid';
+import { fromTimetable, newKey, overlappingKeys, timetableReducer, visibleRange } from './timetableReducer';
 
 const conflictText = (conflict: TeacherConflict) =>
   `${conflict.teacherName} também está em ${conflict.classGroupName} na ${WEEKDAY_LABELS[conflict.weekday - 1]} ` +
   `${formatMinute(conflict.startMinute)}–${formatMinute(conflict.endMinute)}`;
 
 /** Editor da grade semanal da turma: agenda livre de arrastar (ou clicar), salva como a versão de hoje. */
-export function TimetableEditor({ classGroup }: { classGroup: ClassGroupDetail }) {
+export function TimetableEditor({ classGroup }: { classGroup: ClassGroupWithAssignments }) {
   const toast = useToast();
   const readOnly = useMediaQuery('(max-width: 899px)');
   const [blocks, dispatch] = useReducer(timetableReducer, []);
@@ -69,11 +69,41 @@ export function TimetableEditor({ classGroup }: { classGroup: ClassGroupDetail }
   const range = visibleRange(classGroup.shift, blocks);
   const selected = blocks.find((block) => block.key === selectedKey) ?? null;
 
+  // Só a aula recém-inserida leva o foco; selecionar uma existente não o rouba.
+  const focusStartRef = useRef(false);
+  const startRef = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    if (!focusStartRef.current) return;
+    focusStartRef.current = false;
+    startRef.current?.focus();
+  }, [selectedKey]);
+
   function place(weekday: number, minute: number, item: PaletteItem | null = armed) {
     if (!item) return;
-    dispatch({ type: 'place', ...item, weekday, minute });
+    const key = newKey();
+    dispatch({ type: 'place', key, ...item, weekday, minute });
     setArmed(null);
+    setSelectedKey(key);
+    focusStartRef.current = true;
   }
+
+  function removeBlock(key: string) {
+    dispatch({ type: 'remove', key });
+    setSelectedKey((current) => (current === key ? null : current));
+  }
+
+  useEffect(() => {
+    if (!selectedKey || readOnly) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== 'Delete' && event.key !== 'Backspace') return;
+      const target = event.target as HTMLElement;
+      if (target.closest('input, select, textarea') || target.isContentEditable) return;
+      event.preventDefault();
+      removeBlock(selectedKey);
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [selectedKey, readOnly]);
 
   async function handleCopy() {
     const source = siblings.find((group) => String(group.id) === copyFrom);
@@ -167,9 +197,20 @@ export function TimetableEditor({ classGroup }: { classGroup: ClassGroupDetail }
       )}
 
       <div className="tt-editor">
-        <aside className="tt-palette">
+        <aside
+          className="tt-palette"
+          onDragOver={(event) => {
+            if (event.dataTransfer.types.includes(BLOCK_MIME)) event.preventDefault();
+          }}
+          onDrop={(event) => {
+            const dragged = event.dataTransfer.getData(BLOCK_MIME);
+            if (!dragged) return;
+            event.preventDefault();
+            removeBlock(JSON.parse(dragged).key);
+          }}
+        >
           <h2 className="card-title">Disciplinas</h2>
-          <p className="hint">Arraste para a grade, ou clique aqui e depois no dia.</p>
+          <p className="hint">Arraste para a grade, ou clique aqui e depois no dia. Para remover, arraste a aula de volta para cá ou selecione e aperte Delete.</p>
           {classGroup.assignments.length === 0 && (
             <p className="hint">Defina as disciplinas e os professores da turma para montar a grade.</p>
           )}
@@ -215,6 +256,7 @@ export function TimetableEditor({ classGroup }: { classGroup: ClassGroupDetail }
                 <label className="field">
                   <span>Início</span>
                   <input
+                    ref={startRef}
                     type="time"
                     step={300}
                     value={formatMinute(selected.startMinute)}
@@ -242,10 +284,7 @@ export function TimetableEditor({ classGroup }: { classGroup: ClassGroupDetail }
               <button
                 type="button"
                 className="btn btn-danger btn-small"
-                onClick={() => {
-                  dispatch({ type: 'remove', key: selected.key });
-                  setSelectedKey(null);
-                }}
+                onClick={() => removeBlock(selected.key)}
               >
                 Remover
               </button>

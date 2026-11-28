@@ -185,7 +185,7 @@ export function attendancePaths({ ref, json, errorResponse, authErrors, validati
     '/api/attendance/cancellation': {
       put: {
         tags: [TAG],
-        summary: 'Marca falta do professor ou aula cancelada (a turma inteira recebe presença)',
+        summary: 'Marca falta do professor ou aula cancelada (a aula não conta como dada, salvo correção manual)',
         requestBody: {
           required: true,
           content: json({
@@ -275,7 +275,7 @@ export function attendanceSchemas(ref: (name: string) => object) {
                   properties: {
                     startMinute: { type: 'integer', example: 450 },
                     present: { type: 'boolean', nullable: true },
-                    source: { type: 'string', enum: ['AUTO', 'MANUAL', 'COLLECTIVE', 'JUSTIFIED'], description: 'JUSTIFIED = falta com atestado (`present: null`, não conta)' },
+                    source: { type: 'string', enum: ['AUTO', 'MANUAL', 'COLLECTIVE', 'JUSTIFIED'], description: 'COLLECTIVE = aula cancelada / professor faltou; JUSTIFIED = falta com atestado (ambos `present: null`, não contam)' },
                   },
                 },
               },

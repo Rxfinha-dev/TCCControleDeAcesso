@@ -1,4 +1,4 @@
-import type { UserRole } from '@prisma/client';
+import type { SchoolPlan, UserRole } from '@prisma/client';
 import type { NextFunction, Request, RequestHandler, Response } from 'express';
 import { forbidden, unauthorized } from '../lib/errors';
 import type { AuthService } from '../modules/auth/auth.service';
@@ -11,6 +11,8 @@ export interface AuthContext {
   email: string;
   /** Escola "dona" do usuário (SCHOOL) ou escola padrão (SUPER_ADMIN). */
   homeSchoolId: number | null;
+  /** Plano da escola "dona" (null sem escola). */
+  homeSchoolPlan: SchoolPlan | null;
   /** Cadastro ligado ao login (perfis TEACHER e STUDENT). */
   teacherId: number | null;
   studentId: number | null;
@@ -33,6 +35,7 @@ export function createRequireAuth(auth: AuthService): RequestHandler {
       name: user.name,
       email: user.email,
       homeSchoolId: user.schoolId,
+      homeSchoolPlan: user.school?.plan ?? null,
       teacherId: user.teacherId,
       studentId: user.studentId,
       mustChangePassword: user.mustChangePassword,
