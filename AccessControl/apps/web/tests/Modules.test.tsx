@@ -1,6 +1,6 @@
 import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { PLAN_NOTICE } from '../src/components/RequireModule';
+import { PLAN_NOTICE, SUPER_ADMIN_MODULE_NOTICE } from '../src/components/RequireModule';
 import { ALL_MODULES, jsonResponse, mockApi, renderAt, SCHOOL_USER } from './harness';
 import { setMockSession } from './mocks/supabase';
 
@@ -97,17 +97,21 @@ describe('Planos', () => {
     expect(screen.queryByRole('heading', { name: /nota|avalia/i })).not.toBeInTheDocument();
   });
 
-  it('super admin troca de escola e o menu acompanha sem recarregar', async () => {
+  it('super admin vê todos os módulos; fora do plano a tela abre bloqueada com aviso', async () => {
     mockApi((path) => {
       if (path === '/schools') return jsonResponse(200, [summary(1, 'Escola Plena', ALL_MODULES), summary(2, 'Escola Básica', BASIC)]);
       return undefined;
     }, SUPER_ADMIN);
-    renderAt('/');
+    renderAt('/presenca');
 
     await screen.findByLabelText('Escola em uso');
-    expect(sidebar().getByText('Presença')).toBeInTheDocument();
+    expect(screen.queryByText(SUPER_ADMIN_MODULE_NOTICE)).not.toBeInTheDocument();
     await userEvent.selectOptions(screen.getByLabelText('Escola em uso'), '2');
-    await waitFor(() => expect(sidebar().queryByText('Presença')).not.toBeInTheDocument());
+    expect(await within(screen.getByRole('main')).findByText(SUPER_ADMIN_MODULE_NOTICE)).toBeInTheDocument();
+    expect(screen.queryByText(PLAN_NOTICE)).not.toBeInTheDocument();
+    for (const label of ['Disciplinas', 'Professores', 'Calendário', 'Presença', 'Avaliações']) {
+      expect(sidebar().getByText(label)).toBeInTheDocument();
+    }
   });
 
   it('403 MODULE_NOT_IN_PLAN numa tela aberta mostra o aviso do plano', async () => {
